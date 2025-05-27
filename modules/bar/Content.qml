@@ -24,8 +24,6 @@ StyledRect {
     Item {
         id: child
 
-        readonly property bool vertical: true
-
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
@@ -40,7 +38,7 @@ StyledRect {
             anchors.topMargin: Appearance.padding.large
         }
 
-        ClippingRectangle {
+        StyledClippingRect {
             id: workspaces
 
             anchors.horizontalCenter: parent.horizontalCenter
@@ -57,16 +55,6 @@ StyledRect {
                 id: workspacesInner
 
                 anchors.centerIn: parent
-
-                vertical: true
-            }
-
-            Behavior on color {
-                ColorAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
             }
         }
 

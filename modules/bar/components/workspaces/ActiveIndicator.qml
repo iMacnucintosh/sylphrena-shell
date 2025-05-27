@@ -4,10 +4,9 @@ import "root:/config"
 import QtQuick
 import QtQuick.Effects
 
-Rectangle {
+StyledRect {
     id: root
 
-    required property bool vertical
     required property list<Workspace> workspaces
     required property Item mask
     required property real maskWidth
@@ -15,34 +14,26 @@ Rectangle {
     required property int groupOffset
 
     readonly property Workspace currentWs: workspaces[Hyprland.activeWsId - 1 - groupOffset] ?? null
-    property real leading: (vertical ? currentWs?.y : currentWs?.x) ?? 0
-    property real trailing: (vertical ? currentWs?.y : currentWs?.x) ?? 0
+    property real leading: currentWs?.y ?? 0
+    property real trailing: currentWs?.y ?? 0
     property real currentSize: (currentWs?.size) ?? 0
     property real size: Math.abs(leading - trailing) + currentSize
     property real offset: Math.min(leading, trailing)
 
     clip: true
-    x: vertical ? 1 : offset + 1
-    y: vertical ? offset + 1 : 1
-    implicitWidth: (vertical ? BarConfig.sizes.innerHeight : size) - 2
-    implicitHeight: (vertical ? size : BarConfig.sizes.innerHeight) - 2
+    x: 1
+    y: offset + 1
+    implicitWidth: BarConfig.sizes.innerHeight - 2
+    implicitHeight: size - 2
     radius: BarConfig.workspaces.rounded ? Appearance.rounding.full : 0
     color: Colours.palette.m3primary
 
-    Rectangle {
+    StyledRect {
         id: base
 
         visible: false
         anchors.fill: parent
         color: Colours.palette.m3onPrimary
-
-        Behavior on color {
-            ColorAnimation {
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-            }
-        }
     }
 
     MultiEffect {
@@ -52,21 +43,12 @@ Rectangle {
         maskSpreadAtMin: 1
         maskThresholdMin: 0.5
 
-        x: root.vertical ? 0 : -parent.offset
-        y: root.vertical ? -parent.offset : 0
+        x: 0
+        y: -parent.offset
         implicitWidth: root.maskWidth
         implicitHeight: root.maskHeight
 
-        anchors.horizontalCenter: root.vertical ? parent.horizontalCenter : undefined
-        anchors.verticalCenter: root.vertical ? undefined : parent.verticalCenter
-    }
-
-    Behavior on color {
-        ColorAnimation {
-            duration: Appearance.anim.durations.normal
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.standard
-        }
+        anchors.horizontalCenter: parent.horizontalCenter
     }
 
     Behavior on leading {

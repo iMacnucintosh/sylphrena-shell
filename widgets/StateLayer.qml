@@ -3,7 +3,7 @@ import "root:/services"
 import "root:/config"
 import QtQuick
 
-Rectangle {
+StyledRect {
     id: root
 
     readonly property alias hovered: mouse.hovered
@@ -36,14 +36,6 @@ Rectangle {
     Behavior on opacity {
         NumberAnimation {
             duration: Appearance.anim.durations.small
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.standard
-        }
-    }
-
-    Behavior on color {
-        ColorAnimation {
-            duration: Appearance.anim.durations.normal
             easing.type: Easing.BezierSpline
             easing.bezierCurve: Appearance.anim.curves.standard
         }

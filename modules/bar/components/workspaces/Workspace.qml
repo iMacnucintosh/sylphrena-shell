@@ -10,20 +10,19 @@ Item {
     id: root
 
     required property int index
-    required property bool vertical
     required property var occupied
     required property int groupOffset
 
     readonly property bool isWorkspace: true // Flag for finding workspace children
     // Unanimated prop for others to use as reference
-    readonly property real size: childrenRect[vertical ? "height" : "width"] + (hasWindows ? Appearance.padding.normal : 0)
+    readonly property real size: childrenRect.height + (hasWindows ? Appearance.padding.normal : 0)
 
     readonly property int ws: groupOffset + index + 1
     readonly property bool isOccupied: occupied[ws] ?? false
     readonly property bool hasWindows: isOccupied && BarConfig.workspaces.showWindows
 
-    Layout.preferredWidth: childrenRect.width + (hasWindows && !vertical ? Appearance.padding.normal : 0)
-    Layout.preferredHeight: childrenRect.height + (hasWindows && vertical ? Appearance.padding.normal : 0)
+    Layout.preferredWidth: childrenRect.width
+    Layout.preferredHeight: size
 
     StyledText {
         id: indicator
@@ -43,16 +42,25 @@ Item {
     }
 
     Loader {
+        id: windows
+
         active: BarConfig.workspaces.showWindows
         asynchronous: true
 
-        anchors.left: root.vertical ? undefined : indicator.right
-        anchors.top: root.vertical ? indicator.bottom : undefined
-        anchors.verticalCenter: root.vertical ? undefined : indicator.verticalCenter
-        anchors.horizontalCenter: root.vertical ? indicator.horizontalCenter : undefined
+        anchors.horizontalCenter: indicator.horizontalCenter
+        anchors.top: indicator.bottom
 
-        sourceComponent: Box {
-            vertical: root.vertical
+        sourceComponent: Column {
+            spacing: Appearance.spacing.small
+
+            add: Transition {
+                Anim {
+                    properties: "scale"
+                    from: 0
+                    to: 1
+                    easing.bezierCurve: Appearance.anim.curves.standardDecel
+                }
+            }
 
             Repeater {
                 model: ScriptModel {

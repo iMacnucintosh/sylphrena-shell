@@ -9,7 +9,6 @@ import QtQuick
 Item {
     id: root
 
-    required property bool vertical
     required property list<Workspace> workspaces
     required property var occupied
     required property int groupOffset
@@ -44,7 +43,7 @@ Item {
             values: root.pills.filter(p => p)
         }
 
-        Rectangle {
+        StyledRect {
             id: rect
 
             required property var modelData
@@ -57,22 +56,13 @@ Item {
 
             x: start?.x ?? 0
             y: start?.y ?? 0
-            implicitWidth: root.vertical ? BarConfig.sizes.innerHeight : end?.x + end?.width - start?.x
-            implicitHeight: root.vertical ? end?.y + end?.height - start?.y : BarConfig.sizes.innerHeight
+            implicitWidth: BarConfig.sizes.innerHeight
+            implicitHeight: end?.y + end?.height - start?.y
 
-            anchors.horizontalCenter: root.vertical ? parent.horizontalCenter : undefined
-            anchors.verticalCenter: root.vertical ? undefined : parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
 
             scale: 0
             Component.onCompleted: scale = 1
-
-            Behavior on color {
-                ColorAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
-            }
 
             Behavior on scale {
                 Anim {

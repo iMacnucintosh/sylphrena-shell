@@ -98,7 +98,7 @@ Item {
         }
     }
 
-    ClippingRectangle {
+    StyledClippingRect {
         id: cover
 
         anchors.verticalCenter: parent.verticalCenter
@@ -129,14 +129,6 @@ Item {
             fillMode: Image.PreserveAspectCrop
             sourceSize.width: width
             sourceSize.height: height
-        }
-
-        Behavior on color {
-            ColorAnimation {
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-            }
         }
     }
 

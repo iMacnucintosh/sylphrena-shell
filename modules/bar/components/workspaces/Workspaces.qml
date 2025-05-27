@@ -4,11 +4,10 @@ import "root:/widgets"
 import "root:/services"
 import "root:/config"
 import QtQuick
+import QtQuick.Layouts
 
 Item {
     id: root
-
-    property alias vertical: layout.vertical
 
     readonly property list<Workspace> workspaces: layout.children.filter(c => c.isWorkspace).sort((w1, w2) => w1.ws - w2.ws)
     readonly property var occupied: Hyprland.workspaces.values.reduce((acc, curr) => {
@@ -20,7 +19,7 @@ Item {
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
 
-    BoxLayout {
+    ColumnLayout {
         id: layout
 
         spacing: 0
@@ -31,7 +30,6 @@ Item {
             model: BarConfig.workspaces.shown
 
             Workspace {
-                vertical: root.vertical
                 occupied: root.occupied
                 groupOffset: root.groupOffset
             }
@@ -46,7 +44,6 @@ Item {
         anchors.fill: parent
 
         sourceComponent: OccupiedBg {
-            vertical: root.vertical
             workspaces: root.workspaces
             occupied: root.occupied
             groupOffset: root.groupOffset
@@ -58,7 +55,6 @@ Item {
         asynchronous: true
 
         sourceComponent: ActiveIndicator {
-            vertical: root.vertical
             workspaces: root.workspaces
             mask: layout
             maskWidth: root.width

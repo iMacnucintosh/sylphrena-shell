@@ -13,7 +13,7 @@ Row {
     padding: Appearance.padding.large
     spacing: Appearance.spacing.large
 
-    ClippingRectangle {
+    StyledClippingRect {
         implicitWidth: info.implicitHeight
         implicitHeight: info.implicitHeight
 
@@ -31,14 +31,6 @@ Row {
         CachingImage {
             anchors.fill: parent
             path: `${Paths.home}/.face`
-        }
-
-        Behavior on color {
-            ColorAnimation {
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-            }
         }
     }
 
@@ -109,10 +101,11 @@ Row {
                 })
         }
 
-        AnchorText {
+        StyledText {
             id: text
 
-            prevAnchor: icon
+            anchors.verticalCenter: icon.verticalCenter
+            anchors.left: icon.right
             anchors.leftMargin: icon.anchors.leftMargin
             text: `:  ${line.text}`
             font.pointSize: Appearance.font.size.normal

@@ -3,14 +3,12 @@ import "root:/services"
 import "root:/config"
 import QtQuick
 
-Item {
+Column {
     id: root
 
-    readonly property bool vertical: parent?.vertical ?? false
     property color colour: Colours.palette.m3tertiary
 
-    implicitWidth: vertical ? Math.max(icon.implicitWidth, text.implicitWidth) : icon.implicitWidth + text.implicitWidth + text.anchors.leftMargin
-    implicitHeight: vertical ? icon.implicitHeight + text.implicitHeight + text.anchors.topMargin : Math.max(icon.implicitHeight, text.implicitHeight)
+    spacing: Appearance.spacing.small
 
     MaterialIcon {
         id: icon
@@ -18,16 +16,16 @@ Item {
         text: "calendar_month"
         color: root.colour
 
-        anchors.horizontalCenter: root.vertical ? parent.horizontalCenter : undefined
+        anchors.horizontalCenter: parent.horizontalCenter
     }
 
-    AnchorText {
+    StyledText {
         id: text
 
-        prevAnchor: icon
+        anchors.horizontalCenter: parent.horizontalCenter
 
         horizontalAlignment: StyledText.AlignHCenter
-        text: root.vertical ? Time.format("hh\nmm") : Time.format("hh:mm • dddd, dd MMMM")
+        text: Time.format("hh\nmm")
         font.pointSize: Appearance.font.size.smaller
         font.family: Appearance.font.family.mono
         color: root.colour
