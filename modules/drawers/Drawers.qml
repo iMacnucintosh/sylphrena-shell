@@ -116,6 +116,7 @@ Variants {
             Interactions {
                 screen: scope.modelData
                 visibilities: visibilities
+                panels: panels
 
                 Panels {
                     id: panels

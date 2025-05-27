@@ -39,19 +39,6 @@ Singleton {
         }
     }
 
-    FrameAnimation {
-        running: true
-        onTriggered: getCursorPos.running = true
-    }
-
-    Process {
-        id: getCursorPos
-        command: ["hyprctl", "cursorpos"]
-        stdout: SplitParser {
-            onRead: data => root.cursorPos = data
-        }
-    }
-
     Process {
         id: getClients
         command: ["sh", "-c", "hyprctl -j clients | jq -c"]

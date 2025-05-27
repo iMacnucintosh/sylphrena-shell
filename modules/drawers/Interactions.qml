@@ -9,6 +9,7 @@ MouseArea {
 
     required property ShellScreen screen
     required property PersistentProperties visibilities
+    required property Panels panels
 
     property bool osdHovered
     property point dragStart
@@ -31,35 +32,32 @@ MouseArea {
     hoverEnabled: true
 
     onPressed: event => dragStart = Qt.point(event.x, event.y)
-
-    Connections {
-        target: Hyprland
-
-        function onCursorPosChanged(): void {
-            let {
-                x,
-                y
-            } = Hyprland.cursorPos;
-            x -= QsWindow.window.margins.left + Hyprland.focusedMonitor.x;
-            y -= QsWindow.window.margins.top + Hyprland.focusedMonitor.y;
-
-            // Show osd on hover
-            const showOsd = root.inRightPanel(panels.osd, x, y);
-            root.visibilities.osd = showOsd;
-            root.osdHovered = showOsd;
-
-            // Show/hide session on drag
-            if (root.pressed && root.withinPanelHeight(panels.session, x, y)) {
-                const dragX = x - root.dragStart.x;
-                if (dragX < -SessionConfig.dragThreshold)
-                    root.visibilities.session = true;
-                else if (dragX > SessionConfig.dragThreshold)
-                    root.visibilities.session = false;
-            }
-
-            const showDashboard = root.inTopPanel(panels.dashboard, x, y);
-            root.visibilities.dashboard = showDashboard;
+    onContainsMouseChanged: {
+        if (!containsMouse) {
+            visibilities.osd = false;
+            osdHovered = false;
+            visibilities.dashboard = false;
         }
+    }
+
+    onPositionChanged: ({x, y}) => {
+        // Show osd on hover
+        const showOsd = inRightPanel(panels.osd, x, y);
+        visibilities.osd = showOsd;
+        osdHovered = showOsd;
+
+        // Show/hide session on drag
+        if (pressed && withinPanelHeight(panels.session, x, y)) {
+            const dragX = x - dragStart.x;
+            if (dragX < -SessionConfig.dragThreshold)
+                visibilities.session = true;
+            else if (dragX > SessionConfig.dragThreshold)
+                visibilities.session = false;
+        }
+
+        // Show dashboard on hover
+        const showDashboard = root.inTopPanel(panels.dashboard, x, y);
+        visibilities.dashboard = showDashboard;
     }
 
     Osd.Interactions {
