@@ -99,7 +99,7 @@ Singleton {
         return Fuzzy.go(search.slice(LauncherConfig.actionPrefix.length), preppedActions, {
             all: true,
             keys: ["name", "desc"],
-            scoreFn: r => r[0].score * 0.9 + r[1].score * 0.1
+            scoreFn: r => r[0].score > 0 ? r[0].score * 0.9 + r[1].score * 0.1 : 0
         }).map(r => r.obj.action);
     }
 
