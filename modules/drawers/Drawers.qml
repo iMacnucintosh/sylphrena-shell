@@ -53,8 +53,8 @@ Variants {
                 Region {
                     required property Item modelData
 
-                    x: modelData.x
-                    y: modelData.y
+                    x: modelData.x + BorderConfig.thickness
+                    y: modelData.y + BorderConfig.thickness
                     width: modelData.width
                     height: modelData.height
                     intersection: Intersection.Subtract

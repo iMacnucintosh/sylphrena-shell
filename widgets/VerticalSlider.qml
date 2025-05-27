@@ -54,6 +54,12 @@ Slider {
             color: Colours.alpha(Colours.palette.m3inverseSurface, true)
             radius: Appearance.rounding.full
 
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onPressed: event => event.accepted = false
+            }
+
             MaterialIcon {
                 id: icon
 
