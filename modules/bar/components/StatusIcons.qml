@@ -73,9 +73,8 @@ Item {
 
         sourceComponent: MaterialIcon {
             text: {
-                const device = UPower.displayDevice;
-                const perc = device.percentage;
-                const charging = device.changeRate > 0;
+                const perc = UPower.displayDevice.percentage;
+                const charging = !UPower.onBattery;
                 if (perc === 1)
                     return charging ? "battery_charging_full" : "battery_full";
                 let level = Math.floor(perc * 7);
@@ -83,7 +82,7 @@ Item {
                     level--;
                 return charging ? `battery_charging_${(level + 3) * 10}` : `battery_${level}_bar`;
             }
-            color: UPower.displayDevice.percentage > 0.2 || UPower.displayDevice.changeRate > 0 ? root.colour : Colours.palette.m3error
+            color: !UPower.onBattery || UPower.displayDevice.percentage > 0.2 ? root.colour : Colours.palette.m3error
             fill: 1
         }
     }
