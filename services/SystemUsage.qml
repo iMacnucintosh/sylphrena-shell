@@ -56,6 +56,8 @@ Singleton {
             meminfo.reload();
             storage.running = true;
             cpuTemp.running = true;
+            gpuUsage.running = true;
+            gpuTemp.running = true;
         }
     }
 
