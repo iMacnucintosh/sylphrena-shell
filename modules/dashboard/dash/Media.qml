@@ -127,6 +127,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: Appearance.spacing.normal
 
+        animate: true
         horizontalAlignment: Text.AlignHCenter
         text: (Players.active?.trackTitle ?? qsTr("No media")) || qsTr("Unknown title")
         color: Colours.palette.m3primary
@@ -143,6 +144,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: Appearance.spacing.small
 
+        animate: true
         horizontalAlignment: Text.AlignHCenter
         text: (Players.active?.trackAlbum ?? qsTr("No media")) || qsTr("Unknown album")
         color: Colours.palette.m3outline
@@ -159,6 +161,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: Appearance.spacing.small
 
+        animate: true
         horizontalAlignment: Text.AlignHCenter
         text: (Players.active?.trackArtist ?? qsTr("No media")) || qsTr("Unknown artist")
         color: Colours.palette.m3secondary
