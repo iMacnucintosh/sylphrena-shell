@@ -65,9 +65,6 @@ Item {
         }
 
         transitions: Transition {
-            from: "*"
-            to: "*"
-
             NumberAnimation {
                 target: img
                 properties: "opacity,scale"

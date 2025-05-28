@@ -51,9 +51,6 @@ Item {
     ]
 
     transitions: Transition {
-        from: "*"
-        to: "*"
-
         SequentialAnimation {
             NumberAnimation {
                 target: root

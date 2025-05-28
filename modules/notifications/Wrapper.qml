@@ -20,32 +20,15 @@ Item {
         }
     }
 
-    transitions: [
-        Transition {
-            from: ""
-            to: "visible"
-
-            NumberAnimation {
-                target: root
-                property: "implicitHeight"
-                duration: Appearance.anim.durations.large
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
-            }
-        },
-        Transition {
-            from: "visible"
-            to: ""
-
-            NumberAnimation {
-                target: root
-                property: "implicitHeight"
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-            }
+    transitions: Transition {
+        NumberAnimation {
+            target: root
+            property: "implicitHeight"
+            duration: Appearance.anim.durations.normal
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
         }
-    ]
+    }
 
     Content {
         id: content

@@ -28,9 +28,9 @@ Item {
             NumberAnimation {
                 target: root
                 property: "implicitHeight"
-                duration: Appearance.anim.durations.large
+                duration: Appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
+                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
             }
         },
         Transition {
@@ -42,7 +42,7 @@ Item {
                 property: "implicitHeight"
                 duration: Appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.emphasizedAccel
+                easing.bezierCurve: Appearance.anim.curves.emphasized
             }
         }
     ]

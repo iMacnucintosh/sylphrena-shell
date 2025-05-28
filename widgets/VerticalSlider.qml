@@ -81,9 +81,6 @@ Slider {
                 }
 
                 transitions: Transition {
-                    from: "*"
-                    to: "*"
-
                     NumberAnimation {
                         target: icon
                         property: "scale"

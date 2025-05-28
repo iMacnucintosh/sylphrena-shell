@@ -29,9 +29,9 @@ Item {
             NumberAnimation {
                 target: root
                 property: "implicitWidth"
-                duration: Appearance.anim.durations.large
+                duration: Appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
+                easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
             }
         },
         Transition {
@@ -43,7 +43,7 @@ Item {
                 property: "implicitWidth"
                 duration: Appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.emphasizedAccel
+                easing.bezierCurve: root.visibilities.osd ? Appearance.anim.curves.expressiveFastSpatial : Appearance.anim.curves.emphasized
             }
         }
     ]
