@@ -24,7 +24,7 @@ Item {
         NumberAnimation {
             target: root
             property: "implicitHeight"
-            duration: Appearance.anim.durations.normal
+            duration: Appearance.anim.durations.expressiveDefaultSpatial
             easing.type: Easing.BezierSpline
             easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
         }
