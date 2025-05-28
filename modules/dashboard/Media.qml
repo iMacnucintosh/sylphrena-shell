@@ -62,9 +62,12 @@ Item {
         readonly property real centerY: height / 2
         readonly property real innerX: cover.implicitWidth / 2 + Appearance.spacing.small
         readonly property real innerY: cover.implicitHeight / 2 + Appearance.spacing.small
+        property color colour: Colours.palette.m3primary
 
         anchors.fill: cover
         anchors.margins: -DashboardConfig.sizes.mediaVisualiserSize
+
+        onColourChanged: requestPaint()
 
         onPaint: {
             const ctx = getContext("2d");
@@ -73,7 +76,7 @@ Item {
             const values = root.cava;
             const len = values.length;
 
-            ctx.strokeStyle = Colours.palette.m3primary;
+            ctx.strokeStyle = colour;
             ctx.lineWidth = 360 / len - Appearance.spacing.small / 4;
             ctx.lineCap = "round";
 
@@ -96,6 +99,14 @@ Item {
             }
 
             ctx.stroke();
+        }
+
+        Behavior on colour {
+            ColorAnimation {
+                duration: Appearance.anim.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.anim.curves.standard
+            }
         }
     }
 
