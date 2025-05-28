@@ -72,11 +72,16 @@ Item {
 
             const values = root.cava;
             const len = values.length;
+
+            ctx.strokeStyle = Colours.palette.m3primary;
+            ctx.lineWidth = 360 / len - Appearance.spacing.small / 4;
+            ctx.lineCap = "round";
+
             const size = DashboardConfig.sizes.mediaVisualiserSize;
             const cx = centerX;
             const cy = centerY;
-            const rx = innerX;
-            const ry = innerY;
+            const rx = innerX + ctx.lineWidth / 2;
+            const ry = innerY + ctx.lineWidth / 2;
 
             for (let i = 0; i < len; i++) {
                 const v = Math.max(1, Math.min(100, values[i]));
@@ -89,10 +94,6 @@ Item {
                 ctx.moveTo(cx + rx * cos, cy + ry * sin);
                 ctx.lineTo(cx + (rx + magnitude) * cos, cy + (ry + magnitude) * sin);
             }
-
-            ctx.strokeStyle = Colours.palette.m3primary;
-            ctx.lineWidth = 360 / len - Appearance.spacing.small / 4;
-            ctx.lineCap = "round";
 
             ctx.stroke();
         }
