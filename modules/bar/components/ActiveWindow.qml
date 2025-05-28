@@ -17,11 +17,13 @@ Item {
     Item {
         id: child
 
+        property Item current: text1
+
         anchors.centerIn: parent
 
         clip: true
-        implicitWidth: Math.max(icon.implicitWidth, text.implicitHeight)
-        implicitHeight: icon.implicitHeight + text.implicitWidth + text.anchors.topMargin
+        implicitWidth: Math.max(icon.implicitWidth, current.implicitHeight)
+        implicitHeight: icon.implicitHeight + current.implicitWidth + current.anchors.topMargin
 
         MaterialIcon {
             id: icon
@@ -33,26 +35,12 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
-        StyledText {
-            id: text
+        Title {
+            id: text1
+        }
 
-            anchors.horizontalCenter: icon.horizontalCenter
-            anchors.top: icon.bottom
-            anchors.topMargin: Appearance.spacing.small
-
-            text: metrics.elidedText
-            font.pointSize: metrics.font.pointSize
-            font.family: metrics.font.family
-            color: root.colour
-
-            transform: Rotation {
-                angle: 90
-                origin.x: text.implicitHeight / 2
-                origin.y: text.implicitHeight / 2
-            }
-
-            width: implicitHeight
-            height: implicitWidth
+        Title {
+            id: text2
         }
 
         TextMetrics {
@@ -63,6 +51,13 @@ Item {
             font.family: Appearance.font.family.mono
             elide: Qt.ElideRight
             elideWidth: root.height - icon.height
+
+            onTextChanged: {
+                const next = child.current === text1 ? text2 : text1;
+                next.text = elidedText;
+                child.current = next;
+            }
+            onElideWidthChanged: child.current.text = elidedText
         }
 
         Behavior on implicitWidth {
@@ -78,6 +73,36 @@ Item {
                 duration: Appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
+        }
+    }
+
+    component Title: StyledText {
+        id: text
+
+        anchors.horizontalCenter: icon.horizontalCenter
+        anchors.top: icon.bottom
+        anchors.topMargin: Appearance.spacing.small
+
+        font.pointSize: metrics.font.pointSize
+        font.family: metrics.font.family
+        color: root.colour
+        opacity: child.current === this ? 1 : 0
+
+        transform: Rotation {
+            angle: 90
+            origin.x: text.implicitHeight / 2
+            origin.y: text.implicitHeight / 2
+        }
+
+        width: implicitHeight
+        height: implicitWidth
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Appearance.anim.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.anim.curves.standard
             }
         }
     }
