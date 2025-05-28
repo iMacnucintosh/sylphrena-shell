@@ -54,18 +54,21 @@ Item {
                 radius: Appearance.rounding.normal
                 color: "transparent"
 
-                Dash {
-                    clip: true
-                }
+                Dash {}
             }
 
             ClippingWrapperRectangle {
                 radius: Appearance.rounding.normal
                 color: "transparent"
 
-                Media {
-                    clip: true
-                }
+                Media {}
+            }
+
+            ClippingWrapperRectangle {
+                radius: Appearance.rounding.normal
+                color: "transparent"
+
+                Performance {}
             }
         }
     }

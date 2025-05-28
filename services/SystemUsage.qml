@@ -8,6 +8,9 @@ Singleton {
     id: root
 
     property real cpuPerc
+    property real cpuTemp
+    property real gpuPerc
+    property real gpuTemp
     property int memUsed
     property int memTotal
     readonly property real memPerc: memTotal > 0 ? memUsed / memTotal : 0
@@ -18,14 +21,41 @@ Singleton {
     property int lastCpuIdle
     property int lastCpuTotal
 
+    function formatKib(kib: int): var {
+        const mib = 1024;
+        const gib = 1024 ** 2;
+        const tib = 1024 ** 3;
+
+        if (kib >= tib)
+            return {
+                value: kib / tib,
+                unit: "TiB"
+            };
+        if (kib >= gib)
+            return {
+                value: kib / gib,
+                unit: "GiB"
+            };
+        if (kib >= mib)
+            return {
+                value: kib / mib,
+                unit: "MiB"
+            };
+        return {
+            value: kib,
+            unit: "KiB"
+        };
+    }
+
     Timer {
         running: true
-        interval: 1000
+        interval: 3000
         repeat: true
         onTriggered: {
             stat.reload();
             meminfo.reload();
             storage.running = true;
+            cpuTemp.running = true;
         }
     }
 
@@ -78,6 +108,58 @@ Singleton {
                 }
                 root.storageUsed = used;
                 root.storageTotal = used + avail;
+            }
+        }
+    }
+
+    Process {
+        id: cpuTemp
+
+        running: true
+        command: ["fish", "-c", "cat /sys/class/thermal/thermal_zone*/temp | string join ' '"]
+        stdout: SplitParser {
+            onRead: data => {
+                const temps = data.trim().split(" ");
+                const sum = temps.reduce((acc, d) => acc + parseInt(d, 10), 0);
+                root.cpuTemp = sum / temps.length / 1000;
+            }
+        }
+    }
+
+    Process {
+        id: gpuUsage
+
+        running: true
+        command: ["sh", "-c", "cat /sys/class/drm/card*/device/gpu_busy_percent"]
+        stdout: SplitParser {
+            splitMarker: ""
+            onRead: data => root.gpuPerc = data.trim().split("\n").reduce((acc, d) => acc + parseInt(d, 10), 0)
+        }
+    }
+
+    Process {
+        id: gpuTemp
+
+        running: true
+        command: ["sh", "-c", "sensors | jq -nRc '[inputs]'"]
+        stdout: SplitParser {
+            readonly property var tempTest: new RegExp("^temp[0-9]+:")
+
+            onRead: data => {
+                let eligible = false;
+                let sum = 0;
+                let count = 0;
+                for (const line of JSON.parse(data)) {
+                    if (line === "Adapter: PCI Adapter")
+                        eligible = true;
+                    else if (line === "")
+                        eligible = false;
+                    else if (eligible && (line.startsWith("GPU core:") || tempTest.test(line))) {
+                        sum += parseFloat(line).split(" ")[1];
+                        count++;
+                    }
+                }
+                root.gpuTemp = count > 0 ? sum / count : 0;
             }
         }
     }
