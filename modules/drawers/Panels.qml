@@ -40,8 +40,6 @@ Item {
     Notifications.Wrapper {
         id: notifications
 
-        visibility: root.visibilities.notifications
-
         anchors.top: parent.top
         anchors.right: parent.right
     }

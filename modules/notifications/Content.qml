@@ -10,16 +10,42 @@ Item {
 
     readonly property int padding: Appearance.padding.large
 
+    anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.right: parent.right
 
-    implicitWidth: NotifsConfig.sizes.width + root.padding * 2
-    implicitHeight: list.implicitHeight + root.padding * 2
+    implicitWidth: NotifsConfig.sizes.width + padding * 2
+    implicitHeight: {
+        const count = list.count;
+        if (count === 0)
+            return 0;
+
+        let height = (count - 1) * list.spacing;
+        for (let i = 0; i < count; i++)
+            height += list.itemAtIndex(i)?.nonAnimHeight ?? 0;
+
+        const screen = QsWindow.window?.screen;
+        const visibilities = Visibilities.screens[screen];
+        const panel = Visibilities.panels[screen];
+        if (visibilities && panel) {
+            if (visibilities.osd) {
+                const h = panel.osd.y - BorderConfig.rounding * 2;
+                if (height > h)
+                    height = h;
+            }
+
+            if (visibilities.session) {
+                const h = panel.session.y - BorderConfig.rounding * 2;
+                if (height > h)
+                    height = h;
+            }
+        }
+
+        return Math.min((screen?.height ?? 0) - BorderConfig.thickness * 2, height + padding * 2);
+    }
 
     ClippingWrapperRectangle {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.fill: parent
         anchors.margins: root.padding
 
         color: "transparent"
@@ -33,31 +59,6 @@ Item {
             }
 
             anchors.fill: parent
-
-            implicitHeight: {
-                let height = (count - 1) * spacing;
-                for (let i = 0; i < count; i++)
-                    height += itemAtIndex(i)?.nonAnimHeight ?? 0;
-
-                const screen = QsWindow.window?.screen;
-                const visibilities = Visibilities.screens[screen];
-                const panel = Visibilities.panels[screen];
-                if (visibilities && panel) {
-                    if (visibilities.osd) {
-                        const h = panel.osd.y - BorderConfig.rounding * 2;
-                        if (height > h)
-                            height = h;
-                    }
-
-                    if (visibilities.session) {
-                        const h = panel.session.y - BorderConfig.rounding * 2;
-                        if (height > h)
-                            height = h;
-                    }
-                }
-
-                return Math.max(61, Math.min((screen?.height ?? 0) - root.padding * 2 - BorderConfig.thickness * 2, height));
-            }
 
             orientation: Qt.Vertical
             spacing: Appearance.spacing.smaller
@@ -92,11 +93,11 @@ Item {
                     property: "y"
                 }
             }
-
-            Behavior on implicitHeight {
-                Anim {}
-            }
         }
+    }
+
+    Behavior on implicitHeight {
+        Anim {}
     }
 
     component Anim: NumberAnimation {

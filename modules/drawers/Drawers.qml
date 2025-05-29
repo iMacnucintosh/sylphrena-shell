@@ -105,7 +105,6 @@ Variants {
                 id: visibilities
 
                 property bool osd
-                property bool notifications: Notifs.popups.length > 0
                 property bool session
                 property bool launcher
                 property bool dashboard
