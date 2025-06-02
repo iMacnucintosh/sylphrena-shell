@@ -11,6 +11,7 @@ Singleton {
 
     component Sizes: QtObject {
         property int innerHeight: 30
+        property int windowPreviewSize: 400
     }
 
     component Workspaces: QtObject {

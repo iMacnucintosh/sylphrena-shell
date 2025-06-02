@@ -1,7 +1,6 @@
 import "root:/services"
 import "root:/config"
 import Quickshell
-import Quickshell.Widgets
 import QtQuick
 
 Item {
@@ -13,7 +12,6 @@ Item {
 
     implicitWidth: Popouts.hasCurrent ? content.children.find(c => c.shouldBeActive).implicitWidth + Appearance.padding.large * 2 : 0
     implicitHeight: Popouts.hasCurrent ? content.children.find(c => c.shouldBeActive).implicitHeight + Appearance.padding.large * 2 : 0
-    clip: true
 
     Item {
         id: content
@@ -46,6 +44,9 @@ Item {
 
         required property string name
         property bool shouldBeActive: Popouts.currentName === name
+
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
 
         active: shouldBeActive
         asynchronous: true
