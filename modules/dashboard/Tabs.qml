@@ -114,16 +114,16 @@ Item {
                 rippleAnim.x = x;
                 rippleAnim.y = y - stateY;
 
-                const dist = (ox,oy) => ox*ox + oy*oy
-                const stateEndY = stateY + stateWrapper.height
-                rippleAnim.radius = Math.sqrt(Math.max(dist(0, stateY), dist(0, stateEndY), dist(width, stateY), dist(width, stateEndY)))
+                const dist = (ox,oy) => ox * ox + oy * oy;
+                const stateEndY = stateY + stateWrapper.height;
+                rippleAnim.radius = Math.sqrt(Math.max(dist(0, stateY), dist(0, stateEndY), dist(width, stateY), dist(width, stateEndY)));
 
                 rippleAnim.restart();
             }
             onWheel: event => {
-                if (event.angleDelta.y > 0)
+                if (event.angleDelta.y < 0)
                     tab.TabBar.tabBar.incrementCurrentIndex();
-                else if (event.angleDelta.y < 0)
+                else if (event.angleDelta.y > 0)
                     tab.TabBar.tabBar.decrementCurrentIndex();
             }
 
