@@ -135,7 +135,11 @@ Singleton {
         command: ["sh", "-c", "cat /sys/class/drm/card*/device/gpu_busy_percent"]
         stdout: SplitParser {
             splitMarker: ""
-            onRead: data => root.gpuPerc = data.trim().split("\n").reduce((acc, d) => acc + parseInt(d, 10), 0)
+            onRead: data => {
+                const percs = data.trim().split("\n");
+                const sum = percs.reduce((acc, d) => acc + parseInt(d, 10), 0);
+                root.gpuPerc = sum / percs.length / 100;
+            }
         }
     }
 
@@ -145,20 +149,21 @@ Singleton {
         running: true
         command: ["sh", "-c", "sensors | jq -nRc '[inputs]'"]
         stdout: SplitParser {
-            readonly property var tempTest: new RegExp("^temp[0-9]+:")
-
             onRead: data => {
                 let eligible = false;
                 let sum = 0;
                 let count = 0;
                 for (const line of JSON.parse(data)) {
-                    if (line === "Adapter: PCI Adapter")
+                    if (line === "Adapter: PCI adapter")
                         eligible = true;
                     else if (line === "")
                         eligible = false;
-                    else if (eligible && (line.startsWith("GPU core:") || tempTest.test(line))) {
-                        sum += parseFloat(line).split(" ")[1];
-                        count++;
+                    else if (eligible) {
+                        const match = line.match(/^\w+:\s+\+([0-9]+\.[0-9]+)°C/);
+                        if (match) {
+                            sum += parseFloat(match[1]);
+                            count++;
+                        }
                     }
                 }
                 root.gpuTemp = count > 0 ? sum / count : 0;
