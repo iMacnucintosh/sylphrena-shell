@@ -4,7 +4,6 @@ import "root:/config"
 import "components"
 import "components/workspaces"
 import Quickshell
-import Quickshell.Widgets
 import QtQuick
 
 StyledRect {
@@ -13,10 +12,10 @@ StyledRect {
     required property ShellScreen screen
 
     function checkPopout(y: real): var {
-        const aw = activeWindow.child
-        const awy = activeWindow.y + aw.y
+        const aw = activeWindow.child;
+        const awy = activeWindow.y + aw.y;
         if (y >= awy && y <= awy + aw.implicitHeight) {
-            Popouts.currentName = "activewindow"
+            Popouts.currentName = "activewindow";
             Popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
             Popouts.hasCurrent = true;
         } else {
@@ -83,20 +82,6 @@ StyledRect {
             }
         }
 
-        MouseArea {
-            anchors.top: workspaces.bottom
-            anchors.bottom: activeWindow.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            onWheel: event => {
-                if (event.angleDelta.y > 0)
-                    Audio.setVolume(Audio.volume + 0.1);
-                else if (event.angleDelta.y < 0)
-                    Audio.setVolume(Audio.volume - 0.1);
-            }
-        }
-
         ActiveWindow {
             id: activeWindow
 
@@ -104,21 +89,8 @@ StyledRect {
             anchors.top: workspaces.bottom
             anchors.bottom: tray.top
             anchors.margins: Appearance.spacing.large
-        }
 
-        MouseArea {
-            anchors.top: workspaces.bottom
-            anchors.bottom: activeWindow.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            onWheel: event => {
-                const monitor = Brightness.getMonitorForScreen(root.screen);
-                if (event.angleDelta.y > 0)
-                    monitor.setBrightness(monitor.brightness + 0.1);
-                else if (event.angleDelta.y < 0)
-                    monitor.setBrightness(monitor.brightness - 0.1);
-            }
+            monitor: Brightness.getMonitorForScreen(root.screen)
         }
 
         Tray {
