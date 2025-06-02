@@ -37,6 +37,7 @@ MouseArea {
             visibilities.osd = false;
             osdHovered = false;
             visibilities.dashboard = false;
+            Popouts.hasCurrent = false;
         }
     }
 
@@ -58,6 +59,18 @@ MouseArea {
         // Show dashboard on hover
         const showDashboard = root.inTopPanel(panels.dashboard, x, y);
         visibilities.dashboard = showDashboard;
+
+        // Show popouts on hover
+        const popout = panels.popouts;
+        if (x < BorderConfig.thickness + popout.width) {
+            if (x < BorderConfig.thickness)
+                // Handle like part of bar
+                Visibilities.bars[screen].checkPopout(y);
+            else
+                // Keep on hover
+                Popouts.hasCurrent = withinPanelHeight(popout, x, y);
+        } else
+            Popouts.hasCurrent = false;
     }
 
     Osd.Interactions {

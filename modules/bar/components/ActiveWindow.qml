@@ -10,6 +10,7 @@ Item {
     id: root
 
     property color colour: Colours.palette.m3primary
+    readonly property Item child: child
 
     implicitWidth: child.implicitWidth
     implicitHeight: child.implicitHeight

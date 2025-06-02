@@ -12,6 +12,18 @@ StyledRect {
 
     required property ShellScreen screen
 
+    function checkPopout(y: real): var {
+        const aw = activeWindow.child
+        const awy = activeWindow.y + aw.y
+        if (y >= awy && y <= awy + aw.implicitHeight) {
+            Popouts.currentName = "activewindow"
+            Popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
+            Popouts.hasCurrent = true;
+        } else {
+            Popouts.hasCurrent = false;
+        }
+    }
+
     anchors.top: parent.top
     anchors.bottom: parent.bottom
 
@@ -20,6 +32,19 @@ StyledRect {
     color: BorderConfig.colour
 
     Component.onCompleted: Visibilities.bars[screen] = this
+
+    MouseArea {
+        anchors.fill: parent
+
+        hoverEnabled: true
+
+        onPositionChanged: event => root.checkPopout(event.y)
+
+        onContainsMouseChanged: {
+            if (!containsMouse)
+                Popouts.hasCurrent = false;
+        }
+    }
 
     Item {
         id: child

@@ -5,6 +5,7 @@ import "root:/modules/notifications" as Notifications
 import "root:/modules/session" as Session
 import "root:/modules/launcher" as Launcher
 import "root:/modules/dashboard" as Dashboard
+import "root:/modules/bar/popouts" as BarPopouts
 import QtQuick.Shapes
 
 Shape {
@@ -50,5 +51,12 @@ Shape {
 
         startX: (root.width - wrapper.width) / 2
         startY: 0
+    }
+
+    BarPopouts.Background {
+        wrapper: panels.popouts
+
+        startX: 0
+        startY: wrapper.y
     }
 }
