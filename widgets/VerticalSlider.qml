@@ -63,45 +63,43 @@ Slider {
             MaterialIcon {
                 id: icon
 
+                property bool moving: handle.moving
+
+                function update(): void {
+                    animate = !moving;
+                    text = moving ? Qt.binding(() => Math.round(root.value * 100)) : Qt.binding(() => root.icon);
+                    font.pointSize = moving ? Appearance.font.size.small : Appearance.font.size.normal;
+                    font.family = moving ? Appearance.font.family.sans : Appearance.font.family.material;
+                }
+
                 animate: true
                 text: root.icon
                 color: Colours.palette.m3inverseOnSurface
                 anchors.centerIn: parent
 
-                states: State {
-                    name: "value"
-                    when: handle.moving
-
-                    PropertyChanges {
-                        icon.animate: false
-                        icon.text: Math.round(root.value * 100)
-                        icon.font.pointSize: Appearance.font.size.small
-                        icon.font.family: Appearance.font.family.sans
-                    }
-                }
-
-                transitions: Transition {
-                    NumberAnimation {
-                        target: icon
-                        property: "scale"
-                        from: 1
-                        to: 0
-                        duration: Appearance.anim.durations.normal
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.anim.curves.standardAccel
-                    }
-                    PropertyAction {
-                        target: icon
-                        properties: "animate,text,font.pointSize,font.family"
-                    }
-                    NumberAnimation {
-                        target: icon
-                        property: "scale"
-                        from: 0
-                        to: 1
-                        duration: Appearance.anim.durations.normal
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.anim.curves.standardDecel
+                Behavior on moving {
+                    SequentialAnimation {
+                        NumberAnimation {
+                            target: icon
+                            property: "scale"
+                            from: 1
+                            to: 0
+                            duration: Appearance.anim.durations.normal / 2
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: Appearance.anim.curves.standardAccel
+                        }
+                        ScriptAction {
+                            script: icon.update()
+                        }
+                        NumberAnimation {
+                            target: icon
+                            property: "scale"
+                            from: 0
+                            to: 1
+                            duration: Appearance.anim.durations.normal / 2
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: Appearance.anim.curves.standardDecel
+                        }
                     }
                 }
             }
