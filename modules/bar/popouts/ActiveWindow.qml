@@ -2,6 +2,7 @@ import "root:/widgets"
 import "root:/services"
 import "root:/utils"
 import "root:/config"
+import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
 import QtQuick
@@ -9,7 +10,7 @@ import QtQuick
 Item {
     id: root
 
-    implicitWidth: child.implicitWidth
+    implicitWidth: Hyprland.activeClient ? child.implicitWidth : 0
     implicitHeight: child.implicitHeight
 
     Column {
@@ -18,18 +19,37 @@ Item {
         anchors.centerIn: parent
         spacing: Appearance.spacing.normal
 
-        StyledText {
-            text: Hyprland.activeClient?.title ?? ""
+        Row {
+            id: detailsRow
 
-            elide: Text.ElideRight
-            width: preview.implicitWidth
-        }
+            spacing: Appearance.spacing.normal
 
-        StyledText {
-            text: Hyprland.activeClient?.wmClass ?? ""
+            IconImage {
+                id: icon
 
-            elide: Text.ElideRight
-            width: preview.implicitWidth
+                implicitSize: details.implicitHeight
+                source: Quickshell.iconPath(DesktopEntries.applications.values.find(a => a.id === Hyprland.activeClient?.wmClass.toLowerCase())?.icon, "image-missing")
+            }
+
+            Column {
+                id: details
+
+                StyledText {
+                    text: Hyprland.activeClient?.title ?? ""
+                    font.pointSize: Appearance.font.size.normal
+
+                    elide: Text.ElideRight
+                    width: preview.implicitWidth - icon.implicitWidth - detailsRow.spacing
+                }
+
+                StyledText {
+                    text: Hyprland.activeClient?.wmClass ?? ""
+                    color: Colours.palette.m3onSurfaceVariant
+
+                    elide: Text.ElideRight
+                    width: preview.implicitWidth - icon.implicitWidth - detailsRow.spacing
+                }
+            }
         }
 
         ClippingWrapperRectangle {
@@ -46,5 +66,11 @@ Item {
                 constraintSize.height: BarConfig.sizes.windowPreviewSize
             }
         }
+    }
+
+    component Anim: NumberAnimation {
+        duration: Appearance.anim.durations.normal
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Appearance.anim.curves.emphasized
     }
 }
