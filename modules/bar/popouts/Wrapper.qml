@@ -8,6 +8,8 @@ Item {
 
     required property ShellScreen screen
 
+    visible: width > 0 && height > 0
+
     implicitWidth: content.implicitWidth
     implicitHeight: content.implicitHeight + BorderConfig.rounding * 2
 
