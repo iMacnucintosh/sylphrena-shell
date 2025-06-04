@@ -20,7 +20,7 @@ Item {
         if (count === 0)
             return 0;
 
-        let height = (count - 1) * list.spacing;
+        let height = (count - 1) * Appearance.spacing.smaller;
         for (let i = 0; i < count; i++)
             height += list.itemAtIndex(i)?.nonAnimHeight ?? 0;
 
@@ -61,24 +61,69 @@ Item {
             anchors.fill: parent
 
             orientation: Qt.Vertical
-            spacing: Appearance.spacing.smaller
+            spacing: 0
             cacheBuffer: QsWindow.window?.screen.height ?? 0
 
-            delegate: ClippingRectangle {
+            delegate: Item {
                 id: wrapper
 
                 required property Notifs.Notif modelData
                 readonly property alias nonAnimHeight: notif.nonAnimHeight
 
-                color: "transparent"
-                radius: notif.radius
-                implicitWidth: notif.width
-                implicitHeight: notif.height
+                implicitWidth: notif.implicitWidth
+                implicitHeight: notif.implicitHeight + Appearance.spacing.smaller
 
-                Notification {
-                    id: notif
+                ListView.onRemove: removeAnim.start()
 
-                    modelData: wrapper.modelData
+                SequentialAnimation {
+                    id: removeAnim
+
+                    PropertyAction {
+                        target: wrapper
+                        property: "ListView.delayRemove"
+                        value: true
+                    }
+                    PropertyAction {
+                        target: wrapper
+                        property: "enabled"
+                        value: false
+                    }
+                    PropertyAction {
+                        target: wrapper
+                        property: "implicitHeight"
+                        value: 0
+                    }
+                    PropertyAction {
+                        target: wrapper
+                        property: "z"
+                        value: 1
+                    }
+                    Anim {
+                        target: notif
+                        property: "x"
+                        to: (notif.x >= 0 ? NotifsConfig.sizes.width : -NotifsConfig.sizes.width) * 2
+                        duration: Appearance.anim.durations.normal
+                        easing.bezierCurve: Appearance.anim.curves.emphasized
+                    }
+                    PropertyAction {
+                        target: wrapper
+                        property: "ListView.delayRemove"
+                        value: false
+                    }
+                }
+
+                ClippingRectangle {
+                    anchors.top: parent.top
+                    color: "transparent"
+                    radius: notif.radius
+                    implicitWidth: notif.implicitWidth
+                    implicitHeight: notif.implicitHeight
+
+                    Notification {
+                        id: notif
+
+                        modelData: wrapper.modelData
+                    }
                 }
             }
 
