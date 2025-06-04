@@ -28,7 +28,7 @@ Item {
                 id: icon
 
                 implicitSize: details.implicitHeight
-                source: Quickshell.iconPath(DesktopEntries.applications.values.find(a => a.id === Hyprland.activeClient?.wmClass.toLowerCase())?.icon, "image-missing")
+                source: Icons.getAppIcon(Hyprland.activeClient?.wmClass ?? "")
             }
 
             Column {

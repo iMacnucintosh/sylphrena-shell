@@ -102,9 +102,7 @@ Singleton {
             "395": "snowing"
         })
 
-    readonly property var desktopEntrySubs: ({
-            Firefox: "firefox"
-        })
+    readonly property var desktopEntrySubs: ({})
 
     readonly property var categoryIcons: ({
             WebBrowser: "web",
@@ -149,9 +147,21 @@ Singleton {
     property string osIcon: ""
     property string osName
 
+    function getDesktopEntry(name: string): DesktopEntry {
+        name = name.toLowerCase().replace(/ /g, "-");
+
+        if (desktopEntrySubs.hasOwnProperty(name))
+            name = desktopEntrySubs[name];
+
+        return DesktopEntries.applications.values.find(a => a.id.toLowerCase() === name) ?? null;
+    }
+
+    function getAppIcon(name: string): string {
+        return Quickshell.iconPath(getDesktopEntry(name)?.icon, "image-missing");
+    }
+
     function getAppCategoryIcon(name: string, fallback: string): string {
-        const lName = name.toLowerCase();
-        const categories = DesktopEntries.applications.values.find(app => app.id.toLowerCase() === lName)?.categories;
+        const categories = getDesktopEntry(name)?.categories;
 
         if (categories)
             for (const [key, value] of Object.entries(categoryIcons))
