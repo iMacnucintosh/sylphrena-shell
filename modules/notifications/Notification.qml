@@ -142,7 +142,7 @@ StyledRect {
                     asynchronous: true
 
                     anchors.centerIn: parent
-                    visible: !root.modelData?.appIcon.includes("symbolic")
+                    visible: !root.modelData?.appIcon.endsWith("symbolic")
 
                     width: Math.round(parent.width * 0.6)
                     height: Math.round(parent.width * 0.6)
@@ -155,7 +155,7 @@ StyledRect {
                 }
 
                 Loader {
-                    active: root.modelData?.appIcon.includes("symbolic") ?? false
+                    active: root.modelData?.appIcon.endsWith("symbolic") ?? false
                     asynchronous: true
                     anchors.fill: icon
 

@@ -1,6 +1,7 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
 
+import "root:/widgets"
 import "root:/config"
 import Quickshell
 import Quickshell.Services.Notifications
@@ -29,6 +30,15 @@ Singleton {
                 popup: true,
                 notification: notif
             }));
+        }
+    }
+
+    CustomShortcut {
+        name: "clearNotifs"
+        description: "Clear all notifications"
+        onPressed: {
+            for (const notif of root.list)
+                notif.popup = false;
         }
     }
 
