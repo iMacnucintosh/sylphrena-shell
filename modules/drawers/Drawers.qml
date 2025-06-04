@@ -25,8 +25,8 @@ Variants {
 
             screen: scope.modelData
             name: "drawers"
-            exclusionMode: ExclusionMode.Ignore
-            keyboardFocus: visibilities.launcher || visibilities.session ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+            WlrLayershell.exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.keyboardFocus: visibilities.launcher || visibilities.session ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
             mask: Region {
                 x: BorderConfig.thickness

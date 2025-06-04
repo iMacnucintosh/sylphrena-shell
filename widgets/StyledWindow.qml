@@ -1,10 +1,11 @@
 import "root:/utils"
 import "root:/config"
+import Quickshell
 import Quickshell.Wayland
 
-WlrLayershell {
+PanelWindow {
     required property string name
 
-    namespace: `caelestia-${name}`
+    WlrLayershell.namespace: `caelestia-${name}`
     color: "transparent"
 }

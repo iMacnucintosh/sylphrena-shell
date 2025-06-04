@@ -12,8 +12,8 @@ Variants {
 
         screen: modelData
         name: "background"
-        exclusionMode: ExclusionMode.Ignore
-        layer: WlrLayer.Background
+        WlrLayershell.exclusionMode: ExclusionMode.Ignore
+        WlrLayershell.layer: WlrLayer.Background
         color: "black"
 
         anchors.top: true
