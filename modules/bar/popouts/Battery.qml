@@ -12,7 +12,7 @@ Column {
     spacing: Appearance.spacing.normal
 
     StyledText {
-        text: `Remaining: ${Math.round(UPower.displayDevice.percentage * 100)}%`
+        text: qsTr("Remaining: %1%").arg(Math.round(UPower.displayDevice.percentage * 100))
     }
 
     StyledText {
@@ -33,7 +33,7 @@ Column {
             return comps.join(", ") || fallback;
         }
 
-        text: `Time ${UPower.onBattery ? "remaining" : "until charged"}: ${UPower.onBattery ? formatSeconds(UPower.displayDevice.timeToEmpty, "Calculating...") : formatSeconds(UPower.displayDevice.timeToFull, "Fully charged!")}`
+        text: qsTr("Time %1: %2").arg(UPower.onBattery ? "remaining" : "until charged").arg(UPower.onBattery ? formatSeconds(UPower.displayDevice.timeToEmpty, "Calculating...") : formatSeconds(UPower.displayDevice.timeToFull, "Fully charged!"))
     }
 
     StyledRect {
