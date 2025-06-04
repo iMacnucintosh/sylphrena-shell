@@ -14,6 +14,7 @@ Text {
     property int animateDuration: Appearance.anim.durations.normal
 
     renderType: Text.NativeRendering
+    textFormat: Text.PlainText
     color: Colours.palette.m3onSurface
     font.family: Appearance.font.family.sans
     font.pointSize: Appearance.font.size.smaller
