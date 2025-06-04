@@ -80,6 +80,12 @@ Item {
 
         anchors.left: parent.left
         anchors.verticalCenter: parent.top
-        anchors.verticalCenterOffset: Popouts.currentCenter - BorderConfig.thickness
+        anchors.verticalCenterOffset: {
+            const off = Popouts.currentCenter - BorderConfig.thickness;
+            const diff = root.height - Math.floor(off + implicitHeight / 2 - BorderConfig.rounding);
+            if (diff < 0)
+                return off + diff;
+            return off;
+        }
     }
 }

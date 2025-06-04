@@ -7,6 +7,7 @@ ShapePath {
     id: root
 
     required property Wrapper wrapper
+    required property bool invertBottomRounding
     readonly property real rounding: BorderConfig.rounding
     readonly property bool flatten: wrapper.width < rounding * 2
     readonly property real roundingX: flatten ? wrapper.width / 2 : rounding
@@ -36,13 +37,14 @@ ShapePath {
         relativeY: root.wrapper.height - root.rounding * 4
     }
     PathArc {
-        relativeX: -root.roundingX
+        relativeX: root.invertBottomRounding ? root.roundingX : -root.roundingX
         relativeY: root.rounding
         radiusX: Math.min(root.rounding, root.wrapper.width)
         radiusY: root.rounding
+        direction: root.invertBottomRounding ? PathArc.Counterclockwise : PathArc.Clockwise
     }
     PathLine {
-        relativeX: -(root.wrapper.width - root.roundingX * 2)
+        relativeX: -(root.wrapper.width - root.roundingX * (root.invertBottomRounding ? 0 : 2))
         relativeY: 0
     }
     PathArc {
