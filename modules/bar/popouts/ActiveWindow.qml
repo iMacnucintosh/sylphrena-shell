@@ -10,7 +10,7 @@ import QtQuick
 Item {
     id: root
 
-    implicitWidth: Hyprland.activeClient ? child.implicitWidth : 0
+    implicitWidth: Hyprland.activeClient ? child.implicitWidth : -Appearance.padding.large * 2
     implicitHeight: child.implicitHeight
 
     Column {
