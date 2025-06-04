@@ -23,7 +23,12 @@ Item {
 
         Popout {
             name: "activewindow"
-            sourceComponent: ActiveWindow {}
+            source: "ActiveWindow.qml"
+        }
+
+        Popout {
+            name: "battery"
+            source: "Battery.qml"
         }
     }
 
@@ -51,25 +56,25 @@ Item {
         active: shouldBeActive
         asynchronous: true
 
-        Behavior on active {
-            SequentialAnimation {
-                Anim {
-                    target: popout
-                    property: "opacity"
-                    from: popout.shouldBeActive ? 1 : 0
-                    to: popout.shouldBeActive ? 0 : 1
-                    duration: popout.shouldBeActive ? 0 : Appearance.anim.durations.normal
-                }
-                PropertyAction {}
-                Anim {
-                    target: popout
-                    property: "opacity"
-                    from: popout.shouldBeActive ? 0 : 1
-                    to: popout.shouldBeActive ? 1 : 0
-                    duration: popout.shouldBeActive ? Appearance.anim.durations.normal : 0
-                }
-            }
-        }
+        // Behavior on active {
+        //     SequentialAnimation {
+        //         Anim {
+        //             target: popout
+        //             property: "opacity"
+        //             from: popout.shouldBeActive ? 1 : 0
+        //             to: popout.shouldBeActive ? 0 : 1
+        //             duration: popout.shouldBeActive ? 0 : Appearance.anim.durations.normal
+        //         }
+        //         PropertyAction {}
+        //         Anim {
+        //             target: popout
+        //             property: "opacity"
+        //             from: popout.shouldBeActive ? 0 : 1
+        //             to: popout.shouldBeActive ? 1 : 0
+        //             duration: popout.shouldBeActive ? Appearance.anim.durations.normal : 0
+        //         }
+        //     }
+        // }
     }
 
     component Anim: NumberAnimation {

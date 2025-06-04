@@ -10,6 +10,7 @@ Item {
     id: root
 
     property color colour: Colours.palette.m3secondary
+    readonly property Item battery: battery
 
     clip: true
     implicitWidth: Math.max(network.implicitWidth, bluetooth.implicitWidth, devices.implicitWidth, battery.implicitWidth)

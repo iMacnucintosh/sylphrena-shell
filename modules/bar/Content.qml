@@ -14,9 +14,15 @@ StyledRect {
     function checkPopout(y: real): var {
         const aw = activeWindow.child;
         const awy = activeWindow.y + aw.y;
+        const b = statusIconsInner.battery;
+        const by = statusIcons.y + statusIconsInner.y + b.y;
         if (y >= awy && y <= awy + aw.implicitHeight) {
             Popouts.currentName = "activewindow";
             Popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
+            Popouts.hasCurrent = true;
+        } else if (y >= by && y <= by + b.implicitHeight) {
+            Popouts.currentName = "battery";
+            Popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + b.y + b.implicitHeight / 2);
             Popouts.hasCurrent = true;
         } else {
             Popouts.hasCurrent = false;
