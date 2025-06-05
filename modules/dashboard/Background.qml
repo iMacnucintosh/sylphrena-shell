@@ -35,7 +35,7 @@ ShapePath {
     }
 
     PathLine {
-        relativeX: root.wrapper.width - root.rounding * 4
+        relativeX: root.wrapper.width - root.rounding * 2
         relativeY: 0
     }
 
@@ -65,7 +65,5 @@ ShapePath {
             easing.type: Easing.BezierSpline
             easing.bezierCurve: Appearance.anim.curves.standard
         }
-
     }
-
 }

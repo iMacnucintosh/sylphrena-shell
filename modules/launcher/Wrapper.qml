@@ -9,7 +9,7 @@ Item {
 
     visible: height > 0
     implicitHeight: 0
-    implicitWidth: content.implicitWidth + BorderConfig.rounding * 2
+    implicitWidth: content.implicitWidth
 
     states: State {
         name: "visible"

@@ -22,7 +22,7 @@ Shape {
         wrapper: panels.osd
 
         startX: root.width - panels.session.width
-        startY: (root.height - wrapper.height) / 2
+        startY: (root.height - wrapper.height) / 2 - rounding
     }
 
     Notifications.Background {
@@ -36,20 +36,20 @@ Shape {
         wrapper: panels.session
 
         startX: root.width
-        startY: (root.height - wrapper.height) / 2
+        startY: (root.height - wrapper.height) / 2 - rounding
     }
 
     Launcher.Background {
         wrapper: panels.launcher
 
-        startX: (root.width - wrapper.width) / 2
+        startX: (root.width - wrapper.width) / 2 - rounding
         startY: root.height
     }
 
     Dashboard.Background {
         wrapper: panels.dashboard
 
-        startX: (root.width - wrapper.width) / 2
+        startX: (root.width - wrapper.width) / 2 - rounding
         startY: 0
     }
 
@@ -58,6 +58,6 @@ Shape {
         invertBottomRounding: wrapper.y + wrapper.height - BorderConfig.rounding >= root.height
 
         startX: 0
-        startY: wrapper.y
+        startY: wrapper.y - rounding
     }
 }

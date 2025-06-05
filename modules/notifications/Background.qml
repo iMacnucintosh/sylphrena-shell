@@ -17,7 +17,7 @@ ShapePath {
     fillColor: BorderConfig.colour
 
     PathLine {
-        relativeX: -root.wrapper.width
+        relativeX: -(root.wrapper.width + root.rounding)
         relativeY: 0
     }
     PathArc {
@@ -38,7 +38,7 @@ ShapePath {
         direction: root.fullHeightRounding < 0 ? PathArc.Clockwise : PathArc.Counterclockwise
     }
     PathLine {
-        relativeX: root.wrapper.height > 0 ? root.wrapper.width - root.rounding * 2 - root.fullHeightRounding : root.wrapper.width
+        relativeX: root.wrapper.height > 0 ? root.wrapper.width - root.rounding - root.fullHeightRounding : root.wrapper.width
         relativeY: 0
     }
     PathArc {

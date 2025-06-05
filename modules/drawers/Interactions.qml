@@ -16,7 +16,7 @@ MouseArea {
 
     function withinPanelHeight(panel: Item, x: real, y: real): bool {
         const panelY = BorderConfig.thickness + panel.y;
-        return y >= panelY && y <= panelY + panel.height;
+        return y >= panelY - BorderConfig.rounding && y <= panelY + panel.height + BorderConfig.rounding;
     }
 
     function inRightPanel(panel: Item, x: real, y: real): bool {
@@ -25,7 +25,7 @@ MouseArea {
 
     function inTopPanel(panel: Item, x: real, y: real): bool {
         const panelX = BorderConfig.thickness + panel.x;
-        return y < BorderConfig.thickness + panel.y + panel.height && x >= panelX && x <= panelX + panel.width;
+        return y < BorderConfig.thickness + panel.y + panel.height && x >= panelX - BorderConfig.rounding && x <= panelX + panel.width + BorderConfig.rounding;
     }
 
     anchors.fill: parent
@@ -57,8 +57,7 @@ MouseArea {
         }
 
         // Show dashboard on hover
-        const showDashboard = root.inTopPanel(panels.dashboard, x, y);
-        visibilities.dashboard = showDashboard;
+        visibilities.dashboard = inTopPanel(panels.dashboard, x, y);
 
         // Show popouts on hover
         const popout = panels.popouts;

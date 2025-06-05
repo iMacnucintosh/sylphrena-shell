@@ -34,7 +34,7 @@ ShapePath {
     }
     PathLine {
         relativeX: 0
-        relativeY: root.wrapper.height - root.rounding * 4
+        relativeY: root.wrapper.height - root.rounding * 2
     }
     PathArc {
         relativeX: root.invertBottomRounding ? root.roundingX : -root.roundingX
