@@ -18,8 +18,8 @@ Row {
         label1: `${Math.ceil(SystemUsage.gpuTemp)}°C`
         label2: `${Math.round(SystemUsage.gpuPerc * 100)}%`
 
-        sublabel1: "GPU temp"
-        sublabel2: "Usage"
+        sublabel1: qsTr("GPU temp")
+        sublabel2: qsTr("Usage")
     }
 
     Resource {
@@ -31,8 +31,8 @@ Row {
         label1: `${Math.ceil(SystemUsage.cpuTemp)}°C`
         label2: `${Math.round(SystemUsage.cpuPerc * 100)}%`
 
-        sublabel1: "CPU temp"
-        sublabel2: "Usage"
+        sublabel1: qsTr("CPU temp")
+        sublabel2: qsTr("Usage")
     }
 
     Resource {
@@ -48,8 +48,8 @@ Row {
             return `${Math.floor(fmt.value)}${fmt.unit}`;
         }
 
-        sublabel1: "Memory"
-        sublabel2: "Storage"
+        sublabel1: qsTr("Memory")
+        sublabel2: qsTr("Storage")
     }
 
     component Resource: Item {

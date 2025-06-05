@@ -10,6 +10,8 @@ Item {
     id: root
 
     property color colour: Colours.palette.m3secondary
+
+    readonly property Item network: network
     readonly property Item battery: battery
 
     clip: true

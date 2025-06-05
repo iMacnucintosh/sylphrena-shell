@@ -27,6 +27,11 @@ Item {
         }
 
         Popout {
+            name: "network"
+            source: "Network.qml"
+        }
+
+        Popout {
             name: "battery"
             source: "Battery.qml"
         }
