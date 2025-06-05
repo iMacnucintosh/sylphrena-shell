@@ -10,8 +10,8 @@ Item {
 
     anchors.centerIn: parent
 
-    implicitWidth: Popouts.hasCurrent ? content.children.find(c => c.shouldBeActive).implicitWidth + Appearance.padding.large * 2 : 0
-    implicitHeight: Popouts.hasCurrent ? content.children.find(c => c.shouldBeActive).implicitHeight + Appearance.padding.large * 2 : 0
+    implicitWidth: Popouts.hasCurrent ? (content.children.find(c => c.shouldBeActive)?.implicitWidth ?? 0) + Appearance.padding.large * 2 : 0
+    implicitHeight: Popouts.hasCurrent ? (content.children.find(c => c.shouldBeActive)?.implicitHeight ?? 0) + Appearance.padding.large * 2 : 0
 
     Item {
         id: content
@@ -29,6 +29,11 @@ Item {
         Popout {
             name: "network"
             source: "Network.qml"
+        }
+
+        Popout {
+            name: "bluetooth"
+            source: "Bluetooth.qml"
         }
 
         Popout {

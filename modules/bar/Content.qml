@@ -12,21 +12,28 @@ StyledRect {
     required property ShellScreen screen
 
     function checkPopout(y: real): var {
+        const spacing = Appearance.spacing.small;
         const aw = activeWindow.child;
         const awy = activeWindow.y + aw.y;
         const n = statusIconsInner.network;
-        const ny = statusIcons.y + statusIconsInner.y + n.y;
+        const ny = statusIcons.y + statusIconsInner.y + n.y - spacing / 2;
+        const bls = statusIcons.y + statusIconsInner.y + statusIconsInner.bs - spacing / 2;
+        const ble = statusIcons.y + statusIconsInner.y + statusIconsInner.be + spacing / 2;
         const b = statusIconsInner.battery;
-        const by = statusIcons.y + statusIconsInner.y + b.y;
+        const by = statusIcons.y + statusIconsInner.y + b.y - spacing / 2;
         if (y >= awy && y <= awy + aw.implicitHeight) {
             Popouts.currentName = "activewindow";
             Popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
             Popouts.hasCurrent = true;
-        } else if (y >= ny && y <= ny + n.implicitHeight) {
+        } else if (y >= ny && y <= ny + n.implicitHeight + spacing) {
             Popouts.currentName = "network";
             Popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + n.y + n.implicitHeight / 2);
             Popouts.hasCurrent = true;
-        } else if (y >= by && y <= by + b.implicitHeight) {
+        } else if (y >= bls && y <= ble) {
+            Popouts.currentName = "bluetooth";
+            Popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + statusIconsInner.bs + (statusIconsInner.be - statusIconsInner.bs) / 2);
+            Popouts.hasCurrent = true;
+        } else if (y >= by && y <= by + b.implicitHeight + spacing) {
             Popouts.currentName = "battery";
             Popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + b.y + b.implicitHeight / 2);
             Popouts.hasCurrent = true;

@@ -12,6 +12,8 @@ Item {
     property color colour: Colours.palette.m3secondary
 
     readonly property Item network: network
+    readonly property real bs: bluetooth.y
+    readonly property real be: repeater.count > 0 ? devices.y + devices.implicitHeight : bluetooth.y + bluetooth.implicitHeight
     readonly property Item battery: battery
 
     clip: true
