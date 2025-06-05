@@ -2,7 +2,6 @@ import "root:/widgets"
 import "root:/services"
 import "root:/utils"
 import "root:/config"
-import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
 import QtQuick
@@ -28,7 +27,7 @@ Item {
                 id: icon
 
                 implicitSize: details.implicitHeight
-                source: Icons.getAppIcon(Hyprland.activeClient?.wmClass ?? "")
+                source: Icons.getAppIcon(Hyprland.activeClient?.wmClass ?? "", "image-missing")
             }
 
             Column {

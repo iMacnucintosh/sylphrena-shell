@@ -2,11 +2,14 @@ pragma ComponentBehavior: Bound
 
 import "root:/widgets"
 import "root:/services"
+import "root:/utils"
 import "root:/config"
 import Quickshell.Io
 import Quickshell.Widgets
+import Quickshell.Services.Mpris
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Effects
 
 Item {
     id: root
@@ -323,6 +326,182 @@ Item {
                 font.pointSize: Appearance.font.size.small
             }
         }
+
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            spacing: Appearance.spacing.small
+
+            Control {
+                icon: "flip_to_front"
+                canUse: Players.active?.canRaise ?? false
+                fontSize: Appearance.font.size.larger
+                padding: Appearance.padding.small
+                fill: false
+                color: Colours.palette.m3surfaceContainer
+
+                function onClicked(): void {
+                    Players.active?.raise();
+                }
+            }
+
+            MouseArea {
+                id: playerSelector
+
+                property bool expanded
+
+                anchors.verticalCenter: parent.verticalCenter
+
+                implicitWidth: slider.implicitWidth / 2
+                implicitHeight: currentPlayer.implicitHeight + Appearance.padding.small * 2
+
+                cursorShape: Qt.PointingHandCursor
+                onClicked: expanded = !expanded
+
+                RectangularShadow {
+                    anchors.fill: playerSelectorBg
+
+                    opacity: playerSelector.expanded ? 1 : 0
+                    radius: playerSelectorBg.radius
+                    color: Colours.palette.m3shadow
+                    blur: 5
+                    spread: 0
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Appearance.anim.durations.normal
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: Appearance.anim.curves.standard
+                        }
+                    }
+                }
+
+                StyledRect {
+                    id: playerSelectorBg
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+
+                    implicitHeight: playersWrapper.implicitHeight + Appearance.padding.small * 2
+
+                    color: Colours.palette.m3secondaryContainer
+                    radius: Appearance.rounding.normal
+
+                    Item {
+                        id: playersWrapper
+
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.margins: Appearance.padding.small
+
+                        clip: true
+                        implicitHeight: playerSelector.expanded && Players.list.length > 1 ? players.implicitHeight : currentPlayer.implicitHeight
+
+                        Column {
+                            id: players
+
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.bottom: parent.bottom
+
+                            spacing: Appearance.spacing.small
+
+                            Repeater {
+                                model: Players.list.filter(p => p !== Players.active)
+
+                                Row {
+                                    id: player
+
+                                    required property MprisPlayer modelData
+
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    spacing: Appearance.spacing.small
+
+                                    IconImage {
+                                        source: Icons.getAppIcon(player.modelData.identity, "image-missing")
+                                        implicitSize: Math.round(identity.implicitHeight * 0.9)
+                                    }
+
+                                    StyledText {
+                                        id: identity
+
+                                        text: player.modelData.identity
+                                        color: Colours.palette.m3onSecondaryContainer
+
+                                        MouseArea {
+
+                                            anchors.fill: parent
+
+                                            cursorShape: Qt.PointingHandCursor
+                                            onClicked: {
+                                                Players.manualActive = player.modelData;
+                                                playerSelector.expanded = false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            Item {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                implicitHeight: 1
+
+                                StyledRect {
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    anchors.margins: -Appearance.padding.normal
+                                    color: Colours.palette.m3secondary
+                                    implicitHeight: 1
+                                }
+                            }
+
+                            Row {
+                                id: currentPlayer
+
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                spacing: Appearance.spacing.small
+
+                                IconImage {
+                                    source: Icons.getAppIcon(Players.active?.identity ?? "", "applications-multimedia")
+                                    implicitSize: Math.round(currentIdentity.implicitHeight * 0.9)
+                                }
+
+                                StyledText {
+                                    id: currentIdentity
+
+                                    animate: true
+                                    text: Players.active?.identity ?? "No media"
+                                    color: Colours.palette.m3onSecondaryContainer
+                                }
+                            }
+                        }
+
+                        Behavior on implicitHeight {
+                            NumberAnimation {
+                                duration: Appearance.anim.durations.normal
+                                easing.type: Easing.BezierSpline
+                                easing.bezierCurve: Appearance.anim.curves.emphasized
+                            }
+                        }
+                    }
+                }
+            }
+
+            Control {
+                icon: "delete"
+                canUse: Players.active?.canQuit ?? false
+                fontSize: Appearance.font.size.larger
+                padding: Appearance.padding.small
+                fill: false
+                color: Colours.palette.m3surfaceContainer
+
+                function onClicked(): void {
+                    Players.active?.quit();
+                }
+            }
+        }
     }
 
     AnimatedImage {
@@ -344,11 +523,14 @@ Item {
 
         required property string icon
         required property bool canUse
+        property int fontSize: Appearance.font.size.extraLarge
+        property int padding
+        property bool fill: true
         property bool primary
         function onClicked(): void {
         }
 
-        implicitWidth: Math.max(icon.implicitHeight, icon.implicitHeight) + Appearance.padding.small
+        implicitWidth: Math.max(icon.implicitWidth, icon.implicitHeight) + padding * 2
         implicitHeight: implicitWidth
 
         radius: Appearance.rounding.full
@@ -371,10 +553,10 @@ Item {
             anchors.verticalCenterOffset: font.pointSize * 0.05
 
             animate: true
-            fill: 1
+            fill: control.fill ? 1 : 0
             text: control.icon
             color: control.canUse ? control.primary ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface : Colours.palette.m3outline
-            font.pointSize: Appearance.font.size.extraLarge
+            font.pointSize: control.fontSize
         }
     }
 }

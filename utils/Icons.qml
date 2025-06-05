@@ -156,8 +156,8 @@ Singleton {
         return DesktopEntries.applications.values.find(a => a.id.toLowerCase() === name) ?? null;
     }
 
-    function getAppIcon(name: string): string {
-        return Quickshell.iconPath(getDesktopEntry(name)?.icon, "image-missing");
+    function getAppIcon(name: string, fallback: string): string {
+        return Quickshell.iconPath(getDesktopEntry(name)?.icon, fallback);
     }
 
     function getAppCategoryIcon(name: string, fallback: string): string {
