@@ -21,8 +21,6 @@ Item {
         return active?.length ? active.position / active.length : 0;
     }
 
-    property list<int> cava: []
-
     function lengthStr(length: int): string {
         if (length < 0)
             return "-1:-1";
@@ -48,15 +46,12 @@ Item {
         onTriggered: Players.active?.positionChanged()
     }
 
-    Process {
-        running: true
-        command: ["sh", "-c", `printf '[general]\nframerate=60\nbars=${DashboardConfig.visualiserBars}\n[output]\nchannels=mono\nmethod=raw\nraw_target=/dev/stdout\ndata_format=ascii\nascii_max_range=100' | cava -p /dev/stdin`]
-        stdout: SplitParser {
-            onRead: data => {
-                root.cava = data.slice(0, -1).split(";").map(v => parseInt(v, 10));
-                if (root.shouldUpdate)
-                    visualiser.requestPaint();
-            }
+    Connections {
+        target: Cava
+
+        function onValuesChanged(): void {
+            if (root.shouldUpdate)
+                visualiser.requestPaint();
         }
     }
 
@@ -78,7 +73,7 @@ Item {
             const ctx = getContext("2d");
             ctx.reset();
 
-            const values = root.cava;
+            const values = Cava.values;
             const len = values.length;
 
             ctx.strokeStyle = colour;
