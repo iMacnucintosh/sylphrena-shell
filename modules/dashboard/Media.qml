@@ -419,6 +419,8 @@ Item {
                                     spacing: Appearance.spacing.small
 
                                     IconImage {
+                                        id: playerIcon
+
                                         source: Icons.getAppIcon(player.modelData.identity, "image-missing")
                                         implicitSize: Math.round(identity.implicitHeight * 0.9)
                                     }
@@ -426,8 +428,18 @@ Item {
                                     StyledText {
                                         id: identity
 
-                                        text: player.modelData.identity
+                                        text: identityMetrics.elidedText
                                         color: Colours.palette.m3onSecondaryContainer
+
+                                        TextMetrics {
+                                            id: identityMetrics
+
+                                            text: player.modelData.identity
+                                            font.family: identity.font.family
+                                            font.pointSize: identity.font.pointSize
+                                            elide: Text.ElideRight
+                                            elideWidth: playerSelector.implicitWidth - playerIcon.implicitWidth - player.spacing - Appearance.padding.smaller * 2
+                                        }
 
                                         MouseArea {
 
@@ -464,7 +476,9 @@ Item {
                                 spacing: Appearance.spacing.small
 
                                 IconImage {
-                                    source: Icons.getAppIcon(Players.active?.identity ?? "", "applications-multimedia")
+                                    id: currentIcon
+
+                                    source: Icons.getAppIcon(Players.active?.identity ?? "", "multimedia-player")
                                     implicitSize: Math.round(currentIdentity.implicitHeight * 0.9)
                                 }
 
@@ -472,8 +486,18 @@ Item {
                                     id: currentIdentity
 
                                     animate: true
-                                    text: Players.active?.identity ?? "No media"
+                                    text: currentIdentityMetrics.elidedText
                                     color: Colours.palette.m3onSecondaryContainer
+
+                                    TextMetrics {
+                                        id: currentIdentityMetrics
+
+                                        text: Players.active?.identity ?? "No players"
+                                        font.family: currentIdentity.font.family
+                                        font.pointSize: currentIdentity.font.pointSize
+                                        elide: Text.ElideRight
+                                        elideWidth: playerSelector.implicitWidth - currentIcon.implicitWidth - currentPlayer.spacing - Appearance.padding.smaller * 2
+                                    }
                                 }
                             }
                         }
