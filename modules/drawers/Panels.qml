@@ -82,7 +82,7 @@ Item {
         anchors.verticalCenter: parent.top
         anchors.verticalCenterOffset: {
             const off = Popouts.currentCenter - BorderConfig.thickness;
-            const diff = root.height - Math.floor(off + implicitHeight / 2 - BorderConfig.rounding);
+            const diff = root.height - Math.floor(off + implicitHeight / 2);
             if (diff < 0)
                 return off + diff;
             return off;
