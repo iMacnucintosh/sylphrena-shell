@@ -14,6 +14,8 @@ import QtQuick.Effects
 Item {
     id: root
 
+    required property bool shouldUpdate
+
     property real playerProgress: {
         const active = Players.active;
         return active?.length ? active.position / active.length : 0;
@@ -39,7 +41,7 @@ Item {
     }
 
     Timer {
-        running: root.visible && (Players.active?.isPlaying ?? false)
+        running: root.shouldUpdate && (Players.active?.isPlaying ?? false)
         interval: DashboardConfig.mediaUpdateInterval
         triggeredOnStart: true
         repeat: true
@@ -52,7 +54,7 @@ Item {
         stdout: SplitParser {
             onRead: data => {
                 root.cava = data.slice(0, -1).split(";").map(v => parseInt(v, 10));
-                if (visualiser.visible)
+                if (root.shouldUpdate)
                     visualiser.requestPaint();
             }
         }
@@ -535,7 +537,7 @@ Item {
         anchors.left: details.right
         anchors.leftMargin: Appearance.spacing.large
 
-        playing: visible && (Players.active?.isPlaying ?? false)
+        playing: root.shouldUpdate && (Players.active?.isPlaying ?? false)
         speed: BeatDetector.bpm / 300
         source: "root:/assets/bongocat.gif"
         asynchronous: true

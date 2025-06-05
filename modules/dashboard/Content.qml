@@ -51,17 +51,25 @@ Item {
             currentIndex: tabs.currentIndex
 
             ClippingWrapperRectangle {
+                id: dash
+
                 radius: Appearance.rounding.normal
                 color: "transparent"
 
-                Dash {}
+                Dash {
+                    shouldUpdate: visible && dash.ListView.isCurrentItem
+                }
             }
 
             ClippingWrapperRectangle {
+                id: media
+
                 radius: Appearance.rounding.normal
                 color: "transparent"
 
-                Media {}
+                Media {
+                    shouldUpdate: visible && media.ListView.isCurrentItem
+                }
             }
 
             ClippingWrapperRectangle {

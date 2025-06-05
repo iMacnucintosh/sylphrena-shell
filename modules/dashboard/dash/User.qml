@@ -4,7 +4,6 @@ import "root:/config"
 import "root:/utils"
 import Quickshell
 import Quickshell.Io
-import Quickshell.Widgets
 import QtQuick
 
 Row {

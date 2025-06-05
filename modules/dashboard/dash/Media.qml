@@ -10,6 +10,8 @@ import QtQuick.Shapes
 Item {
     id: root
 
+    required property bool shouldUpdate
+
     property real playerProgress: {
         const active = Players.active;
         return active?.length ? active.position / active.length : 0;
@@ -28,7 +30,7 @@ Item {
     }
 
     Timer {
-        running: root.visible && (Players.active?.isPlaying ?? false)
+        running: root.shouldUpdate && (Players.active?.isPlaying ?? false)
         interval: DashboardConfig.mediaUpdateInterval
         triggeredOnStart: true
         repeat: true
@@ -218,7 +220,7 @@ Item {
         anchors.bottomMargin: Appearance.padding.large
         anchors.margins: Appearance.padding.large * 2
 
-        playing: visible && (Players.active?.isPlaying ?? false)
+        playing: root.shouldUpdate && (Players.active?.isPlaying ?? false)
         speed: BeatDetector.bpm / 300
         source: "root:/assets/bongocat.gif"
         asynchronous: true

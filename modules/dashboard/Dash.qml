@@ -7,6 +7,8 @@ import QtQuick.Layouts
 GridLayout {
     id: root
 
+    required property bool shouldUpdate
+
     rowSpacing: Appearance.spacing.normal
     columnSpacing: Appearance.spacing.normal
 
@@ -72,6 +74,8 @@ GridLayout {
 
         Media {
             id: media
+
+            shouldUpdate: root.shouldUpdate
         }
     }
 

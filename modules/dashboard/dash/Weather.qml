@@ -2,7 +2,6 @@ import "root:/widgets"
 import "root:/services"
 import "root:/config"
 import "root:/utils"
-import Quickshell.Io
 import QtQuick
 
 Item {
