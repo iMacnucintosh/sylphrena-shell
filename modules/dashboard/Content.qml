@@ -43,40 +43,83 @@ Item {
         radius: Appearance.rounding.normal
         color: "transparent"
 
-        SwipeView {
+        Flickable {
             id: view
+
+            readonly property int currentIndex: tabs.currentIndex
+            readonly property Item currentItem: row.children[currentIndex]
 
             anchors.fill: parent
 
-            currentIndex: tabs.currentIndex
+            flickableDirection: Flickable.HorizontalFlick
 
-            ClippingWrapperRectangle {
-                id: dash
+            implicitWidth: currentItem.implicitWidth
+            implicitHeight: currentItem.implicitHeight
 
-                radius: Appearance.rounding.normal
-                color: "transparent"
+            contentX: currentItem.x
+            contentWidth: row.implicitWidth
+            contentHeight: row.implicitHeight
 
-                Dash {
-                    shouldUpdate: visible && dash.ListView.isCurrentItem
+            onContentXChanged: {
+                if (!moving)
+                    return;
+
+                const x = contentX - currentItem.x;
+                if (x > currentItem.implicitWidth / 2)
+                    tabs.bar.incrementCurrentIndex();
+                else if (x < -currentItem.implicitWidth / 2)
+                    tabs.bar.decrementCurrentIndex();
+            }
+
+            onDragEnded: {
+                const x = contentX - currentItem.x;
+                if (x > currentItem.implicitWidth / 10)
+                    tabs.bar.incrementCurrentIndex();
+                else if (x < -currentItem.implicitWidth / 10)
+                    tabs.bar.decrementCurrentIndex();
+                else
+                    contentX = Qt.binding(() => currentItem.x);
+            }
+
+            Row {
+                id: row
+
+                ClippingWrapperRectangle {
+                    id: dash
+
+                    radius: Appearance.rounding.normal
+                    color: "transparent"
+
+                    Dash {
+                        shouldUpdate: visible && dash === view.currentItem
+                    }
+                }
+
+                ClippingWrapperRectangle {
+                    id: media
+
+                    radius: Appearance.rounding.normal
+                    color: "transparent"
+
+                    Media {
+                        shouldUpdate: visible && media === view.currentItem
+                    }
+                }
+
+                ClippingWrapperRectangle {
+                    radius: Appearance.rounding.normal
+                    color: "transparent"
+
+                    Performance {}
                 }
             }
 
-            ClippingWrapperRectangle {
-                id: media
-
-                radius: Appearance.rounding.normal
-                color: "transparent"
-
-                Media {
-                    shouldUpdate: visible && media.ListView.isCurrentItem
+            Behavior on contentX {
+                NumberAnimation {
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
                 }
-            }
-
-            ClippingWrapperRectangle {
-                radius: Appearance.rounding.normal
-                color: "transparent"
-
-                Performance {}
             }
         }
     }

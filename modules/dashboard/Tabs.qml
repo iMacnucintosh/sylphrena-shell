@@ -10,6 +10,7 @@ Item {
 
     required property real nonAnimWidth
     property alias currentIndex: bar.currentIndex
+    readonly property TabBar bar: bar
 
     implicitHeight: bar.implicitHeight + indicator.implicitHeight + indicator.anchors.topMargin + separator.implicitHeight
 
