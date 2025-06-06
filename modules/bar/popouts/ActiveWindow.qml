@@ -58,8 +58,8 @@ Item {
             ScreencopyView {
                 id: preview
 
-                captureSource: visible ? (ToplevelManager.toplevels.values.find(t => t.title === Hyprland.activeClient?.title) ?? null) : null
-                live: true
+                captureSource: ToplevelManager.toplevels.values.find(t => t.title === Hyprland.activeClient?.title) ?? null
+                live: visible
 
                 constraintSize.width: BarConfig.sizes.windowPreviewSize
                 constraintSize.height: BarConfig.sizes.windowPreviewSize
