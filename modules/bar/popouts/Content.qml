@@ -63,28 +63,52 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
 
-        active: shouldBeActive
+        opacity: 0
+        scale: 0.8
         asynchronous: true
 
-        // Behavior on active {
-        //     SequentialAnimation {
-        //         Anim {
-        //             target: popout
-        //             property: "opacity"
-        //             from: popout.shouldBeActive ? 1 : 0
-        //             to: popout.shouldBeActive ? 0 : 1
-        //             duration: popout.shouldBeActive ? 0 : Appearance.anim.durations.normal
-        //         }
-        //         PropertyAction {}
-        //         Anim {
-        //             target: popout
-        //             property: "opacity"
-        //             from: popout.shouldBeActive ? 0 : 1
-        //             to: popout.shouldBeActive ? 1 : 0
-        //             duration: popout.shouldBeActive ? Appearance.anim.durations.normal : 0
-        //         }
-        //     }
-        // }
+        states: State {
+            name: "active"
+            when: popout.shouldBeActive
+
+            PropertyChanges {
+                popout.active: true
+                popout.opacity: 1
+                popout.scale: 1
+            }
+        }
+
+        transitions: [
+            Transition {
+                from: "active"
+                to: ""
+
+                SequentialAnimation {
+                    Anim {
+                        properties: "opacity,scale"
+                        duration: Appearance.anim.durations.small
+                    }
+                    PropertyAction {
+                        target: popout
+                        property: "active"
+                    }
+                }
+            },
+            Transition {
+                from: ""
+                to: "active"
+
+                SequentialAnimation {
+                    PropertyAction {
+                        target: popout
+                        property: "active"
+                    }
+                    Anim {
+                        properties: "opacity,scale"
+                    }
+                }
+            }
+        ]
     }
 
     component Anim: NumberAnimation {
