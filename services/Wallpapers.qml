@@ -46,7 +46,7 @@ Singleton {
 
     function stopPreview(): void {
         showPreview = false;
-        Colours.showPreview = false;
+        Colours.endPreviewOnNextChange = true;
     }
 
     reloadableId: "wallpapers"

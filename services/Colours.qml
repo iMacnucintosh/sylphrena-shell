@@ -12,6 +12,7 @@ Singleton {
     readonly property list<string> colourNames: ["rosewater", "flamingo", "pink", "mauve", "red", "maroon", "peach", "yellow", "green", "teal", "sky", "sapphire", "blue", "lavender"]
 
     property bool showPreview
+    property bool endPreviewOnNextChange
     property bool light
     readonly property Colours palette: showPreview ? preview : current
     readonly property Colours current: Colours {}
@@ -41,6 +42,11 @@ Singleton {
             name = colourNames.includes(name) ? name : `m3${name}`;
             if (colours.hasOwnProperty(name))
                 colours[name] = `#${colour.trim()}`;
+        }
+
+        if (isPreview && endPreviewOnNextChange) {
+            showPreview = false;
+            endPreviewOnNextChange = false;
         }
     }
 
