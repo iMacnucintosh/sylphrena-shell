@@ -1,6 +1,9 @@
+pragma ComponentBehavior: Bound
+
 import "root:/services"
 import "root:/config"
 import Quickshell
+import Quickshell.Services.SystemTray
 import QtQuick
 
 Item {
@@ -40,6 +43,24 @@ Item {
             name: "battery"
             source: "Battery.qml"
         }
+
+        Repeater {
+            model: ScriptModel {
+                values: [...SystemTray.items.values]
+            }
+
+            Popout {
+                id: trayMenu
+
+                required property SystemTrayItem modelData
+                required property int index
+
+                name: `traymenu${index}`
+                sourceComponent: TrayMenu {
+                    trayItem: trayMenu.modelData.menu
+                }
+            }
+        }
     }
 
     Behavior on implicitWidth {
@@ -65,6 +86,7 @@ Item {
 
         opacity: 0
         scale: 0.8
+        active: false
         asynchronous: true
 
         states: State {

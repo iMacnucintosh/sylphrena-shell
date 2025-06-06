@@ -15,15 +15,30 @@ StyledRect {
         const spacing = Appearance.spacing.small;
         const aw = activeWindow.child;
         const awy = activeWindow.y + aw.y;
+
+        const ty = tray.y;
+        const th = tray.implicitHeight;
+        const trayItems = tray.items;
+
         const n = statusIconsInner.network;
         const ny = statusIcons.y + statusIconsInner.y + n.y - spacing / 2;
+
         const bls = statusIcons.y + statusIconsInner.y + statusIconsInner.bs - spacing / 2;
         const ble = statusIcons.y + statusIconsInner.y + statusIconsInner.be + spacing / 2;
+
         const b = statusIconsInner.battery;
         const by = statusIcons.y + statusIconsInner.y + b.y - spacing / 2;
+
         if (y >= awy && y <= awy + aw.implicitHeight) {
             Popouts.currentName = "activewindow";
             Popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
+            Popouts.hasCurrent = true;
+        } else if (y > ty && y < ty + th) {
+            const index = Math.floor(((y - ty) / th) * trayItems.count);
+            const item = trayItems.itemAt(index);
+
+            Popouts.currentName = `traymenu${index}`;
+            Popouts.currentCenter = Qt.binding(() => tray.y + item.y + item.implicitHeight / 2);
             Popouts.hasCurrent = true;
         } else if (y >= ny && y <= ny + n.implicitHeight + spacing) {
             Popouts.currentName = "network";

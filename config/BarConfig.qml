@@ -12,6 +12,7 @@ Singleton {
     component Sizes: QtObject {
         property int innerHeight: 30
         property int windowPreviewSize: 400
+        property int trayMenuWidth: 300
     }
 
     component Workspaces: QtObject {
