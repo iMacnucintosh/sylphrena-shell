@@ -72,7 +72,7 @@ Item {
                 readonly property alias nonAnimHeight: notif.nonAnimHeight
 
                 implicitWidth: notif.implicitWidth
-                implicitHeight: notif.implicitHeight + (index > 0 ? Appearance.spacing.smaller : 0)
+                implicitHeight: notif.implicitHeight + (index === 0 ? 0 : Appearance.spacing.smaller)
 
                 ListView.onRemove: removeAnim.start()
 
@@ -115,7 +115,7 @@ Item {
 
                 ClippingRectangle {
                     anchors.top: parent.top
-                    anchors.topMargin: wrapper.index > 0 ? Appearance.spacing.smaller : 0
+                    anchors.topMargin: wrapper.index === 0 ? 0 : Appearance.spacing.smaller
 
                     color: "transparent"
                     radius: notif.radius

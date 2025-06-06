@@ -78,10 +78,13 @@ Singleton {
         }
 
         readonly property Connections conn: Connections {
-            target: notif.notification
+            target: notif.notification.Retainable
 
-            function onClosed(): void {
+            function onDropped(): void {
                 root.list.splice(root.list.indexOf(notif), 1);
+            }
+
+            function onAboutToDestroy(): void {
                 notif.destroy();
             }
         }

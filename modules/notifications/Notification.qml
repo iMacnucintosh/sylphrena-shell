@@ -13,18 +13,23 @@ StyledRect {
     id: root
 
     required property Notifs.Notif modelData
-    readonly property bool hasImage: modelData?.image.length > 0
-    readonly property bool hasAppIcon: modelData?.appIcon.length > 0
+    readonly property bool hasImage: modelData.image.length > 0
+    readonly property bool hasAppIcon: modelData.appIcon.length > 0
     readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? appName.height + body.height + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
     property bool expanded
 
-    color: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer
+    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer
     radius: Appearance.rounding.normal
     implicitWidth: NotifsConfig.sizes.width
     implicitHeight: inner.implicitHeight
 
     x: NotifsConfig.sizes.width
     Component.onCompleted: x = 0
+
+    RetainableLock {
+        object: root.modelData.notification
+        locked: true
+    }
 
     MouseArea {
         property int startY
@@ -35,8 +40,8 @@ StyledRect {
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
         preventStealing: true
 
-        onEntered: root.modelData?.timer.stop()
-        onExited: root.modelData?.timer.start()
+        onEntered: root.modelData.timer.stop()
+        onExited: root.modelData.timer.start()
 
         drag.target: parent
         drag.axis: Drag.XAxis
@@ -44,12 +49,12 @@ StyledRect {
         onPressed: event => {
             startY = event.y;
             if (event.button === Qt.MiddleButton)
-                root.modelData?.notification.dismiss();
+                root.modelData.notification.dismiss();
         }
         onReleased: event => {
             if (Math.abs(root.x) < NotifsConfig.sizes.width * NotifsConfig.clearThreshold)
                 root.x = 0;
-            else if (root.modelData)
+            else
                 root.modelData.popup = false;
         }
         onPositionChanged: event => {
@@ -63,7 +68,7 @@ StyledRect {
             if (!NotifsConfig.actionOnClick || event.button !== Qt.LeftButton)
                 return;
 
-            const actions = root.modelData?.actions;
+            const actions = root.modelData.actions;
             if (actions?.length === 1)
                 actions[0].invoke();
         }
@@ -110,7 +115,7 @@ StyledRect {
 
                 Image {
                     anchors.fill: parent
-                    source: Qt.resolvedUrl(root.modelData?.image)
+                    source: Qt.resolvedUrl(root.modelData.image)
                     fillMode: Image.PreserveAspectCrop
                     cache: false
                     asynchronous: true
@@ -131,7 +136,7 @@ StyledRect {
 
             sourceComponent: StyledRect {
                 radius: Appearance.rounding.full
-                color: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData?.urgency === NotificationUrgency.Low ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
+                color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
                 implicitWidth: root.hasImage ? NotifsConfig.sizes.badge : NotifsConfig.sizes.image
                 implicitHeight: root.hasImage ? NotifsConfig.sizes.badge : NotifsConfig.sizes.image
 
@@ -142,26 +147,26 @@ StyledRect {
                     asynchronous: true
 
                     anchors.centerIn: parent
-                    visible: !root.modelData?.appIcon.endsWith("symbolic")
+                    visible: !root.modelData.appIcon.endsWith("symbolic")
 
                     width: Math.round(parent.width * 0.6)
                     height: Math.round(parent.width * 0.6)
 
                     sourceComponent: IconImage {
                         implicitSize: Math.round(parent.width * 0.6)
-                        source: Quickshell.iconPath(root.modelData?.appIcon)
+                        source: Quickshell.iconPath(root.modelData.appIcon)
                         asynchronous: true
                     }
                 }
 
                 Loader {
-                    active: root.modelData?.appIcon.endsWith("symbolic") ?? false
+                    active: root.modelData.appIcon.endsWith("symbolic")
                     asynchronous: true
                     anchors.fill: icon
 
                     sourceComponent: Colouriser {
                         source: icon
-                        colorizationColor: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData?.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
+                        colorizationColor: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
                     }
                 }
 
@@ -172,7 +177,7 @@ StyledRect {
 
                     sourceComponent: MaterialIcon {
                         text: {
-                            const summary = root.modelData?.summary.toLowerCase() ?? "";
+                            const summary = root.modelData.summary.toLowerCase();
                             if (summary.includes("reboot"))
                                 return "restart_alt";
                             if (summary.includes("recording"))
@@ -191,12 +196,12 @@ StyledRect {
                                 return "update";
                             if (summary.startsWith("file"))
                                 return "folder_copy";
-                            if (root.modelData?.urgency === NotificationUrgency.Critical)
+                            if (root.modelData.urgency === NotificationUrgency.Critical)
                                 return "release_alert";
                             return "chat";
                         }
 
-                        color: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData?.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
+                        color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
                         font.pointSize: Appearance.font.size.large
                     }
                 }
@@ -226,7 +231,7 @@ StyledRect {
         TextMetrics {
             id: appNameMetrics
 
-            text: root.modelData?.appName ?? ""
+            text: root.modelData.appName
             font.family: appName.font.family
             font.pointSize: appName.font.pointSize
             elide: Text.ElideRight
@@ -279,7 +284,7 @@ StyledRect {
         TextMetrics {
             id: summaryMetrics
 
-            text: root.modelData?.summary ?? ""
+            text: root.modelData.summary
             font.family: summary.font.family
             font.pointSize: summary.font.pointSize
             elide: Text.ElideRight
@@ -325,7 +330,7 @@ StyledRect {
 
             animate: true
             horizontalAlignment: Text.AlignLeft
-            text: root.modelData?.timeStr ?? ""
+            text: root.modelData.timeStr
             color: Colours.palette.m3onSurfaceVariant
             font.pointSize: Appearance.font.size.small
         }
@@ -382,7 +387,7 @@ StyledRect {
         TextMetrics {
             id: bodyPreviewMetrics
 
-            text: root.modelData?.body ?? ""
+            text: root.modelData.body
             font.family: bodyPreview.font.family
             font.pointSize: bodyPreview.font.pointSize
             elide: Text.ElideRight
@@ -399,7 +404,7 @@ StyledRect {
 
             animate: true
             textFormat: Text.MarkdownText
-            text: root.modelData?.body ?? ""
+            text: root.modelData.body
             color: Colours.palette.m3onSurfaceVariant
             font.pointSize: Appearance.font.size.small
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -427,7 +432,7 @@ StyledRect {
             }
 
             Repeater {
-                model: root.modelData?.actions ?? 0
+                model: root.modelData.actions
 
                 delegate: StyledRect {
                     id: action
@@ -446,7 +451,7 @@ StyledRect {
                         radius: Appearance.rounding.full
 
                         function onClicked(): void {
-                            action.modelData?.invoke();
+                            action.modelData.invoke();
                         }
                     }
 
@@ -462,12 +467,12 @@ StyledRect {
                     TextMetrics {
                         id: actionTextMetrics
 
-                        text: modelData?.text ?? ""
+                        text: modelData.text
                         font.family: actionText.font.family
                         font.pointSize: actionText.font.pointSize
                         elide: Text.ElideRight
                         elideWidth: {
-                            const numActions = root.modelData?.actions.length;
+                            const numActions = root.modelData.actions.length;
                             return (inner.width - actions.spacing * (numActions - 1)) / numActions - Appearance.padding.normal * 2;
                         }
                     }
