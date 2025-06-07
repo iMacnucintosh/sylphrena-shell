@@ -1,6 +1,7 @@
 import "root:/widgets"
 import "root:/services"
 import "root:/config"
+import "root:/modules/bar/popouts" as BarPopouts
 import "components"
 import "components/workspaces"
 import Quickshell
@@ -10,6 +11,7 @@ Item {
     id: root
 
     required property ShellScreen screen
+    required property BarPopouts.Wrapper popouts
 
     function checkPopout(y: real): void {
         const spacing = Appearance.spacing.small;
@@ -30,30 +32,30 @@ Item {
         const by = statusIcons.y + statusIconsInner.y + b.y - spacing / 2;
 
         if (y >= awy && y <= awy + aw.implicitHeight) {
-            Popouts.currentName = "activewindow";
-            Popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
-            Popouts.hasCurrent = true;
+            popouts.currentName = "activewindow";
+            popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
+            popouts.hasCurrent = true;
         } else if (y > ty && y < ty + th) {
             const index = Math.floor(((y - ty) / th) * trayItems.count);
             const item = trayItems.itemAt(index);
 
-            Popouts.currentName = `traymenu${index}`;
-            Popouts.currentCenter = Qt.binding(() => tray.y + item.y + item.implicitHeight / 2);
-            Popouts.hasCurrent = true;
+            popouts.currentName = `traymenu${index}`;
+            popouts.currentCenter = Qt.binding(() => tray.y + item.y + item.implicitHeight / 2);
+            popouts.hasCurrent = true;
         } else if (y >= ny && y <= ny + n.implicitHeight + spacing) {
-            Popouts.currentName = "network";
-            Popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + n.y + n.implicitHeight / 2);
-            Popouts.hasCurrent = true;
+            popouts.currentName = "network";
+            popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + n.y + n.implicitHeight / 2);
+            popouts.hasCurrent = true;
         } else if (y >= bls && y <= ble) {
-            Popouts.currentName = "bluetooth";
-            Popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + statusIconsInner.bs + (statusIconsInner.be - statusIconsInner.bs) / 2);
-            Popouts.hasCurrent = true;
+            popouts.currentName = "bluetooth";
+            popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + statusIconsInner.bs + (statusIconsInner.be - statusIconsInner.bs) / 2);
+            popouts.hasCurrent = true;
         } else if (y >= by && y <= by + b.implicitHeight + spacing) {
-            Popouts.currentName = "battery";
-            Popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + b.y + b.implicitHeight / 2);
-            Popouts.hasCurrent = true;
+            popouts.currentName = "battery";
+            popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + b.y + b.implicitHeight / 2);
+            popouts.hasCurrent = true;
         } else {
-            Popouts.hasCurrent = false;
+            popouts.hasCurrent = false;
         }
     }
 

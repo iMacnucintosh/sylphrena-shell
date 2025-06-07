@@ -117,6 +117,7 @@ Variants {
 
             Interactions {
                 screen: scope.modelData
+                popouts: panels.popouts
                 visibilities: visibilities
                 panels: panels
                 bar: bar
@@ -134,6 +135,7 @@ Variants {
                 id: bar
 
                 screen: scope.modelData
+                popouts: panels.popouts
             }
         }
     }
