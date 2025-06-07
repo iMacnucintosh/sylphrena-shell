@@ -11,6 +11,7 @@ import QtQuick.Controls
 StackView {
     id: root
 
+    required property Item popouts
     required property QsMenuHandle trayItem
 
     implicitWidth: currentItem.implicitWidth
@@ -27,9 +28,7 @@ StackView {
 
     component Anim: Transition {
         NumberAnimation {
-            duration: 0 // Appearance.anim.durations.normal
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.standard
+            duration: 0
         }
     }
 
@@ -114,8 +113,10 @@ StackView {
                                         handle: entry,
                                         isSubMenu: true
                                     }));
-                                else
+                                else {
                                     item.modelData.triggered();
+                                    root.popouts.hasCurrent = false;
+                                }
                             }
                         }
 

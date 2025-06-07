@@ -15,16 +15,6 @@ Item {
     property real currentCenter
     property bool hasCurrent
 
-    Behavior on currentCenter {
-        enabled: root.implicitWidth > 0
-
-        NumberAnimation {
-            duration: Appearance.anim.durations.normal
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.emphasized
-        }
-    }
-
     anchors.centerIn: parent
 
     implicitWidth: hasCurrent ? (content.children.find(c => c.shouldBeActive)?.implicitWidth ?? 0) + Appearance.padding.large * 2 : 0
@@ -70,8 +60,26 @@ Item {
                 required property int index
 
                 name: `traymenu${index}`
-                sourceComponent: TrayMenu {
-                    trayItem: trayMenu.modelData.menu
+                sourceComponent: trayMenuComp
+
+                Connections {
+                    target: root
+
+                    function onHasCurrentChanged(): void {
+                        if (root.hasCurrent && trayMenu.shouldBeActive) {
+                            trayMenu.sourceComponent = null;
+                            trayMenu.sourceComponent = trayMenuComp;
+                        }
+                    }
+                }
+
+                Component {
+                    id: trayMenuComp
+
+                    TrayMenu {
+                        popouts: root
+                        trayItem: trayMenu.modelData.menu
+                    }
                 }
             }
         }
@@ -87,6 +95,16 @@ Item {
         enabled: root.implicitWidth > 0
 
         Anim {
+            easing.bezierCurve: Appearance.anim.curves.emphasized
+        }
+    }
+
+    Behavior on currentCenter {
+        enabled: root.implicitWidth > 0
+
+        NumberAnimation {
+            duration: Appearance.anim.durations.normal
+            easing.type: Easing.BezierSpline
             easing.bezierCurve: Appearance.anim.curves.emphasized
         }
     }

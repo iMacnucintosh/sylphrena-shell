@@ -1,5 +1,4 @@
 import "root:/services"
-import Quickshell.Io
 import QtQuick
 
 Image {
