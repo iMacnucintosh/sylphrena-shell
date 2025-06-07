@@ -16,7 +16,7 @@ Item {
     property bool hasCurrent
 
     Behavior on currentCenter {
-        enabled: root.hasCurrent
+        enabled: root.implicitWidth > 0
 
         NumberAnimation {
             duration: Appearance.anim.durations.normal
@@ -27,7 +27,7 @@ Item {
 
     anchors.centerIn: parent
 
-    implicitWidth: root.hasCurrent ? (content.children.find(c => c.shouldBeActive)?.implicitWidth ?? 0) + Appearance.padding.large * 2 : 0
+    implicitWidth: hasCurrent ? (content.children.find(c => c.shouldBeActive)?.implicitWidth ?? 0) + Appearance.padding.large * 2 : 0
     implicitHeight: (content.children.find(c => c.shouldBeActive)?.implicitHeight ?? 0) + Appearance.padding.large * 2
 
     Item {
@@ -84,7 +84,7 @@ Item {
     }
 
     Behavior on implicitHeight {
-        enabled: root.hasCurrent
+        enabled: root.implicitWidth > 0
 
         Anim {
             easing.bezierCurve: Appearance.anim.curves.emphasized
