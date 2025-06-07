@@ -11,9 +11,23 @@ Item {
 
     required property ShellScreen screen
 
+    property string currentName
+    property real currentCenter
+    property bool hasCurrent
+
+    Behavior on currentCenter {
+        enabled: root.hasCurrent
+
+        NumberAnimation {
+            duration: Appearance.anim.durations.normal
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Appearance.anim.curves.emphasized
+        }
+    }
+
     anchors.centerIn: parent
 
-    implicitWidth: Popouts.hasCurrent ? (content.children.find(c => c.shouldBeActive)?.implicitWidth ?? 0) + Appearance.padding.large * 2 : 0
+    implicitWidth: root.hasCurrent ? (content.children.find(c => c.shouldBeActive)?.implicitWidth ?? 0) + Appearance.padding.large * 2 : 0
     implicitHeight: (content.children.find(c => c.shouldBeActive)?.implicitHeight ?? 0) + Appearance.padding.large * 2
 
     Item {
@@ -70,7 +84,7 @@ Item {
     }
 
     Behavior on implicitHeight {
-        enabled: Popouts.hasCurrent
+        enabled: root.hasCurrent
 
         Anim {
             easing.bezierCurve: Appearance.anim.curves.emphasized
@@ -81,7 +95,7 @@ Item {
         id: popout
 
         required property string name
-        property bool shouldBeActive: Popouts.currentName === name
+        property bool shouldBeActive: root.currentName === name
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right

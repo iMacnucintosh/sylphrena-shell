@@ -8,6 +8,10 @@ Item {
 
     required property ShellScreen screen
 
+    property alias currentName: content.currentName
+    property alias currentCenter: content.currentCenter
+    property alias hasCurrent: content.hasCurrent
+
     visible: width > 0 && height > 0
 
     implicitWidth: content.implicitWidth
