@@ -25,3 +25,6 @@ for improving these dots!
 
 A special thanks to [@outfoxxed](https://github.com/outfoxxed/) for making Quickshell and the effort put into fixing issues
 and implementing various feature requests.
+
+Another special thanks to [@end_4](https://github.com/end-4/) for his [config](https://github.com/end-4/dots-hyprland)
+which helped me a lot with learning how to use Quickshell.
