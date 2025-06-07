@@ -13,12 +13,32 @@ StyledRect {
     required property real maskHeight
     required property int groupOffset
 
-    readonly property Workspace currentWs: workspaces[Hyprland.activeWsId - 1 - groupOffset] ?? null
-    property real leading: currentWs?.y ?? 0
-    property real trailing: currentWs?.y ?? 0
-    property real currentSize: (currentWs?.size) ?? 0
-    property real size: Math.abs(leading - trailing) + currentSize
+    readonly property int currentWsIdx: Hyprland.activeWsId - 1 - groupOffset
+    property real leading: getWsY(currentWsIdx)
+    property real trailing: getWsY(currentWsIdx)
+    property real currentSize: workspaces[currentWsIdx]?.size ?? 0
     property real offset: Math.min(leading, trailing)
+    property real size: {
+        const s = Math.abs(leading - trailing) + currentSize;
+        if (BarConfig.workspaces.activeTrail && lastWs > currentWsIdx)
+            return Math.min(getWsY(lastWs) + (workspaces[lastWs]?.size ?? 0) - offset, s);
+        return s;
+    }
+
+    property int cWs
+    property int lastWs
+
+    function getWsY(idx: int): real {
+        let y = 0;
+        for (let i = 0; i < idx; i++)
+            y += workspaces[i]?.size ?? 0;
+        return y;
+    }
+
+    onCurrentWsIdxChanged: {
+        lastWs = cWs;
+        cWs = currentWsIdx;
+    }
 
     clip: true
     x: 1
