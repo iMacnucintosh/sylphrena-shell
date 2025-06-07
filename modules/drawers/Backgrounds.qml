@@ -58,7 +58,7 @@ Shape {
 
     BarPopouts.Background {
         wrapper: panels.popouts
-        invertBottomRounding: wrapper.y + wrapper.height >= root.height
+        invertBottomRounding: wrapper.y + wrapper.height + 1 >= root.height
 
         startX: 0
         startY: wrapper.y - rounding
