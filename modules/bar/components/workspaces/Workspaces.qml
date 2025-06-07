@@ -65,20 +65,11 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        anchors.leftMargin: -(Appearance.padding.small + BorderConfig.thickness)
-        anchors.rightMargin: -(Appearance.padding.small + BorderConfig.thickness)
 
         onPressed: event => {
             const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
             if (Hyprland.activeWsId !== ws)
                 Hyprland.dispatch(`workspace ${ws}`);
-        }
-        onWheel: event => {
-            const activeWs = Hyprland.activeClient?.workspace?.name;
-            if (activeWs?.startsWith("special:"))
-                Hyprland.dispatch(`togglespecialworkspace ${activeWs.slice(8)}`);
-            else if (event.angleDelta.y < 0 || Hyprland.activeWsId > 1)
-                Hyprland.dispatch(`workspace r${event.angleDelta.y > 0 ? "-" : "+"}1`);
         }
     }
 }

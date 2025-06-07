@@ -80,7 +80,7 @@ Item {
             anchors.topMargin: Appearance.padding.large
         }
 
-        StyledClippingRect {
+        StyledRect {
             id: workspaces
 
             anchors.horizontalCenter: parent.horizontalCenter
@@ -92,6 +92,20 @@ Item {
 
             implicitWidth: workspacesInner.implicitWidth + Appearance.padding.small * 2
             implicitHeight: workspacesInner.implicitHeight + Appearance.padding.small * 2
+
+            MouseArea {
+                anchors.fill: parent
+                anchors.leftMargin: -BorderConfig.thickness
+                anchors.rightMargin: -BorderConfig.thickness
+
+                onWheel: event => {
+                    const activeWs = Hyprland.activeClient?.workspace?.name;
+                    if (activeWs?.startsWith("special:"))
+                        Hyprland.dispatch(`togglespecialworkspace ${activeWs.slice(8)}`);
+                    else if (event.angleDelta.y < 0 || Hyprland.activeWsId > 1)
+                        Hyprland.dispatch(`workspace r${event.angleDelta.y > 0 ? "-" : "+"}1`);
+                }
+            }
 
             Workspaces {
                 id: workspacesInner
