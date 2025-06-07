@@ -13,6 +13,7 @@ Singleton {
         property int innerHeight: 30
         property int windowPreviewSize: 400
         property int trayMenuWidth: 300
+        property int batteryWidth: 200
     }
 
     component Workspaces: QtObject {
