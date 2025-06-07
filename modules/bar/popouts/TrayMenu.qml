@@ -199,6 +199,7 @@ StackView {
 
                         StateLayer {
                             radius: parent.radius
+                            color: Colours.palette.m3onSecondaryContainer
 
                             function onClicked(): void {
                                 root.pop();
