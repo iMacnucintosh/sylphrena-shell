@@ -4,7 +4,7 @@ import "root:/widgets"
 import "root:/services"
 import "root:/utils"
 import "root:/config"
-import Quickshell.Io
+import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
 import QtQuick
@@ -15,6 +15,7 @@ Item {
     id: root
 
     required property bool shouldUpdate
+    required property PersistentProperties visibilities
 
     property real playerProgress: {
         const active = Players.active;
@@ -339,6 +340,7 @@ Item {
 
                 function onClicked(): void {
                     Players.active?.raise();
+                    root.visibilities.dashboard = false;
                 }
             }
 
