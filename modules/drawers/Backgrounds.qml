@@ -6,15 +6,18 @@ import "root:/modules/session" as Session
 import "root:/modules/launcher" as Launcher
 import "root:/modules/dashboard" as Dashboard
 import "root:/modules/bar/popouts" as BarPopouts
+import QtQuick
 import QtQuick.Shapes
 
 Shape {
     id: root
 
     required property Panels panels
+    required property Item bar
 
     anchors.fill: parent
     anchors.margins: BorderConfig.thickness
+    anchors.leftMargin: bar.implicitWidth
     preferredRendererType: Shape.CurveRenderer
     opacity: Colours.transparency.enabled ? Colours.transparency.base : 1
 

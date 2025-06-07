@@ -8,6 +8,8 @@ import QtQuick.Effects
 Item {
     id: root
 
+    required property Item bar
+
     anchors.fill: parent
 
     StyledRect {
@@ -28,6 +30,7 @@ Item {
         Rectangle {
             anchors.fill: parent
             anchors.margins: BorderConfig.thickness
+            anchors.leftMargin: root.bar.implicitWidth
             radius: BorderConfig.rounding
         }
     }

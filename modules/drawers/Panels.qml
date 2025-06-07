@@ -14,6 +14,7 @@ Item {
 
     required property ShellScreen screen
     required property PersistentProperties visibilities
+    required property Item bar
 
     readonly property Osd.Wrapper osd: osd
     readonly property Notifications.Wrapper notifications: notifications
@@ -24,6 +25,7 @@ Item {
 
     anchors.fill: parent
     anchors.margins: BorderConfig.thickness
+    anchors.leftMargin: bar.implicitWidth
 
     Component.onCompleted: Visibilities.panels[screen] = this
 

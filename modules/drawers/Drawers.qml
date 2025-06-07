@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import "root:/widgets"
 import "root:/services"
 import "root:/config"
+import "root:/modules/bar"
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
@@ -18,6 +19,7 @@ Variants {
 
         Exclusions {
             screen: scope.modelData
+            bar: bar
         }
 
         StyledWindow {
@@ -29,9 +31,9 @@ Variants {
             WlrLayershell.keyboardFocus: visibilities.launcher || visibilities.session ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
             mask: Region {
-                x: BorderConfig.thickness
+                x: bar.implicitWidth
                 y: BorderConfig.thickness
-                width: win.width - BorderConfig.thickness * 2
+                width: win.width - bar.implicitWidth - BorderConfig.thickness
                 height: win.height - BorderConfig.thickness * 2
                 intersection: Intersection.Xor
 
@@ -43,8 +45,6 @@ Variants {
             anchors.left: true
             anchors.right: true
 
-            margins.left: Visibilities.bars[screen]?.implicitWidth ?? 0
-
             Variants {
                 id: regions
 
@@ -53,7 +53,7 @@ Variants {
                 Region {
                     required property Item modelData
 
-                    x: modelData.x + BorderConfig.thickness
+                    x: modelData.x + bar.implicitWidth
                     y: modelData.y + BorderConfig.thickness
                     width: modelData.width
                     height: modelData.height
@@ -90,10 +90,13 @@ Variants {
                 anchors.fill: parent
                 visible: false
 
-                Border {}
+                Border {
+                    bar: bar
+                }
 
                 Backgrounds {
                     panels: panels
+                    bar: bar
                 }
             }
 
@@ -116,13 +119,21 @@ Variants {
                 screen: scope.modelData
                 visibilities: visibilities
                 panels: panels
+                bar: bar
 
                 Panels {
                     id: panels
 
                     screen: scope.modelData
                     visibilities: visibilities
+                    bar: bar
                 }
+            }
+
+            Bar {
+                id: bar
+
+                screen: scope.modelData
             }
         }
     }

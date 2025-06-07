@@ -10,6 +10,7 @@ MouseArea {
     required property ShellScreen screen
     required property PersistentProperties visibilities
     required property Panels panels
+    required property Item bar
 
     property bool osdHovered
     property point dragStart
@@ -20,11 +21,11 @@ MouseArea {
     }
 
     function inRightPanel(panel: Item, x: real, y: real): bool {
-        return x > BorderConfig.thickness + panel.x && withinPanelHeight(panel, x, y);
+        return x > bar.implicitWidth + panel.x && withinPanelHeight(panel, x, y);
     }
 
     function inTopPanel(panel: Item, x: real, y: real): bool {
-        const panelX = BorderConfig.thickness + panel.x;
+        const panelX = bar.implicitWidth + panel.x;
         return y < BorderConfig.thickness + panel.y + panel.height && x >= panelX - BorderConfig.rounding && x <= panelX + panel.width + BorderConfig.rounding;
     }
 
@@ -61,10 +62,10 @@ MouseArea {
 
         // Show popouts on hover
         const popout = panels.popouts;
-        if (x < BorderConfig.thickness + popout.width) {
-            if (x < BorderConfig.thickness)
+        if (x < bar.implicitWidth + popout.width) {
+            if (x < bar.implicitWidth)
                 // Handle like part of bar
-                Visibilities.bars[screen].checkPopout(y);
+                bar.checkPopout(y);
             else
                 // Keep on hover
                 Popouts.hasCurrent = withinPanelHeight(popout, x, y);

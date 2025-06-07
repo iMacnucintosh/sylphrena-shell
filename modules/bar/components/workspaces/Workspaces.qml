@@ -65,6 +65,8 @@ Item {
 
     MouseArea {
         anchors.fill: parent
+        anchors.leftMargin: -(Appearance.padding.small + BorderConfig.thickness)
+        anchors.rightMargin: -(Appearance.padding.small + BorderConfig.thickness)
 
         onPressed: event => {
             const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;

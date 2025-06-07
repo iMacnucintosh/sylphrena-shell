@@ -4,7 +4,6 @@ import Quickshell
 
 Singleton {
     property var screens: ({})
-    property var bars: ({})
     property var panels: ({})
 
     function getForActive(): PersistentProperties {
