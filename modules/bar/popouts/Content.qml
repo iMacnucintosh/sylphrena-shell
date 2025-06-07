@@ -70,6 +70,8 @@ Item {
     }
 
     Behavior on implicitHeight {
+        enabled: Popouts.hasCurrent
+
         Anim {
             easing.bezierCurve: Appearance.anim.curves.emphasized
         }
