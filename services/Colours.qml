@@ -44,7 +44,7 @@ Singleton {
                 colours[name] = `#${colour.trim()}`;
         }
 
-        if (isPreview && endPreviewOnNextChange) {
+        if (!isPreview || (isPreview && endPreviewOnNextChange)) {
             showPreview = false;
             endPreviewOnNextChange = false;
         }
