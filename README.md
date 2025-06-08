@@ -74,6 +74,9 @@ and implementing various feature requests.
 Another special thanks to [@end_4](https://github.com/end-4) for his [config](https://github.com/end-4/dots-hyprland)
 which helped me a lot with learning how to use Quickshell.
 
+Finally another thank you to all the configs I took inspiration from (only one for now):
+- [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
+
 ## Stonks 📈
 
 <a href="https://www.star-history.com/#caelestia-dots/shell&Date">
