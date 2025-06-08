@@ -30,6 +30,23 @@ clone this repo into `$XDG_CONFIG_HOME/quickshell/caelestia` and run `qs -c cael
 
 ## Usage
 
+The shell can be started in two ways: via systemd or manually running `caelestia shell`.
+
+### Via systemd
+
+The install script creates and enables the systemd service `caelestia-shell.service` which should automatically start the
+shell on login.
+
+### Via command
+
+If not on a system that uses systemd, you can manually start the shell via `caelestia-shell`.
+To autostart it on login, you can use an `exec-once` rule in your Hyprland config:
+```
+exec-once = caelestia shell
+```
+
+### Shortcuts/IPC
+
 All keybinds are accessible via Hyprland [global shortcuts](https://wiki.hyprland.org/Configuring/Binds/#dbus-global-shortcuts).
 For a preconfigured setup, install [`caelestia-hypr`](https://github.com/caelestia-dots/hypr) via `caelestia install hypr` or see
 [this file](https://github.com/caelestia-dots/hypr/blob/main/hyprland/keybinds.conf#L1-L29) for an example on how to use global
