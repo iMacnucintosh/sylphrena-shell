@@ -51,6 +51,22 @@ Singleton {
 
     reloadableId: "wallpapers"
 
+    IpcHandler {
+        target: "wallpaper"
+
+        function get(): string {
+            return root.actualCurrent;
+        }
+
+        function set(path: string): void {
+            root.setWallpaper(path);
+        }
+
+        function list(): string {
+            return root.list.map(w => w.path).join("\n");
+        }
+    }
+
     FileView {
         path: root.currentNamePath
         watchChanges: true
@@ -76,7 +92,7 @@ Singleton {
 
         property string path
 
-        command: ["caelestia", "wallpaper", "-f", path]
+        command: ["caelestia", "wallpaper", "-Q", "-f", path]
     }
 
     Process {

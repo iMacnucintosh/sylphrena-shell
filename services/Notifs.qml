@@ -4,6 +4,7 @@ pragma ComponentBehavior: Bound
 import "root:/widgets"
 import "root:/config"
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Notifications
 import QtQuick
 
@@ -37,6 +38,15 @@ Singleton {
         name: "clearNotifs"
         description: "Clear all notifications"
         onPressed: {
+            for (const notif of root.list)
+                notif.popup = false;
+        }
+    }
+
+    IpcHandler {
+        target: "notifs"
+
+        function clear(): void {
             for (const notif of root.list)
                 notif.popup = false;
         }

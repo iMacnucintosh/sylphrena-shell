@@ -1,7 +1,7 @@
 <h1 align=center>caelestia-shell</h1>
 
 <div align=center>
- 
+
 ![GitHub last commit](https://img.shields.io/github/last-commit/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=9ccbfb)
 ![GitHub Repo stars](https://img.shields.io/github/stars/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=b9c8da)
 ![GitHub repo size](https://img.shields.io/github/repo-size/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=d3bfe6)
@@ -35,9 +35,32 @@ For a preconfigured setup, install [`caelestia-hypr`](https://github.com/caelest
 [this file](https://github.com/caelestia-dots/hypr/blob/main/hyprland/keybinds.conf#L1-L29) for an example on how to use global
 shortcuts.
 
-There is only one IPC command as of now which can be used to get details about the currently active MPRIS player.
+All IPC commands can be accessed via `caelestia shell ...`. For example
 ```sh
-caelestia shell mpris getActive <prop>
+caelestia shell mpris getActive trackTitle
+```
+
+The list of IPC commands can be shown via `caelestia shell help`:
+```
+> caelestia shell help
+target mpris
+  function stop(): void
+  function play(): void
+  function next(): void
+  function getActive(prop: string): string
+  function list(): string
+  function playPause(): void
+  function pause(): void
+  function previous(): void
+target drawers
+  function list(): string
+  function toggle(drawer: string): void
+target wallpaper
+  function list(): string
+  function get(): string
+  function set(path: string): void
+target notifs
+  function clear(): void
 ```
 
 ## Credits
