@@ -23,10 +23,12 @@ Singleton {
     Process {
         id: getNetworks
         running: true
-        command: ["sh", "-c", `nmcli -g ACTIVE,SIGNAL,FREQ,SSID d w | jq -cR '[(inputs / ":") | select(.[3] | length >= 4)]'`]
+        command: ["sh", "-c", `nmcli -g ACTIVE,SIGNAL,FREQ,SSID d w | jq -ncR '[(inputs / ":") | select(.[3] | length >= 4)]'`]
         stdout: SplitParser {
             onRead: data => {
-                const networks = JSON.parse(data).map(n => [n[0] === "yes", parseInt(n[1]), parseInt(n[2]), n[3]]);
+                const networks = JSON.parse(data)
+                    .filter(n => n[0] === "yes")
+                    .map(n => [n[0] === "yes", parseInt(n[1]), parseInt(n[2]), n[3]]);
                 const rNetworks = root.networks;
 
                 const destroyed = rNetworks.filter(rn => !networks.find(n => n[2] === rn.frequency && n[3] === rn.ssid));
