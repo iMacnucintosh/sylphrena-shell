@@ -92,7 +92,7 @@ Singleton {
 
         property string path
 
-        command: ["caelestia", "wallpaper", "-Q", "-f", path]
+        command: ["caelestia", "wallpaper", "-f", path]
     }
 
     Process {
