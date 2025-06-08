@@ -1,4 +1,4 @@
-#!/bin/fish
+#!/usr/bin/env fish
 
 set -l dbus 'quickshell.dbus.properties.warning = false;quickshell.dbus.dbusmenu.warning = false'  # System tray dbus property errors
 set -l notifs 'quickshell.service.notifications.warning = false'  # Notification server warnings on reload
