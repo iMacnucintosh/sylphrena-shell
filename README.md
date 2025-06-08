@@ -16,7 +16,8 @@ Install [`caelestia-scripts`](https://github.com/caelestia-dots/scripts/) and ru
 
 ### Manual installation
 
-Clone this repo into `$XDG_CONFIG_HOME/quickshell/caelestia` and run `qs -c caelestia`.
+Install all [dependencies](https://github.com/caelestia-dots/scripts/blob/main/install/shell.fish#L10/), then
+clone this repo into `$XDG_CONFIG_HOME/quickshell/caelestia` and run `qs -c caelestia`.
 
 ## Credits
 
@@ -28,3 +29,13 @@ and implementing various feature requests.
 
 Another special thanks to [@end_4](https://github.com/end-4/) for his [config](https://github.com/end-4/dots-hyprland)
 which helped me a lot with learning how to use Quickshell.
+
+## Stonks 📈
+
+<a href="https://www.star-history.com/#caelestia-dots/shell&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=caelestia-dots/shell&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=caelestia-dots/shell&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=caelestia-dots/shell&type=Date" />
+ </picture>
+</a>
