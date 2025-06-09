@@ -80,6 +80,14 @@ target notifs
   function clear(): void
 ```
 
+### PFP/Wallpapers
+
+The profile picture for the dashboard is read from the file `~/.face`, so to set it just put your image there.
+
+The wallpapers for the wallpaper switcher are read from `~/Pictures/Wallpapers`, so put your wallpapers there for
+them to show up in the switcher (you need to restart the shell after changing stuff in `~/Pictures/Wallpapers` sadly,
+no watching for changes yet).
+
 ## Credits
 
 Thanks to the Hyprland discord community (especially the homies in #rice-discussion) for all the help and suggestions
