@@ -88,6 +88,9 @@ The wallpapers for the wallpaper switcher are read from `~/Pictures/Wallpapers`,
 them to show up in the switcher (you need to restart the shell after changing stuff in `~/Pictures/Wallpapers` sadly,
 no watching for changes yet).
 
+To set the wallpaper, you can use the command `caelestia wallpaper`. Use `caelestia wallpaper -h` for more info about
+the command.
+
 ## Credits
 
 Thanks to the Hyprland discord community (especially the homies in #rice-discussion) for all the help and suggestions
