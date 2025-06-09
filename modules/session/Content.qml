@@ -23,7 +23,7 @@ Column {
         id: logout
 
         icon: "logout"
-        command: ["uwsm", "stop"]
+        command: ["sh", "-c", "uwsm stop || loginctl terminate-session $XDG_SESSION_ID"]
 
         KeyNavigation.down: shutdown
 
