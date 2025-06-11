@@ -9,6 +9,15 @@
 
 </div>
 
+> [!WARNING]
+> I am currently working on a complete overhaul for everything but the shell which should fix most issues with installation.
+> Some breaking changes:
+> - Rename the `scripts` repo -> `cli`
+> - Rename the `hypr` repo -> `caelestia` (this will be the main repo after the change)
+> - Merge all other repos (except this and `cli`) into `caelestia`
+> - Installation for the `shell` and `cli` will be done via AUR packages; `caelestia` will have a meta package and an install script (should fix most installation issues)
+> - Overhaul the scheme system (should fix a few bugs with that and make it cleaner in general)
+
 https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 ## Components
