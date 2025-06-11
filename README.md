@@ -11,6 +11,9 @@
 
 > [!WARNING]
 > I am currently working on a complete overhaul for everything but the shell which should fix most issues with installation.
+> As such, I will not be working on the shell until the overhaul is finished. I will still try to answer issues, however other
+> than minor issues, I will most likely not be able to fix them (same goes for feature requests). PRs are still welcome though!
+> 
 > Some breaking changes:
 > - Rename the `scripts` repo -> `cli`
 > - Rename the `hypr` repo -> `caelestia` (this will be the main repo after the change)
