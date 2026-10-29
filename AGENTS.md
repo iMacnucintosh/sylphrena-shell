@@ -90,7 +90,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 
 ### Aislamiento de Plasma (aprendizajes fase 1)
 
-- `QT_QPA_PLATFORMTHEME` tiene **3 fuentes** (pragma de `shell.qml`, `hyprland.lua`, `environment.d`): las tres a la vez o nada; el env de Hyprland y `environment.d` solo normalizan al relogin, el pragma al restart de la shell.
+- `QT_QPA_PLATFORMTHEME` tiene **3 fuentes** (pragma de `shell.qml`, `hyprland.lua`, `environment.d`): las tres a la vez o nada. El env de Hyprland y `environment.d` solo normalizan al relogin; el pragma se aplica al restart, pero ojo: un env **ya definido en la sesión** (stale de un login anterior) no se sobreescribe siempre y `/proc/PID/environ` no refleja vars metidas a runtime (solo el snapshot de exec) — validar el tema efectivo con una app Qt, no leyendo el /proc.
 - `_sync_qt6ct` escribe el esquema con **22 roles** (orden del enum `QPalette::ColorRole` de Qt ≥6.6, `Accent` al final — qt6ct mapea índice→rol literal). Escritura atómica temp+rename: el watcher de qt6ct es dir-scoped con debounce.
 - `libcolorreload-gtk-module.so` vive vendorizado en `~/.local/share/gtk-3.0/modules/` (GTK resuelve módulos por nombre ahí); **no existe build GTK4 del módulo** (kde-gtk-config solo compila GTK3).
 - D-Bus service duplicates: dbus-broker escanea dirs y **el primero que registra gana** (alfabético dentro del dir) — los overrides de usuario van en `~/.local/share/dbus-1/services/` y ganan a `/usr/share`. Tras crear uno, dbus-broker-launch *nota* el cambio y re-escanea (journal: "Noticed file-system modification, trigger reload").
