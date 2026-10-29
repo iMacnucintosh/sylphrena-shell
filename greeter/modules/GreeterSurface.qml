@@ -1,0 +1,138 @@
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import qs.components
+import qs.modules
+import qs.services
+
+// Shared lock-layout surface used by the real layershell greeter and the
+// FloatingWindow demo preview.
+Item {
+    id: root
+
+    required property real screenHeight
+    required property real screenWidth
+
+    // Solid theme fill first — never leave the greeter as a blank black void.
+    StyledRect {
+        anchors.fill: parent
+        color: Theme.palette.m3surface
+    }
+
+    Image {
+        id: background
+
+        anchors.fill: parent
+        source: `file://${Theme.wallpaper}`
+        fillMode: Image.PreserveAspectCrop
+        asynchronous: false
+        cache: true
+        opacity: 0.85
+    }
+
+    // Opaque surface card with the lock layout (minus media/notifs).
+    Item {
+        id: lockContent
+
+        readonly property int size: lockIcon.implicitHeight + Theme.spacing.large * 4
+        readonly property int radius: size / 4
+        readonly property real targetW: root.screenHeight * Theme.lock.heightMult * Theme.lock.ratio
+        readonly property real targetH: root.screenHeight * Theme.lock.heightMult
+
+        anchors.centerIn: parent
+        implicitWidth: targetW
+        implicitHeight: targetH
+        rotation: 0
+        scale: 1
+
+        StyledRect {
+            id: lockBg
+
+            anchors.fill: parent
+            color: Theme.palette.m3surface
+            radius: Theme.rounding.extraLarge * 1.5
+        }
+
+        MaterialIcon {
+            id: lockIcon
+
+            anchors.centerIn: parent
+            text: "lock"
+            iconSize: Theme.font.iconExtraLarge * 4
+            font.weight: Font.Bold
+            opacity: 0
+            visible: false
+        }
+
+        Content {
+            id: content
+
+            anchors.centerIn: parent
+            width: root.screenHeight * Theme.lock.heightMult * Theme.lock.ratio - Theme.spacing.extraLargeIncreased
+            height: root.screenHeight * Theme.lock.heightMult - Theme.spacing.extraLargeIncreased
+
+            screenHeight: root.screenHeight
+            screenWidth: root.screenWidth
+
+            opacity: 1
+            scale: 1
+        }
+    }
+
+    // Demo banner so we never confuse a session window with the real greeter.
+    StyledRect {
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.topMargin: Theme.spacing.large
+        visible: Theme.demo
+        color: Theme.palette.m3secondaryContainer
+        radius: Theme.rounding.full
+        implicitWidth: demoLabel.implicitWidth + Theme.spacing.large * 2
+        implicitHeight: demoLabel.implicitHeight + Theme.spacing.small * 2
+        z: 10
+
+        StyledText {
+            id: demoLabel
+
+            anchors.centerIn: parent
+            text: "Demo del greeter — contraseña cualquiera / «fail» para error · Esc cierra"
+            color: Theme.palette.m3onSecondaryContainer
+            font.pixelSize: Theme.font.bodySmall
+        }
+    }
+
+    // Fade to a black curtain before asking greetd to switch sessions.
+    // The UI remains untouched underneath, so an error can fade back instead
+    // of stranding the user on a permanent black screen.
+    Rectangle {
+        id: handoffCurtain
+
+        anchors.fill: parent
+        color: "black"
+        z: 9998
+        opacity: Auth.success ? 1 : 0
+
+        Behavior on opacity {
+            Anim {
+                duration: 200
+                type: Anim.FastEffects
+            }
+        }
+    }
+
+    // Give the curtain one rendered frame at full opacity, then launch once.
+    Timer {
+        interval: 220
+        running: Auth.success && !Auth.launchRequested
+        onTriggered: Auth.launch()
+    }
+
+    // Fullscreen blackout before poweroff/reboot.
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        z: 9999
+        visible: Shutdown.armed
+        opacity: Shutdown.armed ? 1 : 0
+    }
+}

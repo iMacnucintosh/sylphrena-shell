@@ -6,7 +6,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ### Aislamiento de Plasma (fase 1)
 
-- **Login**: plasmalogin → greetd + tuigreet con autologin a Hyprland (`[initial_session]` en `/etc/greetd/config.toml`; tras logout queda el greeter tuigreet). plasmalogin instalado pero deshabilitado.
+- **Login**: plasmalogin → greetd con autologin inicial a Hyprland y greeter Quickshell Material You tras logout. Teclado español fijo; handoff corto bajo cortina negra, VT limpio y recuperación ante timeout para evitar texto intermedio y pantallas negras permanentes. El Hyprland desechable del greeter arranca directo (sin el retraso del watchdog de `start-hyprland`); plasmalogin sigue instalado pero deshabilitado.
 - **Qt sin plasma-integration**: `QT_QPA_PLATFORMTHEME=kde → qt6ct` en `shell.qml`, `hyprland.lua` y `environment.d`. Los apps Qt pasan de Breeze a Fusion con la **paleta Material**: `caelestia-quiet.py` genera en cada cambio de esquema `~/.config/qt6ct/colors/caelestia.conf` (22 roles de QPalette desde los tokens Material) + `qt6ct.conf` (Papirus por modo, Fusion), con escritura atómica para el hot-reload de qt6ct.
 - **Thunar sin Dolphin**: `plasma-dolphin`/`plasma-kactivitymanagerd` parados y enmascarados (user systemd); override D-Bus de `org.freedesktop.FileManager1` a Thunar (`~/.local/share/dbus-1/services/`). "Open containing folder" y similares ya no suben Dolphin.
 - **`colorreload-gtk-module` vendorizado** en `~/.local/share/gtk-3.0/modules/` (copia del .so de kde-gtk-config): la recarga en vivo de Thunar sobrevive a la desinstalación de Plasma.

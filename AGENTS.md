@@ -18,7 +18,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 ## 2. Entorno del usuario (Manu)
 
 - Arch Linux + **Hyprland 0.57**, sobremesa (sin batería), monitor MSI 1440p @ **144 Hz** por HDMI (`HDMI-A-1`).
-- Login: **greetd + tuigreet** (autologin a `start-hyprland`; plasmalogin instalado pero disabled). Cursor **Adwaita** en GTK/Qt/Hyprland.
+- Login: **greetd + greeter Quickshell Material You** tras logout (autologin inicial a `start-hyprland`; compositor desechable del greeter con `Hyprland` directo para un handoff rápido, teclado `es`, cortina negra + VT limpio y watchdog anti-stuck). Instalación con `greeter/install-greeter.sh`; plasmalogin instalado pero disabled. Cursor **Adwaita** en GTK/Qt/Hyprland.
 - Locale `es_ES.UTF-8`; **todo lo nuevo va con i18n**: cadenas vía `Tr.tr` / `Tr.trN` / `Tr.trCtx` → `es.po` → recompilar el plugin I18n e instalarlo en `~/.local`.
 - Apps por defecto: **kitty** (terminal), **thunar** (explorador, `Super+E`, sirve `FileManager1` vía override D-Bus), **VLC** (vídeo), tema de iconos **Papirus(-Dark)**.
 - Qt platform theme: **qt6ct** (`~/.config/qt6ct`, paleta + Papirus los empuja `caelestia-quiet` en cada esquema). Plasma en proceso de aislamiento (fase 1 hecha; fase 2 = desinstalar).
@@ -110,4 +110,4 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 
 ---
 
-*Última actualización: 2026-10-29 (repaso integral: Clipboard argv/verificación de paths, VPN busy guard, Activities verify cap, Requests 15 s + plugin build user-local, Updates askpass en RAM + heartbeat, Displays hotplug, Steam cap/gate del reload; aislamiento de Plasma fase 1: greetd+tuigreet, theme Qt6ct con paleta Material, module GTK vendorizado, FileManager1 → Thunar, cursor Adwaita). Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*
+*Última actualización: 2026-10-29 (repaso integral: Clipboard argv/verificación de paths, VPN busy guard, Activities verify cap, Requests 15 s + plugin build user-local, Updates askpass en RAM + heartbeat, Displays hotplug, Steam cap/gate del reload; aislamiento de Plasma fase 1: greeter Quickshell sobre greetd, theme Qt6ct con paleta Material, module GTK vendorizado, FileManager1 → Thunar, cursor Adwaita). Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*
