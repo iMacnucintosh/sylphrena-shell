@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Io
 import qs.components
 import qs.modules
 import qs.services
@@ -102,13 +101,30 @@ Item {
         }
     }
 
-    // Killing the greeter compositor drops DRM (AMD goes black). Snapshot the
-    // lock layout first so the user session can show it as an instant wallpaper
-    // until Caelestia paints.
-    Process {
-        command: ["sh", "-c", "grim -t png /tmp/caelestia-handoff.png && chmod a+r /tmp/caelestia-handoff.png"]
+    // Fade to a black curtain before asking greetd to switch sessions.
+    // The UI remains untouched underneath, so an error can fade back instead
+    // of stranding the user on a permanent black screen.
+    Rectangle {
+        id: handoffCurtain
+
+        anchors.fill: parent
+        color: "black"
+        z: 9998
+        opacity: Auth.success ? 1 : 0
+
+        Behavior on opacity {
+            Anim {
+                duration: 200
+                type: Anim.FastEffects
+            }
+        }
+    }
+
+    // Give the curtain one rendered frame at full opacity, then launch once.
+    Timer {
+        interval: 220
         running: Auth.success && !Auth.launchRequested
-        onExited: Auth.launch()
+        onTriggered: Auth.launch()
     }
 
     // Fullscreen blackout before poweroff/reboot.

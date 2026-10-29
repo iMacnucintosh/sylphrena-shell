@@ -23,20 +23,6 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("/etc/greetd/caelestia/launch-qs.sh; exec /etc/greetd/caelestia/exit-compositor.sh")
 end)
 
--- Match the Material background so a dropped DRM frame is not a black void.
-local bg = 0xff161310
-do
-  local f = io.open("/etc/greetd/caelestia/scheme.json", "r")
-  if f then
-    local json = f:read("*a") or ""
-    f:close()
-    local hex = json:match('"background"%s*:%s*"(%x%x%x%x%x%x)"')
-    if hex then
-      bg = tonumber("ff" .. hex, 16) or bg
-    end
-  end
-end
-
 hl.config({
   input = {
     kb_layout = "es",
@@ -50,7 +36,8 @@ hl.config({
     disable_hyprland_logo = true,
     disable_splash_rendering = true,
     disable_hyprland_guiutils_check = true,
-    background_color = bg,
+    -- Solid black after qs exits — shortens the VT flash before the user session.
+    background_color = 0xff000000,
     force_default_wallpaper = 0,
   },
 })

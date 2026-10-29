@@ -12,7 +12,6 @@ EXIT_SRC="$ROOT/greeter/exit-compositor.sh"
 SESSION_SRC="$ROOT/greeter/start-user-session.sh"
 QUIET_SRC="$ROOT/greeter/quiet-exec.sh"
 COMPOSITOR_SRC="$ROOT/greeter/start-greeter-compositor.sh"
-HANDOFF_SRC="$ROOT/greeter/show-handoff.sh"
 
 if [[ ! -d "$GREETER_DIR" ]]; then
   echo "Missing $GREETER_DIR — create it (chown to your user) before installing." >&2
@@ -28,7 +27,6 @@ rsync -a --delete \
   --exclude 'start-user-session.sh' \
   --exclude 'quiet-exec.sh' \
   --exclude 'start-greeter-compositor.sh' \
-  --exclude 'show-handoff.sh' \
   --exclude 'systemd' \
   --exclude 'config.toml.snippet' \
   "$ROOT/greeter/" "$QS_DST/"
@@ -40,10 +38,9 @@ install_wrappers() {
   cp -f "$SESSION_SRC" "$GREETER_DIR/start-user-session.sh"
   cp -f "$QUIET_SRC" "$GREETER_DIR/quiet-exec.sh"
   cp -f "$COMPOSITOR_SRC" "$GREETER_DIR/start-greeter-compositor.sh"
-  cp -f "$HANDOFF_SRC" "$GREETER_DIR/show-handoff.sh"
   chmod 755 "$GREETER_DIR/launch-qs.sh" "$GREETER_DIR/exit-compositor.sh" \
     "$GREETER_DIR/start-user-session.sh" "$GREETER_DIR/quiet-exec.sh" \
-    "$GREETER_DIR/start-greeter-compositor.sh" "$GREETER_DIR/show-handoff.sh"
+    "$GREETER_DIR/start-greeter-compositor.sh"
 }
 
 install_wrappers
