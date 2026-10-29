@@ -85,7 +85,7 @@ PageBase {
             leadingIcon: "timer"
             text: Tr.tr("Timers")
             subtext: Timers.enabled
-                ? Tr.tr("Quick timers from the clock popout")
+                ? Tr.tr("Quick timers")
                 : Tr.tr("Disabled — active timers are cleared")
             checked: GlobalConfig.addons.timers.enabled
             onToggled: Timers.setEnabled(checked)

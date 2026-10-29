@@ -64,7 +64,12 @@ ColumnLayout {
             spacing: Tokens.spacing.extraSmall
 
             Repeater {
-                model: [5, 10, 20, 30]
+                model: [
+                    Config.addons.timers.presetMins0,
+                    Config.addons.timers.presetMins1,
+                    Config.addons.timers.presetMins2,
+                    Config.addons.timers.presetMins3
+                ]
 
                 StyledRect {
                     id: preset

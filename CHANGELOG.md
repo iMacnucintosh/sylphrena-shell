@@ -40,7 +40,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 - **Batería revertida a vanilla**: el popout es byte-exacto al de upstream (sin gates por `isLaptopBattery`, selector de perfiles siempre); se elimina `bar.status.hideBatteryOnDesktops` y su toggle; el icono se oculta por la lista de statusIcons.
 - **Reloj revertido al interior vanilla**: la pastilla de hover de bar permanece (el popout del reloj es del fork), pero el fondo en reposo respeta el toggle "Fondo", el padding es condicional y el centrado del calendario vuelve al layout vanilla.
-- **Timers integrados en la página del Reloj**: toggle coherente en `Panels → Taskbar → Clock` (mismo estado `addons.timers.enabled` que Complementos).
+- **Timers en la página del Reloj**: fila desplegable en `Panels → Taskbar → Clock` (mismo patrón que Hidratación) con subtexto «Temporizadores rápidos» y edición de los 4 presets (`addons.timers.presetMins0..3`); el popout del reloj los consume. Mismo `addons.timers.enabled` que Complementos.
 
 ### Nexus → Pantalla (Display)
 

@@ -5173,12 +5173,29 @@ msgstr "Complemento desactivado"
 
 
 #: modules/nexus/pages/ComplementsPage.qml
-msgid "Quick timers from the clock popout"
-msgstr "Temporizadores rápidos desde el popout del reloj"
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Quick timers"
+msgstr "Temporizadores rápidos"
 
 #: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Disabled — active timers are cleared"
 msgstr "Desactivado: se cancelan los temporizadores activos"
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Presets: %1 · %2 · %3 · %4 min"
+msgstr "Presets: %1 · %2 · %3 · %4 min"
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Preset %1"
+msgstr "Preset %1"
+
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Quick timer button duration (min)"
+msgstr "Duración del botón de temporizador rápido (min)"
 
 #: modules/nexus/pages/ComplementsPage.qml
 msgid "Madison VPN config: ~/.config/openfortivpn/config (popout gear). Scripts: ~/.local/share/madison-vpn/"
