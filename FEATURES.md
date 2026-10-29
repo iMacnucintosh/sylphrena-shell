@@ -274,7 +274,7 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 ## Barra (otros retoques)
 
 - **Tray**: muestra también ítems en estado Passive (p. ej. Teams en idle); highlight al hover / menú abierto; tamaño de icono estable.
-- **Status icons**: pastilla al hover como el tray; en PC de sobremesa se oculta el icono de batería.
+- **Status icons**: pastilla al hover como el tray; en PC de sobremesa se oculta el icono de batería (config `bar.status.hideBatteryOnDesktops`); si se fuerza visible sin batería, su popout muestra «Sin batería (escritorio)» y **el selector de perfiles de energía sigue ahí** (power-profiles-daemon funciona en desktop; el fork lo había gateado a portátiles por error).
 - **Popouts** de status un poco más anchos para que no se recorten.
 - **Reloj** centrado de forma estable en el slot de la barra.
 - Indicador de **grabación** bajo el reloj (ver sección anterior).
