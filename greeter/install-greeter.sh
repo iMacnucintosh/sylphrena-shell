@@ -10,6 +10,8 @@ LUA_SRC="$ROOT/greeter/hyprland-greeter.lua"
 LAUNCH_SRC="$ROOT/greeter/launch-qs.sh"
 EXIT_SRC="$ROOT/greeter/exit-compositor.sh"
 SESSION_SRC="$ROOT/greeter/start-user-session.sh"
+QUIET_SRC="$ROOT/greeter/quiet-exec.sh"
+COMPOSITOR_SRC="$ROOT/greeter/start-greeter-compositor.sh"
 
 if [[ ! -d "$GREETER_DIR" ]]; then
   echo "Missing $GREETER_DIR — create it (chown to your user) before installing." >&2
@@ -23,14 +25,24 @@ rsync -a --delete \
   --exclude 'launch-qs.sh' \
   --exclude 'exit-compositor.sh' \
   --exclude 'start-user-session.sh' \
+  --exclude 'quiet-exec.sh' \
+  --exclude 'start-greeter-compositor.sh' \
   --exclude 'config.toml.snippet' \
   "$ROOT/greeter/" "$QS_DST/"
 
-cp -f "$LUA_SRC" "$GREETER_DIR/hyprland-greeter.lua"
-cp -f "$LAUNCH_SRC" "$GREETER_DIR/launch-qs.sh"
-cp -f "$EXIT_SRC" "$GREETER_DIR/exit-compositor.sh"
-cp -f "$SESSION_SRC" "$GREETER_DIR/start-user-session.sh"
-chmod 755 "$GREETER_DIR/launch-qs.sh" "$GREETER_DIR/exit-compositor.sh" "$GREETER_DIR/start-user-session.sh"
+install_wrappers() {
+  cp -f "$LUA_SRC" "$GREETER_DIR/hyprland-greeter.lua"
+  cp -f "$LAUNCH_SRC" "$GREETER_DIR/launch-qs.sh"
+  cp -f "$EXIT_SRC" "$GREETER_DIR/exit-compositor.sh"
+  cp -f "$SESSION_SRC" "$GREETER_DIR/start-user-session.sh"
+  cp -f "$QUIET_SRC" "$GREETER_DIR/quiet-exec.sh"
+  cp -f "$COMPOSITOR_SRC" "$GREETER_DIR/start-greeter-compositor.sh"
+  chmod 755 "$GREETER_DIR/launch-qs.sh" "$GREETER_DIR/exit-compositor.sh" \
+    "$GREETER_DIR/start-user-session.sh" "$GREETER_DIR/quiet-exec.sh" \
+    "$GREETER_DIR/start-greeter-compositor.sh"
+}
+
+install_wrappers
 
 # Palette / wallpaper / face / font (also refreshes qs via _sync_greeter_ui).
 python3 - <<'PY'
@@ -45,11 +57,8 @@ ns["_sync_greeter"]()
 print(f"Synced greeter assets into {ns['_GREETER_DIR']}")
 PY
 
-# Keep launch wrapper after quiet sync (which only mirrors qs/).
-cp -f "$LAUNCH_SRC" "$GREETER_DIR/launch-qs.sh"
-cp -f "$EXIT_SRC" "$GREETER_DIR/exit-compositor.sh"
-cp -f "$SESSION_SRC" "$GREETER_DIR/start-user-session.sh"
-chmod 755 "$GREETER_DIR/launch-qs.sh" "$GREETER_DIR/exit-compositor.sh" "$GREETER_DIR/start-user-session.sh"
+# Keep wrappers after quiet sync (which only mirrors qs/).
+install_wrappers
 
 elevate() {
   if sudo -n true 2>/dev/null; then
@@ -69,7 +78,7 @@ elevate cp -f "$GREETER_DIR/hyprland-greeter.lua" /etc/greetd/hyprland-greeter.l
 # Do not wrap this in dbus-run-session: its private bus kept the greeter PAM
 # session alive for ~5.3 s after qs/Hyprland exited, exposing the old VT.
 # pam_systemd already provides the greeter user's normal runtime/user bus.
-GREETD_CMD='env HOME=/var/lib/regreet XDG_CACHE_HOME=/var/lib/regreet/cache XDG_CONFIG_HOME=/var/lib/regreet/config XDG_STATE_HOME=/var/lib/regreet/state QT_QPA_PLATFORM=wayland XKB_DEFAULT_LAYOUT=es /usr/bin/start-hyprland -- -c /etc/greetd/hyprland-greeter.lua'
+GREETD_CMD='/etc/greetd/caelestia/start-greeter-compositor.sh'
 elevate tee /etc/greetd/config.toml >/dev/null <<EOF
 [terminal]
 vt = 1

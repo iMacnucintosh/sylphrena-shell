@@ -29,6 +29,9 @@ hl.config({
     kb_variant = "",
     kb_options = "",
   },
+  debug = {
+    enable_stdout_logs = false,
+  },
   misc = {
     disable_hyprland_logo = true,
     disable_splash_rendering = true,
