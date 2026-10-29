@@ -26,6 +26,7 @@ Repositorio: [iMacnucintosh/hyprland-shell](https://github.com/iMacnucintosh/hyp
 | **Pantalla** | Nexus → Pantalla: modo (Hz), escala y VRR por monitor (Nunca / Automático / Siempre) |
 | **Atajos** | Remapeables desde Nexus; Super+E → Thunar; atajos de activities |
 | **Tiempo** | Buscar ciudad en Nexus → Idioma y región, o ubicación automática por IP |
+| **Lock** | Columna derecha: notificaciones (35 %) con scroll arriba, compañera **Sylphrena** (65 %) abajo (igual que el greeter) |
 
 ---
 
@@ -130,7 +131,7 @@ Inspirado en [arch-update-checker](https://github.com/iMacnucintosh/arch-update-
 - Icono en status (junto a Madison VPN) **solo si hay paquetes**; badge con el número; popout rápido.
 - Poll cada **30 min**; toast al detectar paquetes nuevos (default on).
 - **Actualizar sistema**: popup de contraseña → en **panel** corre en segundo plano; en **Nexus** muestra log en vivo. Notificación al terminar + rechequeo. Paquete suelto / orphans siguen en terminal.
-- **Seguridad del install**: la contraseña vive **solo en memoria** (`run-system-update.sh` no escribe fichero de askpass; hace `sudo -S -v` antes de cada paso elevado para refrescar el timestamp). El timeout de instalación (45 min) tiene *heartbeat*: solo corta si el instalador lleva 45 min **sin imprimir nada** — nunca mata un `pacman` en mitad de una transacción.
+- **Seguridad del install**: la contraseña vive **solo en memoria** (helper Python + socket unix en `$XDG_RUNTIME_DIR`; no hay fichero `.pw`). yay/pacman usan **`sudo -A`** contra ese askpass — el timestamp de sudo es por TTY y no sobrevive a un Process sin TTY. El timeout de instalación (45 min) tiene *heartbeat*: solo corta si el instalador lleva 45 min **sin imprimir nada** — nunca mata un `pacman` en mitad de una transacción.
 
 ---
 
@@ -371,6 +372,17 @@ el theming de GTK/iconos) invoca `scripts/generate-opencode-theme.py` + escribe 
 - Peculiaridad del format: los hex DEBEN llevar `#` y **no se aceptan referencias entre tokens**
   (`$text.*`/`$background.*`) en temas de usuario — solo refs `$hue.<nombre>.<step>`; los
   built-in evitan esa validación, los nuestros no (lecciones del debug en este script).
+
+## Lockscreen
+
+La columna derecha del lock (tras CPU/RAM) se parte **35/65**:
+
+- **Arriba**: notificaciones agrupadas por app, con scrollbar cuando no caben.
+- **Abajo**: **Sylphrena**, la misma compañera honorspren del greeter Quickshell: saludo por hora, líneas idle a máquina de escribir, orbe SoftBurst y estados al escribir la contraseña, fallar PAM o desbloquear.
+
+El panel del lock usa tokens Material de la sesión (`Tokens` / `Colours`) y PAM (`lock.pam`), no el `Theme`/`Auth` del greeter.
+
+---
 
 ## Plugin C++ (build user-local)
 

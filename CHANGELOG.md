@@ -4,6 +4,15 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## 2026-10-29
 
+### Updates
+
+- Al pulsar **Actualizar** en el popout de la bandeja, el campo de contraseña recibe el foco solo (teclado Exclusive en el diálogo).
+- El instalador vuelve a usar `sudo -A`, pero la contraseña vive en un helper en RAM (socket unix en `$XDG_RUNTIME_DIR`, sin fichero). El timestamp de `sudo -S -v` no sirve aquí: es por TTY y el Process de Quickshell no tiene TTY, así que `-n` fallaba con «a password is required».
+
+### Lockscreen
+
+- La columna derecha se parte **35/65**: **notificaciones arriba** (con scrollbar) y **Sylphrena abajo**, la misma compañera del greeter (máquina de escribir, orbe SoftBurst, estados PAM de escuchando / error / desbloqueo).
+
 ### Aislamiento de Plasma (fase 1)
 
 - **Login**: plasmalogin → greetd con autologin inicial a Hyprland y greeter Quickshell Material You tras logout. Teclado español fijo; handoff corto bajo cortina negra, VT limpio y recuperación ante timeout. Tanto el greeter como la sesión de usuario arrancan Hyprland sin TTY de control y con stdout a log (el logo ASCII + debug ya no quedan en el búfer de tty1); `UserStopDelaySec=0` y `TimeoutStopSec=8` en user@ evitan la pantalla negra de ~10 s al reentrar (systemd no espera al user@ anterior ni a coredumps enormes); el compositor desechable se termina por su watchdog para evitar el shutdown de Hyprland 0.57 que tardaba ~5 s y acababa en segfault; plasmalogin sigue instalado pero deshabilitado.

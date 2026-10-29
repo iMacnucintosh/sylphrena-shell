@@ -226,7 +226,7 @@ Singleton {
             // Keep pendingMode so the password UI stays open for retry
             return;
         }
-        // Auth OK — hand password to the update script over stdin (creates askpass itself)
+        // Auth OK — hand password to the update script over stdin (in-memory askpass helper)
         root.pendingMode = "";
         root.appendLog(Tr.tr("Starting system update…"));
         if (root.installMode === "background")

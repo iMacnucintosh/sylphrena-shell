@@ -27,6 +27,7 @@ Item {
 
     property alias currentName: popoutState.currentName
     property alias hasCurrent: popoutState.hasCurrent
+    readonly property alias sticky: popoutState.sticky
     property real currentCenter
 
     property string detachedMode
@@ -111,6 +112,9 @@ Item {
         onDetachRequested: mode => root.detach(mode)
     }
 
+    readonly property bool needsKeyboard: root.isDetached || (root.hasCurrent && (root.currentName === "wirelesspassword" || root.currentName === "vpnOtp" || root.currentName === "vpnSettings" || root.currentName === "updatesPassword" || root.currentName === "clock"))
+    readonly property bool exclusiveKeyboard: root.hasCurrent && root.currentName === "updatesPassword"
+
     HyprlandFocusGrab {
         active: root.isDetached
         windows: [QsWindow.window]
@@ -118,11 +122,11 @@ Item {
     }
 
     Binding {
-        when: root.isDetached || (root.hasCurrent && (root.currentName === "wirelesspassword" || root.currentName === "vpnOtp" || root.currentName === "vpnSettings" || root.currentName === "updatesPassword" || root.currentName === "clock"))
+        when: root.needsKeyboard
 
         target: QsWindow.window
         property: "WlrLayershell.keyboardFocus"
-        value: WlrKeyboardFocus.OnDemand
+        value: root.exclusiveKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.OnDemand
     }
 
     Comp {

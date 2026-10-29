@@ -34,7 +34,6 @@ ColumnLayout {
     }
 
     function focusPasswordField(): void {
-        passwordField.text = "";
         root.forceActiveFocus();
         passwordField.forceActiveFocus();
     }
@@ -44,9 +43,16 @@ ColumnLayout {
 
     Keys.onEscapePressed: closeDialog()
 
+    Component.onCompleted: {
+        if (shouldBeVisible)
+            focusTimer.restart();
+    }
+
     onShouldBeVisibleChanged: {
         if (shouldBeVisible) {
-            // Wait for OnDemand keyboard focus Binding to apply (same pattern as Wi-Fi password)
+            passwordField.text = "";
+            // Exclusive keyboard applies on the same frame as the switch
+            // from the updates list; wait a tick so the field can take focus.
             focusTimer.restart();
         } else if (Updates.awaitingPassword && !Updates.installing) {
             // Left the password UI without confirming (e.g. hover dismissed the popout)
@@ -85,17 +91,32 @@ ColumnLayout {
         }
         function onAuthErrorChanged(): void {
             // Wrong password — keep dialog open and refocus for retry
-            if (root.shouldBeVisible && Updates.authError.length)
+            if (root.shouldBeVisible && Updates.authError.length) {
+                passwordField.text = "";
                 focusTimer.restart();
+            }
         }
     }
 
     Timer {
         id: focusTimer
 
-        interval: 150
+        interval: 50
         onTriggered: {
-            if (root.shouldBeVisible)
+            if (!root.shouldBeVisible)
+                return;
+            root.focusPasswordField();
+            if (!passwordField.activeFocus)
+                retryFocus.restart();
+        }
+    }
+
+    Timer {
+        id: retryFocus
+
+        interval: 120
+        onTriggered: {
+            if (root.shouldBeVisible && !passwordField.activeFocus)
                 root.focusPasswordField();
         }
     }
@@ -138,6 +159,7 @@ ColumnLayout {
         placeholderText: Tr.tr("Password")
         echoMode: TextInput.Password
         enabled: !Updates.installing
+        focus: root.shouldBeVisible
 
         Keys.onReturnPressed: root.submit()
         Keys.onEnterPressed: root.submit()
