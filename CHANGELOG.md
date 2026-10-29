@@ -29,6 +29,12 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - **Juegos (Steam)**: muestreo de logros capado a 60 juegos (los más jugados) y refresco periódico solo con la pestaña Juegos visible.
 - **OpenCode**: tema `caelestia` con gemelas `caelestia`/`caelestia-alt` para el hot-reload por flip de nombre; `generate-opencode-theme.py` calcula `pick_sources()` una sola vez.
 
+### Nexus reorganizado
+
+- Apariencia en **Activities** (comportamiento + look por activity) y **Wallpaper & style** (estética global; con activities activas escribe el estilo de Principal vía servicio).
+- **Complementos** es el hub de todos los features opt-in: Madison VPN, Timers, Hidratación, Juegos/Steam y **Clipboard** (su max-items migró desde Services, que queda para servicios de sistema).
+- Páginas con `id` estable + `PageRegistry.idxOf()`: el salto Updates→Nexus ya no se descoloca al insertar páginas.
+
 ### Nexus → Pantalla (Display)
 
 - Nueva página en Connectivity (encima de Audio): una tarjeta por monitor con **modo (Hz)**, **escala** y **VRR / Adaptive Sync**.

@@ -288,8 +288,11 @@ Ya presentes en este fork respecto a un Caelestia “vanilla” típico:
 
 - **Atajos de Hyprland remapeables** desde Nexus (genera `caelestia-binds.lua`), incluyendo teclas **F13+**.
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
-- Página **Shell** (activities + opciones de barra relacionadas).
-- UI de colores / wallpapers acoplada al look de la activity en edición.
+- Apariencia dividida en **dos páginas coherentes**:
+  - **Activities** — comportamiento (enable, iconos, desktops, apps ancladas) + el look de cada activity (los botones Wallpapers/Colours editan esa activity; si la activity no tiene override, hereda de Principal).
+  - **Wallpaper & style** — estética **global**: fondo, transparencia, modo claro/oscuro y light apps. Con activities activas, sus toggles escriben el estilo de la **activity Principal** (nunca diverge del mecanismo por activity). Las subpáginas compartidas limpian el id de activity en edición.
+- **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí, no en Services; Services queda para servicios del sistema).
+- Las páginas del nav llevan **id estable** (`PageRegistry.idxOf`) — los saltos programáticos (Updates → Nexus) ya no dependen de índices hardcodeados.
 - Traducciones **español** ampliadas para las cadenas nuevas.
 
 ---
