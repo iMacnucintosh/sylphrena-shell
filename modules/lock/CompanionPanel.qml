@@ -9,7 +9,7 @@ import qs.components
 import qs.services
 import qs.modules.lock
 
-// Sylphrena — same honorspren companion as the greeter, wired to PAM.
+// Sylphrena — same wind-spirit companion as the greeter, wired to PAM.
 StyledRect {
     id: root
 
@@ -33,11 +33,11 @@ StyledRect {
 
     readonly property var idleLines: [
         Tr.tr("There you are! I was looking for you in the winds"),
-        Tr.tr("Life before death"),
-        Tr.tr("Strength before weakness"),
-        Tr.tr("Journey before destination"),
+        Tr.tr("Breath before silence"),
+        Tr.tr("The crack before the steel"),
+        Tr.tr("The steps before the goal"),
         Tr.tr("The sky is still… a good moment for the journey"),
-        Tr.tr("I can wait. Spren are patient… sometimes"),
+        Tr.tr("I can wait. Wind spirits are patient… sometimes"),
         Tr.tr("Your bond with this machine is not closed yet"),
         Tr.tr("Tell me a secret: the password will do")
     ]

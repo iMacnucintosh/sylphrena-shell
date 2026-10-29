@@ -378,7 +378,7 @@ el theming de GTK/iconos) invoca `scripts/generate-opencode-theme.py` + escribe 
 La columna derecha del lock (tras CPU/RAM) se parte **35/65**:
 
 - **Arriba**: notificaciones agrupadas por app, con scrollbar cuando no caben.
-- **Abajo**: **Sylphrena**, la misma compañera honorspren del greeter Quickshell: saludo por hora, líneas idle a máquina de escribir, orbe SoftBurst y estados al escribir la contraseña, fallar PAM o desbloquear.
+- **Abajo**: **Sylphrena**, la misma compañera espíritu del viento del greeter Quickshell: saludo por hora, líneas idle a máquina de escribir, orbe SoftBurst y estados al escribir la contraseña, fallar PAM o desbloquear.
 
 El panel del lock usa tokens Material de la sesión (`Tokens` / `Colours`) y PAM (`lock.pam`), no el `Theme`/`Auth` del greeter.
 

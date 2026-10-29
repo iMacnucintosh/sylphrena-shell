@@ -5735,24 +5735,24 @@ msgid "There you are! I was looking for you in the winds"
 msgstr "¡Ahí estás! Te estaba buscando entre los vientos"
 
 #: modules/lock/CompanionPanel.qml
-msgid "Life before death"
-msgstr "Vida antes que muerte"
+msgid "Breath before silence"
+msgstr "El aliento antes que el silencio"
 
 #: modules/lock/CompanionPanel.qml
-msgid "Strength before weakness"
-msgstr "Fuerza antes que debilidad"
+msgid "The crack before the steel"
+msgstr "La grieta antes que el acero"
 
 #: modules/lock/CompanionPanel.qml
-msgid "Journey before destination"
-msgstr "Viaje antes que destino"
+msgid "The steps before the goal"
+msgstr "Los pasos antes que la meta"
 
 #: modules/lock/CompanionPanel.qml
 msgid "The sky is still… a good moment for the journey"
 msgstr "El cielo está quieto… buen momento para la jornada"
 
 #: modules/lock/CompanionPanel.qml
-msgid "I can wait. Spren are patient… sometimes"
-msgstr "Puedo esperar. Los spren somos pacientes… a veces"
+msgid "I can wait. Wind spirits are patient… sometimes"
+msgstr "Puedo esperar. Los espíritus del viento somos pacientes… a veces"
 
 #: modules/lock/CompanionPanel.qml
 msgid "Your bond with this machine is not closed yet"

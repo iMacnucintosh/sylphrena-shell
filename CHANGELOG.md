@@ -2,6 +2,13 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 2026-10-30
+
+### Compañera Sylphrena (greeter + lock)
+
+- Las tres líneas del Primer Ideal y la de los spren pasan a ser **versos propios** con el mismo ritmo («El aliento antes que el silencio», «La grieta antes que el acero», «Los pasos antes que la meta», «Los espíritus del viento somos pacientes… a veces»): la compañera conserva su voz y su carácter sin reproducir la traducción publicada. Comentarios y documentación usan «espíritu del viento».
+- `greeter/modules/CompanionPanel.qml` y `modules/lock/CompanionPanel.qml` actualizados (msgids nuevos en `es.po`, plugin I18n recompilado e instalado en `~/.local`); la copia desplegada del greeter en `/etc/greetd/caelestia/qs/` queda sincronizada.
+
 ## 2026-10-29
 
 ### Updates

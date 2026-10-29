@@ -6,7 +6,7 @@ import M3Shapes
 import qs.components
 import qs.services
 
-// Sylphrena — honorspren companion (Stormlight vibes, no spoilers). M3 UI.
+// Sylphrena — wind-spirit companion with an original voice. M3 UI.
 StyledRect {
     id: root
 
@@ -24,14 +24,14 @@ StyledRect {
         return "Buenas noches";
     }
 
-    // Curious honorspren voice. Only the First Ideal (safe pre–Viento y Verdad).
+    // Curious wind-spirit voice: original lines, no quotes from any book.
     readonly property var idleLines: [
         "¡Ahí estás! Te estaba buscando entre los vientos",
-        "Vida antes que muerte",
-        "Fuerza antes que debilidad",
-        "Viaje antes que destino",
+        "El aliento antes que el silencio",
+        "La grieta antes que el acero",
+        "Los pasos antes que la meta",
         "El cielo está quieto… buen momento para la jornada",
-        "Puedo esperar. Los spren somos pacientes… a veces",
+        "Puedo esperar. Los espíritus del viento somos pacientes… a veces",
         "Tu vínculo con esta máquina aún no se ha cerrado",
         "Cuéntame un secreto: la contraseña basta"
     ]
