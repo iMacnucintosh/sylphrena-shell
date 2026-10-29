@@ -193,6 +193,10 @@ msgstr "Volumen (%1%)"
 msgid "Open settings"
 msgstr "Abrir ajustes"
 
+#: modules/bar/popouts/Battery.qml
+msgid "No battery (desktop)"
+msgstr "Sin batería (escritorio)"
+
 #: modules/bar/popouts/Battery.qml utils/SysInfo.qml
 #, qt-plural-format
 msgid "%n day"

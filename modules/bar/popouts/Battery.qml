@@ -52,7 +52,17 @@ Column {
 
     spacing: Tokens.spacing.medium
     // Grow with content so long translations / profile pills are not clipped.
-    width: Math.max(Tokens.sizes.bar.batteryWidth, profiles.visible ? profiles.implicitWidth : 0)
+    width: Math.max(Tokens.sizes.bar.batteryWidth, profiles.implicitWidth)
+
+    // Empty state: the icon can be force-shown via Nexus auto-hide config, and
+    // on desktops every other child hides — show why instead of an empty card.
+    StyledText {
+        width: parent.width
+        wrapMode: Text.Wrap
+        visible: !UPower.displayDevice.isLaptopBattery
+        text: Tr.tr("No battery (desktop)")
+        color: Colours.palette.m3onSurfaceVariant
+    }
 
     StyledText {
         width: parent.width
@@ -145,9 +155,8 @@ Column {
     StyledRect {
         id: profiles
 
-        // Power profiles only make sense on laptops; desktops stay on Performance.
-        visible: UPower.displayDevice.isLaptopBattery
-
+        // Power profiles are daemon-level, not laptop-level: switchable on
+        // desktops too (vanilla behaviour; the fork gated it wrongly).
         property string current: {
             const p = PowerProfiles.profile;
             if (p === PowerProfile.PowerSaver)
