@@ -290,6 +290,8 @@ Ya presentes en este fork respecto a un Caelestia “vanilla” típico:
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
 - Apariencia **unificada en Activities**: una sola página para el comportamiento (enable, iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
 - **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí, no en Services; Services queda para servicios del sistema).
+- **Status icons honestos**: el auto-ocultado runtime del fork es config explícita (`bar.status`) y visible en `Panels → Taskbar → Status icons → Auto-hide` (batería en desktops, updates solo con paquetes; VPN atado al complemento con fila informativa).
+- **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-references entre ambas.
 - Las páginas del nav llevan **id estable** (`PageRegistry.idxOf`) — los saltos programáticos (Updates → Nexus) ya no dependen de índices hardcodeados.
 - Traducciones **español** ampliadas para las cadenas nuevas.
 

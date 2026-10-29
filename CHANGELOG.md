@@ -34,6 +34,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - Apariencia **unificada en Activities**: la tarjeta de Principal es el "look general" (las demás heredan o overridean), marqué con etiqueta "Look general"; el switch maestro de fondo de pantalla va en General. Sin doble sitio para el estético.
 - **Complementos** es el hub de todos los features opt-in: Madison VPN, Timers, Hidratación, Juegos/Steam y **Clipboard** (su max-items migró desde Services, que queda para servicios de sistema).
 - Páginas con `id` estable + `PageRegistry.idxOf()`: el salto Updates→Nexus ya no se descoloca al insertar páginas.
+- Status icons: el auto-hide runtime (batería desktop, updates sin paquetes) pasaron a config real `bar.status` con toggles en `Panels → Taskbar → Status icons`; contenido de workspaces movido a Activities ("Escritorios de la barra"), que guarda solo apariencia en Taskbar.
 
 ### Nexus → Pantalla (Display)
 

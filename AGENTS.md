@@ -36,7 +36,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 - `main` está **protegida** (toda escritura exige PR). Flujo: rama `feature/*` o `docs/*` + PR (vía `gh`, HTTPS), y merge de la PR. El push directo a `main` lo rechazan las rules del repo (GH013).
 - `.gitignore` cubre `__pycache__/` y `.cursor-tmp/`.
 - Opciones nuevas: nodo en config (GlobalConfig) si hace falta rebuild del plugin, exposición en Nexus, y **documentación en FEATURES.md**.
-- Nexus: `PageRegistry` lleva `id` estable por página — saltos programáticos usan `idxOf(id)`, jamás índices hardcodeados; el look global **es** el estilo de Principal (nunca nodos globales sueltos ni páginas duplicadas).
+- Nexus: `PageRegistry` lleva `id` estable por página — saltos programáticos usan `idxOf(id)`, jamás índices hardcodeados; el look global **es** el estilo de Principal (nunca nodos globales sueltos ni páginas duplicadas). El auto-ocultado de iconos de estado es config real (`bar.status`), nunca runtime invisible.
 
 ## 4. Mapa del código
 
