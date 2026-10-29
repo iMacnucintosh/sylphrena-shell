@@ -33,9 +33,10 @@ ec=$?
 # exposes tty1 for a frame, it will be solid black instead of old boot/log text.
 if [[ -w /dev/tty1 ]]; then
   /usr/bin/setterm --cursor off --foreground black --background black --clear all \
-    </dev/tty1 >/dev/tty1 2>/dev/null \
-    || printf '\033[2J\033[3J\033[H\033[?25l' >/dev/tty1 2>/dev/null \
-    || true
+    </dev/tty1 >/dev/tty1 2>/dev/null || true
+  # RIS + clear screen + clear scrollback; do this even when setterm succeeds,
+  # as KD_GRAPHICS may defer its visible repaint until DRM is released.
+  printf '\033c\033[2J\033[3J\033[H\033[?25l' >/dev/tty1 2>/dev/null || true
 fi
 
 echo "qs exited $ec at $(date -Is)" >>"$LOG"
