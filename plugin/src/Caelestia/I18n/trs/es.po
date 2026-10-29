@@ -5717,3 +5717,60 @@ msgstr "Complementos opcionales del fork (VPN, portapapeles, Steam, …)"
 #: modules/nexus/pages/ComplementsPage.qml
 msgid "Disabled — watcher processes are stopped"
 msgstr "Desactivado — los vigilantes del portapapeles se han detenido"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Good morning"
+msgstr "Buenos días"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Good afternoon"
+msgstr "Buenas tardes"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Good evening"
+msgstr "Buenas noches"
+
+#: modules/lock/CompanionPanel.qml
+msgid "There you are! I was looking for you in the winds"
+msgstr "¡Ahí estás! Te estaba buscando entre los vientos"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Life before death"
+msgstr "Vida antes que muerte"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Strength before weakness"
+msgstr "Fuerza antes que debilidad"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Journey before destination"
+msgstr "Viaje antes que destino"
+
+#: modules/lock/CompanionPanel.qml
+msgid "The sky is still… a good moment for the journey"
+msgstr "El cielo está quieto… buen momento para la jornada"
+
+#: modules/lock/CompanionPanel.qml
+msgid "I can wait. Spren are patient… sometimes"
+msgstr "Puedo esperar. Los spren somos pacientes… a veces"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Your bond with this machine is not closed yet"
+msgstr "Tu vínculo con esta máquina aún no se ha cerrado"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Tell me a secret: the password will do"
+msgstr "Cuéntame un secreto: la contraseña basta"
+
+#: modules/lock/CompanionPanel.qml
+#, qt-format
+msgid "The bond closes! Welcome home, %1"
+msgstr "¡El vínculo se cierra! Bienvenido a casa, %1"
+
+#: modules/lock/CompanionPanel.qml
+msgid "I'm listening… is it really you?"
+msgstr "Escucho… ¿eres tú de verdad?"
+
+#: modules/lock/CompanionPanel.qml
+msgid "That wasn't very honorable. Let's try again"
+msgstr "Eso no fue muy honorable. Probemos otra vez"

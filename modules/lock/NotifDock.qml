@@ -8,6 +8,7 @@ import Caelestia.Config
 import Caelestia.I18n
 import qs.components
 import qs.components.containers
+import qs.components.controls
 import qs.components.effects
 import qs.services
 import qs.utils
@@ -77,10 +78,16 @@ ColumnLayout {
         }
 
         StyledListView {
+            id: list
+
             anchors.fill: parent
             visible: !Config.lock.hideNotifs
             spacing: Tokens.spacing.small
             clip: true
+
+            StyledScrollBar.vertical: StyledScrollBar {
+                flickable: list
+            }
 
             model: ScriptModel {
                 values: {
