@@ -34,7 +34,13 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - Apariencia **unificada en Activities**: la tarjeta de Principal es el "look general" (las demás heredan o overridean), marqué con etiqueta "Look general"; el switch maestro de fondo de pantalla va en General. Sin doble sitio para el estético.
 - **Complementos** es el hub de todos los features opt-in: Madison VPN, Timers, Hidratación, Juegos/Steam y **Clipboard** (su max-items migró desde Services, que queda para servicios de sistema).
 - Páginas con `id` estable + `PageRegistry.idxOf()`: el salto Updates→Nexus ya no se descoloca al insertar páginas.
-- Status icons: el auto-hide runtime (batería desktop, updates sin paquetes) pasaron a config real `bar.status` con toggles en `Panels → Taskbar → Status icons`; contenido de workspaces movido a Activities ("Escritorios de la barra"), que guarda solo apariencia en Taskbar.
+- Status icons: updates y VPN usan auto-hide con config real (`bar.status.onlyShowUpdatesWithUpdates` + complemento), con toggles/fila en `Panels → Taskbar → Status icons → Auto-hide`; la batería quedó **vanilla** (se muestra/oculta con la lista "Visible icons"). Contenido de workspaces movido a Activities ("Escritorios de la barra"), que guarda solo apariencia en Taskbar.
+
+### Coherencia con vanilla (poda de fork)
+
+- **Batería revertida a vanilla**: el popout es byte-exacto al de upstream (sin gates por `isLaptopBattery`, selector de perfiles siempre); se elimina `bar.status.hideBatteryOnDesktops` y su toggle; el icono se oculta por la lista de statusIcons.
+- **Reloj revertido al interior vanilla**: la pastilla de hover de bar permanece (el popout del reloj es del fork), pero el fondo en reposo respeta el toggle "Fondo", el padding es condicional y el centrado del calendario vuelve al layout vanilla.
+- **Timers integrados en la página del Reloj**: toggle coherente en `Panels → Taskbar → Clock` (mismo estado `addons.timers.enabled` que Complementos).
 
 ### Nexus → Pantalla (Display)
 

@@ -43,17 +43,10 @@ PageBase {
             onToggled: GlobalConfig.bar.clock.showSeconds = checked
         }
 
-        // Timers live inside the clock popout, so expose the complement here
-        // too; the hub stays in Complements for completeness.
-        SectionHeader {
-            text: Tr.tr("Timers")
-        }
-
         ToggleRow {
-            first: true
             last: true
             leadingIcon: "timer"
-            text: Tr.trCtx("Enabled", "clock timers toggle")
+            text: Tr.tr("Timers")
             subtext: Timers.enabled
                 ? Tr.tr("Quick timers from the clock popout")
                 : Tr.tr("Disabled — active timers are cleared")
