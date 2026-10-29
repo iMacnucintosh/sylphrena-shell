@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell.Io
 import qs.components
 import qs.modules
 import qs.services
@@ -101,13 +102,13 @@ Item {
         }
     }
 
-    // Hold the full greeter layout as the last GPU frame. greetd still has to
-    // kill this compositor, but amdgpu usually keeps that scanout until the
-    // user Hyprland paints — so the lock UI stays on screen instead of fading.
-    Timer {
-        interval: 32
+    // Killing the greeter compositor drops DRM (AMD goes black). Snapshot the
+    // lock layout first so the user session can show it as an instant wallpaper
+    // until Caelestia paints.
+    Process {
+        command: ["sh", "-c", "grim -t png /tmp/caelestia-handoff.png && chmod a+r /tmp/caelestia-handoff.png"]
         running: Auth.success && !Auth.launchRequested
-        onTriggered: Auth.launch()
+        onExited: Auth.launch()
     }
 
     // Fullscreen blackout before poweroff/reboot.
