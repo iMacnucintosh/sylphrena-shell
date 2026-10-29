@@ -44,10 +44,6 @@ StyledRect {
     function collapsed(entry: var): bool {
         if (entry.id === "lockStatus")
             return !Hypr.capsLock && !Hypr.numLock;
-        // Desktop has no battery UI; user can re-enable via Nexus → Panels →
-        // Workspaces-style auto-hide config (bar.status).
-        if (entry.id === "battery")
-            return root.Config.bar.status.hideBatteryOnDesktops && !UPower.displayDevice.isLaptopBattery;
         // Hide updates badge when there is nothing to install (keep visible while installing)
         if (entry.id === "updates")
             return root.Config.bar.status.onlyShowUpdatesWithUpdates && !Updates.hasUpdates && !Updates.busy && !Updates.installing;

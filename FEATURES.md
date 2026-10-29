@@ -274,7 +274,7 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 ## Barra (otros retoques)
 
 - **Tray**: muestra también ítems en estado Passive (p. ej. Teams en idle); highlight al hover / menú abierto; tamaño de icono estable.
-- **Status icons**: pastilla al hover como el tray; en PC de sobremesa se oculta el icono de batería (config `bar.status.hideBatteryOnDesktops`); si se fuerza visible sin batería, su popout muestra «Sin batería (escritorio)» y **el selector de perfiles de energía sigue ahí** (power-profiles-daemon funciona en desktop; el fork lo había gateado a portátiles por error).
+- **Status icons**: pastilla al hover como el tray; el icono de batería se oculta con el toggle de statusIcons (vanilla).
 - **Popouts** de status un poco más anchos para que no se recorten.
 - **Reloj** centrado de forma estable en el slot de la barra.
 - Indicador de **grabación** bajo el reloj (ver sección anterior).
@@ -290,7 +290,7 @@ Ya presentes en este fork respecto a un Caelestia “vanilla” típico:
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
 - Apariencia **unificada en Activities**: una sola página para el comportamiento (enable, iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
 - **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí, no en Services; Services queda para servicios del sistema).
-- **Status icons honestos**: el auto-ocultado runtime del fork es config explícita (`bar.status`) y visible en `Panels → Taskbar → Status icons → Auto-hide` (batería en desktops, updates solo con paquetes; VPN atado al complemento con fila informativa).
+- **Status icons honestos**: el badge de updates y la fila de VPN rigen el auto-ocultado con config explícita (`bar.status.onlyShowUpdatesWithUpdates`; VPN atado al complemento) y es visible en `Panels → Taskbar → Status icons → Auto-hide`. La batería quedó **vanilla**: se muestra/oculta con el toggle de la lista "Visible icons" y su popout es el de siempre («No se ha detectado ninguna batería» o «Power profile: %1» en desktops, con el selector de perfiles intacto).
 - **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-references entre ambas.
 - Las páginas del nav llevan **id estable** (`PageRegistry.idxOf`) — los saltos programáticos (Updates → Nexus) ya no dependen de índices hardcodeados.
 - Traducciones **español** ampliadas para las cadenas nuevas.

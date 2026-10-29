@@ -99,7 +99,6 @@ class BarTray : public settings::ObjectNode {
 class BarStatus : public settings::ObjectNode {
     CONFIG_NODE(BarStatus, settings::ObjectNode)
 
-    CONFIG_PROPERTY(bool, hideBatteryOnDesktops, true)
     CONFIG_PROPERTY(bool, onlyShowUpdatesWithUpdates, true)
 };
 

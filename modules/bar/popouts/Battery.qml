@@ -51,32 +51,17 @@ Column {
     }
 
     spacing: Tokens.spacing.medium
-    // Grow with content so long translations / profile pills are not clipped.
-    width: Math.max(Tokens.sizes.bar.batteryWidth, profiles.implicitWidth)
+    width: Tokens.sizes.bar.batteryWidth
 
-    // Empty state: the icon can be force-shown via Nexus auto-hide config, and
-    // on desktops every other child hides — show why instead of an empty card.
     StyledText {
-        width: parent.width
-        wrapMode: Text.Wrap
-        visible: !UPower.displayDevice.isLaptopBattery
-        text: Tr.tr("No battery (desktop)")
-        color: Colours.palette.m3onSurfaceVariant
+        text: UPower.displayDevice.isLaptopBattery ? Tr.trCtx("Remaining: %1%", "battery remaining").arg(Math.round(UPower.displayDevice.percentage * 100)) : Tr.tr("No battery detected")
     }
 
     StyledText {
-        width: parent.width
-        wrapMode: Text.Wrap
-        visible: UPower.displayDevice.isLaptopBattery
-        text: Tr.trCtx("Remaining: %1%", "battery remaining").arg(Math.round(UPower.displayDevice.percentage * 100))
-    }
-
-    StyledText {
-        width: parent.width
-        wrapMode: Text.Wrap
-        visible: UPower.displayDevice.isLaptopBattery
         text: {
             const dev = UPower.displayDevice;
+            if (!dev.isLaptopBattery)
+                return Tr.tr("Power profile: %1").arg(root.powerProfileToString(PowerProfiles.profile));
 
             if (UPower.onBattery) {
                 const time = root.formatSeconds(dev.timeToEmpty);
@@ -155,8 +140,6 @@ Column {
     StyledRect {
         id: profiles
 
-        // Power profiles are daemon-level, not laptop-level: switchable on
-        // desktops too (vanilla behaviour; the fork gated it wrongly).
         property string current: {
             const p = PowerProfiles.profile;
             if (p === PowerProfile.PowerSaver)

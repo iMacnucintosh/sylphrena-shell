@@ -193,10 +193,6 @@ msgstr "Volumen (%1%)"
 msgid "Open settings"
 msgstr "Abrir ajustes"
 
-#: modules/bar/popouts/Battery.qml
-msgid "No battery (desktop)"
-msgstr "Sin batería (escritorio)"
-
 #: modules/bar/popouts/Battery.qml utils/SysInfo.qml
 #, qt-plural-format
 msgid "%n day"
@@ -5010,12 +5006,14 @@ msgstr "Configura el shell"
 #~ msgid "Screenshot copied to clipboard"
 #~ msgstr "Captura de pantalla copiada al portapapeles"
 
-#~ msgid "No battery detected"
-#~ msgstr "No se ha detectado ninguna batería"
+#: modules/bar/popouts/Battery.qml
+msgid "No battery detected"
+msgstr "No se ha detectado ninguna batería"
 
+#: modules/bar/popouts/Battery.qml
 #, qt-format
-#~ msgid "Power profile: %1"
-#~ msgstr "Perfil de energía: %1"
+msgid "Power profile: %1"
+msgstr "Perfil de energía: %1"
 
 #~ msgid "Wallpaper, fonts, colours"
 #~ msgstr "Fondo de pantalla, fuentes, colores"
@@ -5674,14 +5672,6 @@ msgstr "Mostrar ventanas y sus iconos vive en Activities → Escritorios de la b
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 msgid "Auto-hide"
 msgstr "Auto-ocultar"
-
-#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
-msgid "Hide battery on desktops"
-msgstr "Ocultar batería en escritorios"
-
-#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
-msgid "The battery icon is only meaningful on laptops"
-msgstr "El icono de batería solo tiene sentido en portátiles"
 
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 msgid "Updates only when relevant"

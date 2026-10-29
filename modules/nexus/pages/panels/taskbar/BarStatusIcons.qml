@@ -108,13 +108,7 @@ PageBase {
 
         ToggleRow {
             first: true
-            text: Tr.tr("Hide battery on desktops")
-            subtext: Tr.tr("The battery icon is only meaningful on laptops")
-            checked: Config.bar.status.hideBatteryOnDesktops
-            onToggled: GlobalConfig.bar.status.hideBatteryOnDesktops = checked
-        }
-
-        ToggleRow {
+            last: true
             text: Tr.tr("Updates only when relevant")
             subtext: Tr.tr("The updates badge appears only with pending or installing packages")
             checked: Config.bar.status.onlyShowUpdatesWithUpdates
