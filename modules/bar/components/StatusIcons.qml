@@ -44,12 +44,13 @@ StyledRect {
     function collapsed(entry: var): bool {
         if (entry.id === "lockStatus")
             return !Hypr.capsLock && !Hypr.numLock;
-        // Desktops have no battery / power-profile UI in the status strip
+        // Desktop has no battery UI; user can re-enable via Nexus → Panels →
+        // Workspaces-style auto-hide config (bar.status).
         if (entry.id === "battery")
-            return !UPower.displayDevice.isLaptopBattery;
+            return root.Config.bar.status.hideBatteryOnDesktops && !UPower.displayDevice.isLaptopBattery;
         // Hide updates badge when there is nothing to install (keep visible while installing)
         if (entry.id === "updates")
-            return !Updates.hasUpdates && !Updates.busy && !Updates.installing;
+            return root.Config.bar.status.onlyShowUpdatesWithUpdates && !Updates.hasUpdates && !Updates.busy && !Updates.installing;
         // Complements: Madison VPN can be turned off entirely
         if (entry.id === "vpn")
             return !MadisonVpn.enabled;

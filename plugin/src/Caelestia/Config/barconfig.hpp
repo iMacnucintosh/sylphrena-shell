@@ -94,6 +94,15 @@ class BarTray : public settings::ObjectNode {
     CONFIG_GLOBAL_PROPERTY(QStringList, hiddenIcons, {})
 };
 
+// Auto-hide rules applied on top of the statusIcons list; real config so the
+// Nexus page can expose exactly what the runtime collapses.
+class BarStatus : public settings::ObjectNode {
+    CONFIG_NODE(BarStatus, settings::ObjectNode)
+
+    CONFIG_PROPERTY(bool, hideBatteryOnDesktops, true)
+    CONFIG_PROPERTY(bool, onlyShowUpdatesWithUpdates, true)
+};
+
 class BarClock : public settings::ObjectNode {
     CONFIG_NODE(BarClock, settings::ObjectNode)
 
@@ -115,6 +124,7 @@ class BarConfig : public settings::ObjectNode {
     CONFIG_SUBOBJECT(BarActiveWindow, activeWindow)
     CONFIG_SUBOBJECT(BarTray, tray)
     CONFIG_SUBOBJECT(BarClock, clock)
+    CONFIG_SUBOBJECT(BarStatus, status)
     CONFIG_LIST(EntryList, statusIcons,
         DEFAULT_ARG({
             LIST_ENTRY(lockStatus, true),

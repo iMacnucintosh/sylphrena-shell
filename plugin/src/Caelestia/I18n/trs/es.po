@@ -5651,6 +5651,50 @@ msgstr "Look general"
 msgid "Turns the wallpaper machinery on or off shell-wide"
 msgstr "Activa o desactiva el fondo de pantalla en toda la shell"
 
+#: modules/nexus/pages/ShellPage.qml
+msgid "Desktops in the bar"
+msgstr "Escritorios de la barra"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Content of the workspaces shown on the bar; their visuals live in Panels → Taskbar → Workspaces"
+msgstr "Contenido de los workspaces mostrados en la barra; su apariencia vive en Paneles → Taskbar → Workspaces"
+
+#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
+msgid "Window icons on the desktops"
+msgstr "Iconos de ventana en los escritorios"
+
+#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
+msgid "Showing windows and their icons lives in Activities → Desktops in the bar"
+msgstr "Mostrar ventanas y sus iconos vive en Activities → Escritorios de la barra"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Auto-hide"
+msgstr "Auto-ocultar"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Hide battery on desktops"
+msgstr "Ocultar batería en escritorios"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "The battery icon is only meaningful on laptops"
+msgstr "El icono de batería solo tiene sentido en portátiles"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Updates only when relevant"
+msgstr "Updates solo cuando toca"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "The updates badge appears only with pending or installing packages"
+msgstr "El icono de updates aparece solo con paquetes pendientes o instalándose"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Visible while the complement is enabled"
+msgstr "Visible mientras el complemento esté activo"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Hidden — enable it in Complements"
+msgstr "Oculto — actívalo en Complementos"
+
 #: modules/nexus/PageRegistry.qml
 msgid "Output modes, scale, adaptive sync (VRR)"
 msgstr "Modos, escala y VRR (sync adaptativo) por salida"

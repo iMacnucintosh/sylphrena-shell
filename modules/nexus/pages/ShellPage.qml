@@ -195,6 +195,35 @@ PageBase {
         }
 
         SectionHeader {
+            text: Tr.tr("Desktops in the bar")
+        }
+
+        ToggleRow {
+            first: true
+            text: Tr.trCtx("Show windows", "bar workspaces")
+            subtext: Tr.tr("Show icons of open windows on each workspace")
+            checked: Config.bar.workspaces.showWindows
+            onToggled: GlobalConfig.bar.workspaces.showWindows = checked
+        }
+
+        ToggleRow {
+            text: Tr.trCtx("Windows on special workspaces", "bar workspaces")
+            checked: Config.bar.workspaces.showWindowsOnSpecialWorkspaces
+            onToggled: GlobalConfig.bar.workspaces.showWindowsOnSpecialWorkspaces = checked
+        }
+
+        StepperRow {
+            last: true
+            // TRANSLATORS: maximum number of window icons shown per workspace
+            label: Tr.trCtx("Max window icons", "bar workspaces")
+            value: Config.bar.workspaces.maxWindowIcons
+            from: 0
+            to: 20
+            stepSize: 1
+            onMoved: v => GlobalConfig.bar.workspaces.maxWindowIcons = v
+        }
+
+        SectionHeader {
             text: Tr.tr("Activities")
         }
 

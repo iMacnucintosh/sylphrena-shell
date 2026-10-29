@@ -1,8 +1,10 @@
 pragma ComponentBehavior: Bound
 
+import QtQuick
 import QtQuick.Layouts
 import Caelestia.Config
 import Caelestia.I18n
+import qs.services
 import qs.modules.nexus.common
 
 PageBase {
@@ -96,6 +98,36 @@ PageBase {
             subtext: Tr.tr("Show a details popout when hovering the status icons")
             checked: Config.bar.popouts.statusIcons
             onToggled: GlobalConfig.bar.popouts.statusIcons = checked
+        }
+
+        // Auto-hide (fork semantics explained): the runtime collapses icons
+        // whose data is irrelevant; these toggles make that explicit.
+        SectionHeader {
+            text: Tr.tr("Auto-hide")
+        }
+
+        ToggleRow {
+            first: true
+            text: Tr.tr("Hide battery on desktops")
+            subtext: Tr.tr("The battery icon is only meaningful on laptops")
+            checked: Config.bar.status.hideBatteryOnDesktops
+            onToggled: GlobalConfig.bar.status.hideBatteryOnDesktops = checked
+        }
+
+        ToggleRow {
+            text: Tr.tr("Updates only when relevant")
+            subtext: Tr.tr("The updates badge appears only with pending or installing packages")
+            checked: Config.bar.status.onlyShowUpdatesWithUpdates
+            onToggled: GlobalConfig.bar.status.onlyShowUpdatesWithUpdates = checked
+        }
+
+        InfoRow {
+            last: true
+            icon: "shield_lock"
+            label: Tr.tr("Madison VPN")
+            subtext: MadisonVpn.enabled
+                ? Tr.tr("Visible while the complement is enabled")
+                : Tr.tr("Hidden — enable it in Complements")
         }
     }
 }
