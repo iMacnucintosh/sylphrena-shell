@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick.Layouts
 import Caelestia.Config
 import Caelestia.I18n
+import qs.services
 import qs.modules.nexus.common
 
 PageBase {
@@ -37,10 +38,27 @@ PageBase {
         }
 
         ToggleRow {
-            last: true
             text: Tr.tr("Show seconds")
             checked: Config.bar.clock.showSeconds
             onToggled: GlobalConfig.bar.clock.showSeconds = checked
+        }
+
+        // Timers live inside the clock popout, so expose the complement here
+        // too; the hub stays in Complements for completeness.
+        SectionHeader {
+            text: Tr.tr("Timers")
+        }
+
+        ToggleRow {
+            first: true
+            last: true
+            leadingIcon: "timer"
+            text: Tr.tr("Enabled")
+            subtext: Timers.enabled
+                ? Tr.tr("Quick timers from the clock popout")
+                : Tr.tr("Disabled — active timers are cleared")
+            checked: GlobalConfig.addons.timers.enabled
+            onToggled: Timers.setEnabled(checked)
         }
     }
 }
