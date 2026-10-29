@@ -94,9 +94,15 @@ Singleton {
         if (cmd === "Hyprland" || cmd === "/usr/bin/Hyprland")
             cmd = "/usr/bin/start-hyprland";
 
+        // Hyprland prints its ASCII logo and early debug lines before it can
+        // read the config. Keep those bytes off tty1 during the DRM handoff.
+        const launchCommand = cmd === "start-hyprland" || cmd === "/usr/bin/start-hyprland"
+            ? [`${Theme.dir}/start-user-session.sh`, "/usr/bin/start-hyprland"]
+            : ["sh", "-c", cmd];
+
         // Quit explicitly on `launched`: this leaves a watchdog window to
         // recover the UI if greetd never acknowledges start_session.
-        Greetd.launch(["sh", "-c", cmd], ["XDG_SESSION_TYPE=wayland", "XDG_SESSION_CLASS=user", `XDG_SESSION_DESKTOP=${desktop}`, `XDG_CURRENT_DESKTOP=${desktop}`], false);
+        Greetd.launch(launchCommand, ["XDG_SESSION_TYPE=wayland", "XDG_SESSION_CLASS=user", `XDG_SESSION_DESKTOP=${desktop}`, `XDG_CURRENT_DESKTOP=${desktop}`], false);
     }
 
     Connections {

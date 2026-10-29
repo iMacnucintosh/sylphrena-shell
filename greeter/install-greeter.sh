@@ -8,6 +8,8 @@ GREETER_DIR="${CAELESTIA_GREETER_DIR:-/etc/greetd/caelestia}"
 QS_DST="$GREETER_DIR/qs"
 LUA_SRC="$ROOT/greeter/hyprland-greeter.lua"
 LAUNCH_SRC="$ROOT/greeter/launch-qs.sh"
+EXIT_SRC="$ROOT/greeter/exit-compositor.sh"
+SESSION_SRC="$ROOT/greeter/start-user-session.sh"
 
 if [[ ! -d "$GREETER_DIR" ]]; then
   echo "Missing $GREETER_DIR — create it (chown to your user) before installing." >&2
@@ -19,12 +21,16 @@ rsync -a --delete \
   --exclude 'install-greeter.sh' \
   --exclude 'hyprland-greeter.lua' \
   --exclude 'launch-qs.sh' \
+  --exclude 'exit-compositor.sh' \
+  --exclude 'start-user-session.sh' \
   --exclude 'config.toml.snippet' \
   "$ROOT/greeter/" "$QS_DST/"
 
 cp -f "$LUA_SRC" "$GREETER_DIR/hyprland-greeter.lua"
 cp -f "$LAUNCH_SRC" "$GREETER_DIR/launch-qs.sh"
-chmod 755 "$GREETER_DIR/launch-qs.sh"
+cp -f "$EXIT_SRC" "$GREETER_DIR/exit-compositor.sh"
+cp -f "$SESSION_SRC" "$GREETER_DIR/start-user-session.sh"
+chmod 755 "$GREETER_DIR/launch-qs.sh" "$GREETER_DIR/exit-compositor.sh" "$GREETER_DIR/start-user-session.sh"
 
 # Palette / wallpaper / face / font (also refreshes qs via _sync_greeter_ui).
 python3 - <<'PY'
@@ -41,7 +47,9 @@ PY
 
 # Keep launch wrapper after quiet sync (which only mirrors qs/).
 cp -f "$LAUNCH_SRC" "$GREETER_DIR/launch-qs.sh"
-chmod 755 "$GREETER_DIR/launch-qs.sh"
+cp -f "$EXIT_SRC" "$GREETER_DIR/exit-compositor.sh"
+cp -f "$SESSION_SRC" "$GREETER_DIR/start-user-session.sh"
+chmod 755 "$GREETER_DIR/launch-qs.sh" "$GREETER_DIR/exit-compositor.sh" "$GREETER_DIR/start-user-session.sh"
 
 elevate() {
   if sudo -n true 2>/dev/null; then

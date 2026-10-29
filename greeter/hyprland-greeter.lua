@@ -20,7 +20,7 @@ hl.env("XKB_DEFAULT_LAYOUT", "es")
 hl.env("XKB_DEFAULT_VARIANT", "")
 
 hl.on("hyprland.start", function()
-  hl.exec_cmd("/etc/greetd/caelestia/launch-qs.sh; hyprctl dispatch exit")
+  hl.exec_cmd("/etc/greetd/caelestia/launch-qs.sh; exec /etc/greetd/caelestia/exit-compositor.sh")
 end)
 
 hl.config({
