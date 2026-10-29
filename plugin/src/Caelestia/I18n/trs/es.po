@@ -5185,7 +5185,7 @@ msgstr "Desactivado: se cancelan los temporizadores activos"
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 #, qt-format
 msgid "Presets: %1 · %2 · %3 · %4 min"
-msgstr "Presets: %1 · %2 · %3 · %4 min"
+msgstr "Preajustes: %1 · %2 · %3 · %4 min"
 
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 #, qt-format
