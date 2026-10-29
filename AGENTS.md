@@ -18,7 +18,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 ## 2. Entorno del usuario (Manu)
 
 - Arch Linux + **Hyprland 0.57**, sobremesa (sin batería), monitor MSI 1440p @ **144 Hz** por HDMI (`HDMI-A-1`).
-- Login: **greetd + greeter Quickshell Material You** tras logout (autologin inicial a `start-hyprland`; compositor desechable del greeter con `Hyprland` directo para un handoff rápido, teclado `es`, cortina negra + VT limpio y watchdog anti-stuck). Instalación con `greeter/install-greeter.sh`; plasmalogin instalado pero disabled. Cursor **Adwaita** en GTK/Qt/Hyprland.
+- Login: **greetd + greeter Quickshell Material You** tras logout (autologin inicial a `start-hyprland`; greeter también con `start-hyprland` pero sin `dbus-run-session` privado — retenía PAM ~5,3 s—, teclado `es`, cortina negra + VT limpio y watchdog anti-stuck). Instalación con `greeter/install-greeter.sh`; plasmalogin instalado pero disabled. Cursor **Adwaita** en GTK/Qt/Hyprland.
 - Locale `es_ES.UTF-8`; **todo lo nuevo va con i18n**: cadenas vía `Tr.tr` / `Tr.trN` / `Tr.trCtx` → `es.po` → recompilar el plugin I18n e instalarlo en `~/.local`.
 - Apps por defecto: **kitty** (terminal), **thunar** (explorador, `Super+E`, sirve `FileManager1` vía override D-Bus), **VLC** (vídeo), tema de iconos **Papirus(-Dark)**.
 - Qt platform theme: **qt6ct** (`~/.config/qt6ct`, paleta + Papirus los empuja `caelestia-quiet` en cada esquema). Plasma en proceso de aislamiento (fase 1 hecha; fase 2 = desinstalar).

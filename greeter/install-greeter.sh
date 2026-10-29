@@ -58,10 +58,10 @@ elevate cp -f "$GREETER_DIR/hyprland-greeter.lua" /etc/greetd/hyprland-greeter.l
 
 # greeter passwd HOME is `/` — Hyprland must start with a real HOME or it
 # tries to write /hyprland.log and the greeter looks like a black void.
-# The greeter is disposable: using start-hyprland's watchdog here delayed the
-# DRM handoff by ~6 s after qs exited. Keep the watchdog for the user session,
-# but run the greeter compositor directly for an immediate clean shutdown.
-GREETD_CMD='dbus-run-session env HOME=/var/lib/regreet XDG_CACHE_HOME=/var/lib/regreet/cache XDG_CONFIG_HOME=/var/lib/regreet/config XDG_STATE_HOME=/var/lib/regreet/state QT_QPA_PLATFORM=wayland XKB_DEFAULT_LAYOUT=es /usr/bin/Hyprland -c /etc/greetd/hyprland-greeter.lua'
+# Do not wrap this in dbus-run-session: its private bus kept the greeter PAM
+# session alive for ~5.3 s after qs/Hyprland exited, exposing the old VT.
+# pam_systemd already provides the greeter user's normal runtime/user bus.
+GREETD_CMD='env HOME=/var/lib/regreet XDG_CACHE_HOME=/var/lib/regreet/cache XDG_CONFIG_HOME=/var/lib/regreet/config XDG_STATE_HOME=/var/lib/regreet/state QT_QPA_PLATFORM=wayland XKB_DEFAULT_LAYOUT=es /usr/bin/start-hyprland -- -c /etc/greetd/hyprland-greeter.lua'
 elevate tee /etc/greetd/config.toml >/dev/null <<EOF
 [terminal]
 vt = 1

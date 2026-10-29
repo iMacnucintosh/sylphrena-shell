@@ -202,7 +202,7 @@ require("caelestia-monitors")
 
 Wiring para que Hyprland + Caelestia vivan sin depender de Plasma sin desinstalarlo todavía (la desinstalación es fase 2).
 
-- **Login**: **greetd + greeter Quickshell Material You** con teclado español y autologin inicial a `/usr/bin/start-hyprland`. Tras cerrar sesión, el greeter corre sobre un Hyprland mínimo y entrega la sesión con fundido negro corto: limpia el VT para que no aparezca texto, evita el watchdog de `start-hyprland` en el compositor desechable y recupera la UI si greetd no confirma el arranque. Se instala/actualiza con `greeter/install-greeter.sh`; plasmalogin queda instalado pero deshabilitado (rollback = `systemctl enable plasmalogin`).
+- **Login**: **greetd + greeter Quickshell Material You** con teclado español y autologin inicial a `/usr/bin/start-hyprland`. Tras cerrar sesión, el greeter corre sobre un Hyprland mínimo y entrega la sesión con fundido negro corto: limpia el VT para que no aparezca texto, usa el bus normal de `pam_systemd` (un `dbus-run-session` privado retenía el handoff ~5,3 s) y recupera la UI si greetd no confirma el arranque. Se instala/actualiza con `greeter/install-greeter.sh`; plasmalogin queda instalado pero deshabilitado (rollback = `systemctl enable plasmalogin`).
 - **Plataforma Qt**: cambio en 3 sitios de `QT_QPA_PLATFORMTHEME=kde` a `qt6ct`
   (pragma `Env` en `shell.qml`, env en `hyprland.lua`, `~/.config/environment.d/99-qt-platformtheme.conf`)
   — aplica a processes nuevos; la sesión completa se normaliza al relogin. Los apps Qt ya no dependen de
