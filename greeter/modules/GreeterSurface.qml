@@ -101,28 +101,46 @@ Item {
         }
     }
 
-    // Fade to a black curtain before asking greetd to switch sessions.
-    // The UI remains untouched underneath, so an error can fade back instead
-    // of stranding the user on a permanent black screen.
-    Rectangle {
-        id: handoffCurtain
-
-        anchors.fill: parent
-        color: "black"
-        z: 9998
-        opacity: Auth.success ? 1 : 0
-
-        Behavior on opacity {
-            Anim {
-                duration: 200
-                type: Anim.FastEffects
-            }
+    // Unlock: fade the lock card, keep the wallpaper. greetd must kill this
+    // compositor before starting the session, so a GIF cannot cover the gap.
+    // The last committed wallpaper frame is what amdgpu usually holds until
+    // the user Hyprland paints — better than an intentional black curtain.
+    states: State {
+        when: Auth.success
+        PropertyChanges {
+            target: lockContent
+            opacity: 0
+            scale: 0.98
+        }
+        PropertyChanges {
+            target: content
+            opacity: 0
         }
     }
 
-    // Give the curtain one rendered frame at full opacity, then launch once.
+    transitions: Transition {
+        Anim {
+            target: lockContent
+            property: "opacity"
+            duration: 180
+            type: Anim.FastEffects
+        }
+        Anim {
+            target: lockContent
+            property: "scale"
+            duration: 180
+            type: Anim.FastEffects
+        }
+        Anim {
+            target: content
+            property: "opacity"
+            duration: 180
+            type: Anim.FastEffects
+        }
+    }
+
     Timer {
-        interval: 220
+        interval: 200
         running: Auth.success && !Auth.launchRequested
         onTriggered: Auth.launch()
     }
