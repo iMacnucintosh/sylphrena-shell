@@ -12,6 +12,7 @@ import qs.components.controls
 import qs.components.widgets
 import qs.services
 import qs.utils
+import qs.modules.nexus
 import qs.modules.nexus.common
 
 PageBase {
@@ -61,7 +62,7 @@ PageBase {
         { id: "settings", label: Tr.tr("Settings") }
     ]
 
-    title: Tr.tr("Shell")
+    title: Tr.tr("Activities")
 
     function newActivityId(): string {
         return `activity-${Date.now().toString(36)}`;
@@ -154,6 +155,18 @@ PageBase {
             color: Colours.palette.m3outline
             font: Tokens.font.body.small
             wrapMode: Text.WordWrap
+        }
+
+        NavRow {
+            icon: "wallpaper"
+            text: Tr.tr("Wallpaper & style")
+            subtext: Tr.tr("Global wallpaper, colours and transparency")
+            onClicked: {
+                // The shared look sub-pages edit nState.editingActivityId; a
+                // stale id here would redirect the global page to an activity.
+                root.nState.editingActivityId = "";
+                root.nState.currentPageIdx = PageRegistry.idxOf("wallstyle");
+            }
         }
 
         SectionHeader {

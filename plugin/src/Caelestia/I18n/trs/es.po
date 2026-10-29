@@ -5638,3 +5638,23 @@ msgstr "%1×%2 · %3 Hz"
 #, qt-format
 msgid "This connection tops out at %1 Hz. The panel may support a higher rate over DisplayPort."
 msgstr "Esta conexión llega como máximo a %1 Hz. El panel puede admitir más por DisplayPort."
+
+#: modules/nexus/PageRegistry.qml
+msgid "Behaviour, shortcuts and per-activity look"
+msgstr "Comportamiento, atajos y look por actividad"
+
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/ShellPage.qml
+msgid "Global wallpaper, colours and transparency"
+msgstr "Fondo global, colores y transparencia"
+
+#: modules/nexus/PageRegistry.qml
+msgid "Output modes, scale, adaptive sync (VRR)"
+msgstr "Modos, escala y VRR (sync adaptativo) por salida"
+
+#: modules/nexus/PageRegistry.qml
+msgid "Optional fork features (VPN, clipboard, Steam, …)"
+msgstr "Complementos opcionales del fork (VPN, portapapeles, Steam, …)"
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Disabled — watcher processes are stopped"
+msgstr "Desactivado — los vigilantes del portapapeles se han detenido"
