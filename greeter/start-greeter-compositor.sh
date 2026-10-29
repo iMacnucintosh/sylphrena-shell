@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # greetd default_session entrypoint: Hyprland for the greeter, with no VT chatter.
 set -u
+ulimit -c 0 2>/dev/null || true
 
 export HOME="${HOME:-/var/lib/regreet}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/cache}"

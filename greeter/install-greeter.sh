@@ -27,6 +27,7 @@ rsync -a --delete \
   --exclude 'start-user-session.sh' \
   --exclude 'quiet-exec.sh' \
   --exclude 'start-greeter-compositor.sh' \
+  --exclude 'systemd' \
   --exclude 'config.toml.snippet' \
   "$ROOT/greeter/" "$QS_DST/"
 
@@ -84,8 +85,9 @@ elevate tee /etc/greetd/config.toml >/dev/null <<EOF
 vt = 1
 
 # Primera sesión del boot: autologin directo a Hyprland (como plasmalogin).
+# Wrapped so the ASCII logo/cursor never hits tty1.
 [initial_session]
-command = "/usr/bin/start-hyprland"
+command = "/etc/greetd/caelestia/start-user-session.sh /usr/bin/start-hyprland"
 user = "manu"
 
 # Tras cerrar sesión desde Hyprland: greeter Quickshell (Material You) sobre Hyprland.
@@ -96,6 +98,13 @@ command = "${GREETD_CMD}"
 # command = "/usr/bin/tuigreet --time --cmd /usr/bin/start-hyprland"
 user = "greeter"
 EOF
+
+echo "Installing logind/user stop timeouts (needs elevation)…"
+elevate mkdir -p /etc/systemd/logind.conf.d /etc/systemd/system/user@.service.d
+elevate cp -f "$ROOT/greeter/systemd/logind.conf" /etc/systemd/logind.conf.d/caelestia-greeter.conf
+elevate cp -f "$ROOT/greeter/systemd/user-service.conf" /etc/systemd/system/user@.service.d/caelestia-timeout.conf
+elevate systemctl daemon-reload
+elevate systemctl reload systemd-logind.service
 
 echo "Done. Boot autologin unchanged; after logout you get the Quickshell greeter."
 echo "Logs: /var/lib/regreet/state/qs.log and /tmp/caelestia-greeter-qs.log"
