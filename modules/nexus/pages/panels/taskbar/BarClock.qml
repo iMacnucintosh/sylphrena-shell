@@ -94,6 +94,7 @@ PageBase {
         ConnectedRect {
             id: timersCard
 
+            last: true
             Layout.fillWidth: true
             implicitHeight: timersCol.implicitHeight + Tokens.padding.medium * 2
 
