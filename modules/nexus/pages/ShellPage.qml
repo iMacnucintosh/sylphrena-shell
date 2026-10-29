@@ -12,7 +12,6 @@ import qs.components.controls
 import qs.components.widgets
 import qs.services
 import qs.utils
-import qs.modules.nexus
 import qs.modules.nexus.common
 
 PageBase {
@@ -157,18 +156,6 @@ PageBase {
             wrapMode: Text.WordWrap
         }
 
-        NavRow {
-            icon: "wallpaper"
-            text: Tr.tr("Wallpaper & style")
-            subtext: Tr.tr("Global wallpaper, colours and transparency")
-            onClicked: {
-                // The shared look sub-pages edit nState.editingActivityId; a
-                // stale id here would redirect the global page to an activity.
-                root.nState.editingActivityId = "";
-                root.nState.currentPageIdx = PageRegistry.idxOf("wallstyle");
-            }
-        }
-
         SectionHeader {
             first: true
             text: Tr.tr("General")
@@ -193,11 +180,18 @@ PageBase {
         }
 
         ToggleRow {
-            last: true
             text: Tr.tr("Cross-activity desktop shortcuts")
             subtext: Tr.tr("Allow next/previous desktop shortcuts to leave the current activity; when off, they stay inside it")
             checked: GlobalConfig.activities.crossActivityWorkspaces
             onToggled: GlobalConfig.activities.crossActivityWorkspaces = checked
+        }
+
+        ToggleRow {
+            last: true
+            text: Tr.tr("Display wallpaper")
+            subtext: Tr.tr("Turns the wallpaper machinery on or off shell-wide")
+            checked: Config.background.wallpaperEnabled
+            onToggled: GlobalConfig.background.wallpaperEnabled = checked
         }
 
         SectionHeader {
@@ -249,6 +243,15 @@ PageBase {
                             }
                             color: Colours.palette.m3outline
                             font: Tokens.font.label.small
+                        }
+
+                        // Principal doubles as the shell-wide look: non-principal
+                        // cards either inherit these fields or override them.
+                        StyledText {
+                            visible: root.isPrincipal(actRow.modelData)
+                            text: Tr.tr("General look")
+                            color: Colours.palette.m3onSurfaceVariant
+                            font: Tokens.font.label.medium
                         }
 
                         IconButton {

@@ -19,14 +19,7 @@ QtObject {
             id: "activities",
             label: Tr.tr("Activities"),
             icon: "dashboard_customize",
-            description: Tr.tr("Behaviour, shortcuts and per-activity look"),
-            category: "appearance"
-        },
-        {
-            id: "wallstyle",
-            label: Tr.tr("Wallpaper & style"),
-            icon: "wallpaper",
-            description: Tr.tr("Global wallpaper, colours and transparency"),
+            description: Tr.tr("Behaviour, shortcuts and the unified look (general and per-activity)"),
             category: "appearance"
         },
 

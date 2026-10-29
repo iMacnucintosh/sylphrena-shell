@@ -5640,12 +5640,16 @@ msgid "This connection tops out at %1 Hz. The panel may support a higher rate ov
 msgstr "Esta conexión llega como máximo a %1 Hz. El panel puede admitir más por DisplayPort."
 
 #: modules/nexus/PageRegistry.qml
-msgid "Behaviour, shortcuts and per-activity look"
-msgstr "Comportamiento, atajos y look por actividad"
+msgid "Behaviour, shortcuts and the unified look (general and per-activity)"
+msgstr "Comportamiento, atajos y el look unificado (general y por actividad)"
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/ShellPage.qml
-msgid "Global wallpaper, colours and transparency"
-msgstr "Fondo global, colores y transparencia"
+#: modules/nexus/pages/ShellPage.qml
+msgid "General look"
+msgstr "Look general"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Turns the wallpaper machinery on or off shell-wide"
+msgstr "Activa o desactiva el fondo de pantalla en toda la shell"
 
 #: modules/nexus/PageRegistry.qml
 msgid "Output modes, scale, adaptive sync (VRR)"

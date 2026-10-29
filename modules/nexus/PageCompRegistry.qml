@@ -23,27 +23,10 @@ QtObject {
     readonly property list<Component> pageComps: [
         // Appearance
         Component {
-            // Activities (behaviour + per-activity look)
+            // Activities (behaviour + unified look: Home = general, per-activity overrides)
             StackPage {
                 Component {
                     ShellPage {}
-                }
-                Component {
-                    WallpaperSelect {}
-                }
-                Component {
-                    WallpaperCategory {}
-                }
-                Component {
-                    ColourSelect {}
-                }
-            }
-        },
-        Component {
-            // Global wallpaper & style
-            StackPage {
-                Component {
-                    WallpaperAndStyle {}
                 }
                 Component {
                     WallpaperSelect {}
