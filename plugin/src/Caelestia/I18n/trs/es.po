@@ -5661,6 +5661,11 @@ msgstr "Escritorios de la barra"
 msgid "Content of the workspaces shown on the bar; their visuals live in Panels → Taskbar → Workspaces"
 msgstr "Contenido de los workspaces mostrados en la barra; su apariencia vive en Paneles → Taskbar → Workspaces"
 
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgctxt "clock timers toggle"
+msgid "Enabled"
+msgstr "Activado"
+
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
 msgid "Window icons on the desktops"
 msgstr "Iconos de ventana en los escritorios"

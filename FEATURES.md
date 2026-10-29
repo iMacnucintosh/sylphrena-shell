@@ -276,9 +276,9 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 - **Tray**: muestra también ítems en estado Passive (p. ej. Teams en idle); highlight al hover / menú abierto; tamaño de icono estable.
 - **Status icons**: pastilla al hover como el tray; el icono de batería se oculta con el toggle de statusIcons (vanilla).
 - **Popouts** de status un poco más anchos para que no se recorten.
-- **Reloj** centrado de forma estable en el slot de la barra.
+- **Reloj** centrado de forma estable en el slot de la barra (geometría vanilla); la pastilla de hover-complemento sigue y el fondo respeta el toggle "Fondo" del Nexus (con Fondo off, solo pinta al hover).
 - Indicador de **grabación** bajo el reloj (ver sección anterior).
-- En escritorio sin batería: perfil de energía forzado a Performance; controles de perfil solo en portátil.
+- La batería se muestra/oculta con el toggle de la lista de statusIcons (vanilla); sin batería, status y popout muestran el estado del **perfil de energía** activo (vanilla).
 
 ---
 

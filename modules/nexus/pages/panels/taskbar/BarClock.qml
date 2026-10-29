@@ -53,7 +53,7 @@ PageBase {
             first: true
             last: true
             leadingIcon: "timer"
-            text: Tr.tr("Enabled")
+            text: Tr.trCtx("Enabled", "clock timers toggle")
             subtext: Timers.enabled
                 ? Tr.tr("Quick timers from the clock popout")
                 : Tr.tr("Disabled — active timers are cleared")
