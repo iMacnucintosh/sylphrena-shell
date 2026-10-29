@@ -101,46 +101,11 @@ Item {
         }
     }
 
-    // Unlock: fade the lock card, keep the wallpaper. greetd must kill this
-    // compositor before starting the session, so a GIF cannot cover the gap.
-    // The last committed wallpaper frame is what amdgpu usually holds until
-    // the user Hyprland paints — better than an intentional black curtain.
-    states: State {
-        when: Auth.success
-        PropertyChanges {
-            target: lockContent
-            opacity: 0
-            scale: 0.98
-        }
-        PropertyChanges {
-            target: content
-            opacity: 0
-        }
-    }
-
-    transitions: Transition {
-        Anim {
-            target: lockContent
-            property: "opacity"
-            duration: 180
-            type: Anim.FastEffects
-        }
-        Anim {
-            target: lockContent
-            property: "scale"
-            duration: 180
-            type: Anim.FastEffects
-        }
-        Anim {
-            target: content
-            property: "opacity"
-            duration: 180
-            type: Anim.FastEffects
-        }
-    }
-
+    // Hold the full greeter layout as the last GPU frame. greetd still has to
+    // kill this compositor, but amdgpu usually keeps that scanout until the
+    // user Hyprland paints — so the lock UI stays on screen instead of fading.
     Timer {
-        interval: 200
+        interval: 32
         running: Auth.success && !Auth.launchRequested
         onTriggered: Auth.launch()
     }
