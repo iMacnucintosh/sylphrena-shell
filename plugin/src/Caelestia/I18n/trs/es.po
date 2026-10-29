@@ -5006,12 +5006,14 @@ msgstr "Configura el shell"
 #~ msgid "Screenshot copied to clipboard"
 #~ msgstr "Captura de pantalla copiada al portapapeles"
 
-#~ msgid "No battery detected"
-#~ msgstr "No se ha detectado ninguna batería"
+#: modules/bar/popouts/Battery.qml
+msgid "No battery detected"
+msgstr "No se ha detectado ninguna batería"
 
+#: modules/bar/popouts/Battery.qml
 #, qt-format
-#~ msgid "Power profile: %1"
-#~ msgstr "Perfil de energía: %1"
+msgid "Power profile: %1"
+msgstr "Perfil de energía: %1"
 
 #~ msgid "Wallpaper, fonts, colours"
 #~ msgstr "Fondo de pantalla, fuentes, colores"
@@ -5171,12 +5173,29 @@ msgstr "Complemento desactivado"
 
 
 #: modules/nexus/pages/ComplementsPage.qml
-msgid "Quick timers from the clock popout"
-msgstr "Temporizadores rápidos desde el popout del reloj"
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Quick timers"
+msgstr "Temporizadores rápidos"
 
 #: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Disabled — active timers are cleared"
 msgstr "Desactivado: se cancelan los temporizadores activos"
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Presets: %1 · %2 · %3 · %4 min"
+msgstr "Preajustes: %1 · %2 · %3 · %4 min"
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Preset %1"
+msgstr "Preset %1"
+
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Quick timer button duration (min)"
+msgstr "Duración del botón de temporizador rápido (min)"
 
 #: modules/nexus/pages/ComplementsPage.qml
 msgid "Madison VPN config: ~/.config/openfortivpn/config (popout gear). Scripts: ~/.local/share/madison-vpn/"
@@ -5638,3 +5657,120 @@ msgstr "%1×%2 · %3 Hz"
 #, qt-format
 msgid "This connection tops out at %1 Hz. The panel may support a higher rate over DisplayPort."
 msgstr "Esta conexión llega como máximo a %1 Hz. El panel puede admitir más por DisplayPort."
+
+#: modules/nexus/PageRegistry.qml
+msgid "Behaviour, shortcuts and the unified look (general and per-activity)"
+msgstr "Comportamiento, atajos y el look unificado (general y por actividad)"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "General look"
+msgstr "Look general"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Turns the wallpaper machinery on or off shell-wide"
+msgstr "Activa o desactiva el fondo de pantalla en toda la shell"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Desktops in the bar"
+msgstr "Escritorios de la barra"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Content of the workspaces shown on the bar; their visuals live in Panels → Taskbar → Workspaces"
+msgstr "Contenido de los workspaces mostrados en la barra; su apariencia vive en Paneles → Taskbar → Workspaces"
+
+#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
+msgid "Window icons on the desktops"
+msgstr "Iconos de ventana en los escritorios"
+
+#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
+msgid "Showing windows and their icons lives in Activities → Desktops in the bar"
+msgstr "Mostrar ventanas y sus iconos vive en Activities → Escritorios de la barra"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Auto-hide"
+msgstr "Auto-ocultar"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Updates only when relevant"
+msgstr "Updates solo cuando toca"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "The updates badge appears only with pending or installing packages"
+msgstr "El icono de updates aparece solo con paquetes pendientes o instalándose"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Visible while the complement is enabled"
+msgstr "Visible mientras el complemento esté activo"
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Hidden — enable it in Complements"
+msgstr "Oculto — actívalo en Complementos"
+
+#: modules/nexus/PageRegistry.qml
+msgid "Output modes, scale, adaptive sync (VRR)"
+msgstr "Modos, escala y VRR (sync adaptativo) por salida"
+
+#: modules/nexus/PageRegistry.qml
+msgid "Optional fork features (VPN, clipboard, Steam, …)"
+msgstr "Complementos opcionales del fork (VPN, portapapeles, Steam, …)"
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Disabled — watcher processes are stopped"
+msgstr "Desactivado — los vigilantes del portapapeles se han detenido"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Good morning"
+msgstr "Buenos días"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Good afternoon"
+msgstr "Buenas tardes"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Good evening"
+msgstr "Buenas noches"
+
+#: modules/lock/CompanionPanel.qml
+msgid "There you are! I was looking for you in the winds"
+msgstr "¡Ahí estás! Te estaba buscando entre los vientos"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Life before death"
+msgstr "Vida antes que muerte"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Strength before weakness"
+msgstr "Fuerza antes que debilidad"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Journey before destination"
+msgstr "Viaje antes que destino"
+
+#: modules/lock/CompanionPanel.qml
+msgid "The sky is still… a good moment for the journey"
+msgstr "El cielo está quieto… buen momento para la jornada"
+
+#: modules/lock/CompanionPanel.qml
+msgid "I can wait. Spren are patient… sometimes"
+msgstr "Puedo esperar. Los spren somos pacientes… a veces"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Your bond with this machine is not closed yet"
+msgstr "Tu vínculo con esta máquina aún no se ha cerrado"
+
+#: modules/lock/CompanionPanel.qml
+msgid "Tell me a secret: the password will do"
+msgstr "Cuéntame un secreto: la contraseña basta"
+
+#: modules/lock/CompanionPanel.qml
+#, qt-format
+msgid "The bond closes! Welcome home, %1"
+msgstr "¡El vínculo se cierra! Bienvenido a casa, %1"
+
+#: modules/lock/CompanionPanel.qml
+msgid "I'm listening… is it really you?"
+msgstr "Escucho… ¿eres tú de verdad?"
+
+#: modules/lock/CompanionPanel.qml
+msgid "That wasn't very honorable. Let's try again"
+msgstr "Eso no fue muy honorable. Probemos otra vez"

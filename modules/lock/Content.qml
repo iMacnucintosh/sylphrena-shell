@@ -47,14 +47,24 @@ RowLayout {
         StyledRect {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.preferredHeight: 35
+            Layout.minimumHeight: 0
 
-            bottomRightRadius: Tokens.rounding.extraLarge
+            bottomRightRadius: Tokens.rounding.medium
             radius: Tokens.rounding.medium
             color: Colours.tPalette.m3surfaceContainer
 
             NotifDock {
                 lock: root.lock
             }
+        }
+
+        CompanionPanel {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: 65
+            Layout.minimumHeight: 0
+            lock: root.lock
         }
     }
 }

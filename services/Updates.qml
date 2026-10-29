@@ -32,7 +32,7 @@ Singleton {
     property string authError: ""
     property real downloadSizeMb: 0
     property bool showSingleWarning: false
-    property int pendingNexusPageIdx: -1
+    property string pendingNexusPageId: ""
     // "background" | "logged" while the password UI is open
     property string pendingMode: ""
     property string installMode: ""
@@ -226,7 +226,7 @@ Singleton {
             // Keep pendingMode so the password UI stays open for retry
             return;
         }
-        // Auth OK — hand password to the update script over stdin (creates askpass itself)
+        // Auth OK — hand password to the update script over stdin (in-memory askpass helper)
         root.pendingMode = "";
         root.appendLog(Tr.tr("Starting system update…"));
         if (root.installMode === "background")
@@ -323,8 +323,10 @@ Singleton {
     }
 
     function prepareNexus(): void {
-        // Updates is index 4 in PageRegistry (Shell, Network, Devices, Audio, Updates, …)
-        root.pendingNexusPageIdx = 4;
+        // PageRegistry is order-sensitive; pass the page id and let Nexus
+        // resolve it (a hardcoded index used to drift and opened Audio after
+        // the Display page landed before Updates).
+        root.pendingNexusPageId = "updates";
     }
 
     function maybeNotify(list: list<var>): void {

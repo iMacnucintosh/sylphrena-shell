@@ -23,7 +23,7 @@ QtObject {
     readonly property list<Component> pageComps: [
         // Appearance
         Component {
-            // Shell (activities + per-activity look)
+            // Activities (behaviour + unified look: Home = general, per-activity overrides)
             StackPage {
                 Component {
                     ShellPage {}

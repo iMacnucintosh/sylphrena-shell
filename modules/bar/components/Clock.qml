@@ -13,7 +13,9 @@ MouseArea {
     required property var popouts
 
     readonly property color colour: highlighted ? Colours.palette.m3onPrimary : Colours.palette.m3tertiary
-    readonly property int padding: Tokens.padding.medium
+    // Vanilla toggle: the idle pill only draws when Config.bar.clock.background
+    // says so; the hover highlight stays regardless (unified pastilla al hover).
+    readonly property int padding: Config.bar.clock.background ? Tokens.padding.medium : Tokens.padding.extraSmall
     readonly property var font: Tokens.font.body.builders.small.scale(1.1)
     readonly property bool menuOpen: popouts?.hasCurrent && popouts?.currentName === "clock"
     readonly property bool highlighted: containsMouse || menuOpen
@@ -33,7 +35,9 @@ MouseArea {
     StyledRect {
         anchors.fill: parent
         radius: Tokens.rounding.full
-        color: root.highlighted ? Colours.palette.m3primary : Colours.tPalette.m3surfaceContainer
+        color: root.highlighted
+            ? Colours.palette.m3primary
+            : Qt.alpha(Colours.tPalette.m3surfaceContainer, Config.bar.clock.background ? Colours.tPalette.m3surfaceContainer.a : 0)
 
         Behavior on color {
             CAnim {}
@@ -43,47 +47,39 @@ MouseArea {
     ColumnLayout {
         id: layout
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.centerIn: parent
         spacing: Tokens.spacing.extraSmall
 
         Loader {
-            Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
             asynchronous: true
             active: Config.bar.clock.showIcon
             visible: active
 
             sourceComponent: MaterialIcon {
-                anchors.horizontalCenter: parent.horizontalCenter
                 text: "calendar_month"
                 color: root.colour
             }
         }
 
         Loader {
-            Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
             asynchronous: true
             active: Config.bar.clock.showDate
             visible: active
 
             sourceComponent: ColumnLayout {
-                width: layout.width
                 spacing: layout.spacing - 4
 
                 StyledText {
-                    Layout.fillWidth: true
-                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter
                     text: Time.format("ddd")
                     font: Tokens.font.body.builders.small.scale(0.9).build()
                     color: root.colour
                 }
 
                 StyledText {
-                    Layout.fillWidth: true
-                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter
                     text: Time.format("d")
                     font: root.font.scale(1.1).build()
                     color: root.colour
@@ -91,8 +87,8 @@ MouseArea {
 
                 StyledRect {
                     Layout.fillWidth: true
-                    Layout.leftMargin: Tokens.padding.extraSmall
-                    Layout.rightMargin: Tokens.padding.extraSmall
+                    Layout.leftMargin: -Tokens.padding.extraSmall
+                    Layout.rightMargin: -Tokens.padding.extraSmall
                     Layout.topMargin: 4
                     Layout.bottomMargin: Tokens.padding.extraSmall / 2
                     implicitHeight: 1
@@ -102,8 +98,7 @@ MouseArea {
         }
 
         StyledText {
-            Layout.fillWidth: true
-            horizontalAlignment: Text.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter
             text: Time.hourStr
             font: root.fontFor(text, hourMetrics.width)
             color: root.colour
@@ -117,9 +112,8 @@ MouseArea {
         }
 
         StyledText {
-            Layout.fillWidth: true
             Layout.topMargin: -parent.spacing - 4
-            horizontalAlignment: Text.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter
             text: Time.minuteStr
             font: root.fontFor(text, minMetrics.width)
             color: root.colour
@@ -133,7 +127,6 @@ MouseArea {
         }
 
         Loader {
-            Layout.fillWidth: true
             Layout.topMargin: -parent.spacing - 4
             Layout.alignment: Qt.AlignHCenter
             asynchronous: true
@@ -141,8 +134,6 @@ MouseArea {
             visible: active
 
             sourceComponent: StyledText {
-                width: layout.width
-                horizontalAlignment: Text.AlignHCenter
                 text: Time.format("ss")
                 font: root.fontFor(text, secMetrics.width)
                 color: root.colour
@@ -157,7 +148,6 @@ MouseArea {
         }
 
         Loader {
-            Layout.fillWidth: true
             Layout.topMargin: -parent.spacing - 4
             Layout.alignment: Qt.AlignHCenter
             asynchronous: true
@@ -165,8 +155,6 @@ MouseArea {
             visible: active
 
             sourceComponent: StyledText {
-                width: layout.width
-                horizontalAlignment: Text.AlignHCenter
                 text: Time.amPmStr.toLowerCase()
                 font: Tokens.font.body.builders.small.scale(0.9).build()
                 color: root.colour

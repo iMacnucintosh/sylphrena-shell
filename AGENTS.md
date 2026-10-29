@@ -18,7 +18,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 ## 2. Entorno del usuario (Manu)
 
 - Arch Linux + **Hyprland 0.57**, sobremesa (sin batería), monitor MSI 1440p @ **144 Hz** por HDMI (`HDMI-A-1`).
-- Login: **greetd + tuigreet** (autologin a `start-hyprland`; plasmalogin instalado pero disabled). Cursor **Adwaita** en GTK/Qt/Hyprland.
+- Login: **greetd + greeter Quickshell Material You** tras logout (autologin inicial a `start-hyprland`; teclado `es`, cortina negra + VT limpio y watchdog anti-stuck). La sesión redirige stdout/stderr temprano a `~/.local/state/caelestia/session-startup.log`; el compositor desechable también se lanza sin TTY de control (el logo ASCII de Hyprland no llega a tty1) y termina matando su `start-hyprland` (PDEATHSIG mata al hijo), porque el shutdown normal de Hyprland 0.57 tarda ~5 s y acaba en segfault de Aquamarine. `logind` `UserStopDelaySec=0` + `user@.service` `TimeoutStopSec=8` evitan la pantalla negra de ~10 s (systemd esperando al user@ anterior / coredumps). Instalación con `greeter/install-greeter.sh`; plasmalogin instalado pero disabled. Cursor **Adwaita** en GTK/Qt/Hyprland.
 - Locale `es_ES.UTF-8`; **todo lo nuevo va con i18n**: cadenas vía `Tr.tr` / `Tr.trN` / `Tr.trCtx` → `es.po` → recompilar el plugin I18n e instalarlo en `~/.local`.
 - Apps por defecto: **kitty** (terminal), **thunar** (explorador, `Super+E`, sirve `FileManager1` vía override D-Bus), **VLC** (vídeo), tema de iconos **Papirus(-Dark)**.
 - Qt platform theme: **qt6ct** (`~/.config/qt6ct`, paleta + Papirus los empuja `caelestia-quiet` en cada esquema). Plasma en proceso de aislamiento (fase 1 hecha; fase 2 = desinstalar).
@@ -36,6 +36,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 - `main` está **protegida** (toda escritura exige PR). Flujo: rama `feature/*` o `docs/*` + PR (vía `gh`, HTTPS), y merge de la PR. El push directo a `main` lo rechazan las rules del repo (GH013).
 - `.gitignore` cubre `__pycache__/` y `.cursor-tmp/`.
 - Opciones nuevas: nodo en config (GlobalConfig) si hace falta rebuild del plugin, exposición en Nexus, y **documentación en FEATURES.md**.
+- Nexus: `PageRegistry` lleva `id` estable por página — saltos programáticos usan `idxOf(id)`, jamás índices hardcodeados; el look global **es** el estilo de Principal (nunca nodos globales sueltos ni páginas duplicadas). El auto-ocultado de updates/VPN es config real (`bar.status`); batería y reloj quedaron **vanilla** (ocultar por lista de statusIcons; popout/fondo del reloj como upstream salvo la pastilla de hover que abre su popout).
 
 ## 4. Mapa del código
 
@@ -45,7 +46,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 | `Activities` | Core del fork: pills en la barra, look por activity, apply atómico vía `scripts/apply-activity-style.py` (wallpaper + un solo `scheme set`; el modo de la activity gana a `smartScheme`; verify + reintentos). El apply es **serial**: lanzar en paralelo = carrera light/dark |
 | `Colours` | Paleta, modo light/dark, `lightApps` (portal `prefer-light`; theming GTK off con light apps sin que pierda el CSS del esquema) |
 | `Steam` | ~1040 líneas (deuda técnica). Web API + logros + no-Steam (VDF/Millennium) + sesiones (`reaper`). Al refrescar **conserva el juego seleccionado** |
-| `Updates` | Poll 30 min (Arch/AUR/Flatpak); update: password popup → `sudo -S -v` + askpass síncrono → proceso en bg. Nunca `yay --sudoloop` (bloquea con faillock); en bg pasará `--sudoflags=-n` |
+| `Updates` | Poll 30 min (Arch/AUR/Flatpak); update: password popup → `sudo -S -v` de comprobación → script en bg con askpass **en RAM** (helper + socket, sin fichero). Nunca `yay --sudoloop` (bloquea con faillock). yay/pacman con `--sudoflags=-A` / `sudo -A`; no usar `-n` (el timestamp de sudo es por TTY y el Process no tiene TTY) |
 | `Clipboard` | cliphist + `wl-clipboard`; paste con foco restaurado (~220 ms) + `send_shortcut` / `wtype` |
 | `MadisonVpn` | Status exige ping a intranet (no basta `ppp0`); teardown/heal tras suspender; popout OTP + settings |
 | `Displays` | `hyprctl monitors -j`; VRR **por conector** (Nunca/Automático/Siempre) → `caelestia-monitors.lua` + `hyprctl reload` (sin reload VRR off no llega al CRTC) |
@@ -55,7 +56,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 
 ### UI
 - `modules/nexus/pages/`: `DisplayPage`, `UpdatesPage`(+`UpdatesSettings`), `ComplementsPage`, `ShellPage` (activities + look), `KeybindsPage`, `LanguageAndRegion` (tiempo/ubicación)…
-- Barra/popouts en `modules/bar/`; panel Juegos en `modules/dashboard/games/`.
+- Barra/popouts en `modules/bar/`; panel Juegos en `modules/dashboard/games/`; lock en `modules/lock/` (columna derecha: `NotifDock` 35% + `CompanionPanel` Sylphrena 65%).
 - Trampas QML de este codebase: `PageBase` admite **un solo hijo**; no existe `IconButton.Standard`; `HoverHandler` usa `hovered` (no `containsMouse`); para drop de arrastres no fiarse de `DropArea` con reparent al drag-layer — detectar el target bajo el cursor; `ClipRect` no recorta por `radius` sin máscara; un `Process` con stdin heredado cuelga (usar `DEVNULL`); QML no permite anotaciones de tipo en parámetros con valor por defecto; `Row` no acepta asignar `implicitHeight`.
 
 ### Scripts (`scripts/`)
@@ -76,7 +77,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 5. **Clipboard** — popout estilo Caelestia (`m3surface` + blur), favoritos, búsqueda, previews de imágenes/rutas, pegar en la ventana enfocada.
 6. **Madison VPN** — icono en status, dropdown al hover, OTP integrado, settings (host/puerto/user/pass), heal tras sleep.
 7. **Complementos** — VPN, Timers, Hidratación (+ Juegos) con icono por fila y limpieza al desactivar. Hidratación: depósito con waves en el dashboard (el calendario del popout del reloj sigue), meta 3000 ml, presets +20/+83/+250/+500, recordatorio con acciones.
-8. **Varios** — timers del reloj persistentes, grabación estable + chip REC, capturas sin notificación, clic en notificación → enfoca/abre la app en su workspace, launcher con edición de `.desktop` (hover inferior para abrirlo, se cierra al salir el puntero), tray/status con pastilla al hover unificada, recoloreado forzado a claro de tray sin contraste (Steam/Cursor), Keep-awake (café) activado por defecto, **layout compacto** (ex game mode: solo barra izquierda, gaps/rounding/border 0, sin tocar animaciones/blur/wobble), i18n ES completo, docs README/FEATURES/CHANGELOG.
+8. **Varios** — timers del reloj persistentes, grabación estable + chip REC, capturas sin notificación, clic en notificación → enfoca/abre la app en su workspace, launcher con edición de `.desktop` (hover inferior para abrirlo, se cierra al salir el puntero), tray/status con pastilla al hover unificada, recoloreado forzado a claro de tray sin contraste (Steam/Cursor), Keep-awake (café) activado por defecto, **layout compacto** (ex game mode: solo barra izquierda, gaps/rounding/border 0, sin tocar animaciones/blur/wobble), lock con Sylphrena (65 % inferior) + notifs con scroll (35 %), i18n ES completo, docs README/FEATURES/CHANGELOG.
 
 ## 6. Trampas / aprendizajes
 
@@ -109,4 +110,4 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 
 ---
 
-*Última actualización: 2026-10-29 (repaso integral: Clipboard argv/verificación de paths, VPN busy guard, Activities verify cap, Requests 15 s + plugin build user-local, Updates askpass en RAM + heartbeat, Displays hotplug, Steam cap/gate del reload; aislamiento de Plasma fase 1: greetd+tuigreet, theme Qt6ct con paleta Material, module GTK vendorizado, FileManager1 → Thunar, cursor Adwaita). Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*
+*Última actualización: 2026-10-29 (lock: NotifDock 35% + Sylphrena 65%; repaso integral: Clipboard argv/verificación de paths, VPN busy guard, Activities verify cap, Requests 15 s + plugin build user-local, Updates askpass en RAM + heartbeat, Displays hotplug, Steam cap/gate del reload; aislamiento de Plasma fase 1: greeter Quickshell sobre greetd, theme Qt6ct con paleta Material, module GTK vendorizado, FileManager1 → Thunar, cursor Adwaita). Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*

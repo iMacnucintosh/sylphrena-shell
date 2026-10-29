@@ -61,7 +61,7 @@ PageBase {
         { id: "settings", label: Tr.tr("Settings") }
     ]
 
-    title: Tr.tr("Shell")
+    title: Tr.tr("Activities")
 
     function newActivityId(): string {
         return `activity-${Date.now().toString(36)}`;
@@ -180,11 +180,47 @@ PageBase {
         }
 
         ToggleRow {
-            last: true
             text: Tr.tr("Cross-activity desktop shortcuts")
             subtext: Tr.tr("Allow next/previous desktop shortcuts to leave the current activity; when off, they stay inside it")
             checked: GlobalConfig.activities.crossActivityWorkspaces
             onToggled: GlobalConfig.activities.crossActivityWorkspaces = checked
+        }
+
+        ToggleRow {
+            last: true
+            text: Tr.tr("Display wallpaper")
+            subtext: Tr.tr("Turns the wallpaper machinery on or off shell-wide")
+            checked: Config.background.wallpaperEnabled
+            onToggled: GlobalConfig.background.wallpaperEnabled = checked
+        }
+
+        SectionHeader {
+            text: Tr.tr("Desktops in the bar")
+        }
+
+        ToggleRow {
+            first: true
+            text: Tr.trCtx("Show windows", "bar workspaces")
+            subtext: Tr.tr("Show icons of open windows on each workspace")
+            checked: Config.bar.workspaces.showWindows
+            onToggled: GlobalConfig.bar.workspaces.showWindows = checked
+        }
+
+        ToggleRow {
+            text: Tr.trCtx("Windows on special workspaces", "bar workspaces")
+            checked: Config.bar.workspaces.showWindowsOnSpecialWorkspaces
+            onToggled: GlobalConfig.bar.workspaces.showWindowsOnSpecialWorkspaces = checked
+        }
+
+        StepperRow {
+            last: true
+            // TRANSLATORS: maximum number of window icons shown per workspace
+            label: Tr.trCtx("Max window icons", "bar workspaces")
+            value: Config.bar.workspaces.maxWindowIcons
+            from: 0
+            to: 20
+            stepSize: 1
+            onMoved: v => GlobalConfig.bar.workspaces.maxWindowIcons = v
         }
 
         SectionHeader {
@@ -236,6 +272,15 @@ PageBase {
                             }
                             color: Colours.palette.m3outline
                             font: Tokens.font.label.small
+                        }
+
+                        // Principal doubles as the shell-wide look: non-principal
+                        // cards either inherit these fields or override them.
+                        StyledText {
+                            visible: root.isPrincipal(actRow.modelData)
+                            text: Tr.tr("General look")
+                            color: Colours.palette.m3onSurfaceVariant
+                            font: Tokens.font.label.medium
                         }
 
                         IconButton {

@@ -21,9 +21,9 @@ Item {
     signal close
 
     Component.onCompleted: {
-        if (Updates.pendingNexusPageIdx >= 0) {
-            nState.currentPageIdx = Updates.pendingNexusPageIdx;
-            Updates.pendingNexusPageIdx = -1;
+        if (Updates.pendingNexusPageId) {
+            nState.currentPageIdx = PageRegistry.idxOf(Updates.pendingNexusPageId);
+            Updates.pendingNexusPageId = "";
         }
     }
 

@@ -162,6 +162,132 @@ def _sync_qt6ct(colours: dict[str, str], mode: str) -> None:
     _atomic_write(conf, buf.getvalue())
 
 
+# --- Greeter (Quickshell): palette + wallpaper for /etc/greetd/caelestia -------
+
+_GREETER_DIR = Path("/etc/greetd/caelestia")
+_SCHEME_JSON = Path.home() / ".local/state/caelestia/scheme.json"
+_WALLPAPER_LINK = Path.home() / ".local/state/caelestia/wallpaper/current"
+_FACE = Path.home() / ".face"
+_FONT_SRC = Path(__file__).resolve().parent.parent / "assets/google-sans-flex/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf"
+
+
+def _greeter_copy(src: Path, dst: Path) -> None:
+    """Best-effort copy; greeter dir may not exist or be root-owned yet."""
+    import hashlib
+    import shutil
+
+    if not src.is_file() and not src.is_symlink():
+        return
+    try:
+        src_bytes = src.resolve().read_bytes()
+    except OSError:
+        return
+    digest = hashlib.sha256(src_bytes).hexdigest()
+    marker = dst.with_name(dst.name + ".sha256")
+    try:
+        if dst.is_file() and marker.is_file() and marker.read_text().strip() == digest:
+            return
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        tmp = dst.with_name(dst.name + ".tmp")
+        tmp.write_bytes(src_bytes)
+        os.replace(tmp, dst)
+        tmp_marker = marker.with_name(marker.name + ".tmp")
+        tmp_marker.write_text(digest)
+        os.replace(tmp_marker, marker)
+    except OSError:
+        pass
+
+
+def _sync_greeter_ui() -> None:
+    """Mirror the Quickshell greeter config into /etc/greetd/caelestia/qs.
+
+    The greeter session runs as user `greeter` and should not depend on
+    reading files under the session user's home.
+    """
+    import shutil
+
+    src = Path(__file__).resolve().parent.parent / "greeter"
+    dst = _GREETER_DIR / "qs"
+    if not src.is_dir() or not _GREETER_DIR.is_dir():
+        return
+    try:
+        # Full replace so renames (e.g. Resources → ResourcePanel) do not leave
+        # stale QML that clashes with singletons.
+        if dst.exists():
+            shutil.rmtree(dst)
+        dst.mkdir(parents=True, exist_ok=True)
+        for name in ("shell.qml", "components", "modules", "services"):
+            s = src / name
+            d = dst / name
+            if not s.exists():
+                continue
+            if s.is_dir():
+                shutil.copytree(s, d)
+            else:
+                shutil.copy2(s, d)
+    except OSError:
+        pass
+
+
+def _sync_greeter(colours: dict[str, str] | None = None) -> None:
+    """Push greeter assets: scheme.json, greeter.json, wallpaper, face, font.
+
+    Blur is done in QML (MultiEffect blurMax 64), so we only copy the raw
+    wallpaper. All scheme/wallpaper applies go through apply_colours_quiet;
+    wallpaper CLI hits this from main()'s finally.
+    """
+    import json
+
+    if not _GREETER_DIR.is_dir():
+        return  # greeter not installed / dir not chown'ed yet
+
+    # Palette: prefer the live colours dict, else the persisted scheme.json.
+    scheme: dict = {}
+    try:
+        if _SCHEME_JSON.is_file():
+            scheme = json.loads(_SCHEME_JSON.read_text() or "{}")
+            if not isinstance(scheme, dict):
+                scheme = {}
+    except (OSError, ValueError):
+        scheme = {}
+
+    if colours:
+        scheme = dict(scheme)
+        scheme["colours"] = colours
+
+    if scheme.get("colours"):
+        try:
+            _atomic_write(
+                _GREETER_DIR / "scheme.json",
+                json.dumps(scheme, indent=2) + "\n",
+            )
+        except OSError:
+            pass
+
+    # Static-ish greeter config (user, location). Rewritten so a fresh install
+    # always picks up the current session user without a separate setup step.
+    greeter_cfg = {
+        "user": Path.home().name,
+        "displayName": "Manuel",
+        "location": "41.60956,-4.79692",
+    }
+    try:
+        _atomic_write(_GREETER_DIR / "greeter.json", json.dumps(greeter_cfg, indent=2) + "\n")
+    except OSError:
+        pass
+
+    # Wallpaper: raw copy for the Quickshell greeter; also keep wallpaper.jpg in
+    # sync for the legacy regreet.toml background path.
+    _greeter_copy(_WALLPAPER_LINK, _GREETER_DIR / "wallpaper")
+    _greeter_copy(_WALLPAPER_LINK, _GREETER_DIR / "wallpaper.jpg")
+    # Avatar: greeter user cannot read ~/.face.
+    _greeter_copy(_FACE, _GREETER_DIR / "face")
+    # Google Sans Flex: copied once at install, refreshed if the asset changes.
+    fonts = _GREETER_DIR / "fonts"
+    _greeter_copy(_FONT_SRC, fonts / "GoogleSansFlex.ttf")
+    _sync_greeter_ui()
+
+
 def _sync_gtk_settings(mode: str) -> None:
     """Point GTK at the correct adw-gtk3 variant and enable live CSS reload."""
     dark = mode == "dark"
@@ -282,6 +408,7 @@ def _patch_theme() -> None:
             pass
         _sync_kde_icon_theme(mode)
         _sync_qt6ct(colours, mode)
+        _sync_greeter(colours)
         # OpenCode TUI: theme file + cli.json mode follow the activity scheme.
         _sync_opencode_theme(colours, mode)
         # Templates land inside apply_colours; refresh Kitty after that.
@@ -352,7 +479,13 @@ def main() -> None:
     _patch_theme()
     # Replace argv so caelestia sees a normal CLI invocation
     sys.argv = ["caelestia", *sys.argv[1:]]
-    runpy.run_module("caelestia", run_name="__main__")
+    try:
+        runpy.run_module("caelestia", run_name="__main__")
+    finally:
+        # Wallpaper CLI applies also touch the greeter (no colours payload in
+        # this path — read the persisted scheme).
+        if len(sys.argv) > 1 and sys.argv[1] == "wallpaper":
+            _sync_greeter()
 
 
 if __name__ == "__main__":

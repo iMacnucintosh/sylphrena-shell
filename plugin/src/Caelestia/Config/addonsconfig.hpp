@@ -17,6 +17,11 @@ class AddonsTimers : public settings::ObjectNode {
     CONFIG_NODE(AddonsTimers, settings::ObjectNode)
 
     CONFIG_PROPERTY(bool, enabled, true)
+    // Quick presets for the clock popout (match hydration presetMl0..N naming).
+    CONFIG_PROPERTY(int, presetMins0, 5)
+    CONFIG_PROPERTY(int, presetMins1, 10)
+    CONFIG_PROPERTY(int, presetMins2, 20)
+    CONFIG_PROPERTY(int, presetMins3, 30)
 };
 
 class AddonsHydration : public settings::ObjectNode {

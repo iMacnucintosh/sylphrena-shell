@@ -14,6 +14,7 @@ PageBase {
 
     property bool hydrationSettingsOpen: false
     property bool steamSettingsOpen: false
+    property bool clipboardSettingsOpen: false
     property bool steamKeyVisible: false
 
     title: Tr.tr("Complements")
@@ -84,10 +85,98 @@ PageBase {
             leadingIcon: "timer"
             text: Tr.tr("Timers")
             subtext: Timers.enabled
-                ? Tr.tr("Quick timers from the clock popout")
+                ? Tr.tr("Quick timers")
                 : Tr.tr("Disabled — active timers are cleared")
             checked: GlobalConfig.addons.timers.enabled
             onToggled: Timers.setEnabled(checked)
+        }
+
+        ConnectedRect {
+            id: clipboardCard
+
+            Layout.fillWidth: true
+            implicitHeight: clipboardCol.implicitHeight + Tokens.padding.medium * 2
+
+            ColumnLayout {
+                id: clipboardCol
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.margins: Tokens.padding.medium
+                anchors.leftMargin: Tokens.padding.largeIncreased
+                anchors.rightMargin: Tokens.padding.largeIncreased
+                spacing: Tokens.spacing.medium
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Tokens.spacing.medium
+
+                    MaterialIcon {
+                        text: "content_paste"
+                        color: Colours.palette.m3onSurfaceVariant
+                        fontStyle: Tokens.font.icon.medium
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 0
+
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: Tr.tr("Clipboard")
+                            font: Tokens.font.body.small
+                            elide: Text.ElideRight
+                        }
+
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: Clipboard.enabled
+                                ? Tr.tr("Floating popout (Super+Shift+V) backed by cliphist")
+                                : Tr.tr("Disabled — watcher processes are stopped")
+                            color: Colours.palette.m3outline
+                            font: Tokens.font.label.small
+                            elide: Text.ElideRight
+                            wrapMode: Text.NoWrap
+                        }
+                    }
+
+                    IconButton {
+                        visible: Clipboard.enabled
+                        isRound: true
+                        type: IconButton.Text
+                        icon: root.clipboardSettingsOpen ? "expand_less" : "expand_more"
+                        padding: Tokens.padding.small
+                        Layout.alignment: Qt.AlignVCenter
+                        onClicked: root.clipboardSettingsOpen = !root.clipboardSettingsOpen
+                    }
+
+                    StyledSwitch {
+                        Layout.alignment: Qt.AlignVCenter
+                        checked: GlobalConfig.utilities.clipboard.enabled
+                        onToggled: {
+                            GlobalConfig.utilities.clipboard.enabled = checked;
+                            // The service only reacts via ensureWatchers()
+                            Clipboard.ensureWatchers();
+                            if (!checked)
+                                root.clipboardSettingsOpen = false;
+                        }
+                    }
+                }
+
+                StepperRow {
+                    Layout.fillWidth: true
+                    visible: Clipboard.enabled && root.clipboardSettingsOpen
+                    label: Tr.tr("History size")
+                    subtext: Tr.tr("Maximum number of clipboard entries to keep")
+                    value: GlobalConfig.utilities.clipboard.maxItems
+                    from: 10
+                    to: 200
+                    stepSize: 10
+                    onMoved: v => GlobalConfig.utilities.clipboard.maxItems = Math.round(v)
+                }
+            }
         }
 
         ConnectedRect {

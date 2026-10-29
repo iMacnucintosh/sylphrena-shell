@@ -4,9 +4,18 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## 2026-10-29
 
+### Updates
+
+- Al pulsar **Actualizar** en el popout de la bandeja, el campo de contraseña recibe el foco solo (teclado Exclusive en el diálogo).
+- El instalador vuelve a usar `sudo -A`, pero la contraseña vive en un helper en RAM (socket unix en `$XDG_RUNTIME_DIR`, sin fichero). El timestamp de `sudo -S -v` no sirve aquí: es por TTY y el Process de Quickshell no tiene TTY, así que `-n` fallaba con «a password is required».
+
+### Lockscreen
+
+- La columna derecha se parte **35/65**: **notificaciones arriba** (con scrollbar) y **Sylphrena abajo**, la misma compañera del greeter (máquina de escribir, orbe SoftBurst, estados PAM de escuchando / error / desbloqueo).
+
 ### Aislamiento de Plasma (fase 1)
 
-- **Login**: plasmalogin → greetd + tuigreet con autologin a Hyprland (`[initial_session]` en `/etc/greetd/config.toml`; tras logout queda el greeter tuigreet). plasmalogin instalado pero deshabilitado.
+- **Login**: plasmalogin → greetd con autologin inicial a Hyprland y greeter Quickshell Material You tras logout. Teclado español fijo; handoff corto bajo cortina negra, VT limpio y recuperación ante timeout. Tanto el greeter como la sesión de usuario arrancan Hyprland sin TTY de control y con stdout a log (el logo ASCII + debug ya no quedan en el búfer de tty1); `UserStopDelaySec=0` y `TimeoutStopSec=8` en user@ evitan la pantalla negra de ~10 s al reentrar (systemd no espera al user@ anterior ni a coredumps enormes); el compositor desechable se termina por su watchdog para evitar el shutdown de Hyprland 0.57 que tardaba ~5 s y acababa en segfault; plasmalogin sigue instalado pero deshabilitado.
 - **Qt sin plasma-integration**: `QT_QPA_PLATFORMTHEME=kde → qt6ct` en `shell.qml`, `hyprland.lua` y `environment.d`. Los apps Qt pasan de Breeze a Fusion con la **paleta Material**: `caelestia-quiet.py` genera en cada cambio de esquema `~/.config/qt6ct/colors/caelestia.conf` (22 roles de QPalette desde los tokens Material) + `qt6ct.conf` (Papirus por modo, Fusion), con escritura atómica para el hot-reload de qt6ct.
 - **Thunar sin Dolphin**: `plasma-dolphin`/`plasma-kactivitymanagerd` parados y enmascarados (user systemd); override D-Bus de `org.freedesktop.FileManager1` a Thunar (`~/.local/share/dbus-1/services/`). "Open containing folder" y similares ya no suben Dolphin.
 - **`colorreload-gtk-module` vendorizado** en `~/.local/share/gtk-3.0/modules/` (copia del .so de kde-gtk-config): la recarga en vivo de Thunar sobrevive a la desinstalación de Plasma.
@@ -28,6 +37,19 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - **Pantalla**: refresh automático en `monitoradded`/`monitorremoved` y `persist()` conserva las políticas VRR de outputs desenchufados.
 - **Juegos (Steam)**: muestreo de logros capado a 60 juegos (los más jugados) y refresco periódico solo con la pestaña Juegos visible.
 - **OpenCode**: tema `caelestia` con gemelas `caelestia`/`caelestia-alt` para el hot-reload por flip de nombre; `generate-opencode-theme.py` calcula `pick_sources()` una sola vez.
+
+### Nexus reorganizado
+
+- Apariencia **unificada en Activities**: la tarjeta de Principal es el "look general" (las demás heredan o overridean), marqué con etiqueta "Look general"; el switch maestro de fondo de pantalla va en General. Sin doble sitio para el estético.
+- **Complementos** es el hub de todos los features opt-in: Madison VPN, Timers, Hidratación, Juegos/Steam y **Clipboard** (su max-items migró desde Services, que queda para servicios de sistema).
+- Páginas con `id` estable + `PageRegistry.idxOf()`: el salto Updates→Nexus ya no se descoloca al insertar páginas.
+- Status icons: updates y VPN usan auto-hide con config real (`bar.status.onlyShowUpdatesWithUpdates` + complemento), con toggles/fila en `Panels → Taskbar → Status icons → Auto-hide`; la batería quedó **vanilla** (se muestra/oculta con la lista "Visible icons"). Contenido de workspaces movido a Activities ("Escritorios de la barra"), que guarda solo apariencia en Taskbar.
+
+### Coherencia con vanilla (poda de fork)
+
+- **Batería revertida a vanilla**: el popout es byte-exacto al de upstream (sin gates por `isLaptopBattery`, selector de perfiles siempre); se elimina `bar.status.hideBatteryOnDesktops` y su toggle; el icono se oculta por la lista de statusIcons.
+- **Reloj revertido al interior vanilla**: la pastilla de hover de bar permanece (el popout del reloj es del fork), pero el fondo en reposo respeta el toggle "Fondo", el padding es condicional y el centrado del calendario vuelve al layout vanilla.
+- **Timers en la página del Reloj**: fila desplegable en `Panels → Taskbar → Clock` (mismo patrón que Hidratación) con subtexto «Temporizadores rápidos» y edición de los 4 presets (`addons.timers.presetMins0..3`); el popout del reloj los consume. Mismo `addons.timers.enabled` que Complementos.
 
 ### Nexus → Pantalla (Display)
 

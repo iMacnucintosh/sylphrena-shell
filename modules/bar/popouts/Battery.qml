@@ -51,22 +51,17 @@ Column {
     }
 
     spacing: Tokens.spacing.medium
-    // Grow with content so long translations / profile pills are not clipped.
-    width: Math.max(Tokens.sizes.bar.batteryWidth, profiles.visible ? profiles.implicitWidth : 0)
+    width: Tokens.sizes.bar.batteryWidth
 
     StyledText {
-        width: parent.width
-        wrapMode: Text.Wrap
-        visible: UPower.displayDevice.isLaptopBattery
-        text: Tr.trCtx("Remaining: %1%", "battery remaining").arg(Math.round(UPower.displayDevice.percentage * 100))
+        text: UPower.displayDevice.isLaptopBattery ? Tr.trCtx("Remaining: %1%", "battery remaining").arg(Math.round(UPower.displayDevice.percentage * 100)) : Tr.tr("No battery detected")
     }
 
     StyledText {
-        width: parent.width
-        wrapMode: Text.Wrap
-        visible: UPower.displayDevice.isLaptopBattery
         text: {
             const dev = UPower.displayDevice;
+            if (!dev.isLaptopBattery)
+                return Tr.tr("Power profile: %1").arg(root.powerProfileToString(PowerProfiles.profile));
 
             if (UPower.onBattery) {
                 const time = root.formatSeconds(dev.timeToEmpty);
@@ -144,9 +139,6 @@ Column {
 
     StyledRect {
         id: profiles
-
-        // Power profiles only make sense on laptops; desktops stay on Performance.
-        visible: UPower.displayDevice.isLaptopBattery
 
         property string current: {
             const p = PowerProfiles.profile;

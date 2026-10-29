@@ -51,8 +51,23 @@ ColumnLayout {
 
     ColumnLayout {
         Layout.fillWidth: true
-        visible: Timers.enabled
+        Layout.preferredHeight: Timers.enabled ? implicitHeight : 0
+        opacity: Timers.enabled ? 1 : 0
+        clip: true
         spacing: Tokens.spacing.small
+        enabled: Timers.enabled
+
+        Behavior on Layout.preferredHeight {
+            Anim {
+                type: Anim.DefaultEffects
+            }
+        }
+
+        Behavior on opacity {
+            Anim {
+                type: Anim.DefaultEffects
+            }
+        }
 
         StyledText {
             text: Tr.tr("Timers")
@@ -64,7 +79,12 @@ ColumnLayout {
             spacing: Tokens.spacing.extraSmall
 
             Repeater {
-                model: [5, 10, 20, 30]
+                model: [
+                    Config.addons.timers.presetMins0,
+                    Config.addons.timers.presetMins1,
+                    Config.addons.timers.presetMins2,
+                    Config.addons.timers.presetMins3
+                ]
 
                 StyledRect {
                     id: preset

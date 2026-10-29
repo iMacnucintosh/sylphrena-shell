@@ -26,6 +26,7 @@ Repositorio: [iMacnucintosh/hyprland-shell](https://github.com/iMacnucintosh/hyp
 | **Pantalla** | Nexus → Pantalla: modo (Hz), escala y VRR por monitor (Nunca / Automático / Siempre) |
 | **Atajos** | Remapeables desde Nexus; Super+E → Thunar; atajos de activities |
 | **Tiempo** | Buscar ciudad en Nexus → Idioma y región, o ubicación automática por IP |
+| **Lock** | Columna derecha: notificaciones (35 %) con scroll arriba, compañera **Sylphrena** (65 %) abajo (igual que el greeter) |
 
 ---
 
@@ -130,7 +131,7 @@ Inspirado en [arch-update-checker](https://github.com/iMacnucintosh/arch-update-
 - Icono en status (junto a Madison VPN) **solo si hay paquetes**; badge con el número; popout rápido.
 - Poll cada **30 min**; toast al detectar paquetes nuevos (default on).
 - **Actualizar sistema**: popup de contraseña → en **panel** corre en segundo plano; en **Nexus** muestra log en vivo. Notificación al terminar + rechequeo. Paquete suelto / orphans siguen en terminal.
-- **Seguridad del install**: la contraseña vive **solo en memoria** (`run-system-update.sh` no escribe fichero de askpass; hace `sudo -S -v` antes de cada paso elevado para refrescar el timestamp). El timeout de instalación (45 min) tiene *heartbeat*: solo corta si el instalador lleva 45 min **sin imprimir nada** — nunca mata un `pacman` en mitad de una transacción.
+- **Seguridad del install**: la contraseña vive **solo en memoria** (helper Python + socket unix en `$XDG_RUNTIME_DIR`; no hay fichero `.pw`). yay/pacman usan **`sudo -A`** contra ese askpass — el timestamp de sudo es por TTY y no sobrevive a un Process sin TTY. El timeout de instalación (45 min) tiene *heartbeat*: solo corta si el instalador lleva 45 min **sin imprimir nada** — nunca mata un `pacman` en mitad de una transacción.
 
 ---
 
@@ -140,7 +141,7 @@ Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
 
 - Lista de features opcionales del fork, con icono identificativo por fila.
 - **Madison VPN**: interruptor on/off. Al desactivar se oculta el icono, se para el poll y se ejecuta teardown (`disconnect` + `heal`) para matar `openfortivpn`/helper.
-- **Timers**: interruptor on/off. Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue).
+- **Timers**: interruptor on/off. Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue). Exposición doble: hub en **Complementos** y tarjeta desplegable en **Nexus → Panels → Taskbar → Clock** (mismo `addons.timers.enabled`), con 4 presets editables (`presetMins0..3`, default 5/10/20/30) que alimentan los botones del popout.
 - **Hidratación**: interruptor on/off (opt-in). Al activar sustituye el calendario del dashboard Nexus (solo ahí; el popout del reloj sigue con calendario) por un depósito con waves, meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Estado en `~/.local/state/caelestia/hydration.json`.
 - **Juegos (Steam)**: interruptor on/off (opt-in). Al activar añade la pestaña **Juegos** en el dashboard (a la derecha de Tiempo). Configura API key (oculta por defecto) + Steam ID / vanity / URL de perfil, y el intervalo de refresco (default 10 min). Muestra perfil y nivel, estadísticas globales en shapes Material You (juegos visibles — sin la colección Hidden —, horas, compleción media de logros y juegos al 100 %, amigos en línea), tarjeta del juego destacado con portada y progreso, y un selector de portadas ordenado por última partida. Logros en una lista con scroll: desbloqueados por rareza y bloqueados de más común a más raro, con insignia y descripción. Mapa de calor mensual (puntos = días con logros; el tiempo por día se registra con el shell en marcha). Juegos no Steam desde `shortcuts.vdf`, con horas de Millennium si está instalado. Los logros del perfil deben ser públicos. El muestreo de logros para la compleción media está **capado a 60 juegos** (los más jugados, por orden de playtime) y el refresco periódico **solo corre mientras el dashboard muestra la pestaña Juegos** (no quema API en segundo plano).
 
@@ -202,7 +203,7 @@ require("caelestia-monitors")
 
 Wiring para que Hyprland + Caelestia vivan sin depender de Plasma sin desinstalarlo todavía (la desinstalación es fase 2).
 
-- **Login**: **greetd + tuigreet** con autologin a `/usr/bin/start-hyprland` (`[initial_session]`/`[default_session]` en `/etc/greetd/config.toml`). plasmalogin queda instalado pero deshabilitado (rollback = `systemctl enable plasmalogin`).
+- **Login**: **greetd + greeter Quickshell Material You** con teclado español y autologin inicial a `/usr/bin/start-hyprland`. Tras cerrar sesión, el greeter corre sobre un Hyprland mínimo y entrega la sesión con fundido negro corto: tanto el greeter como la sesión arrancan sin TTY de control (el logo ASCII de Hyprland no llega a tty1), la salida va a `session-startup.log` / `hyprland-greeter.log`, y el compositor desechable se desmonta de inmediato (Hyprland 0.57 se quedaba ~5 s y acababa en segfault al salir). systemd no retiene `user@` 10 s ni espera 90 s a coredumps (`UserStopDelaySec=0`, `TimeoutStopSec=8`). Si greetd no confirma el arranque, recupera la UI en vez de dejar una pantalla negra. Se instala/actualiza con `greeter/install-greeter.sh`; plasmalogin queda instalado pero deshabilitado (rollback = `systemctl enable plasmalogin`).
 - **Plataforma Qt**: cambio en 3 sitios de `QT_QPA_PLATFORMTHEME=kde` a `qt6ct`
   (pragma `Env` en `shell.qml`, env en `hyprland.lua`, `~/.config/environment.d/99-qt-platformtheme.conf`)
   — aplica a processes nuevos; la sesión completa se normaliza al relogin. Los apps Qt ya no dependen de
@@ -274,11 +275,11 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 ## Barra (otros retoques)
 
 - **Tray**: muestra también ítems en estado Passive (p. ej. Teams en idle); highlight al hover / menú abierto; tamaño de icono estable.
-- **Status icons**: pastilla al hover como el tray; en PC de sobremesa se oculta el icono de batería.
+- **Status icons**: pastilla al hover como el tray; el icono de batería se oculta con el toggle de statusIcons (vanilla).
 - **Popouts** de status un poco más anchos para que no se recorten.
-- **Reloj** centrado de forma estable en el slot de la barra.
+- **Reloj** centrado de forma estable en el slot de la barra (geometría vanilla); la pastilla de hover-complemento sigue y el fondo respeta el toggle "Fondo" del Nexus (con Fondo off, solo pinta al hover).
 - Indicador de **grabación** bajo el reloj (ver sección anterior).
-- En escritorio sin batería: perfil de energía forzado a Performance; controles de perfil solo en portátil.
+- La batería se muestra/oculta con el toggle de la lista de statusIcons (vanilla); sin batería, status y popout muestran el estado del **perfil de energía** activo (vanilla).
 
 ---
 
@@ -288,8 +289,11 @@ Ya presentes en este fork respecto a un Caelestia “vanilla” típico:
 
 - **Atajos de Hyprland remapeables** desde Nexus (genera `caelestia-binds.lua`), incluyendo teclas **F13+**.
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
-- Página **Shell** (activities + opciones de barra relacionadas).
-- UI de colores / wallpapers acoplada al look de la activity en edición.
+- Apariencia **unificada en Activities**: una sola página para el comportamiento (enable, iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
+- **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí, no en Services; Services queda para servicios del sistema).
+- **Status icons honestos**: el badge de updates y la fila de VPN rigen el auto-ocultado con config explícita (`bar.status.onlyShowUpdatesWithUpdates`; VPN atado al complemento) y es visible en `Panels → Taskbar → Status icons → Auto-hide`. La batería quedó **vanilla**: se muestra/oculta con el toggle de la lista "Visible icons" y su popout es el de siempre («No se ha detectado ninguna batería» o «Power profile: %1» en desktops, con el selector de perfiles intacto).
+- **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-references entre ambas.
+- Las páginas del nav llevan **id estable** (`PageRegistry.idxOf`) — los saltos programáticos (Updates → Nexus) ya no dependen de índices hardcodeados.
 - Traducciones **español** ampliadas para las cadenas nuevas.
 
 ---
@@ -368,6 +372,17 @@ el theming de GTK/iconos) invoca `scripts/generate-opencode-theme.py` + escribe 
 - Peculiaridad del format: los hex DEBEN llevar `#` y **no se aceptan referencias entre tokens**
   (`$text.*`/`$background.*`) en temas de usuario — solo refs `$hue.<nombre>.<step>`; los
   built-in evitan esa validación, los nuestros no (lecciones del debug en este script).
+
+## Lockscreen
+
+La columna derecha del lock (tras CPU/RAM) se parte **35/65**:
+
+- **Arriba**: notificaciones agrupadas por app, con scrollbar cuando no caben.
+- **Abajo**: **Sylphrena**, la misma compañera honorspren del greeter Quickshell: saludo por hora, líneas idle a máquina de escribir, orbe SoftBurst y estados al escribir la contraseña, fallar PAM o desbloquear.
+
+El panel del lock usa tokens Material de la sesión (`Tokens` / `Colours`) y PAM (`lock.pam`), no el `Theme`/`Auth` del greeter.
+
+---
 
 ## Plugin C++ (build user-local)
 

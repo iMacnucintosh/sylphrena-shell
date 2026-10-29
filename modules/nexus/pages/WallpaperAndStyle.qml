@@ -16,6 +16,16 @@ PageBase {
 
     title: Tr.tr("Wallpaper & style")
 
+    Component.onCompleted: root.nState.editingActivityId = ""
+
+    function openGlobalSubPage(idx: int): void {
+        // Sub-pages write the Principal activity's style when editingActivityId
+        // is empty — clear any stale id left by the Activities page so the
+        // edits always land on the global look.
+        root.nState.editingActivityId = "";
+        root.nState.openSubPage(idx);
+    }
+
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
@@ -95,7 +105,7 @@ PageBase {
                 horizontalPadding: Tokens.padding.extraLarge
                 verticalPadding: Tokens.padding.medium
                 disabled: !Config.background.wallpaperEnabled
-                onClicked: root.nState.openSubPage(1) // Wallpaper page
+                onClicked: root.openGlobalSubPage(1) // Wallpaper page
             }
 
             IconTextButton {
@@ -107,7 +117,7 @@ PageBase {
                 type: IconTextButton.Tonal
                 horizontalPadding: Tokens.padding.extraLarge
                 verticalPadding: Tokens.padding.medium
-                onClicked: root.nState.openSubPage(3) // Colours page
+                onClicked: root.openGlobalSubPage(3) // Colours page
             }
         }
 
@@ -125,7 +135,15 @@ PageBase {
             // TRANSLATORS: %1/%2 = opacity values from 0 to 1 for the base surface and layered surfaces
             subtext: Tr.tr("Base %1, layers %2").arg(Colours.transparency.base).arg(Colours.transparency.layers)
             checked: Colours.transparency.enabled
-            onToggled: GlobalConfig.appearance.transparency.enabled = checked
+            onToggled: {
+                // The "global" look is the Principal activity's style while
+                // activities are enabled — write it through the service so the
+                // stored style and the config node never diverge.
+                if (Activities.enabled)
+                    Activities.setActivityTransparency(Activities.principalId, checked);
+                else
+                    GlobalConfig.appearance.transparency.enabled = checked;
+            }
         }
 
         ToggleRow {
@@ -134,7 +152,12 @@ PageBase {
             text: Tr.tr("Dark theme")
             subtext: Tr.tr("Shell and bar colours")
             checked: !Colours.light
-            onToggled: Colours.setMode(checked ? "dark" : "light")
+            onToggled: {
+                if (Activities.enabled)
+                    Activities.setActivityMode(Activities.principalId, checked ? "dark" : "light");
+                else
+                    Colours.setMode(checked ? "dark" : "light");
+            }
         }
 
         ToggleRow {
@@ -144,7 +167,12 @@ PageBase {
             text: Tr.tr("Light apps")
             subtext: Tr.tr("Keep GTK/Qt apps light even if the shell is dark")
             checked: Colours.lightApps
-            onToggled: Colours.setLightApps(checked)
+            onToggled: {
+                if (Activities.enabled)
+                    Activities.setActivityLightApps(Activities.principalId, checked);
+                else
+                    Colours.setLightApps(checked);
+            }
         }
     }
 }
