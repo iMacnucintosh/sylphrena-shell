@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.19)
 
 if(NOT DEFINED VERSION)
-    execute_process(COMMAND git describe --tags --abbrev=0
+    # Only Sylphrena's own line. v1.* and v2.* belong to the original project
+    # and must not become the version after an upstream merge. Widen the match
+    # when this project leaves 0.x, because v1.0.0 already points at old history.
+    execute_process(COMMAND git describe --tags --abbrev=0 --match v0.*
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         OUTPUT_VARIABLE VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
