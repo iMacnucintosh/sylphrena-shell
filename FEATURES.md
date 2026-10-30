@@ -2,7 +2,7 @@
 
 Documento orientado a **usuarios finales**: diferencias y mejoras respecto al proyecto original (crédito en el [README](./README.md)).
 
-Repositorio: [iMacnucintosh/hyprland-shell](https://github.com/iMacnucintosh/hyprland-shell).
+Repositorio: [iMacnucintosh/Sylphrena](https://github.com/iMacnucintosh/Sylphrena).
 
 ---
 
