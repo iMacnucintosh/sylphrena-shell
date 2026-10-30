@@ -39,7 +39,7 @@ constexpr qreal k_indexFudge = 0.1;
 
 [[nodiscard]] const QHash<QByteArray, QByteArray>& lrclibHeaders() {
     static const QHash<QByteArray, QByteArray> k_h = {
-        { "User-Agent"_ba, "sylphrena-shell (https://github.com/iMacnucintosh/hyprland-shell)"_ba },
+        { "User-Agent"_ba, "sylphrena-shell (https://github.com/iMacnucintosh/Sylphrena)"_ba },
     };
     return k_h;
 }
