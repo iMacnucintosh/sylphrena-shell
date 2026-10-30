@@ -13,6 +13,7 @@ sources of per-day activity:
 Usage:
   steam-activity.py poll
   steam-activity.py snapshot '<json [[appId, playtimeForever, lastPlayed], ...]>'
+  steam-activity.py snapshot   # same JSON on stdin (preferred; avoids ARG_MAX)
 
 Prints JSON: { "days": { appId: { "YYYY-MM-DD": minutes } },
                "sessions": { appId: [ { start, end } ] },
@@ -164,8 +165,15 @@ def main() -> int:
 
         now = int(time.time())
         if cmd == "snapshot":
+            # Prefer stdin (large libraries exceed ARG_MAX on argv). argv[2]
+            # remains supported for manual/debug invokes; "-" means stdin.
+            raw = ""
+            if len(sys.argv) > 2 and sys.argv[2] not in ("", "-"):
+                raw = sys.argv[2]
+            else:
+                raw = sys.stdin.read()
             try:
-                games = json.loads(sys.argv[2]) if len(sys.argv) > 2 else []
+                games = json.loads(raw) if raw.strip() else []
             except json.JSONDecodeError:
                 games = []
             poll(state, now)

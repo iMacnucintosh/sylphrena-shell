@@ -4,6 +4,17 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## 2026-10-30
 
+### Juegos (Steam)
+
+- Caché en disco de logros / schema / % global (`~/.local/state/sylphrena/steam-achievements-cache.json`, TTL ~1 día; wipe al cambiar API key o Steam ID; invalidate del juego enfocado en cada reload).
+- `services/Steam.qml` pasa a façade público estable; lógica partida en `services/steam/` (`SteamFormat`, `SteamApi`, `SteamLibrary`, `SteamAchievements`, `SteamLocal`, `SteamActivity`).
+- `steam-activity.py snapshot` acepta el JSON de playtime por **stdin** (evita `ARG_MAX`); argv sigue válido para debug.
+
+### Atajos
+
+- Nuevo atajo remapeable en Nexus → Keyboard & mouse: **Última ventana** (`focusLast`) → `hl.dsp.focus({ last = true })`. Por defecto **Super + \`**. Alterna entre la ventana actual y la anterior en cualquier escritorio/actividad.
+- Nexus → Keyboard & mouse: opción **Foco del ratón** (al pasar / al clic) → `input:follow_mouse` vía `sylphrena-input.lua` (`general.followMouse`).
+
 ### Rebrand → Sylphrena (instancia Quickshell `sylphrena`)
 
 - CLI fork `sylph` (`sylphrena-cli`); wrapper de tema `scripts/sylphrena-quiet.py`.
@@ -22,6 +33,10 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - El flake de Nix y los workflows de GitHub salen del árbol. Pendiente: publicar el paquete AUR con el nombre Sylphrena.
 - La versión propia empieza en `v0.1.0`. El build solo lee tags `v0.*`; `v1.*` y `v2.*` siguen siendo del proyecto original.
 - El repositorio de GitHub se llama [sylphrena-shell](https://github.com/iMacnucintosh/sylphrena-shell). Las URLs anteriores redirigen.
+
+### Utilities / keep-awake
+
+- Keep-awake (café) ya **no se fuerza a ON** en cada arranque de la shell. Respeta `RuntimeState.inhibitIdle` persistido en `/run/user/$UID/sylphrena/state.json` (default ON). Tras logout/reboot de sesión el runtime se pierde y vuelve el default.
 
 ### Compañera Sylphrena (greeter + lock)
 

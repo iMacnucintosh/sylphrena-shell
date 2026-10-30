@@ -202,8 +202,13 @@ void VisualSource::refresh() {
     }
 
     const auto* window = m_sizeSource->window();
-    if (!window || m_sizeSource->size().isEmpty())
+    if (!window || m_sizeSource->size().isEmpty()) {
+        // Paint the file anyway. Waiting for a size used to leave the layer empty
+        // (black desktop) until the item got a window/size.
+        if (m_type != Type::Live)
+            setImagePath(rawUrl());
         return;
+    }
 
     if (m_scalable || m_type == Type::Unknown) {
         setSourceSize(m_scalable ? m_sizeSource->size().toSize() : QSize());
@@ -211,30 +216,29 @@ void VisualSource::refresh() {
         return;
     }
 
-    auto* const cache = ImageCache::instance();
     const auto bucket = ImageCache::bucketFor((m_sizeSource->size() * window->devicePixelRatio()).toSize());
-    const auto key = ImageCache::keyFor(path, bucket, aspectMode());
-    if (key == m_key)
-        return;
-
-    m_key = key;
-    m_bucket = bucket;
     setSourceSize(bucket);
-    const auto cached = cache->lookup(key);
 
     if (m_type == Type::Live) {
-        m_preview = cached;
-        setImagePath(m_videoReady ? QUrl() : cached);
+        // Keep key/bucket so syncPlayer can decode a first frame and optionally
+        // write a preview into the KTX cache — but never hand that .ktx path to
+        // QML Image (same BC3 decode failure as still wallpapers).
+        const auto key = ImageCache::keyFor(path, bucket, aspectMode());
+        if (key != m_key) {
+            m_key = key;
+            m_bucket = bucket;
+            m_preview.clear();
+            if (!m_videoReady)
+                setImagePath({});
+        }
         syncPlayer();
         return;
     }
 
-    if (cached.isEmpty()) {
-        cache->store(key, path, bucket, aspectMode());
-        setImagePath(QUrl::fromLocalFile(path));
-    } else {
-        setImagePath(cached);
-    }
+    // Still photos: the on-disk cache is BC3 KTX. QML Image cannot decode it, so
+    // a cache hit used to replace the photo with an empty texture (black desktop).
+    // Always feed the original file; sourceSize still buckets the decode size.
+    setImagePath(rawUrl());
 }
 
 void VisualSource::onVideoFrame(const QVideoFrame& frame) {

@@ -7,8 +7,12 @@ import Sylphrena.State
 Scope {
     id: root
 
-    // Always enable keep-awake when the shell starts (reboot or shell restart).
-    Component.onCompleted: RuntimeState.inhibitIdle = true
+    // Respect persisted RuntimeState.inhibitIdle (default true; survives sylph shell -r
+    // via /run/user/.../sylphrena/state.json). Do not force-enable on every start.
+    Component.onCompleted: {
+        if (RuntimeState.inhibitIdle)
+            RuntimeState.inhibitingIdleSince = new Date().getTime();
+    }
 
     Connections {
         function onInhibitIdleChanged(): void {

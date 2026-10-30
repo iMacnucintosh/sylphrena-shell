@@ -82,6 +82,14 @@ Singleton {
             category: "windows"
         },
         {
+            id: "focusLast",
+            label: () => Tr.tr("Focus last window"),
+            description: () => Tr.tr("Toggle focus between the current and previously focused window (any desktop or activity)"),
+            defaultBind: "SUPER + grave",
+            dispatch: "hl.dsp.focus({ last = true })",
+            category: "windows"
+        },
+        {
             id: "windowDrag",
             label: () => Tr.tr("Move window (drag)"),
             description: () => Tr.tr("Drag the active window with the mouse"),

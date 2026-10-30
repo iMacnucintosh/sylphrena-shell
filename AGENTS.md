@@ -13,7 +13,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 - Versión propia: tags `v0.*` (`v0.1.0` es la primera). CMake usa `git describe --match v0.*`. Los tags `v1.*` y `v2.*` son del proyecto original y no cuentan; al salir de 0.x hay que ampliar el `--match`, porque `v1.0.0` ya existe en el historial.
 - El código que **corre** es este checkout: `~/.config/quickshell/sylphrena` (no el paquete AUR de `/etc/xdg`). El plugin C++ de config se compila **desde la raíz del repo** e instala en `~/.local` (sin sudo); `shell.qml` lo carga vía pragma `QT_ADDITIONAL_PACKAGES_PREFIX_PATH` — ver "Plugin C++ (build user-local)" en FEATURES.md.
 - Runtime de la shell: `~/.config/sylphrena/` (`shell.json`, `keybinds.json`, `cli.json`, `templates/`). El plugin escribe `/sylphrena` (config, state, cache, runtime).
-- Estado persistente: `~/.local/state/sylphrena/` (`timers.json`, `hydration.json`, `light-apps.json`, `nonsteam-sessions.json`, `steam-activity.json`, `sequences.txt`, `theme/kitty.conf`).
+- Estado persistente: `~/.local/state/sylphrena/` (`timers.json`, `hydration.json`, `light-apps.json`, `nonsteam-sessions.json`, `steam-activity.json`, `steam-achievements-cache.json`, `sequences.txt`, `theme/kitty.conf`).
 - Generados por el fork en Hyprland (todos via `require(...)` desde `hyprland.lua`): `sylphrena-binds.lua`, `sylphrena-activity-rules.lua`, `sylphrena-monitors.lua`.
 
 ## 2. Entorno del usuario (Manu)
@@ -46,14 +46,16 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 | --- | --- |
 | `Activities` | Core del fork: pills en la barra, look por activity, apply atómico vía `scripts/apply-activity-style.py` (wallpaper + un solo `scheme set`; el modo de la activity gana a `smartScheme`; verify + reintentos). El apply es **serial**: lanzar en paralelo = carrera light/dark |
 | `Colours` | Paleta, modo light/dark, `lightApps` (portal `prefer-light`; theming GTK off con light apps sin que pierda el CSS del esquema) |
-| `Steam` | ~1040 líneas (deuda técnica). Web API + logros + no-Steam (VDF/Millennium) + sesiones (`reaper`). Al refrescar **conserva el juego seleccionado** |
+| `Steam` | Façade singleton (~370 líneas) + `services/steam/*` (Format, Api, Library, Achievements, Local, Activity). Web API + logros (caché disco TTL ~1d) + no-Steam (VDF/Millennium) + sesiones (`reaper`). Al refrescar **conserva el juego seleccionado**; `gen` compartido |
 | `Updates` | Poll 30 min (Arch/AUR/Flatpak); update: password popup → `sudo -S -v` de comprobación → script en bg con askpass **en RAM** (helper + socket, sin fichero). Nunca `yay --sudoloop` (bloquea con faillock). yay/pacman con `--sudoflags=-A` / `sudo -A`; no usar `-n` (el timestamp de sudo es por TTY y el Process no tiene TTY) |
 | `Clipboard` | cliphist + `wl-clipboard`; paste con foco restaurado (~220 ms) + `send_shortcut` / `wtype` |
 | `MadisonVpn` | Status exige ping a intranet (no basta `ppp0`); teardown/heal tras suspender; popout OTP + settings |
 | `Displays` | `hyprctl monitors -j`; VRR **por conector** (Nunca/Automático/Siempre) → `sylphrena-monitors.lua` + `hyprctl reload` (sin reload VRR off no llega al CRTC) |
 | `Hydration` / `Timers` | Complementos on/off; al off limpian estado/procesos y ocultan su UI |
-| `Keybinds` | Grabación de teclas con submap vacío de Hyprland (inhibe binds), soporte F13–F35, diálogo de conflicto → `sylphrena-binds.lua` |
-| `Hypr` | Bridge de eventos de Hyprland; conectar directos cuando el `rawEvent` no se re-emite |
+| `Keybinds` | Grabación de teclas con submap vacío de Hyprland (inhibe binds), soporte F13–F35, diálogo de conflicto → `sylphrena-binds.lua`; incluye `focusLast` (última ventana cross-desktop) |
+| `Hypr` | Bridge de eventos de Hyprland; conectar directos cuando el `rawEvent` no se re-emite; aplica `follow_mouse` (Nexus) a `sylphrena-input.lua` |
+
+Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamFormat`, `SteamApi`, `SteamLibrary`, `SteamAchievements` (RAM+disco `steam-achievements-cache.json`), `SteamLocal`, `SteamActivity` (snapshot por **stdin**).
 
 ### UI
 - `modules/nexus/pages/`: `DisplayPage`, `UpdatesPage`(+`UpdatesSettings`), `ComplementsPage`, `ShellPage` (activities + look), `KeybindsPage`, `LanguageAndRegion` (tiempo/ubicación)…
@@ -65,7 +67,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 - `sylphrena-quiet.py` — aplica tema sin volcar secuencias OSC a los PTYs; recarga Kitty, sync Papirus en qt6ct, GTK/colors.css.
 - `sync-light-apps-cli.py` — reescrituras de `cli.json` **deben conservar** el postHook de Kitty.
 - `steam-nonsteam.py` — VDF + IDs ocultos + sesiones Millennium + caché de historial.
-- `steam-activity.py` — poll de procesos `reaper` (sesiones reales) + delta de `playtime_forever` como respaldo.
+- `steam-activity.py` — poll de procesos `reaper` (sesiones reales) + delta de `playtime_forever` como respaldo; `snapshot` lee JSON por **stdin** (argv sigue para debug).
 - `check-system-updates.py` / `run-system-update.sh` — chequeo (stdin `DEVNULL` + timeout) y update.
 - `record.sh` / `record-start.sh` — grabación desacoplada del panel; directorio en `SYLPHRENA_RECORDINGS_DIR`.
 - `install-system.sh` — piezas de `/etc` con **un solo** `sudo` (se reejecuta a sí mismo). Cada paso es `scripts/system/NN-nombre.sh` con `step_main`. Hoy: `10-greeter.sh` (`/etc/greetd/sylphrena`, `config.toml`, drop-ins de logind). `greeter/install-greeter.sh` solo llama a este.
@@ -88,7 +90,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 - Tras cambiar monitor/VRR: siempre `hyprctl reload`.
 - El CLI volcaba secuencias OSC a todos los `/dev/pts`; el fork lo parchea vía `scripts/sylphrena-quiet.py` — no quitar el wrapper.
 - `Requests.get` ya lleva transfer timeout de 15 s (plugin C++, `~/.local`) — no quitarlo al tocar `requests.cpp`; sin él un hang deja `pending` > 0 para siempre.
-- La caché HTTP/schema/logros de `Steam.qml` es solo en memoria (ver pendientes).
+- Caché de logros/schema/global% de Steam: RAM + disco `~/.local/state/sylphrena/steam-achievements-cache.json` (TTL ~1 día, namespace por `steamId`; wipe al cambiar API key / Steam ID; invalidate per-app del focus en reload).
 - `hyprctl` reporta un booleano de VRR: la **política** vive en el Lua, no la pises con el estado.
 
 ### Aislamiento de Plasma (aprendizajes fase 1)
@@ -102,13 +104,13 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 
 - [x] **Fase 2 — Plasma desinstalado (2026-10-30)**: `pacman -Rs` de `plasma-meta` + Dolphin/Kate/Konsole/KWalletManager y, en un segundo paso, Ark/KCalc/KDialog/Partition Manager (238 paquetes, ~1381 MiB). Se quedaron explícitos `noto-fonts-emoji` y `ttf-hack` (si no, salían como huérfanos); `bluez`/`bluez-utils` ya lo eran. Fuera: `qt6ct`, portales gtk+hyprland, greetd. `qt5-wayland` se quedó ese día por VLC y se quitó con él. `plasma-integration` y `kde-gtk-config` se fueron; el dual-write de `kdeglobals` también. Config/caché/estado de Plasma, Baloo (~1,5 GiB) y KWallet borrados. El módulo GTK `colorreload` sigue vendorizado en `~/.local`. El mismo `-Rs` se llevó `flatpak` (solo era dependencia de `flatpak-kcm`); las apps seguían en `/var/lib/flatpak` pero el `.desktop` llama a `/usr/bin/flatpak`. Reinstalado el 2026-10-30 como **explícito** (Teams, Blender, Bambu Studio, Prism Launcher). No volver a tratarlo como huérfano.
 
-- [ ] **Caché de logros de Steam en disco** (TTL ~1 día) para no re-pedir la biblioteca al arrancar.
-- [ ] **Partir `services/Steam.qml`** por capas si se crece (API / librería / sesiones / formateo).
-- [ ] `steam-activity.py`: mandar el snapshot **por stdin** en vez de argv (riesgo `ARG_MAX`).
+- [x] **Caché de logros de Steam en disco** (TTL ~1 día, `steam-achievements-cache.json`) detrás del façade `Steam`.
+- [x] **Partir `services/Steam.qml`** por capas en `services/steam/*` (Format → Activity(+stdin) → Local → Achievements → Api/Library); façade público estable para Complements + Games.
+- [x] `steam-activity.py`: snapshot por **stdin** (argv opcional para debug).
 - [ ] Tests pytest ligeros: parser VDF, merge de sesiones Millennium, residual delta/sesión.
-- [ ] Keep-awake se reactiva siempre al arrancar la shell: persistir su estado.
+- [x] Keep-awake: ya no se fuerza a ON al arrancar; respeta `RuntimeState.inhibitIdle` persistido en `/run/user/.../sylphrena/state.json` (default ON; tras reboot de sesión el runtime se pierde y vuelve el default).
 - [ ] Heatmap de Steam vacío: pie explicativo ya existe; considerar rellenar cifras del mes con logros cuando no hay tiempo.
-- [ ] A futuro: si upstream monta plugins de verdad, mover Madison VPN y Timers como plugins.
+- [ ] A futuro: si upstream monta plugins de verdad, mover Madison VPN y Timers como plugins. (API multi-singleton pública de Steam: **no**; se mantiene un solo façade.)
 
 ---
 

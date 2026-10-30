@@ -24,7 +24,7 @@ Repositorio: [iMacnucintosh/sylphrena-shell](https://github.com/iMacnucintosh/sy
 | **Clipboard** | Historial estilo Plasma (cliphist): Super+Shift+V, pegar en la ventana enfocada, favoritos |
 | **Updates** | Arch / AUR / Flatpak: icono+badge, popout, Nexus; update en fondo (panel) o con logs (Nexus) |
 | **Pantalla** | Nexus → Pantalla: modo (Hz), escala y VRR por monitor (Nunca / Automático / Siempre) |
-| **Atajos** | Remapeables desde Nexus; Super+E → Thunar; atajos de activities |
+| **Atajos** | Remapeables desde Nexus; Super+E → Thunar; Super+\` última ventana; foco al hover o al clic; atajos de activities |
 | **Tiempo** | Buscar ciudad en Nexus → Idioma y región, o ubicación automática por IP |
 | **Lock** | Columna derecha: notificaciones (35 %) con scroll arriba, compañera **Sylphrena** (65 %) abajo (igual que el greeter) |
 
@@ -143,7 +143,7 @@ Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
 - **Madison VPN**: interruptor on/off. Al desactivar se oculta el icono, se para el poll y se ejecuta teardown (`disconnect` + `heal`) para matar `openfortivpn`/helper.
 - **Timers**: interruptor on/off. Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue). Exposición doble: hub en **Complementos** y tarjeta desplegable en **Nexus → Panels → Taskbar → Clock** (mismo `addons.timers.enabled`), con 4 presets editables (`presetMins0..3`, default 5/10/20/30) que alimentan los botones del popout.
 - **Hidratación**: interruptor on/off (opt-in). Al activar sustituye el calendario del dashboard Nexus (solo ahí; el popout del reloj sigue con calendario) por un depósito con waves, meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Estado en `~/.local/state/sylphrena/hydration.json`.
-- **Juegos (Steam)**: interruptor on/off (opt-in). Al activar añade la pestaña **Juegos** en el dashboard (a la derecha de Tiempo). Configura API key (oculta por defecto) + Steam ID / vanity / URL de perfil, y el intervalo de refresco (default 10 min). Muestra perfil y nivel, estadísticas globales en shapes Material You (juegos visibles — sin la colección Hidden —, horas, compleción media de logros y juegos al 100 %, amigos en línea), tarjeta del juego destacado con portada y progreso, y un selector de portadas ordenado por última partida. Logros en una lista con scroll: desbloqueados por rareza y bloqueados de más común a más raro, con insignia y descripción. Mapa de calor mensual (puntos = días con logros; el tiempo por día se registra con el shell en marcha). Juegos no Steam desde `shortcuts.vdf`, con horas de Millennium si está instalado. Los logros del perfil deben ser públicos. El muestreo de logros para la compleción media está **capado a 60 juegos** (los más jugados, por orden de playtime) y el refresco periódico **solo corre mientras el dashboard muestra la pestaña Juegos** (no quema API en segundo plano).
+- **Juegos (Steam)**: interruptor on/off (opt-in). Al activar añade la pestaña **Juegos** en el dashboard (a la derecha de Tiempo). Configura API key (oculta por defecto) + Steam ID / vanity / URL de perfil, y el intervalo de refresco (default 10 min). Muestra perfil y nivel, estadísticas globales en shapes Material You (juegos visibles — sin la colección Hidden —, horas, compleción media de logros y juegos al 100 %, amigos en línea), tarjeta del juego destacado con portada y progreso, y un selector de portadas ordenado por última partida. Logros en una lista con scroll: desbloqueados por rareza y bloqueados de más común a más raro, con insignia y descripción. Mapa de calor mensual (puntos = días con logros; el tiempo por día se registra con el shell en marcha). Juegos no Steam desde `shortcuts.vdf`, con horas de Millennium si está instalado. Los logros del perfil deben ser públicos. El muestreo de logros para la compleción media está **capado a 60 juegos** (los más jugados, por orden de playtime) y el refresco periódico **solo corre mientras el dashboard muestra la pestaña Juegos** (no quema API en segundo plano). Caché de logros/schema/% global en disco (`~/.local/state/sylphrena/steam-achievements-cache.json`, TTL ~1 día) para arranques en frío más rápidos; el servicio QML es un façade (`Steam`) con capas en `services/steam/*`.
 
 ## Madison VPN (FortiClient / openfortivpn)
 
@@ -186,6 +186,7 @@ require("sylphrena-monitors")
 
 - En **interruptores rápidos**: icono de café (**Keep awake**), a la izquierda del gamepad.
 - **Activado por defecto** (bloquea idle/suspend del compositor vía idle inhibitor).
+- El estado del interruptor **persiste** entre reinicios de la shell (`sylph shell -r`) vía `RuntimeState` (`/run/user/$UID/sylphrena/state.json`). Tras un logout/reboot de sesión el runtime se pierde y vuelve el default ON.
 - La card grande «Mantener activo» está oculta por defecto (se puede volver a mostrar en Nexus → Panels → Utilities → Cards).
 
 ---
@@ -283,7 +284,8 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 
 Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 
-- **Atajos de Hyprland remapeables** desde Nexus (genera `sylphrena-binds.lua`), incluyendo teclas **F13+**.
+- **Atajos de Hyprland remapeables** desde Nexus (genera `sylphrena-binds.lua`), incluyendo teclas **F13+** y **Última ventana** (Super+\` por defecto; cruza escritorios/actividades vía Hyprland).
+- **Foco del ratón** en Nexus → Keyboard & mouse: al pasar por encima (Hyprland `follow_mouse = 1`) o al hacer clic (`= 2`). Genera `sylphrena-input.lua`.
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
 - Apariencia **unificada en Activities**: una sola página para el comportamiento (enable, iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
 - **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí, no en Services; Services queda para servicios del sistema).
@@ -317,6 +319,7 @@ Popout flotante junto al cursor (estilo Sylphrena), respaldado por **cliphist** 
 | Overview de activities | Super + Tab |
 | Activity anterior | Super + Ctrl + ← |
 | Activity siguiente | Super + Ctrl + → |
+| Última ventana (cualquier escritorio/actividad) | Super + \` (grave) |
 | Historial del clipboard | Super + Shift + V |
 
 Cámbialos en **Nexus → Keyboard & mouse**.

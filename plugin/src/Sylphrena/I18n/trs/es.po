@@ -1717,6 +1717,26 @@ msgid "Allow nearby devices to pair with this one"
 msgstr "Permitir que los dispositivos cercanos se emparejen con este"
 
 #: modules/nexus/pages/KeybindsPage.qml
+msgid "Mouse focus"
+msgstr "Foco del ratón"
+
+#: modules/nexus/pages/KeybindsPage.qml
+msgid "Focus windows"
+msgstr "Enfocar ventanas"
+
+#: modules/nexus/pages/KeybindsPage.qml
+msgid "On hover focuses as you move; on click keeps typing until you click (better with “Focus last window”)."
+msgstr "Al pasar enfoca al mover el ratón; al clic mantiene la escritura hasta que hagas clic (mejor con «Última ventana»)."
+
+#: services/Hypr.qml
+msgid "On hover"
+msgstr "Al pasar por encima"
+
+#: services/Hypr.qml
+msgid "On click"
+msgstr "Al hacer clic"
+
+#: modules/nexus/pages/KeybindsPage.qml
 msgid "Click a shortcut, then press a key or mouse button. Esc cancels."
 msgstr "Haz clic en un atajo y pulsa una tecla o un botón del ratón. Esc cancela."
 
@@ -3954,6 +3974,14 @@ msgstr "Foco abajo"
 #: services/Keybinds.qml
 msgid "Move focus to the window below"
 msgstr "Mover el foco a la ventana de abajo"
+
+#: services/Keybinds.qml
+msgid "Focus last window"
+msgstr "Última ventana"
+
+#: services/Keybinds.qml
+msgid "Toggle focus between the current and previously focused window (any desktop or activity)"
+msgstr "Alternar el foco entre la ventana actual y la anterior (cualquier escritorio o actividad)"
 
 #: services/Keybinds.qml
 msgid "Move window (drag)"

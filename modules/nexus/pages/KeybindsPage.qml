@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
@@ -82,8 +83,40 @@ PageBase {
             anchors.top: parent.top
             spacing: Tokens.spacing.small
 
+            SectionHeader {
+                first: true
+                text: Tr.tr("Mouse focus")
+            }
+
+            SelectRow {
+                id: followMouseRow
+
+                first: true
+                last: true
+                label: Tr.tr("Focus windows")
+                subtext: Tr.tr("On hover focuses as you move; on click keeps typing until you click (better with “Focus last window”).")
+                active: followMouseItems.instances.find(i => i.modelData === Hypr.normalizeFollowMouse(GlobalConfig.general.followMouse)) ?? null
+                fallbackText: Hypr.followMouseLabel(GlobalConfig.general.followMouse)
+                onSelected: item => Hypr.setFollowMouse(item.modelData)
+
+                menuItems: followMouseItems.instances
+
+                Variants {
+                    id: followMouseItems
+
+                    model: [1, 2]
+
+                    MenuItem {
+                        required property int modelData
+
+                        text: Hypr.followMouseLabel(modelData)
+                    }
+                }
+            }
+
             StyledText {
                 Layout.fillWidth: true
+                Layout.topMargin: Tokens.spacing.small
                 text: Tr.tr("Click a shortcut, then press a key or mouse button. Esc cancels.")
                 color: Colours.palette.m3outline
                 font: Tokens.font.body.small
@@ -142,7 +175,7 @@ PageBase {
                     readonly property var actionsList: root.categoryActions(modelData)
 
                     SectionHeader {
-                        first: section.modelData === "windows"
+                        first: false
                         text: Keybinds.categoryLabels[section.modelData]()
                     }
 
