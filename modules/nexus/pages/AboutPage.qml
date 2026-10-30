@@ -7,7 +7,6 @@ import Sylphrena.I18n
 import qs.components
 import qs.services
 import qs.utils
-import qs.modules.nexus.common
 
 PageBase {
     id: root
@@ -62,10 +61,11 @@ PageBase {
                 width: parent.width - Tokens.padding.largeIncreased * 2
                 spacing: Tokens.spacing.small
 
-                AnimatedLogo {
+                CompanionOrb {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: implicitWidth
                     Layout.preferredHeight: implicitHeight
+                    orbSize: 96
                 }
 
                 StyledText {

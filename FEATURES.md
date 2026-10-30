@@ -26,7 +26,7 @@ Repositorio: [iMacnucintosh/sylphrena-shell](https://github.com/iMacnucintosh/sy
 | **Pantalla** | Nexus → Dispositivos conectados → Pantalla: modo (Hz), escala y VRR por monitor (Nunca / Automático / Siempre) |
 | **Atajos** | Remapeables desde Nexus; Super+E → Thunar; Super+\` última ventana; foco al hover o al clic; atajos de activities |
 | **Tiempo** | Buscar ciudad en Nexus → Idioma y región, o ubicación automática por IP |
-| **Lock** | Columna derecha: notificaciones (35 %) con scroll arriba, compañera **Sylphrena** (65 %) abajo (igual que el greeter) |
+| **Lock** | Columna derecha: notificaciones (35 %) con scroll arriba, compañera **Sylphrena** (65 %) abajo (igual que el greeter; orbe SoftBurst vía `CompanionOrb`, también en Nexus → About) |
 
 ---
 
