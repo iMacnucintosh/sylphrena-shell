@@ -65,7 +65,9 @@ QtObject {
     }
 
     readonly property Timer timer: Timer {
-        running: true
+        // Only while the toast is showing — restored history entries must not
+        // arm a one-shot, and re-showing a popup must re-arm expiry.
+        running: notif.popup
         interval: notif.expireTimeout > 0 ? notif.expireTimeout : notif.hasFullscreen ? GlobalConfig.notifs.fullscreenExpireTimeout : GlobalConfig.notifs.defaultExpireTimeout
         onTriggered: {
             // Always expire if the active workspace has a fullscreen window

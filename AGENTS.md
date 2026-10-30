@@ -106,7 +106,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 
 - [x] **Caché de logros de Steam en disco** (TTL ~1 día, `steam-achievements-cache.json`) detrás del façade `Steam`.
 - [x] **Partir `services/Steam.qml`** por capas en `services/steam/*` (Format → Activity(+stdin) → Local → Achievements → Api/Library); façade público estable para Complements + Games.
-- [x] `steam-activity.py`: snapshot por **stdin** (argv opcional para debug).
+- [x] `steam-activity.py`: snapshot por **stdin** (argv opcional para debug); baseline heal de timestamps `0`/escalares legacy (sin residual desde epoch).
 - [ ] Tests pytest ligeros: parser VDF, merge de sesiones Millennium, residual delta/sesión.
 - [x] Keep-awake: ya no se fuerza a ON al arrancar; respeta `RuntimeState.inhibitIdle` persistido en `/run/user/.../sylphrena/state.json` (default ON; tras reboot de sesión el runtime se pierde y vuelve el default).
 - [ ] Heatmap de Steam vacío: pie explicativo ya existe; considerar rellenar cifras del mes con logros cuando no hay tiempo.

@@ -117,15 +117,30 @@ def snapshot(state: dict, now: int, games: list) -> None:
         except (IndexError, TypeError, ValueError):
             continue
         prev = snap.get(app_id)
+        # Legacy scalar or corrupt/unknown window ([m, 0]): baseline only.
+        # Attributing residual from since=0 would let tracked sessions swallow
+        # the whole delta and leave heatmap empty for play-while-shell-off.
         if isinstance(prev, int):
-            prev = [prev, 0]
-        if prev is not None and minutes > prev[0]:
-            residual = minutes - prev[0] - tracked_seconds(state, app_id, prev[1], now) // 60
+            snap[app_id] = [minutes, now]
+            continue
+        if not isinstance(prev, (list, tuple)) or len(prev) < 2:
+            snap[app_id] = [minutes, now]
+            continue
+        try:
+            prev_mins, prev_at = int(prev[0]), int(prev[1] or 0)
+        except (TypeError, ValueError):
+            snap[app_id] = [minutes, now]
+            continue
+        if prev_at <= 0:
+            snap[app_id] = [minutes, now]
+            continue
+        if minutes > prev_mins:
+            residual = minutes - prev_mins - tracked_seconds(state, app_id, prev_at, now) // 60
             if residual > 1:
                 day = datetime.fromtimestamp(last or now).date().isoformat()
                 bucket = days.setdefault(app_id, {})
                 bucket[day] = bucket.get(day, 0) + residual
-        if prev is None or prev[0] != minutes:
+        if prev_mins != minutes:
             snap[app_id] = [minutes, now]
 
 

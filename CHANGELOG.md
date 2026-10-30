@@ -4,6 +4,12 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## 2026-10-30
 
+### Polish (deep audit)
+
+- `steam-activity.py` snapshot: entries with legacy/`[minutes, 0]` timestamps are **rebaselined** (no residual from `since=0`), so heatmap deltas stop being swallowed by tracked sessions after the next Games reload.
+- Area picker clipboard-only capture copies via argv (`$1`), not shell string concat.
+- Notification popup expiry timer only runs while `popup` is true (history entries idle; re-show re-arms).
+
 ### Nexus — reorganización del sidebar (fase 1)
 
 - Categorías visibles en el nav; agrupación tras feedback Jorge: **Escritorio y apariencia** (Activities, Panels, Complements), Entrada, **Dispositivos** (Network, Connected devices, Audio), Apps, Sistema, Acerca de.
