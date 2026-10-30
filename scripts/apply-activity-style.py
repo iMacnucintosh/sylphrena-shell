@@ -17,9 +17,9 @@ from pathlib import Path
 def _patch_theme_quiet() -> None:
     import importlib.util
 
-    # Reuse caelestia-quiet patches (GTK live theme, Papirus/kdeglobals, Kitty).
-    quiet_path = Path(__file__).with_name("caelestia-quiet.py")
-    spec = importlib.util.spec_from_file_location("caelestia_quiet", quiet_path)
+    # Reuse sylphrena-quiet patches (GTK live theme, Papirus via qt6ct, Kitty).
+    quiet_path = Path(__file__).with_name("sylphrena-quiet.py")
+    spec = importlib.util.spec_from_file_location("sylphrena_quiet", quiet_path)
     quiet = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     spec.loader.exec_module(quiet)
@@ -27,14 +27,14 @@ def _patch_theme_quiet() -> None:
 
 
 def _set_wallpaper_files(wall: Path) -> None:
-    from caelestia.utils.paths import (
+    from sylphrena.utils.paths import (
         compute_hash,
         wallpaper_link_path,
         wallpaper_path_path,
         wallpaper_thumbnail_path,
         wallpapers_cache_dir,
     )
-    from caelestia.utils.wallpaper import convert_gif, get_thumb, is_valid_image
+    from sylphrena.utils.wallpaper import convert_gif, get_thumb, is_valid_image
 
     wall = wall.resolve()
     if not is_valid_image(wall):
@@ -63,14 +63,14 @@ def _apply_scheme(
     *,
     force: bool,
 ) -> None:
-    from caelestia.utils.scheme import (
+    from sylphrena.utils.scheme import (
         get_scheme,
         get_scheme_flavours,
         get_scheme_modes,
         get_scheme_names,
         scheme_variants,
     )
-    from caelestia.utils.theme import apply_colours
+    from sylphrena.utils.theme import apply_colours
 
     scheme = get_scheme()
     dirty = force

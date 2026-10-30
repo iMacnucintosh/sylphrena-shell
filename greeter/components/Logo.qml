@@ -20,7 +20,7 @@ Item {
         height: root.designHeight
         scale: Math.min(root.width / width, root.height / height)
         transformOrigin: Item.Center
-        // CurveRenderer has drawn the Caelestia mark as hollow stroke lines
+        // CurveRenderer has drawn the Sylphrena mark as hollow stroke lines
         // ("gota de agua") in the greeter session — prefer geometry fills.
         preferredRendererType: Shape.GeometryRenderer
         asynchronous: false

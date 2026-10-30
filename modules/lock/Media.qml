@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Caelestia.Components
-import Caelestia.Config
-import Caelestia.I18n
+import Sylphrena.Components
+import Sylphrena.Config
+import Sylphrena.I18n
 import qs.components
 import qs.components.controls
 import qs.components.images

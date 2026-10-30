@@ -1,10 +1,10 @@
-//@ pragma Env QS_CRASHREPORT_URL=https://github.com/caelestia-dots/shell/issues/new?template=crash.yml
+//@ pragma Env QS_CRASHREPORT_URL=https://github.com/iMacnucintosh/hyprland-shell/issues/new
 //@ pragma DefaultEnv QS_NO_RELOAD_POPUP=1
 //@ pragma DefaultEnv QS_DROP_EXPENSIVE_FONTS=1
 //@ pragma DefaultEnv QSG_RENDER_LOOP=threaded
 //@ pragma DefaultEnv QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000
 // Use qt6ct platform theme so QIcon reads qt6ct.conf [Appearance] icon_theme (Papirus) and the
-// Material palette is applied to Qt widgets; kept in sync by caelestia-quiet (see _sync_qt6ct)
+// Material palette is applied to Qt widgets; kept in sync by sylphrena-quiet (see _sync_qt6ct)
 //@ pragma Env QT_QPA_PLATFORMTHEME=qt6ct
 // Load the locally built plugin (in ~/.local) instead of the system package's:
 // it carries fork-side C++ changes (Requests transfer timeout, config nodes).
@@ -12,7 +12,7 @@
 
 import QtQuick
 import Quickshell
-import Caelestia.Config
+import Sylphrena.Config
 import qs.services
 import qs.modules.activities
 import qs.modules.areapicker

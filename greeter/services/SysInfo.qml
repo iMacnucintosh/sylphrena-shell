@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.services
 
-// The greeter only needs the few facts caelestiafetch shows on the lock.
+// The greeter only needs the few facts sylphrenafetch shows on the lock.
 Singleton {
     id: root
 

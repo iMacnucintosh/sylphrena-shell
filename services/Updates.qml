@@ -4,9 +4,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Caelestia
-import Caelestia.Config
-import Caelestia.I18n
+import Sylphrena
+import Sylphrena.Config
+import Sylphrena.I18n
 import qs.utils
 
 Singleton {
@@ -113,7 +113,7 @@ Singleton {
         root.statusMessage = message;
         root.statusIcon = "terminal";
         const term = GlobalConfig.general.apps.terminal;
-        const banner = `echo ${JSON.stringify(Tr.tr("##### Caelestia updates #####"))}; `;
+        const banner = `echo ${JSON.stringify(Tr.tr("##### Sylphrena updates #####"))}; `;
         const footer = `; echo; read -n 1 -p ${JSON.stringify(Tr.tr("Press any key to close…"))}`;
         const wrapped = `${banner}${shellCmd}${footer}`;
         Quickshell.execDetached([...term, "bash", "-c", wrapped]);

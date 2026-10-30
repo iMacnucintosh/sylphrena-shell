@@ -5,14 +5,14 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// Self-contained copy of the Caelestia tokens: the greeter user cannot read
-// ~/.local (Caelestia.Config plugin) nor the session config. scheme.json and
-// greeter.json are written by scripts/caelestia-quiet.py.
+// Self-contained copy of the Sylphrena tokens: the greeter user cannot read
+// ~/.local (Sylphrena.Config plugin) nor the session config. scheme.json and
+// greeter.json are written by scripts/sylphrena-quiet.py.
 Singleton {
     id: root
 
-    readonly property string dir: Quickshell.env("CAELESTIA_GREETER_DIR") || "/etc/greetd/caelestia"
-    readonly property bool demo: Quickshell.env("CAELESTIA_GREETER_DEMO") === "1"
+    readonly property string dir: Quickshell.env("SYLPHRENA_GREETER_DIR") || Quickshell.env("SYLPHRENA_GREETER_DIR") || "/etc/greetd/sylphrena"
+    readonly property bool demo: Quickshell.env("SYLPHRENA_GREETER_DEMO") === "1" || Quickshell.env("SYLPHRENA_GREETER_DEMO") === "1"
 
     property var scheme: ({})
     property var config: ({})

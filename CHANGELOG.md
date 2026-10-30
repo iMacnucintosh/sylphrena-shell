@@ -4,10 +4,33 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## 2026-10-30
 
+### Rebrand → Sylphrena (instancia Quickshell `sylphrena`)
+
+- CLI fork `sylph` (`sylphrena-cli`); wrapper de tema `scripts/sylphrena-quiet.py`.
+- Runtime/state/cache en `~/.config|state|cache/sylphrena/`. El plugin escribe ya `/sylphrena`.
+- Env vars `SYLPHRENA_*`; Lua generados `sylphrena-{binds,activity-rules,monitors}.lua`.
+- Globals Hyprland `sylphrena:*` (`CustomShortcut` appid); namespaces de capa `sylphrena-*`.
+- OpenCode twins `sylphrena`/`sylphrena-alt`; qt6ct scheme `sylphrena.conf`; Kitty include bajo state `sylphrena`.
+- Instancia Quickshell: `~/.config/quickshell/sylphrena` (`sylphrena` → symlink) y arranque Hyprland con `/home/manu/.local/bin/sylph shell -d` (el PATH del compositor no incluye `~/.local/bin`).
+- Plugin C++: URI QML `import Sylphrena` (módulos `Sylphrena.*`) y segmento de path `/sylphrena`. Los namespaces C++ `sylphrena::` se quedan.
+- Greeter: `/etc/greetd/sylphrena`. `scripts/install-system.sh` pide root una vez y corre los pasos de `scripts/system/`; `greeter/install-greeter.sh` entra por ahí.
+- Plasma desde el greeter: se apaga el VRR antes de soltar el CRTC (KWin hacía `Modeset failed: Invalid argument` a 144 Hz) y la sesión no hereda `qt6ct` ni el path QML de Sylphrena. Hyprland los restaura al entrar.
+- Plasma desinstalado (`plasma-meta`, apps KDE explícitas y sus huérfanos: 238 paquetes, ~1381 MiB). Se conservan Bluetooth, Noto emoji, Hack, qt6ct y los portales gtk/hyprland. El tema ya no escribe `kdeglobals`.
+- VLC desinstalado, y con él `qt5-wayland`, `qt5-declarative`, `qt5-svg` y `qt5-x11extras`. `general.apps.playback` queda vacío.
+- OpenSCAD desinstalado. Con él se van `qt5-base`, `qt5-multimedia` y `qscintilla-qt5`: ya no queda Qt 5.
+- En esta máquina se desinstalaron los paquetes AUR del proyecto original. La shell se arranca con `sylph`. Quickshell, las fuentes, cliphist y la grabación se quedaron marcados como explícitos, porque el checkout los usa aunque pacman los contaba como dependencia de esos paquetes.
+- El flake de Nix y los workflows de GitHub salen del árbol. Pendiente: publicar el paquete AUR con el nombre Sylphrena.
+
 ### Compañera Sylphrena (greeter + lock)
 
 - Las tres líneas del Primer Ideal y la de los spren pasan a ser **versos propios** con el mismo ritmo («El aliento antes que el silencio», «La grieta antes que el acero», «Los pasos antes que la meta», «Los espíritus del viento somos pacientes… a veces»): la compañera conserva su voz y su carácter sin reproducir la traducción publicada. Comentarios y documentación usan «espíritu del viento».
-- `greeter/modules/CompanionPanel.qml` y `modules/lock/CompanionPanel.qml` actualizados (msgids nuevos en `es.po`, plugin I18n recompilado e instalado en `~/.local`); la copia desplegada del greeter en `/etc/greetd/caelestia/qs/` queda sincronizada.
+- `greeter/modules/CompanionPanel.qml` y `modules/lock/CompanionPanel.qml` actualizados (msgids nuevos en `es.po`, plugin I18n recompilado e instalado en `~/.local`); la copia desplegada del greeter en `/etc/greetd/sylphrena/qs/` queda sincronizada.
+
+## 2026-10-30
+
+### Greeter
+
+- Elegir **Plasma (Wayland)** ya no vuelve al login: se lanza el `Exec` del `.desktop` por argv (sin `sh -c`), se conserva el TTY para KWin y el compositor del greeter suelta el DRM/VT en vez de dejarlo colgado tras un SIGKILL.
 
 ## 2026-10-29
 
@@ -23,7 +46,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 ### Aislamiento de Plasma (fase 1)
 
 - **Login**: plasmalogin → greetd con autologin inicial a Hyprland y greeter Quickshell Material You tras logout. Teclado español fijo; handoff corto bajo cortina negra, VT limpio y recuperación ante timeout. Tanto el greeter como la sesión de usuario arrancan Hyprland sin TTY de control y con stdout a log (el logo ASCII + debug ya no quedan en el búfer de tty1); `UserStopDelaySec=0` y `TimeoutStopSec=8` en user@ evitan la pantalla negra de ~10 s al reentrar (systemd no espera al user@ anterior ni a coredumps enormes); el compositor desechable se termina por su watchdog para evitar el shutdown de Hyprland 0.57 que tardaba ~5 s y acababa en segfault; plasmalogin sigue instalado pero deshabilitado.
-- **Qt sin plasma-integration**: `QT_QPA_PLATFORMTHEME=kde → qt6ct` en `shell.qml`, `hyprland.lua` y `environment.d`. Los apps Qt pasan de Breeze a Fusion con la **paleta Material**: `caelestia-quiet.py` genera en cada cambio de esquema `~/.config/qt6ct/colors/caelestia.conf` (22 roles de QPalette desde los tokens Material) + `qt6ct.conf` (Papirus por modo, Fusion), con escritura atómica para el hot-reload de qt6ct.
+- **Qt sin plasma-integration**: `QT_QPA_PLATFORMTHEME=kde → qt6ct` en `shell.qml`, `hyprland.lua` y `environment.d`. Los apps Qt pasan de Breeze a Fusion con la **paleta Material**: `sylphrena-quiet.py` genera en cada cambio de esquema `~/.config/qt6ct/colors/sylphrena.conf` (22 roles de QPalette desde los tokens Material) + `qt6ct.conf` (Papirus por modo, Fusion), con escritura atómica para el hot-reload de qt6ct.
 - **Thunar sin Dolphin**: `plasma-dolphin`/`plasma-kactivitymanagerd` parados y enmascarados (user systemd); override D-Bus de `org.freedesktop.FileManager1` a Thunar (`~/.local/share/dbus-1/services/`). "Open containing folder" y similares ya no suben Dolphin.
 - **`colorreload-gtk-module` vendorizado** en `~/.local/share/gtk-3.0/modules/` (copia del .so de kde-gtk-config): la recarga en vivo de Thunar sobrevive a la desinstalación de Plasma.
 - **Cursor unificado**: `breeze_cursors → Adwaita` (`gsettings`, `settings.ini`, `XCURSOR_THEME`/`HYPRCURSOR_THEME` en `hyprland.lua`).
@@ -31,7 +54,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ### Sync upstream
 
-- Merge de `upstream/main` (PR #1: `feat(lock): clear password with Ctrl+U`). El fork lleva remote `upstream` (caelestia-dots/shell); las actualizaciones de base se hacen mergeando upstream y pasando PR a `main`.
+- Merge de `upstream/main` (PR #1: `feat(lock): clear password with Ctrl+U`). El fork lleva remote `upstream` al proyecto original; las actualizaciones de base se hacen mergeando upstream y pasando PR a `main`.
 - `.cursor-tmp/` añadido a `.gitignore`.
 
 ### Repaso integral de calidad (fixes)
@@ -43,7 +66,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - **Updates**: la contraseña del sudo vive solo en RAM (`sudo -S -v` por paso en `run-system-update.sh`, sin fichero de askpass); el timeout de instalación solo corta si lleva 45 min sin imprimir nada (heartbeat por línea de log).
 - **Pantalla**: refresh automático en `monitoradded`/`monitorremoved` y `persist()` conserva las políticas VRR de outputs desenchufados.
 - **Juegos (Steam)**: muestreo de logros capado a 60 juegos (los más jugados) y refresco periódico solo con la pestaña Juegos visible.
-- **OpenCode**: tema `caelestia` con gemelas `caelestia`/`caelestia-alt` para el hot-reload por flip de nombre; `generate-opencode-theme.py` calcula `pick_sources()` una sola vez.
+- **OpenCode**: tema `sylphrena` con gemelas `sylphrena`/`sylphrena-alt` para el hot-reload por flip de nombre; `generate-opencode-theme.py` calcula `pick_sources()` una sola vez.
 
 ### Nexus reorganizado
 
@@ -62,11 +85,11 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 - Nueva página en Connectivity (encima de Audio): una tarjeta por monitor con **modo (Hz)**, **escala** y **VRR / Adaptive Sync**.
 - Política VRR estilo Plasma: **Nunca / Automático / Siempre** (Automático = solo a pantalla completa).
-- Persistencia por conector en `~/.config/hypr/caelestia-monitors.lua` + `hyprctl reload` al aplicar; la política guardada ya no la pisa el booleano de `hyprctl` (fix del parpadeo con Adaptive Sync pegado en el CRTC). Requiere `require("caelestia-monitors")` en `hyprland.lua`.
+- Persistencia por conector en `~/.config/hypr/sylphrena-monitors.lua` + `hyprctl reload` al aplicar; la política guardada ya no la pisa el booleano de `hyprctl` (fix del parpadeo con Adaptive Sync pegado en el CRTC). Requiere `require("sylphrena-monitors")` en `hyprland.lua`.
 
 ### Layout compacto (ex game mode)
 
-- Redefinido como layout que aprovecha la pantalla al máximo: sin marco de Caelestia (solo barra izquierda, `reserved: 60 0 0 0`), gaps 0, `rounding`/`border_size` 0 y sin hueco entre barra y ventanas (smoothing 0 + solape 1px).
+- Redefinido como layout que aprovecha la pantalla al máximo: sin marco de Sylphrena (solo barra izquierda, `reserved: 60 0 0 0`), gaps 0, `rounding`/`border_size` 0 y sin hueco entre barra y ventanas (smoothing 0 + solape 1px).
 - Ya **no** toca animaciones, blur, sombras, wobble ni tearing. El id interno sigue siendo `gameMode` (IPC / quick toggle `fit_screen`).
 
 ## 2026-10-28
@@ -103,7 +126,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ### Clipboard
 
-- Historial flotante estilo Plasma/Caelestia (`cliphist`): **Super+Shift+V** (remapeable).
+- Historial flotante estilo Plasma/Sylphrena (`cliphist`): **Super+Shift+V** (remapeable).
 - Pegado directo en la ventana enfocada (`wtype` Ctrl+V).
 - Favoritos persistentes, búsqueda, miniaturas de imagen.
 - Rutas/`file://` a imagen desde el explorador se muestran y pegan como imagen.
@@ -115,7 +138,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - VPN off: oculta icono, para poll, teardown disconnect+heal.
 - Timers off: limpia timers activos y oculta la sección en el popout del reloj.
 - Icono VPN en la pastilla de status (bajo Bluetooth) cuando el complemento está on.
-- Clic = conectar (diálogo OTP Caelestia) / desconectar.
+- Clic = conectar (diálogo OTP Sylphrena) / desconectar.
 - Engranaje en el popout: editar config local de openfortivpn (sin secretos en el repo).
 - Scripts en `madison_vpn_widget` (`hyprland/`) instalados a `~/.local/share/madison-vpn/`.
 - Tras **suspender/reanudar**: health-check (ping a intranet); si el túnel está zombie se limpia y el icono pasa a desconectado (toast). Comando `madison-vpn heal` + `heal_vpn.sh`.
@@ -127,11 +150,11 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - Verify + reintento si el modo no cuadra tras el apply.
 - **GTK/Thunar** siguen el esquema dinámico de la activity (`enableGtk` siempre on; `colors.css` para `colorreload`).
 - **Apps claras** de la activity: `prefer-light` + sin motor Qt oscuro; Thunar puede seguir el CSS del esquema.
-- Iconos del launcher vía tema KDE: sync **Papirus** en `kdeglobals` desde `caelestia-quiet.py` (ya no depende solo de Breeze).
+- Iconos del launcher vía tema KDE: sync **Papirus** en `kdeglobals` desde `sylphrena-quiet.py` (ya no depende solo de Breeze).
 
 ### Grabación de pantalla
 
-- Carpeta por defecto: `~/Vídeos/Videocapturas de pantalla` (`CAELESTIA_RECORDINGS_DIR` / `Paths.recsdir`).
+- Carpeta por defecto: `~/Vídeos/Videocapturas de pantalla` (`SYLPHRENA_RECORDINGS_DIR` / `Paths.recsdir`).
 - Wrappers `record-start.sh` / `record.sh` fijan esa ruta al start/stop/pause.
 - Abrir carpeta desde la lista usa el explorador configurado (`thunar` por defecto).
 - Reproducir (▶) abre con `apps.playback` (**VLC** por defecto); MIME `video/*` también apunta a VLC.
@@ -171,7 +194,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - Overview: arrastrar ventanas entre desktops/activities y enfocar el destino al soltar.
 - Estilo por activity al cambiar de foco (wallpaper, esquema, modo, transparency, light apps).
 - Integración Kitty: plantilla de usuario, `include` del tema generado, recarga en vivo al cambiar activity.
-- `caelestia-quiet.py` recarga Kitty tras aplicar colores; `sync-light-apps-cli.py` conserva el hook de recarga (ya no lo pisa).
+- `sylphrena-quiet.py` recarga Kitty tras aplicar colores; `sync-light-apps-cli.py` conserva el hook de recarga (ya no lo pisa).
 
 ### Barra / UI
 

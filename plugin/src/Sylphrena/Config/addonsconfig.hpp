@@ -1,0 +1,57 @@
+#pragma once
+
+#include "settings/objectnode.hpp"
+#include "common.hpp"
+
+namespace sylphrena::shell::config {
+
+using Qt::StringLiterals::operator""_s;
+
+class AddonsMadisonVpn : public settings::ObjectNode {
+    CONFIG_NODE(AddonsMadisonVpn, settings::ObjectNode)
+
+    CONFIG_PROPERTY(bool, enabled, true)
+};
+
+class AddonsTimers : public settings::ObjectNode {
+    CONFIG_NODE(AddonsTimers, settings::ObjectNode)
+
+    CONFIG_PROPERTY(bool, enabled, true)
+    // Quick presets for the clock popout (match hydration presetMl0..N naming).
+    CONFIG_PROPERTY(int, presetMins0, 5)
+    CONFIG_PROPERTY(int, presetMins1, 10)
+    CONFIG_PROPERTY(int, presetMins2, 20)
+    CONFIG_PROPERTY(int, presetMins3, 30)
+};
+
+class AddonsHydration : public settings::ObjectNode {
+    CONFIG_NODE(AddonsHydration, settings::ObjectNode)
+
+    CONFIG_PROPERTY(bool, enabled, false)
+    CONFIG_PROPERTY(int, dailyGoalMl, 3000)
+    CONFIG_PROPERTY(int, reminderMinutes, 15)
+    CONFIG_PROPERTY(int, presetMl0, 20)
+    CONFIG_PROPERTY(int, presetMl1, 83)
+    CONFIG_PROPERTY(int, presetMl2, 250)
+    CONFIG_PROPERTY(int, presetMl3, 500)
+};
+
+class AddonsSteam : public settings::ObjectNode {
+    CONFIG_NODE(AddonsSteam, settings::ObjectNode)
+
+    CONFIG_PROPERTY(bool, enabled, false)
+    CONFIG_PROPERTY(QString, apiKey, {})
+    CONFIG_PROPERTY(QString, steamId, {})
+    CONFIG_PROPERTY(int, refreshMinutes, 10)
+};
+
+class AddonsConfig : public settings::ObjectNode {
+    CONFIG_NODE(AddonsConfig, settings::ObjectNode)
+
+    CONFIG_GLOBAL_SUBOBJECT(AddonsMadisonVpn, madisonVpn)
+    CONFIG_GLOBAL_SUBOBJECT(AddonsTimers, timers)
+    CONFIG_GLOBAL_SUBOBJECT(AddonsHydration, hydration)
+    CONFIG_GLOBAL_SUBOBJECT(AddonsSteam, steam)
+};
+
+} // namespace sylphrena::shell::config

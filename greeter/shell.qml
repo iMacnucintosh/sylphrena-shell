@@ -36,7 +36,7 @@ ShellRoot {
         sourceComponent: FloatingWindow {
             id: demoWin
 
-            title: "Caelestia greeter (demo)"
+            title: "Sylphrena greeter (demo)"
             color: "black"
 
             readonly property real previewH: Math.min(1008, (Quickshell.screens[0]?.height ?? 1440) * 0.7)
@@ -91,7 +91,7 @@ ShellRoot {
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
-            WlrLayershell.namespace: "caelestia-greeter"
+            WlrLayershell.namespace: "sylphrena-greeter"
 
             anchors.top: true
             anchors.bottom: true

@@ -1,10 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Caelestia.Components
-import Caelestia.Config
-import Caelestia.I18n
-import Caelestia.Services
+import Sylphrena.Components
+import Sylphrena.Config
+import Sylphrena.I18n
+import Sylphrena.Services
 import qs.components
 import qs.components.controls
 import qs.components.widgets

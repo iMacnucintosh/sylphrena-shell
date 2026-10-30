@@ -6,8 +6,8 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Widgets
 import M3Shapes
-import Caelestia.Components
-import Caelestia.Config
+import Sylphrena.Components
+import Sylphrena.Config
 import qs.components
 import qs.services
 import qs.utils

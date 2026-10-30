@@ -6,7 +6,7 @@ if test (count $argv) -lt 1
 end
 
 cd (status dirname)/.. || exit 1
-set -l tr_dir plugin/src/Caelestia/I18n/trs
+set -l tr_dir plugin/src/Sylphrena/I18n/trs
 set -g pot_file $tr_dir/raw.pot
 mkdir -p $tr_dir
 
@@ -18,7 +18,7 @@ function gen -a lang
         --no-wrap \
         --add-location=file \
         --add-comments=TRANSLATORS: \
-        --package-name=caelestia-shell \
+        --package-name=sylphrena-shell \
         -k \
         -ktr:1 -ktrCtx:2c,1 -ktrMarked:1 \
         -ktrN:1,2 -ktrCtxN:4c,1,2 \

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local Steam library helpers for Caelestia.
+"""Local Steam library helpers for Sylphrena.
 
 Reads Non-Steam shortcuts (shortcuts.vdf), the hidden library collection
 (user-collections.hidden), and optional Millennium Non-Steam Playtimes
@@ -123,8 +123,8 @@ def millennium_sessions_paths() -> list[Path]:
 def session_cache_path() -> Path:
     import os
 
-    base = os.environ.get("XDG_STATE_HOME") or str(Path.home() / ".local/state")
-    return Path(base) / "caelestia" / "nonsteam-sessions.json"
+    base = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state")
+    return base / "sylphrena" / "nonsteam-sessions.json"
 
 
 def merge_session_cache(fresh: dict[str, list[dict[str, int]]]) -> dict[str, list[dict[str, int]]]:

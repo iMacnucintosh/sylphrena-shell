@@ -2,9 +2,9 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell.Io
-import Caelestia
-import Caelestia.Config
-import Caelestia.I18n
+import Sylphrena
+import Sylphrena.Config
+import Sylphrena.I18n
 
 // TODO: handle this better later
 

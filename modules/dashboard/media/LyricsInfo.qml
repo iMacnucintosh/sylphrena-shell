@@ -1,10 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
-import Caelestia
-import Caelestia.Blobs
-import Caelestia.Config
-import Caelestia.I18n
-import Caelestia.Services
+import Sylphrena
+import Sylphrena.Blobs
+import Sylphrena.Config
+import Sylphrena.I18n
+import Sylphrena.Services
 import qs.components
 import qs.services
 

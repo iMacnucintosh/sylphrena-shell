@@ -4,8 +4,8 @@ import "games"
 import QtQuick
 import QtQuick.Layouts
 import M3Shapes
-import Caelestia.Config
-import Caelestia.I18n
+import Sylphrena.Config
+import Sylphrena.I18n
 import qs.components
 import qs.components.controls
 import qs.components.images

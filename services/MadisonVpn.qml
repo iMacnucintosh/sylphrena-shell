@@ -3,9 +3,9 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Caelestia.Config
-import Caelestia.I18n
-import Caelestia.Services
+import Sylphrena.Config
+import Sylphrena.I18n
+import Sylphrena.Services
 
 Singleton {
     id: root

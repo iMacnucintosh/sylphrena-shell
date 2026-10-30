@@ -1,9 +1,9 @@
 import QtQuick
-import Caelestia
-import Caelestia.Config
-import Caelestia.Multimedia
-import Caelestia.Shaders
-import Caelestia.State
+import Sylphrena
+import Sylphrena.Config
+import Sylphrena.Multimedia
+import Sylphrena.Shaders
+import Sylphrena.State
 import qs.services
 
 Item {
