@@ -6,9 +6,8 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ### Nexus — reorganización del sidebar (fase 1)
 
-- Categorías visibles en el nav (Apariencia, Entrada, Escritorio, Cromo, Apps, Conectividad, Integraciones, Sistema, Acerca de).
-- Orden nuevo sin renombrar `id`s: Activities → Keyboard & mouse → Display → Panels → Apps → Network → Bluetooth → Audio → Complements → Updates → Language & region → Tuning (`id: services`) → About.
-- Display pasa a **Escritorio**; Complements a **Integraciones**; Input/Cromo fuera del saco «shell».
+- Categorías visibles en el nav; agrupación tras feedback Jorge: **Escritorio y apariencia** (Activities, Panels, Complements), Entrada, **Dispositivos** (Display + Network + Bluetooth + Audio), Apps, Sistema, Acerca de.
+- Orden sin renombrar `id`s: Activities → Panels → Complements → Keyboard & mouse → Display → Network → Bluetooth → Audio → Apps → Updates → Language & region → Tuning (`id: services`) → About.
 - `smartScheme` se edita en Activities; incrementos volumen/brillo/max volume en Audio (paths `services.*` intactos).
 - Cross-links Activities ↔ Taskbar Workspaces, Clock → Complements (Timers), Status icons → Complements (Madison), Display → Compact layout en Utilities.
 - Docs: «Nexus → Shell» / «Services → Clipboard» alineados a Activities / Complements.
@@ -109,7 +108,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ### Nexus → Pantalla (Display)
 
-- Nueva página (hoy categoría Escritorio): una tarjeta por monitor con **modo (Hz)**, **escala** y **VRR / Adaptive Sync**.
+- Nueva página (hoy categoría Dispositivos, junto a red/BT/audio): una tarjeta por monitor con **modo (Hz)**, **escala** y **VRR / Adaptive Sync**.
 - Política VRR estilo Plasma: **Nunca / Automático / Siempre** (Automático = solo a pantalla completa).
 - Persistencia por conector en `~/.config/hypr/sylphrena-monitors.lua` + `hyprctl reload` al aplicar; la política guardada ya no la pisa el booleano de `hyprctl` (fix del parpadeo con Adaptive Sync pegado en el CRTC). Requiere `require("sylphrena-monitors")` en `hyprland.lua`.
 

@@ -16,19 +16,13 @@ QtObject {
     function categoryLabel(category: string): string {
         switch (category) {
         case "appearance":
-            return Tr.tr("Appearance");
+            return Tr.tr("Desktop & appearance");
         case "input":
             return Tr.tr("Input");
-        case "desktop":
-            return Tr.tr("Desktop");
-        case "chrome":
-            return Tr.trCtx("Chrome", "nexus sidebar category for panels");
+        case "connectivity":
+            return Tr.tr("Devices");
         case "apps":
             return Tr.trCtx("Apps", "nexus sidebar category");
-        case "connectivity":
-            return Tr.tr("Connectivity");
-        case "integrations":
-            return Tr.tr("Integrations");
         case "system":
             return Tr.tr("System");
         case "about":
@@ -39,12 +33,26 @@ QtObject {
     }
 
     readonly property list<var> pages: [
-        // Appearance
+        // Desktop & appearance
         {
             id: "activities",
             label: Tr.tr("Activities"),
             icon: "dashboard_customize",
             description: Tr.tr("Behaviour, shortcuts and the unified look (general and per-activity)"),
+            category: "appearance"
+        },
+        {
+            id: "panels",
+            label: Tr.tr("Panels"),
+            icon: "dock_to_bottom",
+            description: Tr.tr("Dashboard, taskbar, launcher, sidebar"),
+            category: "appearance"
+        },
+        {
+            id: "complements",
+            label: Tr.tr("Complements"),
+            icon: "extension",
+            description: Tr.tr("Optional fork features (VPN, clipboard, Steam, …)"),
             category: "appearance"
         },
 
@@ -57,34 +65,14 @@ QtObject {
             category: "input"
         },
 
-        // Desktop
+        // Devices (monitors + connectivity I/O)
         {
             id: "display",
             label: Tr.trCtx("Display", "monitor settings"),
             icon: "monitor",
             description: Tr.tr("Output modes, scale, adaptive sync (VRR)"),
-            category: "desktop"
+            category: "connectivity"
         },
-
-        // Chrome (panels / shell surfaces)
-        {
-            id: "panels",
-            label: Tr.tr("Panels"),
-            icon: "dock_to_bottom",
-            description: Tr.tr("Dashboard, taskbar, launcher, sidebar"),
-            category: "chrome"
-        },
-
-        // Apps
-        {
-            id: "apps",
-            label: Tr.tr("Apps"),
-            icon: "apps",
-            description: Tr.tr("Default apps, favourites, hidden apps"),
-            category: "apps"
-        },
-
-        // Connectivity
         {
             id: "network",
             label: Tr.tr("Network"),
@@ -108,13 +96,13 @@ QtObject {
             category: "connectivity"
         },
 
-        // Integrations
+        // Apps
         {
-            id: "complements",
-            label: Tr.tr("Complements"),
-            icon: "extension",
-            description: Tr.tr("Optional fork features (VPN, clipboard, Steam, …)"),
-            category: "integrations"
+            id: "apps",
+            label: Tr.tr("Apps"),
+            icon: "apps",
+            description: Tr.tr("Default apps, favourites, hidden apps"),
+            category: "apps"
         },
 
         // System

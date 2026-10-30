@@ -22,7 +22,7 @@ QtObject {
 
     // Keep 1:1 with PageRegistry.pages order (same comments / blocks).
     readonly property list<Component> pageComps: [
-        // Appearance
+        // Desktop & appearance
         Component {
             // Activities (behaviour + unified look: Home = general, per-activity overrides)
             StackPage {
@@ -40,28 +40,6 @@ QtObject {
                 }
             }
         },
-
-        // Input
-        Component {
-            // Keyboard & mouse
-            StackPage {
-                Component {
-                    KeybindsPage {}
-                }
-            }
-        },
-
-        // Desktop
-        Component {
-            // Display
-            StackPage {
-                Component {
-                    DisplayPage {}
-                }
-            }
-        },
-
-        // Chrome
         Component {
             // Panels
             StackPage {
@@ -102,24 +80,34 @@ QtObject {
                 }
             }
         },
-
-        // Apps
         Component {
-            // Apps
+            // Complements
             StackPage {
                 Component {
-                    AppsPage {}
-                }
-                Component {
-                    AllApps {}
-                }
-                Component {
-                    AppInfo {}
+                    ComplementsPage {}
                 }
             }
         },
 
-        // Connectivity
+        // Input
+        Component {
+            // Keyboard & mouse
+            StackPage {
+                Component {
+                    KeybindsPage {}
+                }
+            }
+        },
+
+        // Devices
+        Component {
+            // Display
+            StackPage {
+                Component {
+                    DisplayPage {}
+                }
+            }
+        },
         Component {
             // Network
             StackPage {
@@ -172,12 +160,18 @@ QtObject {
             }
         },
 
-        // Integrations
+        // Apps
         Component {
-            // Complements
+            // Apps
             StackPage {
                 Component {
-                    ComplementsPage {}
+                    AppsPage {}
+                }
+                Component {
+                    AllApps {}
+                }
+                Component {
+                    AppInfo {}
                 }
             }
         },

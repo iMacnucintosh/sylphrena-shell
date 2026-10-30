@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:19+0100\n"
+"POT-Creation-Date: 2026-10-30 15:36+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1605,34 +1605,21 @@ msgid "This page will be available in a future update."
 msgstr "Esta página estará disponible en una próxima actualización."
 
 #: modules/nexus/PageRegistry.qml
-msgid "Appearance"
-msgstr "Apariencia"
+msgid "Desktop & appearance"
+msgstr "Escritorio y apariencia"
 
 #: modules/nexus/PageRegistry.qml
 msgid "Input"
 msgstr "Entrada"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Desktop"
-msgstr "Escritorio"
-
-#: modules/nexus/PageRegistry.qml
-msgctxt "nexus sidebar category for panels"
-msgid "Chrome"
-msgstr "Cromo"
+msgid "Devices"
+msgstr "Dispositivos"
 
 #: modules/nexus/PageRegistry.qml
 msgctxt "nexus sidebar category"
 msgid "Apps"
 msgstr "Aplicaciones"
-
-#: modules/nexus/PageRegistry.qml
-msgid "Connectivity"
-msgstr "Conectividad"
-
-#: modules/nexus/PageRegistry.qml
-msgid "Integrations"
-msgstr "Integraciones"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AboutPage.qml
 #: services/Keybinds.qml
@@ -1653,6 +1640,22 @@ msgstr "Actividades"
 msgid "Behaviour, shortcuts and the unified look (general and per-activity)"
 msgstr "Comportamiento, atajos y el look unificado (general y por actividad)"
 
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/PanelsPage.qml
+msgid "Panels"
+msgstr "Paneles"
+
+#: modules/nexus/PageRegistry.qml
+msgid "Dashboard, taskbar, launcher, sidebar"
+msgstr "Panel, barra de tareas, lanzador, barra lateral"
+
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/ComplementsPage.qml
+msgid "Complements"
+msgstr "Complementos"
+
+#: modules/nexus/PageRegistry.qml
+msgid "Optional fork features (VPN, clipboard, Steam, …)"
+msgstr "Complementos opcionales del fork (VPN, portapapeles, Steam, …)"
+
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
 msgid "Keyboard & mouse"
 msgstr "Teclado y ratón"
@@ -1669,24 +1672,6 @@ msgstr "Pantalla"
 #: modules/nexus/PageRegistry.qml
 msgid "Output modes, scale, adaptive sync (VRR)"
 msgstr "Modos, escala y VRR (sync adaptativo) por salida"
-
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/PanelsPage.qml
-msgid "Panels"
-msgstr "Paneles"
-
-#: modules/nexus/PageRegistry.qml
-msgid "Dashboard, taskbar, launcher, sidebar"
-msgstr "Panel, barra de tareas, lanzador, barra lateral"
-
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/AppsPage.qml
-#: modules/nexus/pages/panels/LauncherPanel.qml
-#: modules/nexus/pages/ShellPage.qml
-msgid "Apps"
-msgstr "Aplicaciones"
-
-#: modules/nexus/PageRegistry.qml
-msgid "Default apps, favourites, hidden apps"
-msgstr "Aplicaciones predeterminadas, favoritas, ocultas"
 
 #: modules/nexus/PageRegistry.qml
 msgid "Wi-Fi, ethernet, VPN (NetworkManager)"
@@ -1708,13 +1693,15 @@ msgstr "Audio"
 msgid "App volumes, sound devices"
 msgstr "Volumen de aplicaciones, dispositivos de sonido"
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/ComplementsPage.qml
-msgid "Complements"
-msgstr "Complementos"
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/AppsPage.qml
+#: modules/nexus/pages/panels/LauncherPanel.qml
+#: modules/nexus/pages/ShellPage.qml
+msgid "Apps"
+msgstr "Aplicaciones"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Optional fork features (VPN, clipboard, Steam, …)"
-msgstr "Complementos opcionales del fork (VPN, portapapeles, Steam, …)"
+msgid "Default apps, favourites, hidden apps"
+msgstr "Aplicaciones predeterminadas, favoritas, ocultas"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/UpdatesPage.qml
 msgid "System updates"
@@ -5817,6 +5804,22 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "Appearance"
+#~ msgstr "Apariencia"
+
+#~ msgid "Desktop"
+#~ msgstr "Escritorio"
+
+#~ msgctxt "nexus sidebar category for panels"
+#~ msgid "Chrome"
+#~ msgstr "Cromo"
+
+#~ msgid "Connectivity"
+#~ msgstr "Conectividad"
+
+#~ msgid "Integrations"
+#~ msgstr "Integraciones"
 
 #~ msgid "Open in Nexus"
 #~ msgstr "Abrir en Nexus"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:19+0100\n"
+"POT-Creation-Date: 2026-10-30 15:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1599,7 +1599,7 @@ msgid "This page will be available in a future update."
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Appearance"
+msgid "Desktop & appearance"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
@@ -1607,25 +1607,12 @@ msgid "Input"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Desktop"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml
-msgctxt "nexus sidebar category for panels"
-msgid "Chrome"
+msgid "Devices"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
 msgctxt "nexus sidebar category"
 msgid "Apps"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml
-msgid "Connectivity"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml
-msgid "Integrations"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AboutPage.qml
@@ -1647,6 +1634,22 @@ msgstr ""
 msgid "Behaviour, shortcuts and the unified look (general and per-activity)"
 msgstr ""
 
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/PanelsPage.qml
+msgid "Panels"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml
+msgid "Dashboard, taskbar, launcher, sidebar"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/ComplementsPage.qml
+msgid "Complements"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml
+msgid "Optional fork features (VPN, clipboard, Steam, …)"
+msgstr ""
+
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
 msgid "Keyboard & mouse"
 msgstr ""
@@ -1662,24 +1665,6 @@ msgstr ""
 
 #: modules/nexus/PageRegistry.qml
 msgid "Output modes, scale, adaptive sync (VRR)"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/PanelsPage.qml
-msgid "Panels"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml
-msgid "Dashboard, taskbar, launcher, sidebar"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/AppsPage.qml
-#: modules/nexus/pages/panels/LauncherPanel.qml
-#: modules/nexus/pages/ShellPage.qml
-msgid "Apps"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml
-msgid "Default apps, favourites, hidden apps"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
@@ -1702,12 +1687,14 @@ msgstr ""
 msgid "App volumes, sound devices"
 msgstr ""
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/ComplementsPage.qml
-msgid "Complements"
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/AppsPage.qml
+#: modules/nexus/pages/panels/LauncherPanel.qml
+#: modules/nexus/pages/ShellPage.qml
+msgid "Apps"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Optional fork features (VPN, clipboard, Steam, …)"
+msgid "Default apps, favourites, hidden apps"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/UpdatesPage.qml

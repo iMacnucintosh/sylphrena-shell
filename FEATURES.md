@@ -168,7 +168,7 @@ Credenciales en `~/.config/openfortivpn/config` (las mismas que Plasma; **no** v
 
 ## Pantalla (modos, escala, VRR)
 
-Página **Nexus → Pantalla** (categoría Escritorio), una tarjeta por monitor:
+Página **Nexus → Pantalla** (categoría Dispositivos, junto a red/BT/audio), una tarjeta por monitor:
 
 - **Modo**: resolución + Hz (deduplicados y ordenados).
 - **Escala**.
@@ -291,7 +291,7 @@ Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 - **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí; **Tuning** / `id: services` queda para notificaciones, polling y media).
 - **Status icons honestos**: el badge de updates y la fila de VPN rigen el auto-ocultado con config explícita (`bar.status.onlyShowUpdatesWithUpdates`; VPN atado al complemento) y es visible en `Panels → Taskbar → Status icons → Auto-hide`. La batería quedó **vanilla**: se muestra/oculta con el toggle de la lista "Visible icons" y su popout es el de siempre («No se ha detectado ninguna batería» o «Power profile: %1» en desktops, con el selector de perfiles intacto).
 - **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-links navegables entre ambas.
-- **IA del sidebar (fase 1)**: títulos de categoría visibles; orden Apariencia → Entrada → Escritorio → Cromo → Apps → Conectividad → Integraciones → Sistema → Acerca de. `smartScheme` en Activities; incrementos volumen/brillo en Audio. Ids de página intactos.
+- **IA del sidebar (fase 1)**: títulos de categoría visibles; orden **Escritorio y apariencia** (Activities, Panels, Complements) → Entrada → **Dispositivos** (Display, Network, Bluetooth, Audio) → Apps → Sistema → Acerca de. `smartScheme` en Activities; incrementos volumen/brillo en Audio. Ids de página intactos.
 - Las páginas del nav llevan **id estable** (`PageRegistry.idxOf`) — los saltos programáticos (Updates → Nexus) ya no dependen de índices hardcodeados.
 - Traducciones **español** ampliadas para las cadenas nuevas.
 
