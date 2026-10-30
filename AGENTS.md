@@ -59,7 +59,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 
 ### UI
 - `modules/nexus/pages/`: `DisplayPage`, `UpdatesPage`(+`UpdatesSettings`), `ComplementsPage`, `ShellPage` (página Nexus **Activities** + look; fichero histórico), `KeybindsPage`, `LanguageAndRegion` (tiempo/ubicación)… Sidebar con títulos de categoría (`PageRegistry.categoryLabel` + `NavLocations`); orden espejo 1:1 en `PageCompRegistry`.
-- Barra/popouts en `modules/bar/`; panel Juegos en `modules/dashboard/games/`; lock en `modules/lock/` (columna derecha: `NotifDock` 35% + `CompanionPanel` Sylphrena 65%). Orbe SoftBurst compartido: `components/CompanionOrb.qml` (shell: About + lock); gemela Theme en `greeter/components/` (el greeter no importa Colours/Tokens).
+- Barra/popouts en `modules/bar/`; panel Juegos en `modules/dashboard/games/`; lock en `modules/lock/` (columna derecha: `NotifDock` 35% + `CompanionPanel` Sylphrena 65%). Orbe SoftBurst compartido: `components/SylphOrb.qml` (shell: About + lock); gemela Theme en `greeter/components/` (el greeter no importa Colours/Tokens).
 - Trampas QML de este codebase: `PageBase` admite **un solo hijo**; no existe `IconButton.Standard`; `HoverHandler` usa `hovered` (no `containsMouse`); para drop de arrastres no fiarse de `DropArea` con reparent al drag-layer — detectar el target bajo el cursor; `ClipRect` no recorta por `radius` sin máscara; un `Process` con stdin heredado cuelga (usar `DEVNULL`); QML no permite anotaciones de tipo en parámetros con valor por defecto; `Row` no acepta asignar `implicitHeight`.
 
 ### Scripts (`scripts/`)

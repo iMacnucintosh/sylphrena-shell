@@ -71,7 +71,7 @@ StyledRect {
             Layout.alignment: Qt.AlignHCenter
             spacing: Theme.spacing.medium
 
-            CompanionOrb {
+            SylphOrb {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight

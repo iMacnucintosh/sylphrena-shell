@@ -5,7 +5,8 @@ import M3Shapes
 import qs.components
 import qs.services
 
-// SoftBurst companion orb shared by lock, About, and other brand surfaces.
+// SoftBurst Sylphrena orb — greeter twin of components/SylphOrb.qml
+// (Theme tokens; greeter cannot import the shell Colours/Tokens tree).
 Item {
     id: root
 
@@ -30,7 +31,7 @@ Item {
             anchors.centerIn: parent
             implicitSize: root.orbSize
             shape: MaterialShape.SoftBurst
-            color: Qt.alpha(Colours.palette.m3primary, 0.22)
+            color: Qt.alpha(Theme.palette.m3primary, 0.22)
             opacity: 0
             scale: 1
 
@@ -81,10 +82,10 @@ Item {
             StyledRect {
                 required property int index
 
-                width: Tokens.spacing.small * (index % 2 === 0 ? 1.1 : 0.7)
+                width: Theme.spacing.small * (index % 2 === 0 ? 1.1 : 0.7)
                 height: width
-                radius: Tokens.rounding.full
-                color: index % 2 === 0 ? Colours.palette.m3primary : Colours.palette.m3tertiary
+                radius: Theme.rounding.full
+                color: index % 2 === 0 ? Theme.palette.m3primary : Theme.palette.m3tertiary
                 opacity: 0.35 + (index % 3) * 0.15
                 x: parent.width / 2 + Math.cos(index * 1.256) * (parent.width / 2) - width / 2
                 y: parent.height / 2 + Math.sin(index * 1.256) * (parent.height / 2) - height / 2
@@ -98,7 +99,7 @@ Item {
         anchors.centerIn: parent
         implicitSize: root.orbSize * 1.16
         shape: MaterialShape.SoftBurst
-        color: Qt.alpha(root.troubled ? Colours.palette.m3error : Colours.palette.m3primary, 0.2)
+        color: Qt.alpha(root.troubled ? Theme.palette.m3error : Theme.palette.m3primary, 0.2)
         opacity: 0.8
 
         Behavior on color {
@@ -112,7 +113,7 @@ Item {
         anchors.centerIn: parent
         implicitSize: root.orbSize
         shape: root.listening ? MaterialShape.SoftBurst : MaterialShape.Cookie4Sided
-        color: root.troubled ? Colours.palette.m3errorContainer : root.listening ? Colours.palette.m3tertiaryContainer : Colours.palette.m3primaryContainer
+        color: root.troubled ? Theme.palette.m3errorContainer : root.listening ? Theme.palette.m3tertiaryContainer : Theme.palette.m3primaryContainer
 
         Behavior on color {
             CAnim {}
@@ -121,8 +122,8 @@ Item {
         MaterialIcon {
             anchors.centerIn: parent
             text: root.welcomed ? "favorite" : root.troubled ? "priority_high" : root.listening ? "hearing" : "auto_awesome"
-            color: root.troubled ? Colours.palette.m3onErrorContainer : root.listening ? Colours.palette.m3onTertiaryContainer : Colours.palette.m3onPrimaryContainer
-            fontStyle: Tokens.font.icon.size(Math.round(parent.implicitSize * 0.38)).build()
+            color: root.troubled ? Theme.palette.m3onErrorContainer : root.listening ? Theme.palette.m3onTertiaryContainer : Theme.palette.m3onPrimaryContainer
+            iconSize: Math.round(parent.implicitSize * 0.38)
             fill: root.welcomed || root.listening ? 1 : 0
 
             Behavior on color {
@@ -140,7 +141,7 @@ Item {
             property: "scale"
             from: 1
             to: 1.05
-            duration: Tokens.anim.durations.expressiveDefaultEffects * 5
+            duration: Theme.durations.extraLarge
             easing.type: Easing.InOutSine
         }
         NumberAnimation {
@@ -148,7 +149,7 @@ Item {
             property: "scale"
             from: 1.05
             to: 1
-            duration: Tokens.anim.durations.expressiveDefaultEffects * 5
+            duration: Theme.durations.extraLarge
             easing.type: Easing.InOutSine
         }
     }
@@ -184,7 +185,7 @@ Item {
             property: "scale"
             from: 0.94
             to: 1.1
-            duration: Math.round(Tokens.anim.durations.expressiveDefaultEffects * 6.5)
+            duration: Math.round(Theme.durations.extraLarge * 1.3)
             easing.type: Easing.InOutSine
         }
         NumberAnimation {
@@ -192,7 +193,7 @@ Item {
             property: "scale"
             from: 1.1
             to: 0.94
-            duration: Math.round(Tokens.anim.durations.expressiveDefaultEffects * 6.5)
+            duration: Math.round(Theme.durations.extraLarge * 1.3)
             easing.type: Easing.InOutSine
         }
     }

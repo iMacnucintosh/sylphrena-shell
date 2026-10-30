@@ -7,7 +7,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 ### About / Companion
 
 - Página **Acerca de**: el hero usa el orbe SoftBurst animado (mismo de lock/greeter) en lugar del `AnimatedLogo` SVG estático.
-- Nuevo `components/CompanionOrb.qml` (+ gemela `greeter/components/CompanionOrb.qml` con tokens Theme): lock y greeter dejan de duplicar el bloque del orbe.
+- Nuevo `components/SylphOrb.qml` (+ gemela `greeter/components/SylphOrb.qml` con tokens Theme): lock y greeter dejan de duplicar el bloque del orbe.
 
 ### Tray
 

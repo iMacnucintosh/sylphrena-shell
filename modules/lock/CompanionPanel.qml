@@ -78,7 +78,7 @@ StyledRect {
             Layout.alignment: Qt.AlignHCenter
             spacing: Tokens.spacing.medium
 
-            CompanionOrb {
+            SylphOrb {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
