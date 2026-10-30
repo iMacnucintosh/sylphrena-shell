@@ -7,6 +7,7 @@ import Sylphrena.I18n
 import qs.components
 import qs.services
 import qs.utils
+import qs.modules.nexus.common
 
 PageBase {
     id: root
