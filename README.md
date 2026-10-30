@@ -6,9 +6,9 @@ Basada en [caelestia-shell](https://github.com/caelestia-dots/shell), de soraman
 
 <div align=center>
 
-![GitHub last commit](https://img.shields.io/github/last-commit/iMacnucintosh/Sylphrena?style=for-the-badge&labelColor=101418&color=9ccbfb)
-![GitHub Repo stars](https://img.shields.io/github/stars/iMacnucintosh/Sylphrena?style=for-the-badge&labelColor=101418&color=b9c8da)
-![GitHub repo size](https://img.shields.io/github/repo-size/iMacnucintosh/Sylphrena?style=for-the-badge&labelColor=101418&color=d3bfe6)
+![GitHub last commit](https://img.shields.io/github/last-commit/iMacnucintosh/sylphrena-shell?style=for-the-badge&labelColor=101418&color=9ccbfb)
+![GitHub Repo stars](https://img.shields.io/github/stars/iMacnucintosh/sylphrena-shell?style=for-the-badge&labelColor=101418&color=b9c8da)
+![GitHub repo size](https://img.shields.io/github/repo-size/iMacnucintosh/sylphrena-shell?style=for-the-badge&labelColor=101418&color=d3bfe6)
 [![Ko-Fi donate](https://img.shields.io/badge/donate-kofi?style=for-the-badge&logo=ko-fi&logoColor=ffffff&label=ko-fi&labelColor=101418&color=f16061&link=https%3A%2F%2Fko-fi.com%2Fsoramane)](https://ko-fi.com/soramane)
 [![Discord invite](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscordapp.com%2Fapi%2Finvites%2FBGDCFCmMBk%3Fwith_counts%3Dtrue&query=approximate_member_count&style=for-the-badge&logo=discord&logoColor=ffffff&label=discord&labelColor=101418&color=96f1f1&link=https%3A%2F%2Fdiscord.gg%2FBGDCFCmMBk)][discord]
 
@@ -61,7 +61,7 @@ and likely to be unstable/have bugs. Regular users are recommended to use the st
 
 Dependencies:
 
-- [`sylphrena-cli`](https://github.com/iMacnucintosh/Sylphrena)
+- [`sylphrena-cli`](https://github.com/iMacnucintosh/sylphrena-shell)
 - [`quickshell-git`](https://git.outfoxxed.me/quickshell/quickshell) - this has to be the git version, not the latest tagged version
 - `glibc`
 - `gcc-libs`
@@ -104,7 +104,7 @@ Then build and install using CMake.
 
 ```sh
 cd $XDG_CONFIG_HOME/quickshell
-git clone https://github.com/iMacnucintosh/Sylphrena.git sylphrena
+git clone https://github.com/iMacnucintosh/sylphrena-shell.git sylphrena
 
 cd sylphrena
 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/
@@ -994,7 +994,7 @@ See the [manual installation](#manual-installation) section for the correspondin
 ### I want to disable \_\_\_ feature!
 
 Please read the [configuring](#configuring) section.
-If there is no corresponding option, make a [feature request](https://github.com/iMacnucintosh/Sylphrena/issues/new).
+If there is no corresponding option, make a [feature request](https://github.com/iMacnucintosh/sylphrena-shell/issues/new).
 
 ### How do I make my colour scheme change to match my wallpaper?
 
@@ -1033,13 +1033,13 @@ Finally, another thank you to all the configs I took inspiration from (only one 
 
 ## Stonks 📈
 
-<a href="https://www.star-history.com/#iMacnucintosh/Sylphrena&Date">
+<a href="https://www.star-history.com/#iMacnucintosh/sylphrena-shell&Date">
     <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=iMacnucintosh/Sylphrena&type=Date&theme=dark" />
-        <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=iMacnucintosh/Sylphrena&type=Date" />
-        <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=iMacnucintosh/Sylphrena&type=Date" />
+        <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=iMacnucintosh/sylphrena-shell&type=Date&theme=dark" />
+        <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=iMacnucintosh/sylphrena-shell&type=Date" />
+        <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=iMacnucintosh/sylphrena-shell&type=Date" />
     </picture>
 </a>
 
-[dots-repo]: https://github.com/iMacnucintosh/Sylphrena
-[discord]: https://github.com/iMacnucintosh/Sylphrena
+[dots-repo]: https://github.com/iMacnucintosh/sylphrena-shell
+[discord]: https://github.com/iMacnucintosh/sylphrena-shell

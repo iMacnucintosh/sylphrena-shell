@@ -9,7 +9,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 ## 1. Qué es
 
 - Fork rebranded como **Sylphrena** (shell Quickshell/QML para **Hyprland**, config en **Lua**). CLI: `sylph` (paquete user-local `sylphrena-cli`); instancia Quickshell `qs -c sylphrena`. El directorio es `~/.config/quickshell/sylphrena`.
-- Repo GitHub: **iMacnucintosh/Sylphrena**. Remote `origin` = tu fork; `upstream` = el proyecto original (crédito en el README). Las actualizaciones de base se hacen mergeando upstream y pasando PR a `main`.
+- Repo GitHub: **iMacnucintosh/sylphrena-shell**. Remote `origin` = tu fork; `upstream` = el proyecto original (crédito en el README). Las actualizaciones de base se hacen mergeando upstream y pasando PR a `main`.
 - Versión propia: tags `v0.*` (`v0.1.0` es la primera). CMake usa `git describe --match v0.*`. Los tags `v1.*` y `v2.*` son del proyecto original y no cuentan; al salir de 0.x hay que ampliar el `--match`, porque `v1.0.0` ya existe en el historial.
 - El código que **corre** es este checkout: `~/.config/quickshell/sylphrena` (no el paquete AUR de `/etc/xdg`). El plugin C++ de config se compila **desde la raíz del repo** e instala en `~/.local` (sin sudo); `shell.qml` lo carga vía pragma `QT_ADDITIONAL_PACKAGES_PREFIX_PATH` — ver "Plugin C++ (build user-local)" en FEATURES.md.
 - Runtime de la shell: `~/.config/sylphrena/` (`shell.json`, `keybinds.json`, `cli.json`, `templates/`). El plugin escribe `/sylphrena` (config, state, cache, runtime).
@@ -112,4 +112,4 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 
 ---
 
-*Última actualización: 2026-10-30 (repo GitHub `iMacnucintosh/Sylphrena`; versión propia `v0.1.0`, solo tags `v0.*`; greeter en `/etc/greetd/sylphrena` vía `scripts/install-system.sh`; flake de Nix y workflows de GitHub fuera del árbol; empaquetado AUR pendiente). Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*
+*Última actualización: 2026-10-30 (repo GitHub `iMacnucintosh/sylphrena-shell`; versión propia `v0.1.0`, solo tags `v0.*`; greeter en `/etc/greetd/sylphrena` vía `scripts/install-system.sh`; flake de Nix y workflows de GitHub fuera del árbol; empaquetado AUR pendiente). Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*

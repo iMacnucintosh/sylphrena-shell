@@ -185,7 +185,7 @@ Singleton {
 
         const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=geocodejson&accept-language=${lang}`;
         const nominatimHeaders = {
-            "User-Agent": `sylphrena-shell/${CUtils.version} (+https://github.com/iMacnucintosh/Sylphrena)`
+            "User-Agent": `sylphrena-shell/${CUtils.version} (+https://github.com/iMacnucintosh/sylphrena-shell)`
         };
 
         Requests.get(nominatimUrl, text => {
