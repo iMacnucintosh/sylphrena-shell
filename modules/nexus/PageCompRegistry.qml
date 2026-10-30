@@ -20,6 +20,7 @@ import qs.modules.nexus.pages.panels.taskbar
 QtObject {
     id: root
 
+    // Keep 1:1 with PageRegistry.pages order (same comments / blocks).
     readonly property list<Component> pageComps: [
         // Appearance
         Component {
@@ -36,6 +37,84 @@ QtObject {
                 }
                 Component {
                     ColourSelect {}
+                }
+            }
+        },
+
+        // Input
+        Component {
+            // Keyboard & mouse
+            StackPage {
+                Component {
+                    KeybindsPage {}
+                }
+            }
+        },
+
+        // Desktop
+        Component {
+            // Display
+            StackPage {
+                Component {
+                    DisplayPage {}
+                }
+            }
+        },
+
+        // Chrome
+        Component {
+            // Panels
+            StackPage {
+                Component {
+                    PanelsPage {}
+                }
+                Component {
+                    DashboardPanel {}
+                }
+                Component {
+                    TaskbarPanel {}
+                }
+                Component {
+                    LauncherPanel {}
+                }
+                Component {
+                    SidebarPanel {}
+                }
+                Component {
+                    UtilitiesPanel {}
+                }
+
+                // Taskbar component sub-pages
+                Component {
+                    BarWorkspaces {}
+                }
+                Component {
+                    BarActiveWindow {}
+                }
+                Component {
+                    BarTray {}
+                }
+                Component {
+                    BarStatusIcons {}
+                }
+                Component {
+                    BarClock {}
+                }
+            }
+        },
+
+        // Apps
+        Component {
+            // Apps
+            StackPage {
+                Component {
+                    AppsPage {}
+                }
+                Component {
+                    AllApps {}
+                }
+                Component {
+                    AppInfo {}
                 }
             }
         },
@@ -82,14 +161,6 @@ QtObject {
             }
         },
         Component {
-            // Display
-            StackPage {
-                Component {
-                    DisplayPage {}
-                }
-            }
-        },
-        Component {
             // Audio
             StackPage {
                 Component {
@@ -97,6 +168,16 @@ QtObject {
                 }
                 Component {
                     AppVolumes {}
+                }
+            }
+        },
+
+        // Integrations
+        Component {
+            // Complements
+            StackPage {
+                Component {
+                    ComplementsPage {}
                 }
             }
         },
@@ -114,81 +195,6 @@ QtObject {
             }
         },
         Component {
-            // Complements
-            StackPage {
-                Component {
-                    ComplementsPage {}
-                }
-            }
-        },
-
-        // Shell
-        Component {
-            // Panels
-            StackPage {
-                Component {
-                    PanelsPage {}
-                }
-                Component {
-                    DashboardPanel {}
-                }
-                Component {
-                    TaskbarPanel {}
-                }
-                Component {
-                    LauncherPanel {}
-                }
-                Component {
-                    SidebarPanel {}
-                }
-                Component {
-                    UtilitiesPanel {}
-                }
-
-                // Taskbar component sub-pages
-                Component {
-                    BarWorkspaces {}
-                }
-                Component {
-                    BarActiveWindow {}
-                }
-                Component {
-                    BarTray {}
-                }
-                Component {
-                    BarStatusIcons {}
-                }
-                Component {
-                    BarClock {}
-                }
-            }
-        },
-        Component {
-            // Apps
-            StackPage {
-                Component {
-                    AppsPage {}
-                }
-                Component {
-                    AllApps {}
-                }
-                Component {
-                    AppInfo {}
-                }
-            }
-        },
-        Component {
-            // Services
-            StackPage {
-                Component {
-                    ServicesPage {}
-                }
-                Component {
-                    NotificationsPage {}
-                }
-            }
-        },
-        Component {
             // Language & region
             StackPage {
                 Component {
@@ -197,10 +203,13 @@ QtObject {
             }
         },
         Component {
-            // Keyboard & mouse
+            // Tuning (id: services)
             StackPage {
                 Component {
-                    KeybindsPage {}
+                    ServicesPage {}
+                }
+                Component {
+                    NotificationsPage {}
                 }
             }
         },

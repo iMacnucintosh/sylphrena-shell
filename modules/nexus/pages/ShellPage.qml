@@ -12,6 +12,7 @@ import qs.components.controls
 import qs.components.widgets
 import qs.services
 import qs.utils
+import qs.modules.nexus
 import qs.modules.nexus.common
 
 PageBase {
@@ -187,11 +188,18 @@ PageBase {
         }
 
         ToggleRow {
-            last: true
             text: Tr.tr("Display wallpaper")
             subtext: Tr.tr("Turns the wallpaper machinery on or off shell-wide")
             checked: Config.background.wallpaperEnabled
             onToggled: GlobalConfig.background.wallpaperEnabled = checked
+        }
+
+        ToggleRow {
+            last: true
+            text: Tr.tr("Smart colour scheme")
+            subtext: Tr.tr("Derive theme mode and variant from the wallpaper (activity look still wins)")
+            checked: GlobalConfig.services.smartScheme
+            onToggled: GlobalConfig.services.smartScheme = checked
         }
 
         SectionHeader {
@@ -213,7 +221,6 @@ PageBase {
         }
 
         StepperRow {
-            last: true
             // TRANSLATORS: maximum number of window icons shown per workspace
             label: Tr.trCtx("Max window icons", "bar workspaces")
             value: Config.bar.workspaces.maxWindowIcons
@@ -221,6 +228,14 @@ PageBase {
             to: 20
             stepSize: 1
             onMoved: v => GlobalConfig.bar.workspaces.maxWindowIcons = v
+        }
+
+        NavRow {
+            last: true
+            icon: "dock_to_bottom"
+            text: Tr.tr("Workspace look on the taskbar")
+            subtext: Tr.tr("Indicators, trail and occupied background live in Panels → Taskbar → Workspaces")
+            onClicked: root.nState.currentPageIdx = PageRegistry.idxOf("panels")
         }
 
         SectionHeader {

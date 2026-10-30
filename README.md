@@ -148,7 +148,7 @@ Wire that file into your Hyprland Lua config (and avoid duplicating the same bin
 -- Managed by Sylphrena Keybinds (Nexus → Keyboard & mouse)
 require("sylphrena-binds")
 
--- Activity workspace rules + app pinning (Nexus → Shell)
+-- Activity workspace rules + app pinning (Nexus → Activities)
 require("sylphrena-activity-rules")
 ```
 

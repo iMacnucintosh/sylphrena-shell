@@ -43,7 +43,7 @@ PageBase {
         }
     ]
 
-    title: Tr.tr("Services")
+    title: Tr.tr("Tuning")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -145,43 +145,6 @@ PageBase {
             onSelected: item => GlobalConfig.services.defaultPlayer = item.text
         }
 
-        // Input increments
-        SectionHeader {
-            text: Tr.tr("Input increments")
-        }
-
-        StepperRow {
-            first: true
-            label: Tr.tr("Volume step")
-            subtext: Tr.tr("Amount the volume changes per scroll (%)")
-            value: Math.round(GlobalConfig.services.audioIncrement * 100)
-            from: 1
-            to: 50
-            stepSize: 1
-            onMoved: v => GlobalConfig.services.audioIncrement = v / 100
-        }
-
-        StepperRow {
-            label: Tr.tr("Brightness step")
-            subtext: Tr.tr("Amount the brightness changes per scroll (%)")
-            value: Math.round(GlobalConfig.services.brightnessIncrement * 100)
-            from: 1
-            to: 50
-            stepSize: 1
-            onMoved: v => GlobalConfig.services.brightnessIncrement = v / 100
-        }
-
-        StepperRow {
-            last: true
-            label: Tr.tr("Max volume")
-            subtext: Tr.tr("Upper limit for output volume (%)")
-            value: Math.round(GlobalConfig.services.maxVolume * 100)
-            from: 50
-            to: 200
-            stepSize: 5
-            onMoved: v => GlobalConfig.services.maxVolume = v / 100
-        }
-
         // Service tuning
         SectionHeader {
             text: Tr.tr("Service tuning")
@@ -197,13 +160,6 @@ PageBase {
             to: 120
             stepSize: 2
             onMoved: v => GlobalConfig.services.visualiserBars = v
-        }
-
-        ToggleRow {
-            text: Tr.tr("Smart colour scheme")
-            subtext: Tr.tr("Derive theme mode and variant from the wallpaper")
-            checked: GlobalConfig.services.smartScheme
-            onToggled: GlobalConfig.services.smartScheme = checked
         }
 
         SelectRow {

@@ -15,7 +15,7 @@ Repositorio: [iMacnucintosh/sylphrena-shell](https://github.com/iMacnucintosh/sy
 | **Reloj** | Popout con calendario (o hidratación) + temporizadores (con sonido y persistencia) |
 | **Grabación** | Estable (no se corta al salir del panel); guarda en `~/Vídeos/Videocapturas de pantalla` |
 | **Notificaciones** | Clic → enfoca la app; hover en la esquina superior derecha abre la sidebar |
-| **Nexus** | Página **Shell** para configurar activities y aspecto |
+| **Nexus** | Página **Activities** para configurar activities y aspecto |
 | **Launcher** | Hover inferior, edición de `.desktop`, iconos Papirus |
 | **Kitty / GTK** | Paleta alineada a la activity (Kitty + Thunar/Material) |
 | **Madison VPN** | Complemento on/off en Nexus; icono OTP / desconectar; engranaje config; limpia túnel tras sleep |
@@ -70,12 +70,12 @@ El apply es **un solo proceso** (`scripts/apply-activity-style.py`): evita carre
 
 ### Apps ancladas a un desktop
 
-Desde **Nexus → Shell** puedes asociar aplicaciones a un desktop concreto de una activity.  
+Desde **Nexus → Activities** puedes asociar aplicaciones a un desktop concreto de una activity.  
 Hyprland aplica esas reglas al arrancar (archivo generado `~/.config/hypr/sylphrena-activity-rules.lua`).
 
 ### Configuración
 
-**Nexus → Shell**:
+**Nexus → Activities**:
 
 - Activar / desactivar activities
 - Mostrar iconos de apps en los workspaces de la barra
@@ -91,7 +91,7 @@ En tu config Lua de Hyprland:
 
 ```lua
 require("sylphrena-binds")           -- atajos (Nexus → Keyboard & mouse)
-require("sylphrena-activity-rules")  -- reglas de activities / pins (Nexus → Shell)
+require("sylphrena-activity-rules")  -- reglas de activities / pins (Nexus → Activities)
 ```
 
 ---
@@ -168,7 +168,7 @@ Credenciales en `~/.config/openfortivpn/config` (las mismas que Plasma; **no** v
 
 ## Pantalla (modos, escala, VRR)
 
-Página **Nexus → Pantalla** (en Connectivity, encima de Audio), una tarjeta por monitor:
+Página **Nexus → Pantalla** (categoría Escritorio), una tarjeta por monitor:
 
 - **Modo**: resolución + Hz (deduplicados y ordenados).
 - **Escala**.
@@ -288,9 +288,10 @@ Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 - **Foco del ratón** en Nexus → Keyboard & mouse: al pasar por encima (Hyprland `follow_mouse = 1`) o al hacer clic (`= 2`). Genera `sylphrena-input.lua`.
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
 - Apariencia **unificada en Activities**: una sola página para el comportamiento (enable, iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
-- **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí, no en Services; Services queda para servicios del sistema).
+- **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí; **Tuning** / `id: services` queda para notificaciones, polling y media).
 - **Status icons honestos**: el badge de updates y la fila de VPN rigen el auto-ocultado con config explícita (`bar.status.onlyShowUpdatesWithUpdates`; VPN atado al complemento) y es visible en `Panels → Taskbar → Status icons → Auto-hide`. La batería quedó **vanilla**: se muestra/oculta con el toggle de la lista "Visible icons" y su popout es el de siempre («No se ha detectado ninguna batería» o «Power profile: %1» en desktops, con el selector de perfiles intacto).
-- **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-references entre ambas.
+- **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-links navegables entre ambas.
+- **IA del sidebar (fase 1)**: títulos de categoría visibles; orden Apariencia → Entrada → Escritorio → Cromo → Apps → Conectividad → Integraciones → Sistema → Acerca de. `smartScheme` en Activities; incrementos volumen/brillo en Audio. Ids de página intactos.
 - Las páginas del nav llevan **id estable** (`PageRegistry.idxOf`) — los saltos programáticos (Updates → Nexus) ya no dependen de índices hardcodeados.
 - Traducciones **español** ampliadas para las cadenas nuevas.
 
@@ -307,7 +308,7 @@ Popout flotante junto al cursor (estilo Sylphrena), respaldado por **cliphist** 
 - Miniaturas decodificadas **al tamaño del thumb** (`sourceSize`), no al del fichero completo; los favoritos de imágenes binarias se emparejan por el **id de cliphist** de origen (el preview genérico `[[ binary data… ]]` ya no provoca estrellas cruzadas).
 - Todos los comandos (`delete`, `wl-copy`, `cliphist decode`…) pasan el contenido del portapapeles **como argv (`"$1"`)**, nunca interpolado en la cadena del shell (lección de inyección: `JSON.stringify` es quoting de JS, no de shell).
 - Fondo igual que el panel izquierdo (`m3surface` + blur de Hyprland).
-- Límite de historial configurable (por defecto **50**) en **Nexus → Services → Clipboard**.
+- Límite de historial configurable (por defecto **50**) en **Nexus → Complements → Clipboard**.
 - Dependencias: `cliphist`, `wl-clipboard`, `wtype`.
 
 ---
