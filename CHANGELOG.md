@@ -21,7 +21,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - En esta máquina se desinstalaron los paquetes AUR del proyecto original. La shell se arranca con `sylph`. Quickshell, las fuentes, cliphist y la grabación se quedaron marcados como explícitos, porque el checkout los usa aunque pacman los contaba como dependencia de esos paquetes.
 - El flake de Nix y los workflows de GitHub salen del árbol. Pendiente: publicar el paquete AUR con el nombre Sylphrena.
 - La versión propia empieza en `v0.1.0`. El build solo lee tags `v0.*`; `v1.*` y `v2.*` siguen siendo del proyecto original.
-- El repositorio de GitHub pasa a llamarse [Sylphrena](https://github.com/iMacnucintosh/Sylphrena). La URL anterior redirige.
+- El repositorio de GitHub se llama [sylphrena-shell](https://github.com/iMacnucintosh/sylphrena-shell). Las URLs anteriores redirigen.
 
 ### Compañera Sylphrena (greeter + lock)
 

@@ -2,7 +2,7 @@
 
 Documento orientado a **usuarios finales**: diferencias y mejoras respecto al proyecto original (crédito en el [README](./README.md)).
 
-Repositorio: [iMacnucintosh/Sylphrena](https://github.com/iMacnucintosh/Sylphrena).
+Repositorio: [iMacnucintosh/sylphrena-shell](https://github.com/iMacnucintosh/sylphrena-shell).
 
 ---
 
