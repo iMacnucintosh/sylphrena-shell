@@ -271,7 +271,7 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 
 ## Barra (otros retoques)
 
-- **Tray**: muestra también ítems en estado Passive (p. ej. Teams en idle); highlight al hover / menú abierto; tamaño de icono estable.
+- **Tray**: muestra también ítems en estado Passive (p. ej. Teams en idle); highlight al hover / menú abierto; tamaño de icono estable. El **StatusNotifierWatcher** vive fuera de `qs` (`scripts/status-notifier-watcher.py`, arrancado por `scripts/start-shell-with-tray-watcher.sh` desde Hyprland) para que los trays Electron/Flatpak (Teams) sobrevivan a `sylph shell -r` — sin Plasma ya no hay `xembedsniproxy` que rescate el fallback X11.
 - **Status icons**: pastilla al hover como el tray; el icono de batería se oculta con el toggle de statusIcons (vanilla).
 - **Popouts** de status un poco más anchos para que no se recorten.
 - **Reloj** centrado de forma estable en el slot de la barra (geometría vanilla); la pastilla de hover-complemento sigue y el fondo respeta el toggle "Fondo" del Nexus (con Fondo off, solo pinta al hover).

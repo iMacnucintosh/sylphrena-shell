@@ -4,6 +4,10 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## 2026-10-30
 
+### Tray
+
+- StatusNotifierWatcher persistente (`scripts/status-notifier-watcher.py`) fuera de `qs`, arrancado antes de la shell vía `scripts/start-shell-with-tray-watcher.sh`. Los iconos Electron/Flatpak (Teams) dejan de desaparecer tras `sylph shell -r` ahora que Plasma ya no aporta `xembedsniproxy`.
+
 ### Polish (deep audit)
 
 - `steam-activity.py` snapshot: entries with legacy/`[minutes, 0]` timestamps are **rebaselined** (no residual from `since=0`), so heatmap deltas stop being swallowed by tracked sessions after the next Games reload.

@@ -29,7 +29,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 
 ## 3. Convenciones de trabajo
 
-- Tras cualquier cambio de QML/script: **reiniciar la shell** (`sylph shell -r`; background `-r -d`) y verificar que carga sin errores. Hyprland arranca con `/home/manu/.local/bin/sylph shell -d` (el PATH del compositor no tiene `~/.local/bin`).
+- Tras cualquier cambio de QML/script: **reiniciar la shell** (`sylph shell -r`; background `-r -d`) y verificar que carga sin errores. Hyprland arranca con `scripts/start-shell-with-tray-watcher.sh` (watcher SNI persistente + `/home/manu/.local/bin/sylph shell -d`; el PATH del compositor no tiene `~/.local/bin`). El watcher (`scripts/status-notifier-watcher.py`) debe sobrevivir a `-r` o los trays Electron (Teams Flatpak) no se re-registran.
 - Cualquier `sh -c`/`bash -c` que lleve contenido de usuario va **por argv (`"$1"`)**: `JSON.stringify` es quoting de JS, no de shell (lección: inyección en Clipboard). Contraseñas/secretos nunca a fichero: en RAM con `sudo -S -v` por paso (ver `scripts/run-system-update.sh`).
 - Estilo **Material You estricto**: tokens, `MaterialShape`, blur/transparencia; los detalles visuales (padding, tamaños, sombras, centrados) se afinan con el usuario tras cada versión — espera feedback visual.
 - Commits: **conventional commits** (`feat:` / `fix:` / `docs:`), a nombre del usuario. **NUNCA** dejar trailer `Co-authored-by: Cursor/agent`.
