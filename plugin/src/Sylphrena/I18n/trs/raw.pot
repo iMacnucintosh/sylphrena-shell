@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:36+0100\n"
+"POT-Creation-Date: 2026-10-30 15:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1658,15 +1658,6 @@ msgstr ""
 msgid "Shell shortcuts, remapping and mouse focus"
 msgstr ""
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/DisplayPage.qml
-msgctxt "monitor settings"
-msgid "Display"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml
-msgid "Output modes, scale, adaptive sync (VRR)"
-msgstr ""
-
 #: modules/nexus/PageRegistry.qml
 msgid "Wi-Fi, ethernet, VPN (NetworkManager)"
 msgstr ""
@@ -1676,7 +1667,7 @@ msgid "Connected devices"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Bluetooth, pairing"
+msgid "Bluetooth, pairing, displays"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AudioPage.qml
@@ -2066,6 +2057,15 @@ msgstr ""
 
 #: modules/nexus/pages/BluetoothPage.qml
 msgid "Allow nearby devices to pair with this one"
+msgstr ""
+
+#: modules/nexus/pages/BluetoothPage.qml modules/nexus/pages/DisplayPage.qml
+msgctxt "monitor settings"
+msgid "Display"
+msgstr ""
+
+#: modules/nexus/pages/BluetoothPage.qml
+msgid "Output modes, scale, adaptive sync (VRR)"
 msgstr ""
 
 #: modules/nexus/pages/ComplementsPage.qml modules/nexus/pages/UpdatesPage.qml

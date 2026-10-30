@@ -15,6 +15,7 @@ PageBase {
     id: root
 
     title: Tr.trCtx("Display", "monitor settings")
+    isSubPage: true
 
     Component.onCompleted: Displays.refresh()
 

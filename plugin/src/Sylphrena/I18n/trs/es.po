@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:36+0100\n"
+"POT-Creation-Date: 2026-10-30 15:40+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1664,15 +1664,6 @@ msgstr "Teclado y ratón"
 msgid "Shell shortcuts, remapping and mouse focus"
 msgstr "Atajos del shell, reasignación y foco del ratón"
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/DisplayPage.qml
-msgctxt "monitor settings"
-msgid "Display"
-msgstr "Pantalla"
-
-#: modules/nexus/PageRegistry.qml
-msgid "Output modes, scale, adaptive sync (VRR)"
-msgstr "Modos, escala y VRR (sync adaptativo) por salida"
-
 #: modules/nexus/PageRegistry.qml
 msgid "Wi-Fi, ethernet, VPN (NetworkManager)"
 msgstr "Wi-Fi, ethernet, VPN (NetworkManager)"
@@ -1682,8 +1673,8 @@ msgid "Connected devices"
 msgstr "Dispositivos conectados"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Bluetooth, pairing"
-msgstr "Bluetooth, emparejamiento"
+msgid "Bluetooth, pairing, displays"
+msgstr "Bluetooth, emparejado, pantallas"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AudioPage.qml
 msgid "Audio"
@@ -2074,6 +2065,15 @@ msgstr "Emparejable"
 #: modules/nexus/pages/BluetoothPage.qml
 msgid "Allow nearby devices to pair with this one"
 msgstr "Permitir que los dispositivos cercanos se emparejen con este"
+
+#: modules/nexus/pages/BluetoothPage.qml modules/nexus/pages/DisplayPage.qml
+msgctxt "monitor settings"
+msgid "Display"
+msgstr "Pantalla"
+
+#: modules/nexus/pages/BluetoothPage.qml
+msgid "Output modes, scale, adaptive sync (VRR)"
+msgstr "Modos, escala y VRR (sync adaptativo) por salida"
 
 #: modules/nexus/pages/ComplementsPage.qml modules/nexus/pages/UpdatesPage.qml
 msgid "Available"

@@ -65,14 +65,7 @@ QtObject {
             category: "input"
         },
 
-        // Devices (monitors + connectivity I/O)
-        {
-            id: "display",
-            label: Tr.trCtx("Display", "monitor settings"),
-            icon: "monitor",
-            description: Tr.tr("Output modes, scale, adaptive sync (VRR)"),
-            category: "connectivity"
-        },
+        // Devices (Display lives inside Connected devices as a subpage)
         {
             id: "network",
             label: Tr.tr("Network"),
@@ -84,7 +77,7 @@ QtObject {
             id: "bluetooth",
             label: Tr.tr("Connected devices"),
             icon: "devices_other",
-            description: Tr.tr("Bluetooth, pairing"),
+            description: Tr.tr("Bluetooth, pairing, displays"),
             category: "connectivity",
             noFill: true
         },

@@ -101,14 +101,6 @@ QtObject {
 
         // Devices
         Component {
-            // Display
-            StackPage {
-                Component {
-                    DisplayPage {}
-                }
-            }
-        },
-        Component {
             // Network
             StackPage {
                 Component {
@@ -135,7 +127,7 @@ QtObject {
             }
         },
         Component {
-            // Bluetooth
+            // Connected devices (Bluetooth + Display subpage)
             StackPage {
                 Component {
                     BluetoothPage {}
@@ -145,6 +137,9 @@ QtObject {
                 }
                 Component {
                     BluetoothPairing {}
+                }
+                Component {
+                    DisplayPage {}
                 }
             }
         },
