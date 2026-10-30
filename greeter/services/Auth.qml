@@ -89,16 +89,13 @@ Singleton {
         root.busy = true;
         launchWatchdog.restart();
 
-        // Prefer start-hyprland when the desktop entry is bare "Hyprland".
-        let cmd = session.exec;
-        if (cmd === "Hyprland" || cmd === "/usr/bin/Hyprland")
-            cmd = "/usr/bin/start-hyprland";
+        // Desktop Exec → argv. Never `sh -c`: greetd tracks that process, and
+        // a shell wrapper hid Plasma dying in <1s with no log.
+        let argv = `${session.exec || ""}`.trim().split(/\s+/).filter(p => p.length);
+        if (argv[0] === "Hyprland" || argv[0] === "/usr/bin/Hyprland")
+            argv = ["/usr/bin/start-hyprland"];
 
-        // Hyprland prints its ASCII logo and early debug lines before it can
-        // read the config. Keep those bytes off tty1 during the DRM handoff.
-        const launchCommand = cmd === "start-hyprland" || cmd === "/usr/bin/start-hyprland"
-            ? [`${Theme.dir}/start-user-session.sh`, "/usr/bin/start-hyprland"]
-            : ["sh", "-c", cmd];
+        const launchCommand = [`${Theme.dir}/start-user-session.sh`, ...argv];
 
         // Quit explicitly on `launched`: this leaves a watchdog window to
         // recover the UI if greetd never acknowledges start_session.

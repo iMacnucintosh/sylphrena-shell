@@ -8,7 +8,7 @@ import sys
 
 
 def main() -> None:
-    path = os.environ.get("CAELESTIA_SUDO_ASKPASS_SOCK", "")
+    path = os.environ.get("SYLPHRENA_SUDO_ASKPASS_SOCK") or os.environ.get("SYLPHRENA_SUDO_ASKPASS_SOCK", "")
     if not path:
         sys.exit(1)
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)

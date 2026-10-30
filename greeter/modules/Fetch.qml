@@ -49,7 +49,7 @@ StyledRect {
 
             StyledText {
                 Layout.fillWidth: true
-                text: "caelestiafetch.sh"
+                text: "sylphrenafetch.sh"
                 mono: true
                 elide: Text.ElideRight
                 font.pixelSize: Theme.font.bodyMedium

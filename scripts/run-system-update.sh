@@ -10,7 +10,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 HELPER="${SCRIPT_DIR}/sudo-askpass-helper.py"
 ASKPASS="${SCRIPT_DIR}/sudo-askpass-socket.py"
-SOCK="${XDG_RUNTIME_DIR:-/tmp}/caelestia-sudo-$$.sock"
+SOCK="${XDG_RUNTIME_DIR:-/tmp}/sylphrena-sudo-$$.sock"
 helper_pid=""
 
 IFS= read -r PASSWORD || true
@@ -49,7 +49,7 @@ if [[ ! -S "$SOCK" ]]; then
 fi
 
 export SUDO_ASKPASS="$ASKPASS"
-export CAELESTIA_SUDO_ASKPASS_SOCK="$SOCK"
+export SYLPHRENA_SUDO_ASKPASS_SOCK="$SOCK"
 
 do_aur=0
 do_arch=0

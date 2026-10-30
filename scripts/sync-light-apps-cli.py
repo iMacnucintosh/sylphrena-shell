@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sync caelestia cli.json theme hooks for shell-dark / apps-light mode."""
+"""Sync sylphrena cli.json theme hooks for shell-dark / apps-light mode."""
 
 from __future__ import annotations
 
@@ -11,9 +11,9 @@ from pathlib import Path
 # GTK/Thunar CSS still updates (enableGtk stays on) so the file manager follows
 # the activity scheme; color-scheme prefer-light covers Adwaita/Qt apps.
 POST_HOOK = (
-    'test -f "${XDG_STATE_HOME:-$HOME/.local/state}/caelestia/force-apps-light" '
+    'test -f "${XDG_STATE_HOME:-$HOME/.local/state}/sylphrena/force-apps-light" '
     '&& dconf write /org/gnome/desktop/interface/color-scheme "\'prefer-light\'"'
-    ' ; "$HOME/.config/caelestia/scripts/kitty-reload-colours.sh" || true'
+    ' ; "$HOME/.config/sylphrena/scripts/kitty-reload-colours.sh" || true'
 )
 
 
@@ -22,7 +22,7 @@ def main() -> None:
     parser.add_argument("--light-apps", action=argparse.BooleanOptionalAction, required=True)
     args = parser.parse_args()
 
-    path = Path.home() / ".config/caelestia/cli.json"
+    path = Path.home() / ".config/sylphrena/cli.json"
     cfg: dict = {}
     if path.exists():
         try:

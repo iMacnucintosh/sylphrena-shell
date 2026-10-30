@@ -1,5 +1,5 @@
 import QtQuick
-import Caelestia.Config
+import Sylphrena.Config
 
 ColorAnimation {
     duration: Tokens.anim.durations.expressiveSlowEffects

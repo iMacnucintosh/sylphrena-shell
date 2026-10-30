@@ -6,7 +6,7 @@ import Quickshell.Io
 import qs.services
 
 // CPU/memory/disk/temperature, read straight from procfs + sysfs (no
-// Caelestia plugin, no extra dependencies).
+// Sylphrena plugin, no extra dependencies).
 Singleton {
     id: root
 

@@ -4,8 +4,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Caelestia.Config
-import Caelestia.I18n
+import Sylphrena.Config
+import Sylphrena.I18n
 import qs.utils
 
 Singleton {
@@ -285,7 +285,7 @@ Singleton {
             label: () => Tr.tr("Next workspace"),
             description: () => Tr.tr("Switch to the next desktop (respects activity boundaries unless cross-activity is enabled)"),
             defaultBind: "SUPER + mouse_down",
-            global: "caelestia:workspaceNext",
+            global: "sylphrena:workspaceNext",
             category: "workspaces"
         },
         {
@@ -293,7 +293,7 @@ Singleton {
             label: () => Tr.tr("Previous workspace"),
             description: () => Tr.tr("Switch to the previous desktop (respects activity boundaries unless cross-activity is enabled)"),
             defaultBind: "SUPER + mouse_up",
-            global: "caelestia:workspacePrev",
+            global: "sylphrena:workspacePrev",
             category: "workspaces"
         },
         {
@@ -301,7 +301,7 @@ Singleton {
             label: () => Tr.tr("Next activity"),
             description: () => Tr.tr("Jump to the first desktop of the next activity"),
             defaultBind: "SUPER + CTRL + Right",
-            global: "caelestia:activityNext",
+            global: "sylphrena:activityNext",
             category: "activities"
         },
         {
@@ -309,7 +309,7 @@ Singleton {
             label: () => Tr.tr("Previous activity"),
             description: () => Tr.tr("Jump to the first desktop of the previous activity"),
             defaultBind: "SUPER + CTRL + Left",
-            global: "caelestia:activityPrev",
+            global: "sylphrena:activityPrev",
             category: "activities"
         },
         {
@@ -317,7 +317,7 @@ Singleton {
             label: () => Tr.tr("Activities overview"),
             description: () => Tr.tr("Show a preview of all activities and desktops"),
             defaultBind: "SUPER + Tab",
-            global: "caelestia:activityOverview",
+            global: "sylphrena:activityOverview",
             category: "activities"
         },
         // --- Window manager: apps ---
@@ -354,21 +354,21 @@ Singleton {
             dispatch: "hl.dsp.exec_cmd(\"command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit\")",
             category: "apps"
         },
-        // --- Caelestia shell ---
+        // --- Sylphrena shell ---
         {
             id: "launcher",
             label: () => Tr.tr("Launcher"),
             description: () => Tr.tr("Toggle the app launcher"),
             defaultBind: "SUPER + Space",
-            global: "caelestia:launcher",
+            global: "sylphrena:launcher",
             category: "shell"
         },
         {
             id: "nexus",
             label: () => Tr.tr("Settings (Nexus)"),
-            description: () => Tr.tr("Open Caelestia settings"),
+            description: () => Tr.tr("Open Sylphrena settings"),
             defaultBind: "SUPER + COMMA",
-            global: "caelestia:nexus",
+            global: "sylphrena:nexus",
             category: "shell"
         },
         {
@@ -376,7 +376,7 @@ Singleton {
             label: () => Tr.tr("Dashboard"),
             description: () => Tr.tr("Toggle the dashboard"),
             defaultBind: "SUPER + D",
-            global: "caelestia:dashboard",
+            global: "sylphrena:dashboard",
             category: "shell"
         },
         {
@@ -384,7 +384,7 @@ Singleton {
             label: () => Tr.tr("Session menu"),
             description: () => Tr.tr("Power / session menu"),
             defaultBind: "CTRL + ALT + Delete",
-            global: "caelestia:session",
+            global: "sylphrena:session",
             category: "shell"
         },
         {
@@ -392,7 +392,7 @@ Singleton {
             label: () => Tr.tr("Sidebar"),
             description: () => Tr.tr("Toggle the sidebar"),
             defaultBind: "SUPER + N",
-            global: "caelestia:sidebar",
+            global: "sylphrena:sidebar",
             category: "shell"
         },
         {
@@ -400,7 +400,7 @@ Singleton {
             label: () => Tr.tr("Utilities"),
             description: () => Tr.tr("Toggle utilities panel"),
             defaultBind: "SUPER + U",
-            global: "caelestia:utilities",
+            global: "sylphrena:utilities",
             category: "shell"
         },
         {
@@ -408,7 +408,7 @@ Singleton {
             label: () => Tr.tr("Show panels"),
             description: () => Tr.tr("Toggle launcher, dashboard and OSD"),
             defaultBind: "SUPER + K",
-            global: "caelestia:showall",
+            global: "sylphrena:showall",
             category: "shell"
         },
         {
@@ -416,7 +416,7 @@ Singleton {
             label: () => Tr.tr("Lock screen"),
             description: () => Tr.tr("Lock the session"),
             defaultBind: "SUPER + L",
-            global: "caelestia:lock",
+            global: "sylphrena:lock",
             category: "shell",
             flags: {
                 locked: true
@@ -427,7 +427,7 @@ Singleton {
             label: () => Tr.tr("Clear notifications"),
             description: () => Tr.tr("Dismiss all notifications"),
             defaultBind: "CTRL + ALT + C",
-            global: "caelestia:clearNotifs",
+            global: "sylphrena:clearNotifs",
             category: "notifications",
             flags: {
                 locked: true
@@ -438,7 +438,7 @@ Singleton {
             label: () => Tr.tr("Do not disturb"),
             description: () => Tr.tr("Toggle do not disturb"),
             defaultBind: "SUPER + SHIFT + N",
-            global: "caelestia:toggleDnd",
+            global: "sylphrena:toggleDnd",
             category: "notifications"
         },
         {
@@ -446,7 +446,7 @@ Singleton {
             label: () => Tr.tr("Play / pause"),
             description: () => Tr.tr("Toggle media playback"),
             defaultBind: "CTRL + SUPER + Space",
-            global: "caelestia:mediaToggle",
+            global: "sylphrena:mediaToggle",
             category: "media"
         },
         {
@@ -454,7 +454,7 @@ Singleton {
             label: () => Tr.tr("Next track"),
             description: () => Tr.tr("Skip to next track"),
             defaultBind: "CTRL + SUPER + Equal",
-            global: "caelestia:mediaNext",
+            global: "sylphrena:mediaNext",
             category: "media"
         },
         {
@@ -462,7 +462,7 @@ Singleton {
             label: () => Tr.tr("Previous track"),
             description: () => Tr.tr("Go to previous track"),
             defaultBind: "CTRL + SUPER + Minus",
-            global: "caelestia:mediaPrev",
+            global: "sylphrena:mediaPrev",
             category: "media"
         },
         {
@@ -470,7 +470,7 @@ Singleton {
             label: () => Tr.tr("Stop media"),
             description: () => Tr.tr("Stop media playback"),
             defaultBind: "CTRL + SUPER + Backspace",
-            global: "caelestia:mediaStop",
+            global: "sylphrena:mediaStop",
             category: "media"
         },
         {
@@ -478,7 +478,7 @@ Singleton {
             label: () => Tr.tr("Brightness up"),
             description: () => Tr.tr("Increase screen brightness"),
             defaultBind: "XF86MonBrightnessUp",
-            global: "caelestia:brightnessUp",
+            global: "sylphrena:brightnessUp",
             category: "system",
             flags: {
                 locked: true,
@@ -490,7 +490,7 @@ Singleton {
             label: () => Tr.tr("Brightness down"),
             description: () => Tr.tr("Decrease screen brightness"),
             defaultBind: "XF86MonBrightnessDown",
-            global: "caelestia:brightnessDown",
+            global: "sylphrena:brightnessDown",
             category: "system",
             flags: {
                 locked: true,
@@ -502,7 +502,7 @@ Singleton {
             label: () => Tr.tr("Screenshot region"),
             description: () => Tr.tr("Capture a screen region"),
             defaultBind: "Print",
-            global: "caelestia:screenshot",
+            global: "sylphrena:screenshot",
             category: "capture"
         },
         {
@@ -510,7 +510,7 @@ Singleton {
             label: () => Tr.tr("Screenshot region (freeze)"),
             description: () => Tr.tr("Capture a region with a frozen screen"),
             defaultBind: "SHIFT + Print",
-            global: "caelestia:screenshotFreeze",
+            global: "sylphrena:screenshotFreeze",
             category: "capture"
         },
         {
@@ -518,7 +518,7 @@ Singleton {
             label: () => Tr.tr("Screenshot to clipboard"),
             description: () => Tr.tr("Capture a region to the clipboard"),
             defaultBind: "SUPER + Print",
-            global: "caelestia:screenshotClip",
+            global: "sylphrena:screenshotClip",
             category: "capture"
         },
         {
@@ -526,7 +526,7 @@ Singleton {
             label: () => Tr.tr("Screenshot freeze + clipboard"),
             description: () => Tr.tr("Frozen region capture to the clipboard"),
             defaultBind: "SUPER + SHIFT + Print",
-            global: "caelestia:screenshotFreezeClip",
+            global: "sylphrena:screenshotFreezeClip",
             category: "capture"
         },
         {
@@ -534,7 +534,7 @@ Singleton {
             label: () => Tr.tr("Clipboard history"),
             description: () => Tr.tr("Open clipboard history and paste into the focused window"),
             defaultBind: "SUPER + SHIFT + V",
-            global: "caelestia:clipboard",
+            global: "sylphrena:clipboard",
             category: "shell"
         }
     ]
@@ -667,11 +667,11 @@ Singleton {
         return "hl.dsp.no_op()";
     }
 
-    readonly property string grabSubmap: "caelestia-keybind-grab"
+    readonly property string grabSubmap: "sylphrena-keybind-grab"
 
     function generateLua(): string {
-        let out = "-- Auto-generated by Caelestia Keybinds. Do not edit.\n";
-        out += "-- Source: ~/.config/caelestia/keybinds.json\n\n";
+        let out = "-- Auto-generated by Sylphrena Keybinds. Do not edit.\n";
+        out += "-- Source: ~/.config/sylphrena/keybinds.json\n\n";
 
         // Grab submap: while recording, compositor shortcuts are suppressed so
         // keys reach the settings UI (Plasma-style). Needs ≥1 bind to register.
@@ -867,6 +867,6 @@ Singleton {
         id: luaFile
 
         printErrors: false
-        path: `${Quickshell.env("HOME")}/.config/hypr/caelestia-binds.lua`
+        path: `${Quickshell.env("HOME")}/.config/hypr/sylphrena-binds.lua`
     }
 }

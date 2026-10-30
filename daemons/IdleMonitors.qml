@@ -4,9 +4,9 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.UPower
-import Caelestia.Config
-import Caelestia.Services
-import Caelestia.State
+import Sylphrena.Config
+import Sylphrena.Services
+import Sylphrena.State
 import qs.services
 import qs.modules.lock
 

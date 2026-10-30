@@ -1,7 +1,7 @@
 import QtQuick
 import qs.services
 
-// Simplified Caelestia state layer: hover + press wash inside the parent's
+// Simplified Sylphrena state layer: hover + press wash inside the parent's
 // rounded shape (Rectangle parents expose `radius`).
 MouseArea {
     id: root

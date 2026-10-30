@@ -1,6 +1,6 @@
 # Qué incluye este fork
 
-Documento orientado a **usuarios finales**: diferencias y mejoras respecto a [caelestia-shell](https://github.com/caelestia-dots/shell) upstream.
+Documento orientado a **usuarios finales**: diferencias y mejoras respecto al proyecto original (crédito en el [README](./README.md)).
 
 Repositorio: [iMacnucintosh/hyprland-shell](https://github.com/iMacnucintosh/hyprland-shell).
 
@@ -71,7 +71,7 @@ El apply es **un solo proceso** (`scripts/apply-activity-style.py`): evita carre
 ### Apps ancladas a un desktop
 
 Desde **Nexus → Shell** puedes asociar aplicaciones a un desktop concreto de una activity.  
-Hyprland aplica esas reglas al arrancar (archivo generado `~/.config/hypr/caelestia-activity-rules.lua`).
+Hyprland aplica esas reglas al arrancar (archivo generado `~/.config/hypr/sylphrena-activity-rules.lua`).
 
 ### Configuración
 
@@ -90,8 +90,8 @@ Defaults de ejemplo: Home (2 desktops), Games (1), Work (2).
 En tu config Lua de Hyprland:
 
 ```lua
-require("caelestia-binds")           -- atajos (Nexus → Keyboard & mouse)
-require("caelestia-activity-rules")  -- reglas de activities / pins (Nexus → Shell)
+require("sylphrena-binds")           -- atajos (Nexus → Keyboard & mouse)
+require("sylphrena-activity-rules")  -- reglas de activities / pins (Nexus → Shell)
 ```
 
 ---
@@ -117,7 +117,7 @@ require("caelestia-activity-rules")  -- reglas de activities / pins (Nexus → S
 - Mientras grabas, utilities/sidebar **permanecen abiertos** al salir el puntero (evita teardowns mid-capture).
 - Indicador **REC** / **PAUSE** bajo el reloj en la barra mientras hay grabación activa.
 - El chip principal del recorder no re-dispara start mientras ya está grabando (evita toggle-stop accidental).
-- Archivos en **`~/Vídeos/Videocapturas de pantalla`** (override: env `CAELESTIA_RECORDINGS_DIR`).
+- Archivos en **`~/Vídeos/Videocapturas de pantalla`** (override: env `SYLPHRENA_RECORDINGS_DIR`).
 - Desde la lista: reproducir, abrir carpeta (Thunar) o borrar.
 
 ---
@@ -142,7 +142,7 @@ Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
 - Lista de features opcionales del fork, con icono identificativo por fila.
 - **Madison VPN**: interruptor on/off. Al desactivar se oculta el icono, se para el poll y se ejecuta teardown (`disconnect` + `heal`) para matar `openfortivpn`/helper.
 - **Timers**: interruptor on/off. Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue). Exposición doble: hub en **Complementos** y tarjeta desplegable en **Nexus → Panels → Taskbar → Clock** (mismo `addons.timers.enabled`), con 4 presets editables (`presetMins0..3`, default 5/10/20/30) que alimentan los botones del popout.
-- **Hidratación**: interruptor on/off (opt-in). Al activar sustituye el calendario del dashboard Nexus (solo ahí; el popout del reloj sigue con calendario) por un depósito con waves, meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Estado en `~/.local/state/caelestia/hydration.json`.
+- **Hidratación**: interruptor on/off (opt-in). Al activar sustituye el calendario del dashboard Nexus (solo ahí; el popout del reloj sigue con calendario) por un depósito con waves, meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Estado en `~/.local/state/sylphrena/hydration.json`.
 - **Juegos (Steam)**: interruptor on/off (opt-in). Al activar añade la pestaña **Juegos** en el dashboard (a la derecha de Tiempo). Configura API key (oculta por defecto) + Steam ID / vanity / URL de perfil, y el intervalo de refresco (default 10 min). Muestra perfil y nivel, estadísticas globales en shapes Material You (juegos visibles — sin la colección Hidden —, horas, compleción media de logros y juegos al 100 %, amigos en línea), tarjeta del juego destacado con portada y progreso, y un selector de portadas ordenado por última partida. Logros en una lista con scroll: desbloqueados por rareza y bloqueados de más común a más raro, con insignia y descripción. Mapa de calor mensual (puntos = días con logros; el tiempo por día se registra con el shell en marcha). Juegos no Steam desde `shortcuts.vdf`, con horas de Millennium si está instalado. Los logros del perfil deben ser públicos. El muestreo de logros para la compleción media está **capado a 60 juegos** (los más jugados, por orden de playtime) y el refresco periódico **solo corre mientras el dashboard muestra la pestaña Juegos** (no quema API en segundo plano).
 
 ## Madison VPN (FortiClient / openfortivpn)
@@ -174,10 +174,10 @@ Página **Nexus → Pantalla** (en Connectivity, encima de Audio), una tarjeta p
 - **Escala**.
 - **VRR / Adaptive Sync** con política estilo Plasma: **Nunca / Automático / Siempre** (Automático = solo mientras haya algo a pantalla completa).
 
-Persistencia por conector en `~/.config/hypr/caelestia-monitors.lua`; al aplicar se ejecuta `hyprctl reload`, que es lo que hace que el apagado de VRR llegue de verdad al CRTC. La política vive en el Lua y el estado "activo" que reporta `hyprctl` no pisa tu elección. Requiere en tu config de Hyprland:
+Persistencia por conector en `~/.config/hypr/sylphrena-monitors.lua`; al aplicar se ejecuta `hyprctl reload`, que es lo que hace que el apagado de VRR llegue de verdad al CRTC. La política vive en el Lua y el estado "activo" que reporta `hyprctl` no pisa tu elección. Requiere en tu config de Hyprland:
 
 ```lua
-require("caelestia-monitors")
+require("sylphrena-monitors")
 ```
 
 ---
@@ -193,55 +193,51 @@ require("caelestia-monitors")
 ## Explorador y theming GTK
 
 - Explorador por defecto: **Thunar** (`general.apps.explorer` + Super+E + `xdg-mime` para carpetas).
-- Para que Thunar/GTK sigan el esquema de Caelestia: `adw-gtk-theme`, `papirus-icon-theme`, y `GTK_MODULES=colorreload-gtk-module` (Hyprland + `settings.ini`; el módulo está **vendorizado** en `~/.local/share/gtk-3.0/modules/`, ver abajo).
+- Para que Thunar/GTK sigan el esquema de Sylphrena: `adw-gtk-theme`, `papirus-icon-theme`, y `GTK_MODULES=colorreload-gtk-module` (Hyprland + `settings.ini`; el módulo está **vendorizado** en `~/.local/share/gtk-3.0/modules/`, ver abajo).
 - Iconos de apps en el launcher: tema **Papirus** (sincronizado en `~/.config/qt6ct/qt6ct.conf [Appearance] icon_theme` al aplicar el esquema).
 - Diálogos `pkexec` (Timeshift, VPN helper, etc.): activa `hyprpolkitagent.service` (`systemctl --user enable --now hyprpolkitagent`).
 
 ---
 
-## Aislamiento de Plasma (fase 1)
+## Aislamiento de Plasma (fase 2 hecha)
 
-Wiring para que Hyprland + Caelestia vivan sin depender de Plasma sin desinstalarlo todavía (la desinstalación es fase 2).
+Plasma ya no está instalado. Hyprland sigue con qt6ct, Papirus, Thunar y los portales gtk + hyprland.
 
-- **Login**: **greetd + greeter Quickshell Material You** con teclado español y autologin inicial a `/usr/bin/start-hyprland`. Tras cerrar sesión, el greeter corre sobre un Hyprland mínimo y entrega la sesión con fundido negro corto: tanto el greeter como la sesión arrancan sin TTY de control (el logo ASCII de Hyprland no llega a tty1), la salida va a `session-startup.log` / `hyprland-greeter.log`, y el compositor desechable se desmonta de inmediato (Hyprland 0.57 se quedaba ~5 s y acababa en segfault al salir). systemd no retiene `user@` 10 s ni espera 90 s a coredumps (`UserStopDelaySec=0`, `TimeoutStopSec=8`). Si greetd no confirma el arranque, recupera la UI en vez de dejar una pantalla negra. Se instala/actualiza con `greeter/install-greeter.sh`; plasmalogin queda instalado pero deshabilitado (rollback = `systemctl enable plasmalogin`).
+- **Login**: **greetd + greeter Quickshell Material You** con teclado español y autologin inicial a `/usr/bin/start-hyprland`. Tras cerrar sesión, el greeter corre sobre un Hyprland mínimo y entrega la sesión con fundido negro corto: tanto el greeter como la sesión arrancan sin TTY de control (el logo ASCII de Hyprland no llega a tty1), la salida va a `session-startup.log` / `hyprland-greeter.log`, y el compositor desechable se desmonta de inmediato (Hyprland 0.57 se quedaba ~5 s y acababa en segfault al salir). systemd no retiene `user@` 10 s ni espera 90 s a coredumps (`UserStopDelaySec=0`, `TimeoutStopSec=8`). Si greetd no confirma el arranque, recupera la UI en vez de dejar una pantalla negra. Se instala/actualiza con `scripts/install-system.sh` (un solo prompt de root; `greeter/install-greeter.sh` hace lo mismo). `plasma-login-manager` se desinstaló con Plasma.
 - **Plataforma Qt**: cambio en 3 sitios de `QT_QPA_PLATFORMTHEME=kde` a `qt6ct`
   (pragma `Env` en `shell.qml`, env en `hyprland.lua`, `~/.config/environment.d/99-qt-platformtheme.conf`)
   — aplica a processes nuevos; la sesión completa se normaliza al relogin. Los apps Qt ya no dependen de
-  `plasma-integration` (estilo Breeze → Fusion). `scripts/caelestia-quiet.py` empuja en cada cambio de esquema (`_sync_qt6ct`), de forma atómica (temp+rename, lo pilla el QFileSystemWatcher de qt6ct):
-  - `~/.config/qt6ct/colors/caelestia.conf`: paleta Qt (22 roles de `QPalette`) mapeada desde los tokens Material de la activity
+  `plasma-integration` (estilo Breeze → Fusion). `scripts/sylphrena-quiet.py` empuja en cada cambio de esquema (`_sync_qt6ct`), de forma atómica (temp+rename, lo pilla el QFileSystemWatcher de qt6ct):
+  - `~/.config/qt6ct/colors/sylphrena.conf`: paleta Qt (22 roles de `QPalette`) mapeada desde los tokens Material de la activity
   - `~/.config/qt6ct/qt6ct.conf`: `icon_theme=Papirus-{Mode}`, `custom_palette=true`, `style=Fusion`
 - **Cursor**: alineado GTK/Qt/Hyprland a **Adwaita** (`gsettings cursor-theme`, `gtk-cursor-theme-name` de `settings.ini`, env `XCURSOR_THEME`/`HYPRCURSOR_THEME`).
 - **módulo `colorreload-gtk-module`** vendorizado: copia a `~/.local/share/gtk-3.0/modules/`. Sobrevive la desinstalación de `kde-gtk-config` en fase 2 (GTK resuelve el módulo por nombre en la ruta `$XDG_DATA_HOME`). Es un build solo de GTK3 (no existe módulo GTK4).
 - **`org.freedesktop.FileManager1`**: Thunar lo sirve. Override a nivel usuario en
   `~/.local/share/dbus-1/services/org.freedesktop.FileManager1.service` (→ `thunar.service`; dbus-broker ignora los duplicados `/usr/share/dbus-1/services/org.kde.dolphin.*`).
-- **Servicios de KDE enmascarados**: `systemctl --user mask plasma-dolphin plasma-kactivitymanagerd`
-  (el asistente de Dolphin ya no ocupa `FileManager1` ni se levanta al arrancar; la fase 2 los borra).
-- **Dual-write de transición**: `_sync_kde_icon_theme` sigue escribiendo `~/.config/kdeglobals [Icons]`,
-  por si cualquier elemento de Plasma residual sigue leyéndolo (kernel de config, `plasma-integration`).
-- La fase 2 (desinstalación de ~237 paquetes Plasma) retirará además: el dual-write de kdeglobals, el
-  keep-set explícito (`pacman -D --asexplicit plasma-integration kde-gtk-config bluez bluez-utils noto-fonts-emoji ttf-hack`) y los configs/caches de KDE (`~/.config/{KDE,kdedefaults,kwin*,plasma-*,baloo*…}`, `~/.cache/plasmashell*`, `~/.local/share/{baloo,plasma,kactivitymanagerd,kwalletd}`).
+- **Unidades de Dolphin y KActivity**: se fueron con los paquetes. Las máscaras de usuario se quitaron. El override de `FileManager1` a Thunar se queda.
+- **Fase 2 hecha (2026-10-30)**: 238 paquetes KDE/Plasma (~1381 MiB), incluido `plasma-integration` y `kde-gtk-config`. El tema ya no escribe `kdeglobals`. Config, caché y el índice de Baloo se borraron. Siguen `bluez`, `noto-fonts-emoji`, `ttf-hack` y el `colorreload` vendorizado.
 
 ---
 
 ## Kitty y colores de la activity
 
-Kitty no es un target nativo de Caelestia; este fork lo integra así:
+Kitty no es un target nativo de Sylphrena; este fork lo integra así:
 
-1. Plantilla de usuario: `~/.config/caelestia/templates/kitty.conf` (variables `{{ surface.hex }}`, `{{ term0.hex }}`, …).
-2. Generada en: `~/.local/state/caelestia/theme/kitty.conf`.
+1. Plantilla de usuario: `~/.config/sylphrena/templates/kitty.conf` (variables `{{ surface.hex }}`, `{{ term0.hex }}`, …).
+2. Generada en: `~/.local/state/sylphrena/theme/kitty.conf`.
 3. En `~/.config/kitty/kitty.conf`:
 
 ```conf
-include ~/.local/state/caelestia/theme/kitty.conf
+include ~/.local/state/sylphrena/theme/kitty.conf
 allow_remote_control yes
 listen_on unix:${XDG_RUNTIME_DIR}/kitty-{kitty_pid}.sock
 ```
 
 4. Recarga en vivo al cambiar wallpaper / esquema / activity:
-   - `~/.config/caelestia/scripts/kitty-reload-colours.sh`
+   - `~/.config/sylphrena/scripts/kitty-reload-colours.sh`
    - Hook en `cli.json` (`theme.postHook` / `wallpaper.postHook`)
-   - `scripts/caelestia-quiet.py` (usado por la shell) llama a esa recarga tras aplicar colores
-5. En zsh (ventanas nuevas): `cat ~/.local/state/caelestia/sequences.txt` en `~/.zshrc`.
+   - `scripts/sylphrena-quiet.py` (usado por la shell) llama a esa recarga tras aplicar colores
+5. En zsh (ventanas nuevas): `cat ~/.local/state/sylphrena/sequences.txt` en `~/.zshrc`.
 
 Tras el primer arranque de Kitty con `listen_on`, al cambiar de activity (barra, atajos u overview) la paleta de las ventanas abiertas se actualiza sola.
 
@@ -257,7 +253,7 @@ Al pasar el ratón por el **reloj** de la barra:
    - Duración manual (1–180 min): escribe el número y pulsa Enter o +
    - Lista de timers activos con cuenta atrás y cancelar
    - Al terminar: aviso (toast) + sonido del sistema
-   - Se **conservan** si reinicias la shell (estado en `~/.local/state/caelestia/timers.json`)
+   - Se **conservan** si reinicias la shell (estado en `~/.local/state/sylphrena/timers.json`)
 
 El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto de la barra.
 
@@ -285,9 +281,9 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 
 ## Nexus y atajos
 
-Ya presentes en este fork respecto a un Caelestia “vanilla” típico:
+Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 
-- **Atajos de Hyprland remapeables** desde Nexus (genera `caelestia-binds.lua`), incluyendo teclas **F13+**.
+- **Atajos de Hyprland remapeables** desde Nexus (genera `sylphrena-binds.lua`), incluyendo teclas **F13+**.
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
 - Apariencia **unificada en Activities**: una sola página para el comportamiento (enable, iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
 - **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí, no en Services; Services queda para servicios del sistema).
@@ -300,7 +296,7 @@ Ya presentes en este fork respecto a un Caelestia “vanilla” típico:
 
 ## Clipboard (historial)
 
-Popout flotante junto al cursor (estilo Caelestia), respaldado por **cliphist** + `wl-clipboard`:
+Popout flotante junto al cursor (estilo Sylphrena), respaldado por **cliphist** + `wl-clipboard`:
 
 - Atajo por defecto: **Super + Shift + V** (Super+V sigue siendo float de ventana; remapeable en Nexus).
 - Buscar, favoritos persistentes (estrella a la derecha; vacía solo al hover), borrar entradas o limpiar historial.
@@ -353,12 +349,12 @@ según el estado git**, con glifo delante del nombre:
 
 ## OpenCode — tema sincronizado con el esquema
 
-**Fuera de la shell**: el TUI de OpenCode usa un tema `caelestia` generado desde el esquema
-M3 de la activity activa. `scripts/caelestia-quiet.py` (paso `_sync_opencode_theme`, justo tras
+**Fuera de la shell**: el TUI de OpenCode usa un tema `sylphrena` generado desde el esquema
+M3 de la activity activa. `scripts/sylphrena-quiet.py` (paso `_sync_opencode_theme`, justo tras
 el theming de GTK/iconos) invoca `scripts/generate-opencode-theme.py` + escribe `cli.json`.
 
-- Salida: `~/.config/opencode/themes/caelestia.json` (formato hue de OpenCode V2, `$schema`
-  `https://opencode.ai/theme.json`) + `~/.config/opencode/cli.json` → `{"theme":{"name":"caelestia","mode":...}}`.
+- Salida: `~/.config/opencode/themes/sylphrena.json` (formato hue de OpenCode V2, `$schema`
+  `https://opencode.ai/theme.json`) + `~/.config/opencode/cli.json` → `{"theme":{"name":"sylphrena","mode":...}}`.
 - Genera la paleta del modo que llega (dark/light): gradas tonales M3 vía `materialyoucolor.hct`
   (bins de hue asignados por cercanía: red/orange/yellow/green/cyan/blue/purple + gray anclada a
   onSurface/outline/background) y overrides con los colores del esquema (background/surface
@@ -366,7 +362,7 @@ el theming de GTK/iconos) invoca `scripts/generate-opencode-theme.py` + escribe 
 - Hot-reload: OpenCode **solo** re-aplica el tema cuando cambia `theme.name` en `cli.json`
   (ni el contenido del theme file ni el resto de settings externos se re-leen en caliente, bugs
   conocidos upstream: issues #815/#37423). Por eso el tema vive en **dos gemelas idénticas**
-  (`caelestia.json` y `caelestia-alt.json`): cada apply con paleta o modo nuevo flipea `cli.json`
+  (`sylphrena.json` y `sylphrena-alt.json`): cada apply con paleta o modo nuevo flipea `cli.json`
   al otro nombre, lo que fuerza la recarga en los TUI abiertos. Si la paleta no cambió se salta
   (no-op, sin churn). La paleta del otro modo se conserva en la gemela entre runs.
 - Peculiaridad del format: los hex DEBEN llevar `#` y **no se aceptan referencias entre tokens**
@@ -378,7 +374,7 @@ el theming de GTK/iconos) invoca `scripts/generate-opencode-theme.py` + escribe 
 La columna derecha del lock (tras CPU/RAM) se parte **35/65**:
 
 - **Arriba**: notificaciones agrupadas por app, con scrollbar cuando no caben.
-- **Abajo**: **Sylphrena**, la misma compañera honorspren del greeter Quickshell: saludo por hora, líneas idle a máquina de escribir, orbe SoftBurst y estados al escribir la contraseña, fallar PAM o desbloquear.
+- **Abajo**: **Sylphrena**, la misma compañera espíritu del viento del greeter Quickshell: saludo por hora, líneas idle a máquina de escribir, orbe SoftBurst y estados al escribir la contraseña, fallar PAM o desbloquear.
 
 El panel del lock usa tokens Material de la sesión (`Tokens` / `Colours`) y PAM (`lock.pam`), no el `Theme`/`Auth` del greeter.
 
@@ -389,13 +385,13 @@ El panel del lock usa tokens Material de la sesión (`Tokens` / `Colours`) y PAM
 La shell **carga el plugin compilado en `~/.local`**, no el del paquete AUR (que vive en
 `/usr/lib/qt6/qml` y no lo pisamos):
 
-- Build **desde la raíz del repo** (`~/.config/quickshell/caelestia`, su `CMakeLists.txt` ya trae
+- Build **desde la raíz del repo** (`~/.config/quickshell/sylphrena`, su `CMakeLists.txt` ya trae
   `cmake_minimum_required`): `cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_MODULES=plugin
   -DCMAKE_INSTALL_PREFIX=$HOME/.local` → `cmake --build build` → `cmake --install build`.
   Con `ENABLE_MODULES=plugin` no se sobrescribe `shell.qml` (la trampa del install solo aplica al
   módulo `shell`); `build/` está gitignored.
 - La shell lo engancha con el pragma `//@ pragma Env QT_ADDITIONAL_PACKAGES_PREFIX_PATH=/home/manu/.local/lib/qt6/qml`
-  en `shell.qml` — verificar tras un restart: el proceso debe mapear `~/.local/lib/qt6/qml/Caelestia/…/*.so`.
+  en `shell.qml` — verificar tras un restart: el proceso debe mapear `~/.local/lib/qt6/qml/Sylphrena/…/*.so`.
 - Cambios C++ concretos: `Requests.get` con **transfer timeout de 15 s** (sin él, una conexión
   colgada dejaba el contador `pending` a 1 para siempre y el spinner de Steam no paraba).
 
@@ -403,6 +399,6 @@ La shell **carga el plugin compilado en `~/.local`**, no el del paquete AUR (que
 
 - Esto es un **fork**: no sustituye la documentación de instalación de upstream ([README](./README.md)).
 - Historial de cambios recientes: [CHANGELOG.md](./CHANGELOG.md).
-- Algunas piezas siguen en evolución; si algo no aparece tras actualizar, reinicia la shell (`caelestia shell -r`) y comprueba los `require(...)` de Hyprland.
-- `scripts/caelestia-quiet.py` evita spamear OSC a todos los PTY al cambiar el tema (recarga Kitty, sync Papirus/kdeglobals, GTK/`colors.css`).
+- Algunas piezas siguen en evolución; si algo no aparece tras actualizar, reinicia la shell (`sylph shell -r`) y comprueba los `require(...)` de Hyprland.
+- `scripts/sylphrena-quiet.py` evita spamear OSC a todos los PTY al cambiar el tema (recarga Kitty, sync Papirus en qt6ct, GTK/`colors.css`).
 - `scripts/apply-activity-style.py` aplica wallpaper + esquema de la activity en un solo proceso.

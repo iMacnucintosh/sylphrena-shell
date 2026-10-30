@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Effects
 import Quickshell
-import Caelestia.Components
-import Caelestia.Config
-import Caelestia.Services
+import Sylphrena.Components
+import Sylphrena.Config
+import Sylphrena.Services
 import qs.components
 import qs.services
 

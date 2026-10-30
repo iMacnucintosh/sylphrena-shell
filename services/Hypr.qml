@@ -4,8 +4,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
-import Caelestia.I18n
-import Caelestia.Services
+import Sylphrena.I18n
+import Sylphrena.Services
 import qs.components.misc
 
 Singleton {
@@ -249,9 +249,9 @@ Singleton {
 
     function reloadDynamicConfs(): void {
         if (usingLua) {
-            extras.batchMessage(['eval hl.bind("Caps_Lock", hl.dsp.global("caelestia:refreshDevices"), { locked = true, non_consuming = true, ignore_mods = true, release = true })', 'eval hl.bind("Num_Lock", hl.dsp.global("caelestia:refreshDevices"), { locked = true, non_consuming = true, ignore_mods = true, release = true })', 'eval hl.bind("code:66", hl.dsp.global("caelestia:refreshDevices"), { locked = true, non_consuming = true, ignore_mods = true, release = true })']);
+            extras.batchMessage(['eval hl.bind("Caps_Lock", hl.dsp.global("sylphrena:refreshDevices"), { locked = true, non_consuming = true, ignore_mods = true, release = true })', 'eval hl.bind("Num_Lock", hl.dsp.global("sylphrena:refreshDevices"), { locked = true, non_consuming = true, ignore_mods = true, release = true })', 'eval hl.bind("code:66", hl.dsp.global("sylphrena:refreshDevices"), { locked = true, non_consuming = true, ignore_mods = true, release = true })']);
         } else {
-            extras.batchMessage(["keyword bindlni ,Caps_Lock,global,caelestia:refreshDevices", "keyword bindlni ,Num_Lock,global,caelestia:refreshDevices", "keyword bindlni ,code:66,global,caelestia:refreshDevices"]);
+            extras.batchMessage(["keyword bindlni ,Caps_Lock,global,sylphrena:refreshDevices", "keyword bindlni ,Num_Lock,global,sylphrena:refreshDevices", "keyword bindlni ,code:66,global,sylphrena:refreshDevices"]);
         }
     }
 
@@ -300,7 +300,7 @@ Singleton {
     FileView {
         id: kbLayoutFile
 
-        path: Quickshell.env("CAELESTIA_XKB_RULES_PATH") || "/usr/share/X11/xkb/rules/base.lst"
+        path: Quickshell.env("SYLPHRENA_XKB_RULES_PATH") || Quickshell.env("SYLPHRENA_XKB_RULES_PATH") || "/usr/share/X11/xkb/rules/base.lst"
         onLoaded: {
             const layoutMatch = text().match(/! layout\n([\s\S]*?)\n\n/);
             if (layoutMatch) {

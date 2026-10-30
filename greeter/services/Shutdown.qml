@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 
 // Arms a fullscreen black curtain, then runs poweroff/reboot so the VT
-// never flashes systemd lines or the Caelestia mark during teardown.
+// never flashes systemd lines or the Sylphrena mark during teardown.
 Singleton {
     id: root
 

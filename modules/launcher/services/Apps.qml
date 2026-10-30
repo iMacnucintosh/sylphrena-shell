@@ -3,9 +3,9 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Caelestia
-import Caelestia.Config
-import Caelestia.Models
+import Sylphrena
+import Sylphrena.Config
+import Sylphrena.Models
 import qs.utils
 
 Searcher {
