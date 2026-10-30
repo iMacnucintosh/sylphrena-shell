@@ -14,6 +14,15 @@ Item {
     property bool welcomed: false
     property int orbSize: 96
 
+    // Absolute timings — not token multiples (those stay ~1–2s and feel unchanged).
+    readonly property int breathMs: 2400
+    readonly property int listenBreathMs: 900
+    readonly property int haloMs: 3200
+    readonly property int ringMs: 4800
+    readonly property int ringStaggerMs: 1800
+    readonly property int orbitMs: 28000
+    readonly property int iconPx: Math.max(24, Math.round(orbSize * 0.68))
+
     property real orbitAngle: 0
 
     implicitWidth: orbSize * 1.55
@@ -39,7 +48,7 @@ Item {
                 loops: Animation.Infinite
 
                 PauseAnimation {
-                    duration: ring.index * 1200
+                    duration: ring.index * root.ringStaggerMs
                 }
                 ParallelAnimation {
                     NumberAnimation {
@@ -47,7 +56,7 @@ Item {
                         property: "scale"
                         from: 1
                         to: 1.85
-                        duration: 3200
+                        duration: root.ringMs
                         easing.type: Easing.OutCubic
                     }
                     NumberAnimation {
@@ -55,7 +64,7 @@ Item {
                         property: "opacity"
                         from: 0.4
                         to: 0
-                        duration: 3200
+                        duration: root.ringMs
                         easing.type: Easing.OutQuad
                     }
                 }
@@ -122,7 +131,9 @@ Item {
             anchors.centerIn: parent
             text: root.welcomed ? "favorite" : root.troubled ? "priority_high" : root.listening ? "hearing" : "auto_awesome"
             color: root.troubled ? Colours.palette.m3onErrorContainer : root.listening ? Colours.palette.m3onTertiaryContainer : Colours.palette.m3onPrimaryContainer
-            fontStyle: Tokens.font.icon.size(Math.round(parent.implicitSize * 0.5)).build()
+            // Bind to root.orbSize — parent.implicitSize can lag and Material Symbols
+            // glyphs (esp. auto_awesome) need a large em size to read as “big”.
+            fontStyle: Tokens.font.icon.size(root.iconPx).build()
             fill: root.welcomed || root.listening ? 1 : 0
 
             Behavior on color {
@@ -140,7 +151,7 @@ Item {
             property: "scale"
             from: 1
             to: 1.05
-            duration: Tokens.anim.durations.expressiveDefaultEffects * 7
+            duration: root.breathMs
             easing.type: Easing.InOutSine
         }
         NumberAnimation {
@@ -148,7 +159,7 @@ Item {
             property: "scale"
             from: 1.05
             to: 1
-            duration: Tokens.anim.durations.expressiveDefaultEffects * 7
+            duration: root.breathMs
             easing.type: Easing.InOutSine
         }
     }
@@ -162,7 +173,7 @@ Item {
             property: "scale"
             from: 1
             to: 1.1
-            duration: 520
+            duration: root.listenBreathMs
             easing.type: Easing.InOutSine
         }
         NumberAnimation {
@@ -170,7 +181,7 @@ Item {
             property: "scale"
             from: 1.1
             to: 1
-            duration: 520
+            duration: root.listenBreathMs
             easing.type: Easing.InOutSine
         }
     }
@@ -184,7 +195,7 @@ Item {
             property: "scale"
             from: 0.94
             to: 1.1
-            duration: Math.round(Tokens.anim.durations.expressiveDefaultEffects * 9)
+            duration: root.haloMs
             easing.type: Easing.InOutSine
         }
         NumberAnimation {
@@ -192,7 +203,7 @@ Item {
             property: "scale"
             from: 1.1
             to: 0.94
-            duration: Math.round(Tokens.anim.durations.expressiveDefaultEffects * 9)
+            duration: root.haloMs
             easing.type: Easing.InOutSine
         }
     }
@@ -200,7 +211,7 @@ Item {
     NumberAnimation on orbitAngle {
         from: 0
         to: 360
-        duration: 19000
+        duration: root.orbitMs
         loops: Animation.Infinite
         running: true
         easing.type: Easing.Linear
