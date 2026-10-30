@@ -40,7 +40,7 @@ Item {
                 loops: Animation.Infinite
 
                 PauseAnimation {
-                    duration: ring.index * 900
+                    duration: ring.index * 1200
                 }
                 ParallelAnimation {
                     NumberAnimation {
@@ -48,7 +48,7 @@ Item {
                         property: "scale"
                         from: 1
                         to: 1.85
-                        duration: 2400
+                        duration: 3200
                         easing.type: Easing.OutCubic
                     }
                     NumberAnimation {
@@ -56,7 +56,7 @@ Item {
                         property: "opacity"
                         from: 0.4
                         to: 0
-                        duration: 2400
+                        duration: 3200
                         easing.type: Easing.OutQuad
                     }
                 }
@@ -123,7 +123,7 @@ Item {
             anchors.centerIn: parent
             text: root.welcomed ? "favorite" : root.troubled ? "priority_high" : root.listening ? "hearing" : "auto_awesome"
             color: root.troubled ? Theme.palette.m3onErrorContainer : root.listening ? Theme.palette.m3onTertiaryContainer : Theme.palette.m3onPrimaryContainer
-            iconSize: Math.round(parent.implicitSize * 0.38)
+            iconSize: Math.round(parent.implicitSize * 0.5)
             fill: root.welcomed || root.listening ? 1 : 0
 
             Behavior on color {
@@ -141,7 +141,7 @@ Item {
             property: "scale"
             from: 1
             to: 1.05
-            duration: Theme.durations.extraLarge
+            duration: Math.round(Theme.durations.extraLarge * 1.4)
             easing.type: Easing.InOutSine
         }
         NumberAnimation {
@@ -149,7 +149,7 @@ Item {
             property: "scale"
             from: 1.05
             to: 1
-            duration: Theme.durations.extraLarge
+            duration: Math.round(Theme.durations.extraLarge * 1.4)
             easing.type: Easing.InOutSine
         }
     }
@@ -163,7 +163,7 @@ Item {
             property: "scale"
             from: 1
             to: 1.1
-            duration: 380
+            duration: 520
             easing.type: Easing.InOutSine
         }
         NumberAnimation {
@@ -171,7 +171,7 @@ Item {
             property: "scale"
             from: 1.1
             to: 1
-            duration: 380
+            duration: 520
             easing.type: Easing.InOutSine
         }
     }
@@ -185,7 +185,7 @@ Item {
             property: "scale"
             from: 0.94
             to: 1.1
-            duration: Math.round(Theme.durations.extraLarge * 1.3)
+            duration: Math.round(Theme.durations.extraLarge * 1.8)
             easing.type: Easing.InOutSine
         }
         NumberAnimation {
@@ -193,7 +193,7 @@ Item {
             property: "scale"
             from: 1.1
             to: 0.94
-            duration: Math.round(Theme.durations.extraLarge * 1.3)
+            duration: Math.round(Theme.durations.extraLarge * 1.8)
             easing.type: Easing.InOutSine
         }
     }
@@ -201,7 +201,7 @@ Item {
     NumberAnimation on orbitAngle {
         from: 0
         to: 360
-        duration: 14000
+        duration: 19000
         loops: Animation.Infinite
         running: true
         easing.type: Easing.Linear
