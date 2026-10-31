@@ -5,9 +5,11 @@ import Quickshell.Widgets
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
+import qs.components.controls
 import qs.services
 import qs.utils
 import qs.modules.nexus.common
+import qs.modules.launcher.services
 
 PageBase {
     id: root
@@ -54,6 +56,7 @@ PageBase {
 
             ColumnLayout {
                 Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
                 spacing: Tokens.spacing.extraSmall / 2
 
                 StyledText {
@@ -71,6 +74,22 @@ PageBase {
                     font: Tokens.font.body.small
                     wrapMode: Text.WordWrap
                 }
+            }
+
+            IconButton {
+                // Match the full header row (icon + title + description).
+                Layout.fillHeight: true
+                Layout.preferredWidth: height
+                Layout.minimumWidth: height
+                Layout.maximumWidth: height
+                icon: "open_in_new"
+                type: IconButton.Tonal
+                isRound: true
+                font: Tokens.font.icon.medium
+                inactiveColour: Colours.tPalette.m3surfaceContainerHigh
+                inactiveOnColour: Colours.palette.m3onSurfaceVariant
+                enabled: !!root.app
+                onClicked: Apps.launch(root.app)
             }
         }
 

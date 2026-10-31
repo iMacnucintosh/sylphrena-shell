@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick.Layouts
 import Sylphrena.Config
 import Sylphrena.I18n
+import qs.modules.nexus
 import qs.modules.nexus.common
 
 PageBase {
@@ -61,19 +62,12 @@ PageBase {
             onToggled: GlobalConfig.bar.workspaces.perMonitor = checked
         }
 
-        ToggleRow {
+        NavRow {
             last: true
-            text: Tr.trCtx("Show unoccupied", "bar workspaces")
-            subtext: Tr.tr("Show workspaces that are inactive and empty")
-            checked: Config.bar.workspaces.showUnoccupied
-            onToggled: GlobalConfig.bar.workspaces.showUnoccupied = checked
-        }
-
-        InfoRow {
-            icon: "grid_view"
-            label: Tr.tr("Window icons on the desktops")
+            icon: "dashboard_customize"
+            text: Tr.tr("Window icons on the desktops")
             subtext: Tr.tr("Showing windows and their icons lives in Activities → Desktops in the bar")
-            value: Tr.trCtx("Configure", "button")
+            onClicked: root.nState.currentPageIdx = PageRegistry.idxOf("activities")
         }
     }
 }

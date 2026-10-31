@@ -150,6 +150,17 @@ Singleton {
         ]);
     }
 
+    function syncSeekerTransparency(): void {
+        // Live-update Seeker surfaces when Transparency is toggled (no full scheme apply).
+        Quickshell.execDetached([
+            "python3",
+            Quickshell.shellPath("scripts/sync-seeker-transparency.py"),
+            root.transparency.enabled ? "--enabled" : "--no-enabled",
+            "--base",
+            String(root.transparency.base)
+        ]);
+    }
+
     function reloadHyprRules(): void {
         const ignoreAlpha = Math.max(0, transparency.base - 0.03);
         const msgs = [];
@@ -269,12 +280,14 @@ Singleton {
         readonly property real layers: Math.max(0, Math.min(1, Tokens.transparency.layers))
 
         onEnabledChanged: {
+            root.syncSeekerTransparency();
             if (enabled)
                 root.requestReloadHyprRules();
             else
                 cAnimCompleteTimer.start();
         }
         onBaseChanged: {
+            root.syncSeekerTransparency();
             if (root.lastBaseTransparency > base)
                 root.requestReloadHyprRules();
             else

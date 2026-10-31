@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 13:02+0100\n"
+"POT-Creation-Date: 2026-10-30 15:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,8 @@ msgctxt "button"
 msgid "Select"
 msgstr ""
 
-#: components/filedialog/DialogButtons.qml modules/bar/popouts/VpnOtp.qml
+#: components/filedialog/DialogButtons.qml
+#: modules/bar/popouts/UpdatesPassword.qml modules/bar/popouts/VpnOtp.qml
 #: modules/bar/popouts/VpnSettings.qml modules/bar/popouts/WirelessPassword.qml
 #: modules/launcher/DesktopEditDialog.qml
 #: modules/nexus/common/DialogRowButton.qml
@@ -110,15 +111,15 @@ msgid "Battery is charging"
 msgstr ""
 
 #: daemons/GameMode.qml
-msgid "Game mode enabled"
+msgid "Compact layout enabled"
 msgstr ""
 
 #: daemons/GameMode.qml
-msgid "Disabled Hyprland animations, blur, gaps and shadows"
+msgid "Left bar only; no frame, gaps or window rounding"
 msgstr ""
 
 #: daemons/GameMode.qml
-msgid "Game mode disabled"
+msgid "Compact layout disabled"
 msgstr ""
 
 #: daemons/GameMode.qml
@@ -259,6 +260,15 @@ msgid "Remaining: %1%"
 msgstr ""
 
 #: modules/bar/popouts/Battery.qml
+msgid "No battery detected"
+msgstr ""
+
+#: modules/bar/popouts/Battery.qml
+#, qt-format
+msgid "Power profile: %1"
+msgstr ""
+
+#: modules/bar/popouts/Battery.qml
 #, qt-format
 msgid "Time remaining: %1"
 msgstr ""
@@ -320,7 +330,8 @@ msgid_plural "%n devices available"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/bar/popouts/ClockPopout.qml
+#: modules/bar/popouts/ClockPopout.qml modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Timers"
 msgstr ""
 
@@ -408,15 +419,49 @@ msgctxt "button"
 msgid "Back"
 msgstr ""
 
+#: modules/bar/popouts/UpdatesPassword.qml modules/nexus/pages/UpdatesPage.qml
+msgid "Authenticate"
+msgstr ""
+
+#: modules/bar/popouts/UpdatesPassword.qml
+msgid "Enter your password to update the system in the background."
+msgstr ""
+
+#: modules/bar/popouts/UpdatesPassword.qml
+#: modules/bar/popouts/WirelessPassword.qml
+#: modules/nexus/pages/network/AddNetworkPage.qml
+#: modules/nexus/pages/UpdatesPage.qml
+msgid "Password"
+msgstr ""
+
+#: modules/bar/popouts/UpdatesPassword.qml services/Updates.qml
+msgid "Authenticating…"
+msgstr ""
+
+#: modules/bar/popouts/UpdatesPassword.qml modules/nexus/pages/UpdatesPage.qml
+msgid "Update"
+msgstr ""
+
+#: modules/bar/popouts/UpdatesPopout.qml
+msgid "Updating…"
+msgstr ""
+
 #: modules/bar/popouts/UpdatesPopout.qml modules/nexus/PageRegistry.qml
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 #: modules/nexus/pages/UpdatesPage.qml
 msgid "Updates"
 msgstr ""
 
-#: modules/bar/popouts/UpdatesPopout.qml modules/nexus/PageRegistry.qml
-#: modules/nexus/pages/UpdatesPage.qml
-msgid "System updates"
+#. TRANSLATORS: %1 = update count, %2 = total download size (e.g. "12.3 MiB")
+#: modules/bar/popouts/UpdatesPopout.qml
+#, qt-format
+msgid "%1 Updates (%2)"
+msgstr ""
+
+#. TRANSLATORS: %1 = update count
+#: modules/bar/popouts/UpdatesPopout.qml
+#, qt-format
+msgid "%1 Updates"
 msgstr ""
 
 #: modules/bar/popouts/UpdatesPopout.qml modules/nexus/pages/UpdatesPage.qml
@@ -427,11 +472,8 @@ msgstr ""
 msgid "Update system"
 msgstr ""
 
-#: modules/bar/popouts/UpdatesPopout.qml
-msgid "Open in Nexus"
-msgstr ""
-
 #: modules/bar/popouts/Vpn.qml modules/bar/popouts/VpnOtp.qml
+#: modules/nexus/pages/ComplementsPage.qml
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 #: services/MadisonVpn.qml
 msgid "Madison VPN"
@@ -519,12 +561,7 @@ msgstr ""
 msgid "Connecting..."
 msgstr ""
 
-#: modules/bar/popouts/WirelessPassword.qml
-#: modules/nexus/pages/network/AddNetworkPage.qml
-msgid "Password"
-msgstr ""
-
-#: modules/clipboard/Panel.qml modules/nexus/pages/ServicesPage.qml
+#: modules/clipboard/Panel.qml modules/nexus/pages/ComplementsPage.qml
 msgid "Clipboard"
 msgstr ""
 
@@ -560,6 +597,17 @@ msgstr ""
 msgid "Weather"
 msgstr ""
 
+#: modules/dashboard/Content.qml modules/dashboard/GamesTab.qml
+#: modules/nexus/pages/ShellPage.qml
+#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
+msgid "Games"
+msgstr ""
+
+#: modules/dashboard/dash/HydrationWidget.qml
+#, qt-format
+msgid "%1 / %2 ml"
+msgstr ""
+
 #: modules/dashboard/dash/Media.qml
 msgid "No media"
 msgstr ""
@@ -582,6 +630,190 @@ msgstr ""
 #, qt-format
 msgctxt "system uptime"
 msgid "up %1"
+msgstr ""
+
+#. TRANSLATORS: %1 = a number
+#: modules/dashboard/games/AchievementList.qml
+#: modules/nexus/pages/DisplayPage.qml utils/Strings.qml
+#, qt-format
+msgid "%1%"
+msgstr ""
+
+#: modules/dashboard/games/AchievementList.qml
+#: modules/dashboard/games/FocusHero.qml modules/dashboard/GamesTab.qml
+msgid "Achievements"
+msgstr ""
+
+#: modules/dashboard/games/AchievementList.qml
+#, qt-format
+msgid "%1 / %2"
+msgstr ""
+
+#: modules/dashboard/games/AchievementList.qml
+#, qt-format
+msgid "Locked · %1"
+msgstr ""
+
+#: modules/dashboard/games/ActivityCard.qml
+#, qt-format
+msgid "Activity in %1"
+msgstr ""
+
+#: modules/dashboard/games/ActivityCard.qml
+msgid "Sessions"
+msgstr ""
+
+#: modules/dashboard/games/ActivityCard.qml
+msgid "Total"
+msgstr ""
+
+#: modules/dashboard/games/ActivityCard.qml
+msgid "Longest"
+msgstr ""
+
+#: modules/dashboard/games/ActivityCard.qml
+msgid "Less"
+msgstr ""
+
+#: modules/dashboard/games/ActivityCard.qml
+msgid "More"
+msgstr ""
+
+#: modules/dashboard/games/ActivityCard.qml
+msgid "Dots mark achievement days. Playtime is recorded from now on."
+msgstr ""
+
+#: modules/dashboard/games/ActivityCard.qml
+msgid "Playtime is recorded while the shell is running."
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml
+msgid "Playing now"
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml
+msgid "Non-Steam"
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml
+msgid "Played recently"
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml
+#, qt-format
+msgid "Last played %1"
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml
+msgid "From your library"
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml
+msgid "No recently played games"
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml
+#, qt-format
+msgid "%1 in 2 weeks"
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml
+#, qt-format
+msgid "%1 of %2 achievements"
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml modules/dashboard/GamesTab.qml
+msgid "Loading…"
+msgstr ""
+
+#: modules/dashboard/games/FocusHero.qml
+msgid "Perfect!"
+msgstr ""
+
+#: modules/dashboard/games/ProfileHeader.qml
+#, qt-format
+msgid "Playing %1"
+msgstr ""
+
+#: modules/dashboard/games/ProfileHeader.qml
+msgid "Level"
+msgstr ""
+
+#: modules/dashboard/games/SessionList.qml
+msgid "Recent sessions"
+msgstr ""
+
+#: modules/dashboard/games/SessionList.qml
+msgid "No sessions recorded yet"
+msgstr ""
+
+#: modules/dashboard/games/SessionList.qml
+msgid "Install Non-Steam Playtimes (Millennium) to track sessions"
+msgstr ""
+
+#: modules/dashboard/games/SessionList.qml services/NotifData.qml
+msgid "now"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+msgid "Configure Steam"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+msgid "Could not load Steam data"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+msgid "Add your API key and Steam ID in Nexus → Complements."
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+msgid "in your library"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+msgid "Hours"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+#, qt-format
+msgid "+%1 in 2 weeks"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+msgid "played in total"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+#, qt-format
+msgid "Top: %1"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+#, qt-format
+msgid "%1 / %2 unlocked"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+#, qt-format
+msgid "%1 perfect games"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+msgid "Friends"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+#, qt-format
+msgid "online · %1 in game"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+msgid "Private"
+msgstr ""
+
+#: modules/dashboard/GamesTab.qml
+msgid "No achievements unlocked yet"
 msgstr ""
 
 #: modules/dashboard/Media.qml modules/lock/Media.qml
@@ -1127,6 +1359,63 @@ msgstr ""
 msgid "Num lock is ON."
 msgstr ""
 
+#: modules/lock/CompanionPanel.qml
+msgid "Good morning"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "Good afternoon"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "Good evening"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "There you are! I was looking for you in the winds"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "Breath before silence"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "The crack before the steel"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "The steps before the goal"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "The sky is still… a good moment for the journey"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "I can wait. Wind spirits are patient… sometimes"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "Your bond with this machine is not closed yet"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "Tell me a secret: the password will do"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+#, qt-format
+msgid "The bond closes! Welcome home, %1"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "I'm listening… is it really you?"
+msgstr ""
+
+#: modules/lock/CompanionPanel.qml
+msgid "That wasn't very honorable. Let's try again"
+msgstr ""
+
 #. TRANSLATORS: keep the label padded to 4 chars so the column stays aligned
 #: modules/lock/Fetch.qml
 #, qt-format
@@ -1309,41 +1598,40 @@ msgstr ""
 msgid "This page will be available in a future update."
 msgstr ""
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/ShellPage.qml
-#: services/Keybinds.qml
-msgid "Shell"
+#: modules/nexus/PageRegistry.qml
+msgid "Desktop & appearance"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Activities, wallpaper and colours"
+msgid "Input"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Wi-Fi, ethernet, VPN"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/BluetoothPage.qml
-msgid "Connected devices"
+msgid "Devices"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Bluetooth, pairing"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/AudioPage.qml
-msgid "Audio"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml
-msgid "App volumes, sound devices"
+msgctxt "nexus sidebar category"
+msgid "Apps"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AboutPage.qml
-msgid "Plugins"
+#: services/Keybinds.qml
+msgid "System"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Manage plugins"
+msgctxt "nexus sidebar category"
+msgid "About"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/ShellPage.qml
+#: services/Keybinds.qml
+msgid "Activities"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml
+msgid "Behaviour, shortcuts and the unified look (general and per-activity)"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/PanelsPage.qml
@@ -1352,6 +1640,42 @@ msgstr ""
 
 #: modules/nexus/PageRegistry.qml
 msgid "Dashboard, taskbar, launcher, sidebar"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/ComplementsPage.qml
+msgid "Complements"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml
+msgid "Optional fork features (VPN, clipboard, Steam, …)"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
+msgid "Keyboard & mouse"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml
+msgid "Shell shortcuts, remapping and mouse focus"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml
+msgid "Wi-Fi, ethernet, VPN (NetworkManager)"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/BluetoothPage.qml
+msgid "Connected devices"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml
+msgid "Bluetooth, pairing, displays"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/AudioPage.qml
+msgid "Audio"
+msgstr ""
+
+#: modules/nexus/PageRegistry.qml
+msgid "App volumes, sound devices"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AppsPage.qml
@@ -1364,12 +1688,8 @@ msgstr ""
 msgid "Default apps, favourites, hidden apps"
 msgstr ""
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/ServicesPage.qml
-msgid "Services"
-msgstr ""
-
-#: modules/nexus/PageRegistry.qml
-msgid "Poll intervals, lyrics backend"
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/UpdatesPage.qml
+msgid "System updates"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/LanguageAndRegion.qml
@@ -1380,12 +1700,12 @@ msgstr ""
 msgid "UI language, weather location, display units"
 msgstr ""
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
-msgid "Keyboard & mouse"
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/ServicesPage.qml
+msgid "Tuning"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Shell shortcuts and remapping"
+msgid "Notifications, polling, media"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AboutPage.qml
@@ -1394,10 +1714,6 @@ msgstr ""
 
 #: modules/nexus/PageRegistry.qml
 msgid "System information, credits"
-msgstr ""
-
-#: modules/nexus/pages/AboutPage.qml services/Keybinds.qml
-msgid "System"
 msgstr ""
 
 #: modules/nexus/pages/AboutPage.qml
@@ -1434,6 +1750,10 @@ msgstr ""
 #: modules/nexus/pages/AboutPage.qml
 msgctxt "the sylphrena command line tool"
 msgid "CLI"
+msgstr ""
+
+#: modules/nexus/pages/AboutPage.qml
+msgid "Plugins"
 msgstr ""
 
 #: modules/nexus/pages/AboutPage.qml
@@ -1571,6 +1891,34 @@ msgid "%n app playing audio"
 msgid_plural "%n apps playing audio"
 msgstr[0] ""
 msgstr[1] ""
+
+#: modules/nexus/pages/AudioPage.qml
+msgid "Scroll / OSD"
+msgstr ""
+
+#: modules/nexus/pages/AudioPage.qml
+msgid "Volume step"
+msgstr ""
+
+#: modules/nexus/pages/AudioPage.qml
+msgid "Amount the volume changes per scroll (%)"
+msgstr ""
+
+#: modules/nexus/pages/AudioPage.qml
+msgid "Brightness step"
+msgstr ""
+
+#: modules/nexus/pages/AudioPage.qml
+msgid "Amount the brightness changes per scroll (%)"
+msgstr ""
+
+#: modules/nexus/pages/AudioPage.qml
+msgid "Max volume"
+msgstr ""
+
+#: modules/nexus/pages/AudioPage.qml
+msgid "Upper limit for output volume (%)"
+msgstr ""
 
 #: modules/nexus/pages/bluetooth/BluetoothPairing.qml
 #: modules/nexus/pages/BluetoothPage.qml
@@ -1711,6 +2059,212 @@ msgstr ""
 msgid "Allow nearby devices to pair with this one"
 msgstr ""
 
+#: modules/nexus/pages/BluetoothPage.qml modules/nexus/pages/DisplayPage.qml
+msgctxt "monitor settings"
+msgid "Display"
+msgstr ""
+
+#: modules/nexus/pages/BluetoothPage.qml
+msgid "Output modes, scale, adaptive sync (VRR)"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml modules/nexus/pages/UpdatesPage.qml
+msgid "Available"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "FortiClient / openfortivpn status icon and connect flow"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Disabled — tunnel and related processes are stopped"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Quick timers"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Disabled — active timers are cleared"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Floating popout (Super+Shift+V) backed by cliphist"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Disabled — watcher processes are stopped"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "History size"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Maximum number of clipboard entries to keep"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml services/Hydration.qml
+msgid "Hydration"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+#, qt-format
+msgid "%1 ml · reminder every %2 min"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Replaces the dashboard calendar with a water intake tracker"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Disabled — calendar stays on the dashboard"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Daily goal"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Target water intake per day (ml)"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Reminder interval"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Minutes without a sip before a reminder"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Preset 1"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Quick-add button amount (ml)"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Preset 2"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Preset 3"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Preset 4"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Games (Steam)"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Steam API key"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "From steamcommunity.com/dev/apikey"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "API key"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Steam ID"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "SteamID64, vanity name, or profile URL"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Steam ID or vanity"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Auto refresh"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Minutes between automatic Steam updates"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Refresh now"
+msgstr ""
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Madison VPN config: ~/.config/openfortivpn/config (popout gear). Scripts: ~/.local/share/madison-vpn/"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml
+msgid "No displays detected"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml
+msgid "Resolution & refresh rate"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml
+msgid "Scale"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml
+msgid "Adaptive Sync"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml services/Displays.qml services/Hypr.qml
+msgid "Never"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml services/Displays.qml
+msgid "Automatic"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml services/Displays.qml
+msgid "Always"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml
+msgid "Currently active on this output"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml
+msgid "Currently inactive on this output"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml
+#, qt-format
+msgid "This connection tops out at %1 Hz. The panel may support a higher rate over DisplayPort."
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml
+#: modules/nexus/pages/panels/UtilitiesPanel.qml
+msgid "Compact layout"
+msgstr ""
+
+#: modules/nexus/pages/DisplayPage.qml
+msgid "Session toggle for zero gaps/rounding lives in Panels → Utilities"
+msgstr ""
+
+#: modules/nexus/pages/KeybindsPage.qml
+msgid "Mouse focus"
+msgstr ""
+
+#: modules/nexus/pages/KeybindsPage.qml
+msgid "Focus windows"
+msgstr ""
+
+#: modules/nexus/pages/KeybindsPage.qml
+msgid "On hover focuses as you move; on click keeps typing until you click (better with “Focus last window”)."
+msgstr ""
+
 #: modules/nexus/pages/KeybindsPage.qml
 msgid "Click a shortcut, then press a key or mouse button. Esc cancels."
 msgstr ""
@@ -1777,11 +2331,31 @@ msgid "The language used in the shell UI"
 msgstr ""
 
 #: modules/nexus/pages/LanguageAndRegion.qml
-msgid "Location picker coming soon"
+msgid "Detecting location…"
 msgstr ""
 
 #: modules/nexus/pages/LanguageAndRegion.qml
-msgid "Choose your weather location on a map in a future update"
+msgid "Manual location"
+msgstr ""
+
+#: modules/nexus/pages/LanguageAndRegion.qml
+msgid "Automatic (IP)"
+msgstr ""
+
+#: modules/nexus/pages/LanguageAndRegion.qml
+msgid "Search for a city"
+msgstr ""
+
+#: modules/nexus/pages/LanguageAndRegion.qml
+msgid "Searching…"
+msgstr ""
+
+#: modules/nexus/pages/LanguageAndRegion.qml
+msgid "No cities found"
+msgstr ""
+
+#: modules/nexus/pages/LanguageAndRegion.qml
+msgid "Use current location"
 msgstr ""
 
 #: modules/nexus/pages/LanguageAndRegion.qml
@@ -2379,6 +2953,34 @@ msgstr ""
 msgid "Show seconds"
 msgstr ""
 
+#. TRANSLATORS: %1-%4 = timer preset durations in minutes
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Presets: %1 · %2 · %3 · %4 min"
+msgstr ""
+
+#. TRANSLATORS: %1 = preset index (1-based)
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Preset %1"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Quick timer button duration (min)"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Hub for enabling Timers: Complements"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Configure Timers in Complements"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Complements owns the opt-in toggle; presets above stay on the clock"
+msgstr ""
+
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 msgid "Lock keys"
 msgstr ""
@@ -2415,6 +3017,26 @@ msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 msgid "Show a details popout when hovering the status icons"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Auto-hide"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Updates only when relevant"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "The updates badge appears only with pending or installing packages"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Visible while the complement is enabled — configure in Complements"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
+msgid "Hidden — enable it in Complements"
 msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarTray.qml
@@ -2490,23 +3112,11 @@ msgid "Hide workspaces not on the current monitor"
 msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgctxt "bar workspaces"
-msgid "Show windows"
+msgid "Window icons on the desktops"
 msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgid "Show icons of open windows on each workspace"
-msgstr ""
-
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgctxt "bar workspaces"
-msgid "Windows on special workspaces"
-msgstr ""
-
-#. TRANSLATORS: maximum number of window icons shown per workspace
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgctxt "bar workspaces"
-msgid "Max window icons"
+msgid "Showing windows and their icons lives in Activities → Desktops in the bar"
 msgstr ""
 
 #: modules/nexus/pages/panels/TaskbarPanel.qml
@@ -2643,11 +3253,7 @@ msgid "Prevent sleep / idle suspend"
 msgstr ""
 
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
-msgid "Game mode"
-msgstr ""
-
-#: modules/nexus/pages/panels/UtilitiesPanel.qml
-msgid "Toggle game mode"
+msgid "Maximise screen use: no frame or gaps"
 msgstr ""
 
 #: modules/nexus/pages/panels/UtilitiesPanel.qml services/Keybinds.qml
@@ -2775,7 +3381,7 @@ msgid "Charging changes"
 msgstr ""
 
 #: modules/nexus/pages/services/NotificationsPage.qml
-msgid "Game mode changes"
+msgid "Compact layout changes"
 msgstr ""
 
 #: modules/nexus/pages/services/NotificationsPage.qml
@@ -2843,22 +3449,6 @@ msgstr ""
 msgid "Notifications, toasts, timeouts"
 msgstr ""
 
-#: modules/nexus/pages/ServicesPage.qml services/Keybinds.qml
-msgid "Clipboard history"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Floating popout (Super+Shift+V) backed by cliphist"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "History size"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Maximum number of clipboard entries to keep"
-msgstr ""
-
 #: modules/nexus/pages/ServicesPage.qml
 msgid "Polling"
 msgstr ""
@@ -2915,34 +3505,6 @@ msgid "Auto"
 msgstr ""
 
 #: modules/nexus/pages/ServicesPage.qml
-msgid "Input increments"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Volume step"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Amount the volume changes per scroll (%)"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Brightness step"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Amount the brightness changes per scroll (%)"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Max volume"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Upper limit for output volume (%)"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
 msgid "Service tuning"
 msgstr ""
 
@@ -2953,14 +3515,6 @@ msgstr ""
 
 #: modules/nexus/pages/ServicesPage.qml
 msgid "Number of bars in the audio visualisers"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Smart colour scheme"
-msgstr ""
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Derive theme mode and variant from the wallpaper"
 msgstr ""
 
 #: modules/nexus/pages/ServicesPage.qml
@@ -2988,11 +3542,6 @@ msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
 msgid "Work outline"
-msgstr ""
-
-#: modules/nexus/pages/ShellPage.qml
-#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
-msgid "Games"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
@@ -3139,14 +3688,70 @@ msgstr ""
 msgid "Use real application icons; when off, show category icons under the workspace marker"
 msgstr ""
 
-#: modules/nexus/pages/ShellPage.qml services/Keybinds.qml
-msgid "Activities"
+#: modules/nexus/pages/ShellPage.qml
+msgid "Cross-activity desktop shortcuts"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Allow next/previous desktop shortcuts to leave the current activity; when off, they stay inside it"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml modules/nexus/pages/WallpaperAndStyle.qml
+msgid "Display wallpaper"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Turns the wallpaper machinery on or off shell-wide"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Smart colour scheme"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Derive theme mode and variant from the wallpaper (activity look still wins)"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Desktops in the bar"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgctxt "bar workspaces"
+msgid "Show windows"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Show icons of open windows on each workspace"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgctxt "bar workspaces"
+msgid "Windows on special workspaces"
+msgstr ""
+
+#. TRANSLATORS: maximum number of window icons shown per workspace
+#: modules/nexus/pages/ShellPage.qml
+msgctxt "bar workspaces"
+msgid "Max window icons"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Workspace look on the taskbar"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Indicators, trail and occupied background live in Panels → Taskbar → Workspaces"
 msgstr ""
 
 #. TRANSLATORS: %1 = workspace id range, e.g. "1–2"
 #: modules/nexus/pages/ShellPage.qml
 #, qt-format
 msgid "Workspaces %1"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "General look"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
@@ -3242,6 +3847,10 @@ msgid "New activity"
 msgstr ""
 
 #: modules/nexus/pages/UpdatesPage.qml
+msgid "Enter your password to start the system update."
+msgstr ""
+
+#: modules/nexus/pages/UpdatesPage.qml
 msgid "Updating single packages is blocked by default due to high risk of system breakage. Enable it in settings?"
 msgstr ""
 
@@ -3251,15 +3860,7 @@ msgid "Enable"
 msgstr ""
 
 #: modules/nexus/pages/UpdatesPage.qml
-msgid "Available"
-msgstr ""
-
-#: modules/nexus/pages/UpdatesPage.qml
 msgid "Info"
-msgstr ""
-
-#: modules/nexus/pages/UpdatesPage.qml
-msgid "Update"
 msgstr ""
 
 #: modules/nexus/pages/UpdatesPage.qml
@@ -3272,6 +3873,10 @@ msgstr ""
 
 #: modules/nexus/pages/UpdatesPage.qml
 msgid "Clear orphans"
+msgstr ""
+
+#: modules/nexus/pages/UpdatesPage.qml
+msgid "Output"
 msgstr ""
 
 #: modules/nexus/pages/UpdatesSettings.qml
@@ -3410,10 +4015,6 @@ msgstr ""
 
 #: modules/nexus/pages/WallpaperAndStyle.qml
 msgid "Wallpaper disabled"
-msgstr ""
-
-#: modules/nexus/pages/WallpaperAndStyle.qml
-msgid "Display wallpaper"
 msgstr ""
 
 #. TRANSLATORS: %1/%2 = opacity values from 0 to 1 for the base surface and layered surfaces
@@ -3852,9 +4453,47 @@ msgstr ""
 msgid "Binary data"
 msgstr ""
 
+#: services/Displays.qml
+#, qt-format
+msgid "%1×%2 · %3 Hz"
+msgstr ""
+
+#: services/Displays.qml
+msgid "Adaptive Sync stays on, including the desktop"
+msgstr ""
+
+#: services/Displays.qml
+msgid "Adaptive Sync only while a window is fullscreen"
+msgstr ""
+
+#: services/Displays.qml
+msgid "Fixed refresh rate; least flicker on flaky HDMI FreeSync"
+msgstr ""
+
+#: services/Displays.qml
+msgid "Could not read monitor list"
+msgstr ""
+
+#: services/Hydration.qml
+msgid "Time to drink water"
+msgstr ""
+
+#: services/Hydration.qml
+#, qt-format
+msgid "%1 / %2 ml — tap an amount to log it"
+msgstr ""
+
 #: services/Hypr.qml
 msgctxt "keyboard layout"
 msgid "Unknown"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "On click"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "On hover"
 msgstr ""
 
 #: services/Keybinds.qml
@@ -3922,6 +4561,14 @@ msgid "Move focus to the window below"
 msgstr ""
 
 #: services/Keybinds.qml
+msgid "Focus last window"
+msgstr ""
+
+#: services/Keybinds.qml
+msgid "Toggle focus between the current and previously focused window (any desktop or activity)"
+msgstr ""
+
+#: services/Keybinds.qml
 msgid "Move window (drag)"
 msgstr ""
 
@@ -3978,7 +4625,7 @@ msgid "Next workspace"
 msgstr ""
 
 #: services/Keybinds.qml
-msgid "Switch to the next existing workspace"
+msgid "Switch to the next desktop (respects activity boundaries unless cross-activity is enabled)"
 msgstr ""
 
 #: services/Keybinds.qml
@@ -3986,7 +4633,7 @@ msgid "Previous workspace"
 msgstr ""
 
 #: services/Keybinds.qml
-msgid "Switch to the previous existing workspace"
+msgid "Switch to the previous desktop (respects activity boundaries unless cross-activity is enabled)"
 msgstr ""
 
 #: services/Keybinds.qml
@@ -4178,6 +4825,10 @@ msgid "Frozen region capture to the clipboard"
 msgstr ""
 
 #: services/Keybinds.qml
+msgid "Clipboard history"
+msgstr ""
+
+#: services/Keybinds.qml
 msgid "Open clipboard history and paste into the focused window"
 msgstr ""
 
@@ -4187,6 +4838,10 @@ msgstr ""
 
 #: services/Keybinds.qml
 msgid "Applications"
+msgstr ""
+
+#: services/Keybinds.qml
+msgid "Shell"
 msgstr ""
 
 #: services/Keybinds.qml
@@ -4247,6 +4902,10 @@ msgstr ""
 msgid "Could not start the VPN tunnel (code %1)."
 msgstr ""
 
+#: services/MadisonVpn.qml
+msgid "Complement disabled"
+msgstr ""
+
 #: services/MadisonVpn.qml services/VPN.qml
 msgid "VPN disconnected"
 msgstr ""
@@ -4273,10 +4932,6 @@ msgstr ""
 #: services/Nmcli.qml
 #, qt-format
 msgid "%1 Mbps"
-msgstr ""
-
-#: services/NotifData.qml
-msgid "now"
 msgstr ""
 
 #: services/NotifData.qml
@@ -4317,6 +4972,122 @@ msgstr ""
 #, qt-format
 msgctxt "track artist and title"
 msgid "%1 - %2"
+msgstr ""
+
+#: services/Steam.qml
+msgid "Disabled — Games tab is hidden"
+msgstr ""
+
+#: services/Steam.qml
+msgid "Needs API key and Steam ID"
+msgstr ""
+
+#: services/Steam.qml
+msgid "Loading Steam data…"
+msgstr ""
+
+#: services/Steam.qml
+#, qt-format
+msgid "Connected as %1"
+msgstr ""
+
+#: services/Steam.qml
+msgid "Ready"
+msgstr ""
+
+#: services/steam/SteamAchievements.qml
+msgid "Playtime tracked by Millennium"
+msgstr ""
+
+#: services/steam/SteamAchievements.qml
+msgid "Non-Steam game — no Steam achievements"
+msgstr ""
+
+#: services/steam/SteamAchievements.qml
+msgid "Steam achievements are private for this profile"
+msgstr ""
+
+#: services/steam/SteamAchievements.qml
+msgid "This game has no achievements"
+msgstr ""
+
+#: services/steam/SteamAchievements.qml services/steam/SteamLibrary.qml
+msgid "Unknown game"
+msgstr ""
+
+#: services/steam/SteamApi.qml
+msgid "Invalid Steam API response"
+msgstr ""
+
+#: services/steam/SteamApi.qml
+msgid "Steam request failed"
+msgstr ""
+
+#: services/steam/SteamApi.qml
+msgid "Could not resolve Steam vanity URL"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+msgid "No playtime"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+#, qt-format
+msgid "%1 min"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+#, qt-format
+msgid "%1 h %2 min"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+#, qt-format
+msgid "%1 h"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+msgid "In-game"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+msgid "Online"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+msgid "Busy"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+msgid "Away"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+msgid "Snooze"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+msgid "Looking to trade"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+msgid "Looking to play"
+msgstr ""
+
+#: services/steam/SteamFormat.qml
+msgid "Offline"
+msgstr ""
+
+#: services/steam/SteamLibrary.qml
+msgid "Steam profile not found"
+msgstr ""
+
+#: services/steam/SteamLibrary.qml
+msgid "Could not load friend status"
+msgstr ""
+
+#: services/steam/SteamLibrary.qml
+msgid "Friends list is private"
 msgstr ""
 
 #: services/Timers.qml
@@ -4362,7 +5133,64 @@ msgid "Press any key to close…"
 msgstr ""
 
 #: services/Updates.qml
+msgid "Password required"
+msgstr ""
+
+#: services/Updates.qml
 msgid "Updating system…"
+msgstr ""
+
+#: services/Updates.qml
+msgid "Update cancelled."
+msgstr ""
+
+#: services/Updates.qml
+msgid "Too many failed attempts. Wait a minute and try again."
+msgstr ""
+
+#: services/Updates.qml
+msgid "Incorrect password"
+msgstr ""
+
+#: services/Updates.qml
+msgid "Authentication failed"
+msgstr ""
+
+#: services/Updates.qml
+msgid "Starting system update…"
+msgstr ""
+
+#: services/Updates.qml
+msgid "Updating system"
+msgstr ""
+
+#: services/Updates.qml
+msgid "Running in the background…"
+msgstr ""
+
+#: services/Updates.qml
+msgid "Update finished successfully."
+msgstr ""
+
+#: services/Updates.qml
+msgid "System updated"
+msgstr ""
+
+#: services/Updates.qml
+msgid "All updates were installed."
+msgstr ""
+
+#: services/Updates.qml
+#, qt-format
+msgid "Update failed (exit %1)."
+msgstr ""
+
+#: services/Updates.qml
+msgid "See the log for details."
+msgstr ""
+
+#: services/Updates.qml
+msgid "Update failed"
 msgstr ""
 
 #: services/Updates.qml
@@ -4392,6 +5220,22 @@ msgstr ""
 
 #: services/Updates.qml
 msgid "Update check timed out"
+msgstr ""
+
+#: services/Updates.qml
+msgid "Authentication timed out."
+msgstr ""
+
+#: services/Updates.qml
+msgid "Authentication timed out. Wait a minute if the account was locked, then try again."
+msgstr ""
+
+#: services/Updates.qml
+msgid "Update timed out."
+msgstr ""
+
+#: services/Updates.qml
+msgid "Timed out waiting for the package manager."
 msgstr ""
 
 #: services/VPN.qml
@@ -4558,12 +5402,6 @@ msgstr ""
 #: services/Weather.qml
 msgctxt "weather condition"
 msgid "Unknown"
-msgstr ""
-
-#. TRANSLATORS: %1 = a number
-#: utils/Strings.qml
-#, qt-format
-msgid "%1%"
 msgstr ""
 
 #. TRANSLATORS: joins uptime components, e.g. "2 days, 3 hours"

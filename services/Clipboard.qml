@@ -13,7 +13,16 @@ Singleton {
     id: root
 
     readonly property bool enabled: GlobalConfig.utilities.clipboard.enabled
-    readonly property int maxItems: Math.max(1, GlobalConfig.utilities.clipboard.maxItems)
+    // Clamp hard: QML `property int` coerces NaN→0, and `printf '%d' ''` also
+    // writes 0 — cliphist then stores nothing (favorites-only look). Never let
+    // an early/failed config read wipe history via max-items 0.
+    readonly property int maxItems: {
+        const raw = GlobalConfig.utilities.clipboard.maxItems;
+        const n = Number(raw);
+        if (!Number.isFinite(n) || n < 1)
+            return 50;
+        return Math.min(1000, Math.floor(n));
+    }
     readonly property string favoritesDir: `${Paths.state}/clipboard/favorites`
     readonly property string favoritesPath: `${Paths.state}/clipboard/favorites.json`
     readonly property string thumbsDir: `${Paths.cache}/clipboard/thumbs`
@@ -533,7 +542,8 @@ Singleton {
     Process {
         id: syncConfigProc
 
-        command: ["bash", "-c", `mkdir -p \"$1\" \"$2\" \"$3\" \"$4\" && printf 'max-items %d\\n' '$5' > \"$1/config\"`, "_", Quickshell.env("HOME") + "/.config/cliphist", Quickshell.env("HOME") + "/.cache/cliphist", root.favoritesDir, root.thumbsDir, root.maxItems]
+        // $5 must be a positive int; empty/non-numeric/0 → 50 (never max-items 0)
+        command: ["bash", "-c", `mkdir -p \"$1\" \"$2\" \"$3\" \"$4\" && max=\"$5\"; case \"$max\" in ''|*[!0-9]*) max=50 ;; esac; [ \"$max\" -lt 1 ] && max=50; printf 'max-items %d\\n' \"$max\" > \"$1/config\"`, "_", Quickshell.env("HOME") + "/.config/cliphist", Quickshell.env("HOME") + "/.cache/cliphist", root.favoritesDir, root.thumbsDir, String(root.maxItems)]
     }
 
     Process {

@@ -20,8 +20,9 @@ import qs.modules.nexus.pages.panels.taskbar
 QtObject {
     id: root
 
+    // Keep 1:1 with PageRegistry.pages order (same comments / blocks).
     readonly property list<Component> pageComps: [
-        // Appearance
+        // Desktop & appearance
         Component {
             // Activities (behaviour + unified look: Home = general, per-activity overrides)
             StackPage {
@@ -39,90 +40,6 @@ QtObject {
                 }
             }
         },
-
-        // Connectivity
-        Component {
-            // Network
-            StackPage {
-                Component {
-                    NetworkPage {}
-                }
-                Component {
-                    EthernetDetailPage {}
-                }
-                Component {
-                    AddNetworkPage {}
-                }
-                Component {
-                    NetworkDetailPage {}
-                }
-                Component {
-                    AddVpnPage {}
-                }
-                Component {
-                    AllNetworksPage {}
-                }
-                Component {
-                    SavedNetworksPage {}
-                }
-            }
-        },
-        Component {
-            // Bluetooth
-            StackPage {
-                Component {
-                    BluetoothPage {}
-                }
-                Component {
-                    BtDeviceInfo {}
-                }
-                Component {
-                    BluetoothPairing {}
-                }
-            }
-        },
-        Component {
-            // Display
-            StackPage {
-                Component {
-                    DisplayPage {}
-                }
-            }
-        },
-        Component {
-            // Audio
-            StackPage {
-                Component {
-                    AudioPage {}
-                }
-                Component {
-                    AppVolumes {}
-                }
-            }
-        },
-
-        // System
-        Component {
-            // Updates
-            StackPage {
-                Component {
-                    UpdatesPage {}
-                }
-                Component {
-                    UpdatesSettings {}
-                }
-            }
-        },
-        Component {
-            // Complements
-            StackPage {
-                Component {
-                    ComplementsPage {}
-                }
-            }
-        },
-
-        // Shell
         Component {
             // Panels
             StackPage {
@@ -164,6 +81,82 @@ QtObject {
             }
         },
         Component {
+            // Complements
+            StackPage {
+                Component {
+                    ComplementsPage {}
+                }
+            }
+        },
+
+        // Input
+        Component {
+            // Keyboard & mouse
+            StackPage {
+                Component {
+                    KeybindsPage {}
+                }
+            }
+        },
+
+        // Devices
+        Component {
+            // Network
+            StackPage {
+                Component {
+                    NetworkPage {}
+                }
+                Component {
+                    EthernetDetailPage {}
+                }
+                Component {
+                    AddNetworkPage {}
+                }
+                Component {
+                    NetworkDetailPage {}
+                }
+                Component {
+                    AddVpnPage {}
+                }
+                Component {
+                    AllNetworksPage {}
+                }
+                Component {
+                    SavedNetworksPage {}
+                }
+            }
+        },
+        Component {
+            // Connected devices (Bluetooth + Display subpage)
+            StackPage {
+                Component {
+                    BluetoothPage {}
+                }
+                Component {
+                    BtDeviceInfo {}
+                }
+                Component {
+                    BluetoothPairing {}
+                }
+                Component {
+                    DisplayPage {}
+                }
+            }
+        },
+        Component {
+            // Audio
+            StackPage {
+                Component {
+                    AudioPage {}
+                }
+                Component {
+                    AppVolumes {}
+                }
+            }
+        },
+
+        // Apps
+        Component {
             // Apps
             StackPage {
                 Component {
@@ -177,14 +170,16 @@ QtObject {
                 }
             }
         },
+
+        // System
         Component {
-            // Services
+            // Updates
             StackPage {
                 Component {
-                    ServicesPage {}
+                    UpdatesPage {}
                 }
                 Component {
-                    NotificationsPage {}
+                    UpdatesSettings {}
                 }
             }
         },
@@ -197,10 +192,10 @@ QtObject {
             }
         },
         Component {
-            // Keyboard & mouse
+            // Notifications (id: services — stable)
             StackPage {
                 Component {
-                    KeybindsPage {}
+                    NotificationsPage {}
                 }
             }
         },

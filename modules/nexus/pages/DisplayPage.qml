@@ -8,12 +8,14 @@ import Sylphrena.I18n
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.modules.nexus
 import qs.modules.nexus.common
 
 PageBase {
     id: root
 
     title: Tr.trCtx("Display", "monitor settings")
+    isSubPage: true
 
     Component.onCompleted: Displays.refresh()
 
@@ -197,6 +199,16 @@ PageBase {
                     wrapMode: Text.Wrap
                 }
             }
+        }
+
+        NavRow {
+            Layout.topMargin: Tokens.spacing.large - parent.spacing
+            first: true
+            last: true
+            icon: "crop_free"
+            text: Tr.tr("Compact layout")
+            subtext: Tr.tr("Session toggle for zero gaps/rounding lives in Panels → Utilities")
+            onClicked: root.nState.currentPageIdx = PageRegistry.idxOf("panels")
         }
     }
 }

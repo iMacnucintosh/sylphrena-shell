@@ -15,7 +15,7 @@ Repositorio: [iMacnucintosh/sylphrena-shell](https://github.com/iMacnucintosh/sy
 | **Reloj** | Popout con calendario (o hidratación) + temporizadores (con sonido y persistencia) |
 | **Grabación** | Estable (no se corta al salir del panel); guarda en `~/Vídeos/Videocapturas de pantalla` |
 | **Notificaciones** | Clic → enfoca la app; hover en la esquina superior derecha abre la sidebar |
-| **Nexus** | Página **Shell** para configurar activities y aspecto |
+| **Nexus** | Página **Activities** para configurar activities y aspecto |
 | **Launcher** | Hover inferior, edición de `.desktop`, iconos Papirus |
 | **Kitty / GTK** | Paleta alineada a la activity (Kitty + Thunar/Material) |
 | **Madison VPN** | Complemento on/off en Nexus; icono OTP / desconectar; engranaje config; limpia túnel tras sleep |
@@ -23,10 +23,10 @@ Repositorio: [iMacnucintosh/sylphrena-shell](https://github.com/iMacnucintosh/sy
 | **Utilities** | Mantener activo (café) en interruptores rápidos, ON por defecto |
 | **Clipboard** | Historial estilo Plasma (cliphist): Super+Shift+V, pegar en la ventana enfocada, favoritos |
 | **Updates** | Arch / AUR / Flatpak: icono+badge, popout, Nexus; update en fondo (panel) o con logs (Nexus) |
-| **Pantalla** | Nexus → Pantalla: modo (Hz), escala y VRR por monitor (Nunca / Automático / Siempre) |
-| **Atajos** | Remapeables desde Nexus; Super+E → Thunar; atajos de activities |
+| **Pantalla** | Nexus → Dispositivos conectados → Pantalla: modo (Hz), escala y VRR por monitor (Nunca / Automático / Siempre) |
+| **Atajos** | Remapeables desde Nexus; Super+E → Thunar; Super+\` última ventana; foco al hover o al clic; atajos de activities |
 | **Tiempo** | Buscar ciudad en Nexus → Idioma y región, o ubicación automática por IP |
-| **Lock** | Columna derecha: notificaciones (35 %) con scroll arriba, compañera **Sylphrena** (65 %) abajo (igual que el greeter) |
+| **Lock** | Columna derecha: notificaciones (35 %) con scroll arriba, compañera **Sylphrena** (65 %) abajo (igual que el greeter; orbe SoftBurst vía `SylphOrb`, también en Nexus → About) |
 
 ---
 
@@ -70,12 +70,12 @@ El apply es **un solo proceso** (`scripts/apply-activity-style.py`): evita carre
 
 ### Apps ancladas a un desktop
 
-Desde **Nexus → Shell** puedes asociar aplicaciones a un desktop concreto de una activity.  
+Desde **Nexus → Activities** puedes asociar aplicaciones a un desktop concreto de una activity.  
 Hyprland aplica esas reglas al arrancar (archivo generado `~/.config/hypr/sylphrena-activity-rules.lua`).
 
 ### Configuración
 
-**Nexus → Shell**:
+**Nexus → Activities**:
 
 - Activar / desactivar activities
 - Mostrar iconos de apps en los workspaces de la barra
@@ -91,7 +91,7 @@ En tu config Lua de Hyprland:
 
 ```lua
 require("sylphrena-binds")           -- atajos (Nexus → Keyboard & mouse)
-require("sylphrena-activity-rules")  -- reglas de activities / pins (Nexus → Shell)
+require("sylphrena-activity-rules")  -- reglas de activities / pins (Nexus → Activities)
 ```
 
 ---
@@ -143,7 +143,7 @@ Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
 - **Madison VPN**: interruptor on/off. Al desactivar se oculta el icono, se para el poll y se ejecuta teardown (`disconnect` + `heal`) para matar `openfortivpn`/helper.
 - **Timers**: interruptor on/off. Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue). Exposición doble: hub en **Complementos** y tarjeta desplegable en **Nexus → Panels → Taskbar → Clock** (mismo `addons.timers.enabled`), con 4 presets editables (`presetMins0..3`, default 5/10/20/30) que alimentan los botones del popout.
 - **Hidratación**: interruptor on/off (opt-in). Al activar sustituye el calendario del dashboard Nexus (solo ahí; el popout del reloj sigue con calendario) por un depósito con waves, meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Estado en `~/.local/state/sylphrena/hydration.json`.
-- **Juegos (Steam)**: interruptor on/off (opt-in). Al activar añade la pestaña **Juegos** en el dashboard (a la derecha de Tiempo). Configura API key (oculta por defecto) + Steam ID / vanity / URL de perfil, y el intervalo de refresco (default 10 min). Muestra perfil y nivel, estadísticas globales en shapes Material You (juegos visibles — sin la colección Hidden —, horas, compleción media de logros y juegos al 100 %, amigos en línea), tarjeta del juego destacado con portada y progreso, y un selector de portadas ordenado por última partida. Logros en una lista con scroll: desbloqueados por rareza y bloqueados de más común a más raro, con insignia y descripción. Mapa de calor mensual (puntos = días con logros; el tiempo por día se registra con el shell en marcha). Juegos no Steam desde `shortcuts.vdf`, con horas de Millennium si está instalado. Los logros del perfil deben ser públicos. El muestreo de logros para la compleción media está **capado a 60 juegos** (los más jugados, por orden de playtime) y el refresco periódico **solo corre mientras el dashboard muestra la pestaña Juegos** (no quema API en segundo plano).
+- **Juegos (Steam)**: interruptor on/off (opt-in). Al activar añade la pestaña **Juegos** en el dashboard (a la derecha de Tiempo). Configura API key (oculta por defecto) + Steam ID / vanity / URL de perfil, y el intervalo de refresco (default 10 min). Muestra perfil y nivel, estadísticas globales en shapes Material You (juegos visibles — sin la colección Hidden —, horas, compleción media de logros y juegos al 100 %, amigos en línea), tarjeta del juego destacado con portada y progreso, y un selector de portadas ordenado por última partida. Logros en una lista con scroll: desbloqueados por rareza y bloqueados de más común a más raro, con insignia y descripción. Mapa de calor mensual (puntos = días con logros; el tiempo por día se registra con el shell en marcha). Juegos no Steam desde `shortcuts.vdf`, con horas de Millennium si está instalado. Los logros del perfil deben ser públicos. El muestreo de logros para la compleción media está **capado a 60 juegos** (los más jugados, por orden de playtime) y el refresco periódico **solo corre mientras el dashboard muestra la pestaña Juegos** (no quema API en segundo plano). Caché de logros/schema/% global en disco (`~/.local/state/sylphrena/steam-achievements-cache.json`, TTL ~1 día) para arranques en frío más rápidos; el servicio QML es un façade (`Steam`) con capas en `services/steam/*`.
 
 ## Madison VPN (FortiClient / openfortivpn)
 
@@ -168,7 +168,7 @@ Credenciales en `~/.config/openfortivpn/config` (las mismas que Plasma; **no** v
 
 ## Pantalla (modos, escala, VRR)
 
-Página **Nexus → Pantalla** (en Connectivity, encima de Audio), una tarjeta por monitor:
+Subpágina **Nexus → Dispositivos conectados → Pantalla** (categoría Dispositivos; sin entrada propia en el sidebar), una tarjeta por monitor:
 
 - **Modo**: resolución + Hz (deduplicados y ordenados).
 - **Escala**.
@@ -186,13 +186,14 @@ require("sylphrena-monitors")
 
 - En **interruptores rápidos**: icono de café (**Keep awake**), a la izquierda del gamepad.
 - **Activado por defecto** (bloquea idle/suspend del compositor vía idle inhibitor).
+- El estado del interruptor **persiste** entre reinicios de la shell (`sylph shell -r`) vía `RuntimeState` (`/run/user/$UID/sylphrena/state.json`). Tras un logout/reboot de sesión el runtime se pierde y vuelve el default ON.
 - La card grande «Mantener activo» está oculta por defecto (se puede volver a mostrar en Nexus → Panels → Utilities → Cards).
 
 ---
 
 ## Explorador y theming GTK
 
-- Explorador por defecto: **Thunar** (`general.apps.explorer` + Super+E + `xdg-mime` para carpetas).
+- Explorador por defecto: **Seeker** (`general.apps.explorer: ["seeker"]` + Super+E + `xdg-mime` para carpetas). Repo aparte `~/Desarrollo/seeker`; tema M3 vía `~/.config/seeker/theme.json` (escrito por `sylphrena-quiet.py`). Thunar sigue disponible como alternativa.
 - Para que Thunar/GTK sigan el esquema de Sylphrena: `adw-gtk-theme`, `papirus-icon-theme`, y `GTK_MODULES=colorreload-gtk-module` (Hyprland + `settings.ini`; el módulo está **vendorizado** en `~/.local/share/gtk-3.0/modules/`, ver abajo).
 - Iconos de apps en el launcher: tema **Papirus** (sincronizado en `~/.config/qt6ct/qt6ct.conf [Appearance] icon_theme` al aplicar el esquema).
 - Diálogos `pkexec` (Timeshift, VPN helper, etc.): activa `hyprpolkitagent.service` (`systemctl --user enable --now hyprpolkitagent`).
@@ -212,9 +213,9 @@ Plasma ya no está instalado. Hyprland sigue con qt6ct, Papirus, Thunar y los po
   - `~/.config/qt6ct/qt6ct.conf`: `icon_theme=Papirus-{Mode}`, `custom_palette=true`, `style=Fusion`
 - **Cursor**: alineado GTK/Qt/Hyprland a **Adwaita** (`gsettings cursor-theme`, `gtk-cursor-theme-name` de `settings.ini`, env `XCURSOR_THEME`/`HYPRCURSOR_THEME`).
 - **módulo `colorreload-gtk-module`** vendorizado: copia a `~/.local/share/gtk-3.0/modules/`. Sobrevive la desinstalación de `kde-gtk-config` en fase 2 (GTK resuelve el módulo por nombre en la ruta `$XDG_DATA_HOME`). Es un build solo de GTK3 (no existe módulo GTK4).
-- **`org.freedesktop.FileManager1`**: Thunar lo sirve. Override a nivel usuario en
-  `~/.local/share/dbus-1/services/org.freedesktop.FileManager1.service` (→ `thunar.service`; dbus-broker ignora los duplicados `/usr/share/dbus-1/services/org.kde.dolphin.*`).
-- **Unidades de Dolphin y KActivity**: se fueron con los paquetes. Las máscaras de usuario se quitaron. El override de `FileManager1` a Thunar se queda.
+- **`org.freedesktop.FileManager1`**: Seeker lo sirve. Override a nivel usuario en
+  `~/.local/share/dbus-1/services/org.freedesktop.FileManager1.service` (→ `~/.local/bin/seeker`; dbus-broker ignora los duplicados `/usr/share/dbus-1/services/org.kde.dolphin.*`).
+- **Unidades de Dolphin y KActivity**: se fueron con los paquetes. Las máscaras de usuario se quitaron.
 - **Fase 2 hecha (2026-10-30)**: 238 paquetes KDE/Plasma (~1381 MiB), incluido `plasma-integration` y `kde-gtk-config`. El tema ya no escribe `kdeglobals`. Config, caché y el índice de Baloo se borraron. Siguen `bluez`, `noto-fonts-emoji`, `ttf-hack` y el `colorreload` vendorizado.
 
 ---
@@ -270,7 +271,7 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 
 ## Barra (otros retoques)
 
-- **Tray**: muestra también ítems en estado Passive (p. ej. Teams en idle); highlight al hover / menú abierto; tamaño de icono estable.
+- **Tray**: muestra también ítems en estado Passive (p. ej. Teams en idle); highlight al hover / menú abierto; tamaño de icono estable. El **StatusNotifierWatcher** vive fuera de `qs` (`scripts/status-notifier-watcher.py`, arrancado por `scripts/start-shell-with-tray-watcher.sh` desde Hyprland) para que los trays Electron/Flatpak (Teams) sobrevivan a `sylph shell -r` — sin Plasma ya no hay `xembedsniproxy` que rescate el fallback X11.
 - **Status icons**: pastilla al hover como el tray; el icono de batería se oculta con el toggle de statusIcons (vanilla).
 - **Popouts** de status un poco más anchos para que no se recorten.
 - **Reloj** centrado de forma estable en el slot de la barra (geometría vanilla); la pastilla de hover-complemento sigue y el fondo respeta el toggle "Fondo" del Nexus (con Fondo off, solo pinta al hover).
@@ -283,12 +284,14 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 
 Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 
-- **Atajos de Hyprland remapeables** desde Nexus (genera `sylphrena-binds.lua`), incluyendo teclas **F13+**.
+- **Atajos de Hyprland remapeables** desde Nexus (genera `sylphrena-binds.lua`), incluyendo teclas **F13+** y **Última ventana** (Super+\` por defecto; cruza escritorios/actividades vía Hyprland).
+- **Foco del ratón** en Nexus → Keyboard & mouse: al pasar por encima (Hyprland `follow_mouse = 1`) o al hacer clic (`= 2`). Genera `sylphrena-input.lua`.
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
 - Apariencia **unificada en Activities**: una sola página para el comportamiento (enable, iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
-- **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí, no en Services; Services queda para servicios del sistema).
+- **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí; **Tuning** / `id: services` queda para notificaciones, polling y media).
 - **Status icons honestos**: el badge de updates y la fila de VPN rigen el auto-ocultado con config explícita (`bar.status.onlyShowUpdatesWithUpdates`; VPN atado al complemento) y es visible en `Panels → Taskbar → Status icons → Auto-hide`. La batería quedó **vanilla**: se muestra/oculta con el toggle de la lista "Visible icons" y su popout es el de siempre («No se ha detectado ninguna batería» o «Power profile: %1» en desktops, con el selector de perfiles intacto).
-- **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-references entre ambas.
+- **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-links navegables entre ambas.
+- **IA del sidebar (fase 1)**: títulos de categoría visibles; orden **Escritorio y apariencia** (Activities, Panels, Complements) → Entrada → **Dispositivos** (Network, Connected devices [+ Display subpage], Audio) → Apps → Sistema → Acerca de. `smartScheme` en Activities; incrementos volumen/brillo en Audio. Display ya no es página top-level del nav.
 - Las páginas del nav llevan **id estable** (`PageRegistry.idxOf`) — los saltos programáticos (Updates → Nexus) ya no dependen de índices hardcodeados.
 - Traducciones **español** ampliadas para las cadenas nuevas.
 
@@ -305,7 +308,7 @@ Popout flotante junto al cursor (estilo Sylphrena), respaldado por **cliphist** 
 - Miniaturas decodificadas **al tamaño del thumb** (`sourceSize`), no al del fichero completo; los favoritos de imágenes binarias se emparejan por el **id de cliphist** de origen (el preview genérico `[[ binary data… ]]` ya no provoca estrellas cruzadas).
 - Todos los comandos (`delete`, `wl-copy`, `cliphist decode`…) pasan el contenido del portapapeles **como argv (`"$1"`)**, nunca interpolado en la cadena del shell (lección de inyección: `JSON.stringify` es quoting de JS, no de shell).
 - Fondo igual que el panel izquierdo (`m3surface` + blur de Hyprland).
-- Límite de historial configurable (por defecto **50**) en **Nexus → Services → Clipboard**.
+- Límite de historial configurable (por defecto **50**) en **Nexus → Complements → Clipboard**.
 - Dependencias: `cliphist`, `wl-clipboard`, `wtype`.
 
 ---
@@ -317,6 +320,7 @@ Popout flotante junto al cursor (estilo Sylphrena), respaldado por **cliphist** 
 | Overview de activities | Super + Tab |
 | Activity anterior | Super + Ctrl + ← |
 | Activity siguiente | Super + Ctrl + → |
+| Última ventana (cualquier escritorio/actividad) | Super + \` (grave) |
 | Historial del clipboard | Super + Shift + V |
 
 Cámbialos en **Nexus → Keyboard & mouse**.

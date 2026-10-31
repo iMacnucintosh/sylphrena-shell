@@ -236,11 +236,17 @@ Singleton {
         const gen = root.styleApplyGen;
         // Single Python process: wallpaper files (no colour apply) + one scheme apply.
         const cmd = ["python3", root.styleCli];
-        if (wallpaperChanged) {
+        // Dynamic colours are scored from the wallpaper thumbnail. If we only
+        // change scheme/variant/mode, the previous activity's thumb would win —
+        // always sync this activity's wallpaper when regenerating a dynamic look.
+        const dynamicTarget = (style.scheme || "") === "dynamic";
+        const syncWallpaper = !!(style.wallpaper && (wallpaperChanged
+            || (needScheme && dynamicTarget)));
+        if (syncWallpaper) {
             Wallpapers.actualCurrent = style.wallpaper;
             cmd.push("--wallpaper", style.wallpaper);
         }
-        if (needScheme || wallpaperChanged) {
+        if (needScheme || wallpaperChanged || syncWallpaper) {
             if (style.scheme)
                 cmd.push("--name", style.scheme);
             if (style.flavour)

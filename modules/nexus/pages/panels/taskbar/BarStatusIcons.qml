@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.services
+import qs.modules.nexus
 import qs.modules.nexus.common
 
 PageBase {
@@ -108,20 +109,20 @@ PageBase {
 
         ToggleRow {
             first: true
-            last: true
             text: Tr.tr("Updates only when relevant")
             subtext: Tr.tr("The updates badge appears only with pending or installing packages")
             checked: Config.bar.status.onlyShowUpdatesWithUpdates
             onToggled: GlobalConfig.bar.status.onlyShowUpdatesWithUpdates = checked
         }
 
-        InfoRow {
+        NavRow {
             last: true
             icon: "shield_lock"
-            label: Tr.tr("Madison VPN")
+            text: Tr.tr("Madison VPN")
             subtext: MadisonVpn.enabled
-                ? Tr.tr("Visible while the complement is enabled")
+                ? Tr.tr("Visible while the complement is enabled — configure in Complements")
                 : Tr.tr("Hidden — enable it in Complements")
+            onClicked: root.nState.currentPageIdx = PageRegistry.idxOf("complements")
         }
     }
 }

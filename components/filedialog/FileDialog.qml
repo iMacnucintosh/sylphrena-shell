@@ -1,13 +1,14 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
+import Quickshell.Io
+import Sylphrena
 import Sylphrena.I18n
-import qs.components
-import qs.services
+import qs.utils
 
-LazyLoader {
+// System file picker via Seeker (--pick). Keeps the old FloatingWindow API.
+Item {
     id: loader
 
     property list<string> cwd: ["Home"]
@@ -18,89 +19,109 @@ LazyLoader {
     signal accepted(path: string)
     signal rejected
 
+    property bool busy: false
+    property string resultPath: ""
+
+    function cwdAbsolute(): string {
+        if (!cwd.length || cwd[0] === "Home") {
+            const rest = cwd.slice(1).join("/");
+            return rest.length ? `${Paths.home}/${rest}` : Paths.home;
+        }
+        return cwd.join("/");
+    }
+
     function open(): void {
-        activeAsync = true;
+        if (busy)
+            return;
+        busy = true;
+        const runtime = Quickshell.env("XDG_RUNTIME_DIR") || "/tmp";
+        resultPath = `${runtime}/seeker-pick-${Date.now()}.json`;
+        pickProc.running = false;
+        Qt.callLater(() => {
+            pickProc.running = true;
+        });
     }
 
     function close(): void {
-        rejected();
+        pickProc.running = false;
+        if (busy) {
+            busy = false;
+            rejected();
+        }
     }
 
-    onAccepted: activeAsync = false
-    onRejected: activeAsync = false
+    function finishFromResult(): void {
+        const path = loader.resultPath;
+        loader.resultPath = "";
+        loader.busy = false;
 
-    FloatingWindow {
-        id: root
-
-        property list<string> cwd: loader.cwd
-        property string filterLabel: loader.filterLabel
-        property list<string> filters: loader.filters
-
-        readonly property bool selectionValid: {
-            const file = folderContents.currentItem?.modelData;
-            return (file && !file.isDir && (filters.includes("*") || filters.some(filter => filter.toLowerCase() === file.suffix.toLowerCase()))) ?? false;
+        let response = 1;
+        let uris = [];
+        try {
+            const raw = resultView.text();
+            if (raw && raw.length) {
+                const data = JSON.parse(raw);
+                response = data.response ?? 1;
+                uris = data.uris ?? [];
+            }
+        } catch (e) {
+            response = 1;
         }
+        CUtils.deleteFile(Qt.resolvedUrl(path));
 
-        function accepted(path: string): void {
-            loader.accepted(path);
-        }
-
-        function rejected(): void {
+        if (response === 0 && uris.length) {
+            let filePath = uris[0];
+            if (filePath.startsWith("file://"))
+                filePath = decodeURIComponent(filePath.slice("file://".length));
+            const exts = loader.filters.filter(f => f && f !== "*").map(f => f.toLowerCase());
+            if (exts.length) {
+                const lower = filePath.toLowerCase();
+                if (!exts.some(ext => lower.endsWith(`.${ext}`))) {
+                    loader.rejected();
+                    return;
+                }
+            }
+            loader.accepted(filePath);
+        } else {
             loader.rejected();
         }
+    }
 
-        implicitWidth: 1000
-        implicitHeight: 600
-        minimumSize.width: 400
-        minimumSize.height: 300
-        color: Colours.tPalette.m3surface
-        surfaceFormat.opaque: false
-        title: loader.title
+    Process {
+        id: pickProc
 
-        onVisibleChanged: {
-            if (!visible)
-                rejected();
+        command: {
+            const bin = `${Paths.home}/.local/bin/seeker`;
+            const args = [
+                bin,
+                "--pick",
+                "--pick-mode=file",
+                `--pick-result=${loader.resultPath}`,
+                `--pick-title=${loader.title}`,
+                `--pick-accept=${Tr.tr("Select")}`,
+                `--pick-current=${loader.cwdAbsolute()}`
+            ];
+            const exts = loader.filters.filter(f => f && f !== "*").map(f => f.toLowerCase());
+            if (exts.length)
+                args.push(`--pick-extensions=${exts.join(",")}`);
+            return args;
         }
 
-        RowLayout {
-            anchors.fill: parent
-
-            spacing: 0
-
-            Sidebar {
-                Layout.fillHeight: true
-                dialog: root
+        onExited: {
+            if (!loader.resultPath.length) {
+                loader.busy = false;
+                loader.rejected();
+                return;
             }
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                spacing: 0
-
-                HeaderBar {
-                    Layout.fillWidth: true
-                    dialog: root
-                }
-
-                FolderContents {
-                    id: folderContents
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    dialog: root
-                }
-
-                DialogButtons {
-                    Layout.fillWidth: true
-                    dialog: root
-                    folder: folderContents
-                }
-            }
+            resultView.path = loader.resultPath;
+            resultView.reload();
         }
+    }
 
-        Behavior on color {
-            CAnim {}
-        }
+    FileView {
+        id: resultView
+        printErrors: false
+        onLoaded: loader.finishFromResult()
+        onLoadFailed: loader.finishFromResult()
     }
 }

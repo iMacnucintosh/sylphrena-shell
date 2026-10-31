@@ -2,7 +2,55 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 2026-10-31
+
+### Activities / esquema dinámico
+
+- `apply-activity-style.py` se había quedado con imports viejos (`convert_gif` / `is_valid_image`) y fallaba al aplicar wallpaper → el esquema `dynamic` no regeneraba el acento desde el fondo.
+- Al elegir/regenerar `dynamic`, el apply vuelve a sincronizar el wallpaper de la activity (no el thumbnail de otra) y fuerza `update_colours`.
+
 ## 2026-10-30
+
+### Seeker (explorador)
+
+- Nuevo explorador **Seeker** (etiqueta **Archivos**, repo `~/Desarrollo/seeker`, Qt6 QML): default en `apps.explorer`, Super+E y `FileManager1`.
+- `sylphrena-quiet.py` escribe `~/.config/seeker/theme.json` en cada apply de esquema (hot-reload M3 en Seeker).
+- Thunar deja de ser el default; sigue usable como alternativa.
+
+### About / SylphOrb
+
+- Página **Acerca de**: el hero usa el orbe SoftBurst animado (mismo de lock/greeter) en lugar del `AnimatedLogo` SVG estático.
+- Nuevo `components/SylphOrb.qml` (+ gemela `greeter/components/SylphOrb.qml` con tokens Theme): lock y greeter dejan de duplicar el bloque del orbe.
+
+### Tray
+
+- StatusNotifierWatcher persistente (`scripts/status-notifier-watcher.py`) fuera de `qs`, arrancado antes de la shell vía `scripts/start-shell-with-tray-watcher.sh`. Los iconos Electron/Flatpak (Teams) dejan de desaparecer tras `sylph shell -r` ahora que Plasma ya no aporta `xembedsniproxy`.
+
+### Polish (deep audit)
+
+- `steam-activity.py` snapshot: entries with legacy/`[minutes, 0]` timestamps are **rebaselined** (no residual from `since=0`), so heatmap deltas stop being swallowed by tracked sessions after the next Games reload.
+- Area picker clipboard-only capture copies via argv (`$1`), not shell string concat.
+- Notification popup expiry timer only runs while `popup` is true (history entries idle; re-show re-arms).
+
+### Nexus — reorganización del sidebar (fase 1)
+
+- Categorías visibles en el nav; agrupación tras feedback Jorge: **Escritorio y apariencia** (Activities, Panels, Complements), Entrada, **Dispositivos** (Network, Connected devices, Audio), Apps, Sistema, Acerca de.
+- Orden sidebar: Activities → Panels → Complements → Keyboard & mouse → Network → Bluetooth → Audio → Apps → Updates → Language & region → Tuning (`id: services`) → About.
+- **Display** (Hz/escala/VRR) es subpágina de **Connected devices** (no aparece sola en el sidebar); sin deep-links top-level a `display`.
+- `smartScheme` se edita en Activities; incrementos volumen/brillo/max volume en Audio (paths `services.*` intactos).
+- Cross-links Activities ↔ Taskbar Workspaces, Clock → Complements (Timers), Status icons → Complements (Madison), Display → Compact layout en Utilities.
+- Docs: «Nexus → Shell» / «Services → Clipboard» alineados a Activities / Complements.
+
+### Juegos (Steam)
+
+- Caché en disco de logros / schema / % global (`~/.local/state/sylphrena/steam-achievements-cache.json`, TTL ~1 día; wipe al cambiar API key o Steam ID; invalidate del juego enfocado en cada reload).
+- `services/Steam.qml` pasa a façade público estable; lógica partida en `services/steam/` (`SteamFormat`, `SteamApi`, `SteamLibrary`, `SteamAchievements`, `SteamLocal`, `SteamActivity`).
+- `steam-activity.py snapshot` acepta el JSON de playtime por **stdin** (evita `ARG_MAX`); argv sigue válido para debug.
+
+### Atajos
+
+- Nuevo atajo remapeable en Nexus → Keyboard & mouse: **Última ventana** (`focusLast`) → `hl.dsp.focus({ last = true })`. Por defecto **Super + \`**. Alterna entre la ventana actual y la anterior en cualquier escritorio/actividad.
+- Nexus → Keyboard & mouse: opción **Foco del ratón** (al pasar / al clic) → `input:follow_mouse` vía `sylphrena-input.lua` (`general.followMouse`).
 
 ### Rebrand → Sylphrena (instancia Quickshell `sylphrena`)
 
@@ -22,6 +70,10 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - El flake de Nix y los workflows de GitHub salen del árbol. Pendiente: publicar el paquete AUR con el nombre Sylphrena.
 - La versión propia empieza en `v0.1.0`. El build solo lee tags `v0.*`; `v1.*` y `v2.*` siguen siendo del proyecto original.
 - El repositorio de GitHub se llama [sylphrena-shell](https://github.com/iMacnucintosh/sylphrena-shell). Las URLs anteriores redirigen.
+
+### Utilities / keep-awake
+
+- Keep-awake (café) ya **no se fuerza a ON** en cada arranque de la shell. Respeta `RuntimeState.inhibitIdle` persistido en `/run/user/$UID/sylphrena/state.json` (default ON). Tras logout/reboot de sesión el runtime se pierde y vuelve el default.
 
 ### Compañera Sylphrena (greeter + lock)
 
@@ -85,7 +137,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ### Nexus → Pantalla (Display)
 
-- Nueva página en Connectivity (encima de Audio): una tarjeta por monitor con **modo (Hz)**, **escala** y **VRR / Adaptive Sync**.
+- Nueva UI de pantallas (hoy subpágina de Connected devices): una tarjeta por monitor con **modo (Hz)**, **escala** y **VRR / Adaptive Sync**.
 - Política VRR estilo Plasma: **Nunca / Automático / Siempre** (Automático = solo a pantalla completa).
 - Persistencia por conector en `~/.config/hypr/sylphrena-monitors.lua` + `hyprctl reload` al aplicar; la política guardada ya no la pisa el booleano de `hyprctl` (fix del parpadeo con Adaptive Sync pegado en el CRTC). Requiere `require("sylphrena-monitors")` en `hyprland.lua`.
 
@@ -132,7 +184,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - Pegado directo en la ventana enfocada (`wtype` Ctrl+V).
 - Favoritos persistentes, búsqueda, miniaturas de imagen.
 - Rutas/`file://` a imagen desde el explorador se muestran y pegan como imagen.
-- Misma superficie/blur que el panel izquierdo; límite configurable (default 50) en Nexus → Services.
+- Misma superficie/blur que el panel izquierdo; límite configurable (default 50) en Nexus → Complements.
 
 ### Complementos / Madison VPN / Timers
 

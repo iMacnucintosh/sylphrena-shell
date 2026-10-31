@@ -105,6 +105,9 @@ class GeneralConfig : public settings::ObjectNode {
     CONFIG_GLOBAL_PROPERTY(QString, logo, {})
     CONFIG_GLOBAL_PROPERTY(QString, language, {})
     CONFIG_PROPERTY(bool, showOverFullscreen, false)
+    // Hyprland input:follow_mouse — 0 never, 1 on hover, 2 on click (keyboard focus).
+    // Owned by Nexus → Keyboard & mouse; written to sylphrena-input.lua.
+    CONFIG_PROPERTY(int, followMouse, 1)
     CONFIG_PROPERTY(qreal, mediaGifSpeedAdjustment, 300)
     CONFIG_PROPERTY(qreal, sessionGifSpeed, 0.7)
     CONFIG_GLOBAL_SUBOBJECT(GeneralApps, apps)

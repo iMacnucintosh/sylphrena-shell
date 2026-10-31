@@ -80,10 +80,10 @@ ColumnLayout {
 
             Repeater {
                 model: [
-                    Config.addons.timers.presetMins0,
-                    Config.addons.timers.presetMins1,
-                    Config.addons.timers.presetMins2,
-                    Config.addons.timers.presetMins3
+                    GlobalConfig.addons.timers.presetMins0,
+                    GlobalConfig.addons.timers.presetMins1,
+                    GlobalConfig.addons.timers.presetMins2,
+                    GlobalConfig.addons.timers.presetMins3
                 ]
 
                 StyledRect {

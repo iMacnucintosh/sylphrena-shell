@@ -97,6 +97,28 @@ Singleton {
         return bestScore >= 0 ? best : null;
     }
 
+    // Body click already focuses/opens the app; hide freedesktop "default"
+    // (Firefox/Zen label it "Activate") and empty app actions from the row.
+    function isDisplayAction(action: var, hasActionIcons: bool): bool {
+        const id = (action?.identifier || "").toLowerCase();
+        if (id === "default")
+            return false;
+
+        const text = (action?.text || "").trim();
+        if (/^(activate|activar)$/i.test(text))
+            return false;
+        if (text.length > 0)
+            return true;
+
+        return !!(hasActionIcons && action?.identifier);
+    }
+
+    function displayActions(notif: var): var {
+        const actions = notif?.actions ?? [];
+        const hasIcons = !!(notif?.hasActionIcons);
+        return actions.filter(a => root.isDisplayAction(a, hasIcons));
+    }
+
     function focusSource(notif: var): bool {
         if (!notif)
             return false;

@@ -15,6 +15,9 @@ ConnectedRect {
     property alias label: label.text
     property alias status: status.text
     property bool keepPopupAsChild
+    // Open/hover fill — secondaryContainer by default; surface for neutral pickers.
+    property color popupActiveColor: Colours.palette.m3secondaryContainer
+    property color popupIdleColor: Colours.palette.m3surfaceContainerHighest
     readonly property alias popup: popup
     default required property Item content
 
@@ -115,7 +118,7 @@ ConnectedRect {
                     content: root.content
                     pressOverride: stateLayer.pressed
                     hoverOverride: stateLayer.containsMouse
-                    color: open || hovered || stateLayer.containsMouse ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainerHighest
+                    color: open || hovered || stateLayer.containsMouse ? root.popupActiveColor : root.popupIdleColor
                 }
             }
         }

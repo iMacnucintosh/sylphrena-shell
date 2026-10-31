@@ -13,6 +13,7 @@ sources of per-day activity:
 Usage:
   steam-activity.py poll
   steam-activity.py snapshot '<json [[appId, playtimeForever, lastPlayed], ...]>'
+  steam-activity.py snapshot   # same JSON on stdin (preferred; avoids ARG_MAX)
 
 Prints JSON: { "days": { appId: { "YYYY-MM-DD": minutes } },
                "sessions": { appId: [ { start, end } ] },
@@ -116,15 +117,30 @@ def snapshot(state: dict, now: int, games: list) -> None:
         except (IndexError, TypeError, ValueError):
             continue
         prev = snap.get(app_id)
+        # Legacy scalar or corrupt/unknown window ([m, 0]): baseline only.
+        # Attributing residual from since=0 would let tracked sessions swallow
+        # the whole delta and leave heatmap empty for play-while-shell-off.
         if isinstance(prev, int):
-            prev = [prev, 0]
-        if prev is not None and minutes > prev[0]:
-            residual = minutes - prev[0] - tracked_seconds(state, app_id, prev[1], now) // 60
+            snap[app_id] = [minutes, now]
+            continue
+        if not isinstance(prev, (list, tuple)) or len(prev) < 2:
+            snap[app_id] = [minutes, now]
+            continue
+        try:
+            prev_mins, prev_at = int(prev[0]), int(prev[1] or 0)
+        except (TypeError, ValueError):
+            snap[app_id] = [minutes, now]
+            continue
+        if prev_at <= 0:
+            snap[app_id] = [minutes, now]
+            continue
+        if minutes > prev_mins:
+            residual = minutes - prev_mins - tracked_seconds(state, app_id, prev_at, now) // 60
             if residual > 1:
                 day = datetime.fromtimestamp(last or now).date().isoformat()
                 bucket = days.setdefault(app_id, {})
                 bucket[day] = bucket.get(day, 0) + residual
-        if prev is None or prev[0] != minutes:
+        if prev_mins != minutes:
             snap[app_id] = [minutes, now]
 
 
@@ -164,8 +180,15 @@ def main() -> int:
 
         now = int(time.time())
         if cmd == "snapshot":
+            # Prefer stdin (large libraries exceed ARG_MAX on argv). argv[2]
+            # remains supported for manual/debug invokes; "-" means stdin.
+            raw = ""
+            if len(sys.argv) > 2 and sys.argv[2] not in ("", "-"):
+                raw = sys.argv[2]
+            else:
+                raw = sys.stdin.read()
             try:
-                games = json.loads(sys.argv[2]) if len(sys.argv) > 2 else []
+                games = json.loads(raw) if raw.strip() else []
             except json.JSONDecodeError:
                 games = []
             poll(state, now)

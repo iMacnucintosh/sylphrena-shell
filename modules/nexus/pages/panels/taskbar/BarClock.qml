@@ -7,6 +7,7 @@ import Sylphrena.I18n
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.modules.nexus
 import qs.modules.nexus.common
 
 PageBase {
@@ -94,7 +95,6 @@ PageBase {
         ConnectedRect {
             id: timersCard
 
-            last: true
             Layout.fillWidth: true
             implicitHeight: timersCol.implicitHeight + Tokens.padding.medium * 2
 
@@ -213,8 +213,24 @@ PageBase {
                         stepSize: 1
                         onMoved: v => GlobalConfig.addons.timers.presetMins3 = v
                     }
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: Tr.tr("Hub for enabling Timers: Complements")
+                        color: Colours.palette.m3outline
+                        font: Tokens.font.label.small
+                        wrapMode: Text.WordWrap
+                    }
                 }
             }
+        }
+
+        NavRow {
+            last: true
+            icon: "extension"
+            text: Tr.tr("Configure Timers in Complements")
+            subtext: Tr.tr("Complements owns the opt-in toggle; presets above stay on the clock")
+            onClicked: root.nState.currentPageIdx = PageRegistry.idxOf("complements")
         }
     }
 }

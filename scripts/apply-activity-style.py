@@ -34,13 +34,19 @@ def _set_wallpaper_files(wall: Path) -> None:
         wallpaper_thumbnail_path,
         wallpapers_cache_dir,
     )
-    from sylphrena.utils.wallpaper import convert_gif, get_thumb, is_valid_image
+    from sylphrena.utils.wallpaper import (
+        extract_first_frame,
+        get_thumb,
+        is_animated,
+        is_valid_wallpaper,
+    )
 
     wall = wall.resolve()
-    if not is_valid_image(wall):
-        raise ValueError(f'"{wall}" is not a valid image')
+    if not is_valid_wallpaper(wall):
+        raise ValueError(f'"{wall}" is not a valid image or video')
 
-    wall_cache = convert_gif(wall) if wall.suffix.lower() == ".gif" else wall
+    # Match set_wallpaper(): animated → 1st frame for score/thumb only.
+    wall_cache = extract_first_frame(wall) if is_animated(wall) else wall
 
     wallpaper_path_path.parent.mkdir(parents=True, exist_ok=True)
     wallpaper_path_path.write_text(str(wall))
@@ -100,6 +106,12 @@ def _apply_scheme(
         if variant not in scheme_variants:
             raise ValueError(f'Invalid scheme variant: "{variant}"')
         scheme._variant = variant
+        dirty = True
+
+    # Dynamic scores the wallpaper thumbnail. Selecting/keeping "dynamic" or
+    # syncing a wall must always regenerate — otherwise a scheme set with no
+    # field changes keeps the previous wall's palette.
+    if scheme._name == "dynamic" and (force or name == "dynamic"):
         dirty = True
 
     if not dirty:

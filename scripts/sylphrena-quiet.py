@@ -390,6 +390,7 @@ def _patch_theme() -> None:
         except Exception:
             pass
         _sync_qt6ct(colours, mode)
+        _sync_seeker(colours, mode)
         _sync_greeter(colours)
         # OpenCode TUI: theme file + cli.json mode follow the activity scheme.
         _sync_opencode_theme(colours, mode)
@@ -398,6 +399,39 @@ def _patch_theme() -> None:
 
     theme.apply_terms = apply_terms_quiet
     theme.apply_colours = apply_colours_quiet
+
+
+def _sync_seeker(colours: dict[str, str], mode: str) -> None:
+    """Write Material tokens for Seeker (Qt/QML file manager).
+
+    Seeker watches ~/.config/seeker/theme.json and hot-reloads the QML palette.
+    Colours are stored without '#'; Seeker accepts both forms.
+    Transparency mirrors shell appearance.transparency so Seeker matches drawers.
+    """
+    import json as _json
+
+    if not colours:
+        return
+    tr_enabled = False
+    tr_base = 0.85
+    try:
+        from sylphrena.utils.paths import user_config_path
+
+        if user_config_path.is_file():
+            cfg = _json.loads(user_config_path.read_text() or "{}")
+            tr = (cfg.get("appearance") or {}).get("transparency") or {}
+            if isinstance(tr, dict):
+                tr_enabled = bool(tr.get("enabled", False))
+                tr_base = float(tr.get("base", 0.85))
+    except Exception:
+        pass
+    payload = {
+        "mode": mode if mode in ("dark", "light") else "dark",
+        "colours": {k: (v[1:] if isinstance(v, str) and v.startswith("#") else v) for k, v in colours.items()},
+        "transparency": {"enabled": tr_enabled, "base": tr_base},
+    }
+    out = _XDG_CONFIG / "seeker" / "theme.json"
+    _atomic_write(out, _json.dumps(payload, indent=2) + "\n")
 
 
 def _sync_opencode_theme(colours: dict[str, str], mode: str) -> None:
