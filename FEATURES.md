@@ -193,7 +193,7 @@ require("sylphrena-monitors")
 
 ## Explorador y theming GTK
 
-- Explorador por defecto: **Thunar** (`general.apps.explorer` + Super+E + `xdg-mime` para carpetas).
+- Explorador por defecto: **Seeker** (`general.apps.explorer: ["seeker"]` + Super+E + `xdg-mime` para carpetas). Repo aparte `~/Desarrollo/seeker`; tema M3 vía `~/.config/seeker/theme.json` (escrito por `sylphrena-quiet.py`). Thunar sigue disponible como alternativa.
 - Para que Thunar/GTK sigan el esquema de Sylphrena: `adw-gtk-theme`, `papirus-icon-theme`, y `GTK_MODULES=colorreload-gtk-module` (Hyprland + `settings.ini`; el módulo está **vendorizado** en `~/.local/share/gtk-3.0/modules/`, ver abajo).
 - Iconos de apps en el launcher: tema **Papirus** (sincronizado en `~/.config/qt6ct/qt6ct.conf [Appearance] icon_theme` al aplicar el esquema).
 - Diálogos `pkexec` (Timeshift, VPN helper, etc.): activa `hyprpolkitagent.service` (`systemctl --user enable --now hyprpolkitagent`).
@@ -213,9 +213,9 @@ Plasma ya no está instalado. Hyprland sigue con qt6ct, Papirus, Thunar y los po
   - `~/.config/qt6ct/qt6ct.conf`: `icon_theme=Papirus-{Mode}`, `custom_palette=true`, `style=Fusion`
 - **Cursor**: alineado GTK/Qt/Hyprland a **Adwaita** (`gsettings cursor-theme`, `gtk-cursor-theme-name` de `settings.ini`, env `XCURSOR_THEME`/`HYPRCURSOR_THEME`).
 - **módulo `colorreload-gtk-module`** vendorizado: copia a `~/.local/share/gtk-3.0/modules/`. Sobrevive la desinstalación de `kde-gtk-config` en fase 2 (GTK resuelve el módulo por nombre en la ruta `$XDG_DATA_HOME`). Es un build solo de GTK3 (no existe módulo GTK4).
-- **`org.freedesktop.FileManager1`**: Thunar lo sirve. Override a nivel usuario en
-  `~/.local/share/dbus-1/services/org.freedesktop.FileManager1.service` (→ `thunar.service`; dbus-broker ignora los duplicados `/usr/share/dbus-1/services/org.kde.dolphin.*`).
-- **Unidades de Dolphin y KActivity**: se fueron con los paquetes. Las máscaras de usuario se quitaron. El override de `FileManager1` a Thunar se queda.
+- **`org.freedesktop.FileManager1`**: Seeker lo sirve. Override a nivel usuario en
+  `~/.local/share/dbus-1/services/org.freedesktop.FileManager1.service` (→ `~/.local/bin/seeker`; dbus-broker ignora los duplicados `/usr/share/dbus-1/services/org.kde.dolphin.*`).
+- **Unidades de Dolphin y KActivity**: se fueron con los paquetes. Las máscaras de usuario se quitaron.
 - **Fase 2 hecha (2026-10-30)**: 238 paquetes KDE/Plasma (~1381 MiB), incluido `plasma-integration` y `kde-gtk-config`. El tema ya no escribe `kdeglobals`. Config, caché y el índice de Baloo se borraron. Siguen `bluez`, `noto-fonts-emoji`, `ttf-hack` y el `colorreload` vendorizado.
 
 ---

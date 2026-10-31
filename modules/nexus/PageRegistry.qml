@@ -61,7 +61,7 @@ QtObject {
             id: "keybinds",
             label: Tr.tr("Keyboard & mouse"),
             icon: "keyboard",
-            description: Tr.tr("Shell shortcuts, remapping and mouse focus"),
+            description: Tr.tr("Shortcuts, remappings"),
             category: "input"
         },
 
@@ -70,7 +70,7 @@ QtObject {
             id: "network",
             label: Tr.tr("Network"),
             icon: "wifi",
-            description: Tr.tr("Wi-Fi, ethernet, VPN (NetworkManager)"),
+            description: Tr.tr("Wi-Fi, ethernet, VPN"),
             category: "connectivity"
         },
         {
@@ -85,7 +85,7 @@ QtObject {
             id: "audio",
             label: Tr.tr("Audio"),
             icon: "volume_up",
-            description: Tr.tr("App volumes, sound devices"),
+            description: Tr.tr("Output, input"),
             category: "connectivity"
         },
 
@@ -94,7 +94,7 @@ QtObject {
             id: "apps",
             label: Tr.tr("Apps"),
             icon: "apps",
-            description: Tr.tr("Default apps, favourites, hidden apps"),
+            description: Tr.tr("Defaults, library"),
             category: "apps"
         },
 
@@ -110,23 +110,24 @@ QtObject {
             id: "language",
             label: Tr.tr("Language & region"),
             icon: "globe",
-            description: Tr.tr("UI language, weather location, display units"),
+            description: Tr.tr("Location, units"),
             category: "system"
         },
         {
+            // Stable id "services" (was Tuning hub); root page is Notifications.
             id: "services",
-            label: Tr.tr("Tuning"),
-            icon: "build",
-            description: Tr.tr("Notifications, polling, media"),
+            label: Tr.tr("Notifications"),
+            icon: "notifications",
+            description: Tr.tr("Categories, toasts"),
             category: "system"
         },
 
         // About
         {
             id: "about",
-            label: Tr.tr("About"),
+            label: Tr.tr("System information"),
             icon: "info",
-            description: Tr.tr("System information, credits"),
+            description: Tr.tr("Versions, hardware, software"),
             category: "about"
         },
     ]

@@ -2,9 +2,22 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 2026-10-31
+
+### Activities / esquema dinámico
+
+- `apply-activity-style.py` se había quedado con imports viejos (`convert_gif` / `is_valid_image`) y fallaba al aplicar wallpaper → el esquema `dynamic` no regeneraba el acento desde el fondo.
+- Al elegir/regenerar `dynamic`, el apply vuelve a sincronizar el wallpaper de la activity (no el thumbnail de otra) y fuerza `update_colours`.
+
 ## 2026-10-30
 
-### About / Companion
+### Seeker (explorador)
+
+- Nuevo explorador **Seeker** (etiqueta **Archivos**, repo `~/Desarrollo/seeker`, Qt6 QML): default en `apps.explorer`, Super+E y `FileManager1`.
+- `sylphrena-quiet.py` escribe `~/.config/seeker/theme.json` en cada apply de esquema (hot-reload M3 en Seeker).
+- Thunar deja de ser el default; sigue usable como alternativa.
+
+### About / SylphOrb
 
 - Página **Acerca de**: el hero usa el orbe SoftBurst animado (mismo de lock/greeter) en lugar del `AnimatedLogo` SVG estático.
 - Nuevo `components/SylphOrb.qml` (+ gemela `greeter/components/SylphOrb.qml` con tokens Theme): lock y greeter dejan de duplicar el bloque del orbe.

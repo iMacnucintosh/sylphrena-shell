@@ -435,7 +435,7 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
             "terminal": ["foot"],
             "audio": ["pwvucontrol"],
             "playback": ["mpv"],
-            "explorer": ["thunar"]
+            "explorer": ["seeker"]
         },
         "idle": {
             "lockBeforeSleep": true,

@@ -7,12 +7,15 @@ import Quickshell.Widgets
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
+import qs.components.controls
 import qs.services
 import qs.utils
 import qs.modules.nexus.common
 
 PageBase {
     id: root
+
+    property string searchQuery: ""
 
     title: Tr.tr("All apps")
     isSubPage: true
@@ -23,10 +26,35 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
+        SearchBar {
+            id: search
+
+            Layout.fillWidth: true
+            Layout.bottomMargin: Tokens.spacing.medium
+            placeholderText: Tr.tr("Search apps")
+            font: Tokens.font.body.medium
+            text: root.searchQuery
+            onTextChanged: root.searchQuery = text
+            bg.color: Colours.tPalette.m3surfaceContainerLowest
+
+            Component.onCompleted: forceActiveFocus()
+        }
+
         Repeater {
             id: list
 
-            model: [...DesktopEntries.applications.values].sort((a, b) => a.name.localeCompare(b.name))
+            model: {
+                const q = (root.searchQuery || "").trim().toLowerCase();
+                const apps = [...DesktopEntries.applications.values];
+                const filtered = q ? apps.filter(a => {
+                    const name = String(a.name || "").toLowerCase();
+                    const comment = String(a.comment || "").toLowerCase();
+                    const generic = String(a.genericName || "").toLowerCase();
+                    const id = String(a.id || "").toLowerCase();
+                    return name.includes(q) || comment.includes(q) || generic.includes(q) || id.includes(q);
+                }) : apps;
+                return filtered.sort((a, b) => a.name.localeCompare(b.name));
+            }
 
             ConnectedRect {
                 id: appItem
@@ -87,6 +115,14 @@ PageBase {
                         text: "favorite"
                         fill: 1
                         color: Colours.palette.m3primary
+                        fontStyle: Tokens.font.icon.small
+                    }
+
+                    MaterialIcon {
+                        visible: Strings.testRegexList(GlobalConfig.launcher.hiddenApps, appItem.modelData.id)
+                        text: "visibility_off"
+                        fill: 0
+                        color: Colours.palette.m3onSurfaceVariant
                         fontStyle: Tokens.font.icon.small
                     }
 

@@ -19,6 +19,7 @@ StyledRect {
     readonly property bool hasImage: modelData.image.length > 0
     readonly property bool hasAppIcon: modelData.appIcon.length > 0
     readonly property int bodyTextFormat: /[<*_`#\[\]]/.test(modelData.body) ? Text.MarkdownText : Text.PlainText
+    readonly property var displayActions: Notifs.displayActions(root.modelData)
     readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? Tokens.spacing.extraSmall * 2 + appName.height + body.height + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
     property bool expanded: Config.notifs.openExpanded
 
@@ -471,7 +472,7 @@ StyledRect {
                 IconButton {
                     isRound: true
                     shapeMorph: true
-                    fillWidth: root.modelData.actions.length === 0
+                    fillWidth: root.displayActions.length === 0
                     inactiveColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
                     inactiveOnColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
                     icon: "delete"
@@ -480,12 +481,7 @@ StyledRect {
                 }
 
                 Repeater {
-                    model: (root.modelData.actions ?? []).filter(a => {
-                        const text = (a?.text || "").trim();
-                        if (text.length > 0)
-                            return true;
-                        return !!(root.modelData.hasActionIcons && a?.identifier);
-                    })
+                    model: root.displayActions
 
                     TextButton {
                         required property var modelData
@@ -511,7 +507,7 @@ StyledRect {
                 IconButton {
                     isRound: true
                     shapeMorph: true
-                    fillWidth: root.modelData.actions.length === 0
+                    fillWidth: root.displayActions.length === 0
                     inactiveColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
                     inactiveOnColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
                     icon: copyTimer.running ? "inventory" : "content_copy"

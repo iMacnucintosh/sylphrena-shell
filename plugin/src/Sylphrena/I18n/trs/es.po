@@ -1130,7 +1130,6 @@ msgid "Add to favourites"
 msgstr "Añadir a favoritos"
 
 #: modules/launcher/items/AppItem.qml
-#, fuzzy
 msgid "Hide from launcher"
 msgstr "Ocultar del lanzador"
 
@@ -1661,12 +1660,18 @@ msgid "Keyboard & mouse"
 msgstr "Teclado y ratón"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Shell shortcuts, remapping and mouse focus"
-msgstr "Atajos del shell, reasignación y foco del ratón"
+msgid "Shortcuts, remappings"
+msgstr "Atajos, reasignaciones"
+
+#~ msgid "Shell shortcuts, remapping and mouse focus"
+#~ msgstr "Atajos del shell, reasignación y foco del ratón"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Wi-Fi, ethernet, VPN (NetworkManager)"
-msgstr "Wi-Fi, ethernet, VPN (NetworkManager)"
+msgid "Wi-Fi, ethernet, VPN"
+msgstr "Wi-Fi, ethernet, VPN"
+
+#~ msgid "Wi-Fi, ethernet, VPN (NetworkManager)"
+#~ msgstr "Wi-Fi, ethernet, VPN (NetworkManager)"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/BluetoothPage.qml
 msgid "Connected devices"
@@ -1681,8 +1686,11 @@ msgid "Audio"
 msgstr "Audio"
 
 #: modules/nexus/PageRegistry.qml
-msgid "App volumes, sound devices"
-msgstr "Volumen de aplicaciones, dispositivos de sonido"
+msgid "Output, input"
+msgstr "Salida, entrada"
+
+#~ msgid "App volumes, sound devices"
+#~ msgstr "Volumen de aplicaciones, dispositivos de sonido"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AppsPage.qml
 #: modules/nexus/pages/panels/LauncherPanel.qml
@@ -1691,8 +1699,11 @@ msgid "Apps"
 msgstr "Aplicaciones"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Default apps, favourites, hidden apps"
-msgstr "Aplicaciones predeterminadas, favoritas, ocultas"
+msgid "Defaults, library"
+msgstr "Predeterminadas, biblioteca"
+
+#~ msgid "Default apps, favourites, hidden apps"
+#~ msgstr "Aplicaciones predeterminadas, favoritas, ocultas"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/UpdatesPage.qml
 msgid "System updates"
@@ -1703,33 +1714,26 @@ msgid "Language & region"
 msgstr "Idioma y región"
 
 #: modules/nexus/PageRegistry.qml
-msgid "UI language, weather location, display units"
-msgstr "Idioma de la interfaz, ubicación del tiempo, unidades de medida"
+msgid "Location, units"
+msgstr "Ubicación, unidades"
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/ServicesPage.qml
-msgid "Tuning"
-msgstr "Ajuste fino"
+#~ msgid "UI language, weather location, display units"
+#~ msgstr "Idioma de la interfaz, ubicación del tiempo, unidades de medida"
 
-#: modules/nexus/PageRegistry.qml
-msgid "Notifications, polling, media"
-msgstr "Notificaciones, sondeo, media"
+#~ msgid "Tuning"
+#~ msgstr "Ajuste fino"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AboutPage.qml
-msgid "About"
-msgstr "Acerca de"
+msgid "System information"
+msgstr "Información del sistema"
 
 #: modules/nexus/PageRegistry.qml
-msgid "System information, credits"
-msgstr "Información del sistema, créditos"
+msgid "Versions, hardware, software"
+msgstr "Versiones, hardware, software"
 
 #: modules/nexus/pages/AboutPage.qml
 msgid "Hostname"
 msgstr "Nombre del equipo"
-
-#: modules/nexus/pages/AboutPage.qml
-msgctxt "system model name"
-msgid "Device"
-msgstr "Dispositivo"
 
 #: modules/nexus/pages/AboutPage.qml
 msgid "Distro"
@@ -1739,17 +1743,37 @@ msgstr "Distribución"
 msgid "Kernel"
 msgstr "Núcleo"
 
-#. TRANSLATORS: BIOS or UEFI firmware version
+#. TRANSLATORS: BIOS or UEFI firmware version from DMI
 #: modules/nexus/pages/AboutPage.qml
-msgid "Firmware"
-msgstr "Firmware"
+msgid "BIOS version"
+msgstr "Versión BIOS"
+
+#: modules/nexus/pages/AboutPage.qml
+msgid "Packages"
+msgstr "Paquetes"
+
+#: modules/nexus/pages/AboutPage.qml
+msgid "Hardware"
+msgstr "Hardware"
+
+#. TRANSLATORS: focused / primary Hyprland output
+#: modules/nexus/pages/AboutPage.qml
+msgid "Primary monitor"
+msgstr "Monitor principal"
+
+#: modules/nexus/pages/AboutPage.qml
+msgid "Uptime"
+msgstr "Tiempo activo"
+
+#: modules/nexus/pages/AboutPage.qml
+msgid "%1 free"
+msgstr "%1 libre"
 
 #: modules/nexus/pages/AboutPage.qml
 msgid "Software"
 msgstr "Software"
 
 #: modules/nexus/pages/AboutPage.qml
-#, fuzzy
 msgctxt "the sylphrena shell itself, not a unix shell"
 msgid "Shell"
 msgstr "Shell"
@@ -1757,15 +1781,7 @@ msgstr "Shell"
 #: modules/nexus/pages/AboutPage.qml
 msgctxt "the sylphrena command line tool"
 msgid "CLI"
-msgstr ""
-
-#: modules/nexus/pages/AboutPage.qml
-msgid "Plugins"
-msgstr "Complementos"
-
-#: modules/nexus/pages/AboutPage.qml
-msgid "Loaded plugins"
-msgstr "Complementos cargados"
+msgstr "CLI"
 
 #: modules/nexus/pages/apps/AllApps.qml modules/nexus/pages/AppsPage.qml
 msgid "All apps"
@@ -3453,9 +3469,12 @@ msgctxt "gpu type"
 msgid "None"
 msgstr "Ninguno"
 
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Notifications, toasts, timeouts"
-msgstr "Notificaciones, avisos emergentes, tiempos de espera"
+#: modules/nexus/PageRegistry.qml
+msgid "Categories, toasts"
+msgstr "Categorías, avisos emergentes"
+
+#~ msgid "Notifications, toasts, timeouts"
+#~ msgstr "Notificaciones, avisos emergentes, tiempos de espera"
 
 #: modules/nexus/pages/ServicesPage.qml
 msgid "Polling"

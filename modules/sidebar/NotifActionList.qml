@@ -102,17 +102,12 @@ Item {
             spacing: Tokens.spacing.small
 
             Repeater {
-                // Open-app is the card click; skip empty app actions (e.g. Teams blanks)
+                // Open-app is the card click; skip default/Activate and empty app actions
                 model: [
                     {
                         isClose: true
                     },
-                    ...(root.notif?.actions ?? []).filter(a => {
-                        const text = (a?.text || "").trim();
-                        if (text.length > 0)
-                            return true;
-                        return !!(root.notif?.hasActionIcons && a?.identifier);
-                    }),
+                    ...Notifs.displayActions(root.notif),
                     {
                         isCopy: true
                     }

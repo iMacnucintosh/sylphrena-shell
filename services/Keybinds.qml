@@ -343,7 +343,7 @@ Singleton {
             description: () => Tr.tr("Open the file manager"),
             defaultBind: "SUPER + E",
             // Resolved at apply-time from GlobalConfig.general.apps.explorer
-            dispatch: "hl.dsp.exec_cmd(\"thunar\")",
+            dispatch: "hl.dsp.exec_cmd(\"seeker\")",
             category: "apps"
         },
         {
@@ -667,7 +667,12 @@ Singleton {
         if (action.global)
             return `hl.dsp.global("${root.escapeLuaString(action.global)}")`;
         if (action.id === "openFiles") {
-            const bin = GlobalConfig.general.apps.explorer[0] || "thunar";
+            // Hyprland's PATH has no ~/.local/bin — resolve seeker (and any
+            // bare explorer name) to an absolute path when needed.
+            const parts = GlobalConfig.general.apps.explorer;
+            let bin = (parts && parts.length) ? String(parts[0]) : "seeker";
+            if (bin && !bin.includes("/"))
+                bin = `${Quickshell.env("HOME")}/.local/bin/${bin}`;
             return `hl.dsp.exec_cmd("${root.escapeLuaString(bin)}")`;
         }
         if (action.dispatch)

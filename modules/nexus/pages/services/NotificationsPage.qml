@@ -38,7 +38,6 @@ PageBase {
     readonly property list<string> toastFullscreenValues: ["off", "important", "all"]
 
     title: Tr.tr("Notifications")
-    isSubPage: true
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

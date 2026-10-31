@@ -21,7 +21,7 @@ cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream 
 - Arch Linux + **Hyprland 0.57**, sobremesa (sin batería), monitor MSI 1440p @ **144 Hz** por HDMI (`HDMI-A-1`).
 - Login: **greetd + greeter Quickshell Material You** tras logout (autologin inicial a `start-hyprland`; teclado `es`, cortina negra + VT limpio y watchdog anti-stuck). Hyprland de usuario va por `quiet-exec` (sin TTY, log en `~/.local/state/sylphrena/session-startup.log`). El compositor desechable hace `hyprctl exit` corto + SIGKILL y deja tty1 en modo texto. `logind` `UserStopDelaySec=0` + `user@.service` `TimeoutStopSec=8`. Instalación con `greeter/install-greeter.sh`. Plasma y plasmalogin ya no están. Cursor **Adwaita** en GTK/Qt/Hyprland.
 - Locale `es_ES.UTF-8`; **todo lo nuevo va con i18n**: cadenas vía `Tr.tr` / `Tr.trN` / `Tr.trCtx` → `es.po` → recompilar el plugin I18n e instalarlo en `~/.local`.
-- Apps por defecto: **kitty** (terminal), **thunar** (explorador, `Super+E`, sirve `FileManager1` vía override D-Bus), tema de iconos **Papirus(-Dark)**. Vídeo: sin reproductor (`general.apps.playback` vacío; VLC se desinstaló el 2026-10-30).
+- Apps por defecto: **kitty** (terminal), **Seeker** (`seeker`, etiqueta **Archivos**; explorador Material You en `~/Desarrollo/seeker`, `Super+E`, sirve `FileManager1` vía override D-Bus), tema de iconos **Papirus(-Dark)**. Vídeo: sin reproductor (`general.apps.playback` vacío; VLC se desinstaló el 2026-10-30). Thunar queda instalable como fallback.
 - Qt platform theme: **qt6ct** (`~/.config/qt6ct`, paleta + Papirus los empuja `sylphrena-quiet` en cada esquema). Plasma desinstalado (fase 2, 2026-10-30).
 - VPN del trabajo: openfortivpn (credenciales **solo** en `~/.config/openfortivpn/config`, jamás en el repo).
 - Steam: API key **solo en config local** (nunca commitearla; grep del diff antes de push). Perfil/logros públicos.
@@ -64,7 +64,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 
 ### Scripts (`scripts/`)
 - `apply-activity-style.py` — apply de look completo en un solo proceso (~0,38 s).
-- `sylphrena-quiet.py` — aplica tema sin volcar secuencias OSC a los PTYs; recarga Kitty, sync Papirus en qt6ct, GTK/colors.css.
+- `sylphrena-quiet.py` — aplica tema sin volcar secuencias OSC a los PTYs; recarga Kitty, sync Papirus en qt6ct, GTK/colors.css, `~/.config/seeker/theme.json` (Seeker).
 - `sync-light-apps-cli.py` — reescrituras de `cli.json` **deben conservar** el postHook de Kitty.
 - `steam-nonsteam.py` — VDF + IDs ocultos + sesiones Millennium + caché de historial.
 - `steam-activity.py` — poll de procesos `reaper` (sesiones reales) + delta de `playtime_forever` como respaldo; `snapshot` lee JSON por **stdin** (argv sigue para debug).

@@ -192,11 +192,8 @@ QtObject {
             }
         },
         Component {
-            // Tuning (id: services)
+            // Notifications (id: services — stable)
             StackPage {
-                Component {
-                    ServicesPage {}
-                }
                 Component {
                     NotificationsPage {}
                 }
