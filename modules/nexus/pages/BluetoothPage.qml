@@ -220,15 +220,8 @@ PageBase {
             }
         }
 
-        // Displays / monitors (Hz, scale, VRR) — nested under Connected devices
-        NavRow {
-            Layout.topMargin: Tokens.spacing.large - parent.spacing
-            first: true
-            last: true
-            icon: "monitor"
-            text: Tr.trCtx("Display", "monitor settings")
-            subtext: Tr.tr("Output modes, scale, adaptive sync (VRR)")
-            onClicked: root.nState.openSubPage(3)
+        DisplayPage {
+            nState: root.nState
         }
     }
 }

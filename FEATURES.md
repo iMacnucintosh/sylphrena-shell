@@ -193,7 +193,7 @@ require("sylphrena-monitors")
 
 ## Explorador y theming GTK
 
-- Explorador por defecto: **Seeker** (`general.apps.explorer: ["seeker"]` + Super+E + `xdg-mime` para carpetas). Repo aparte `~/Desarrollo/seeker`; tema M3 vía `~/.config/seeker/theme.json` (escrito por `sylphrena-quiet.py`). Thunar sigue disponible como alternativa.
+- Explorador por defecto: **Seeker** (`general.apps.explorer: ["seeker"]` + Super+E + `xdg-mime` para carpetas). Repo aparte `~/Desarrollo/seeker`; tema M3 vía `~/.config/seeker/theme.json` (escrito por `sylphrena-quiet.py`). Thunar sigue disponible como alternativa. Los pickers internos (wallpaper, avatar, icono de `.desktop`) usan `components/filedialog/FileDialog.qml` → `seeker --pick` (sin explorador QML embebido).
 - Para que Thunar/GTK sigan el esquema de Sylphrena: `adw-gtk-theme`, `papirus-icon-theme`, y `GTK_MODULES=colorreload-gtk-module` (Hyprland + `settings.ini`; el módulo está **vendorizado** en `~/.local/share/gtk-3.0/modules/`, ver abajo).
 - Iconos de apps en el launcher: tema **Papirus** (sincronizado en `~/.config/qt6ct/qt6ct.conf [Appearance] icon_theme` al aplicar el esquema).
 - Diálogos `pkexec` (Timeshift, VPN helper, etc.): activa `hyprpolkitagent.service` (`systemctl --user enable --now hyprpolkitagent`).
@@ -266,7 +266,8 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 - **Hover en la esquina superior derecha** (y la inferior derecha) abre la **sidebar** de notificaciones, no solo utilities.
 - Botones de la card: cerrar, acciones de la app (si tienen texto/icono útil) y copiar; se ocultan acciones vacías (p. ej. Teams).
 - Compatible con `actionOnClick` cuando hay una sola acción de notificación.
-
+- **Avisos emergentes (toasts)**: salen integrados en el borde de la shell (mismo `PanelBg` que las notificaciones), con animación como los popups de notificación. **Posición** en Nexus → Notificaciones → Avisos emergentes: **Superior** (esquina superior derecha; por defecto) o **Inferior** (esquina inferior derecha). Con la sidebar abierta el aviso queda a su izquierda en ambas posiciones. Config: `utilities.toasts.position` = `"top"` / `"bottom"`.
+- **Now playing**: portada con `CoverArt` animado (shape al azar entre cookies / soft burst / sunny / gem / …; sin Oval ni ClamShell). No avisa en vistas previas mudas del listado de YouTube (URL MPRIS de resultados/inicio) ni al re-enfocar Zen con la misma pista; sí al cambiar de canción/vídeo real (`/watch`, `/shorts`, `/live`).
 ---
 
 ## Barra (otros retoques)
@@ -291,7 +292,7 @@ Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 - **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí; **Tuning** / `id: services` queda para notificaciones, polling y media).
 - **Status icons honestos**: el badge de updates y la fila de VPN rigen el auto-ocultado con config explícita (`bar.status.onlyShowUpdatesWithUpdates`; VPN atado al complemento) y es visible en `Panels → Taskbar → Status icons → Auto-hide`. La batería quedó **vanilla**: se muestra/oculta con el toggle de la lista "Visible icons" y su popout es el de siempre («No se ha detectado ninguna batería» o «Power profile: %1» en desktops, con el selector de perfiles intacto).
 - **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-links navegables entre ambas.
-- **IA del sidebar (fase 1)**: títulos de categoría visibles; orden **Escritorio y apariencia** (Activities, Panels, Complements) → Entrada → **Dispositivos** (Network, Connected devices [+ Display subpage], Audio) → Apps → Sistema → Acerca de. `smartScheme` en Activities; incrementos volumen/brillo en Audio. Display ya no es página top-level del nav.
+- **IA del sidebar (fase 1)**: títulos de categoría visibles; orden **Escritorio y apariencia** (Activities, Panels, Complements) → Entrada → **Dispositivos** (Network, Connected devices [Bluetooth + Display inline], Audio) → Apps → Sistema → Acerca de. `smartScheme` en Activities; incrementos volumen/brillo en Audio. Display ya no es página top-level del nav.
 - Las páginas del nav llevan **id estable** (`PageRegistry.idxOf`) — los saltos programáticos (Updates → Nexus) ya no dependen de índices hardcodeados.
 - Traducciones **español** ampliadas para las cadenas nuevas.
 

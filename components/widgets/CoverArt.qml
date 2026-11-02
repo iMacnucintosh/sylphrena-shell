@@ -15,6 +15,9 @@ Item {
 
     readonly property alias shape: shape
 
+    // Empty → current MPRIS art. Set to pin a frame (e.g. now-playing toast).
+    property string source: ""
+    property int shapeType: MaterialShape.Cookie12Sided
     property bool hadPrevious
     property color fallbackColour: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
 
@@ -42,7 +45,7 @@ Item {
             id: shape
 
             implicitSize: root.width
-            shape: MaterialShape.Cookie12Sided
+            shape: root.shapeType
             color: Qt.alpha(root.fallbackColour, 1)
 
             Anim on rotation {
@@ -97,7 +100,7 @@ Item {
 
         anchors.fill: parent
 
-        source: Players.getArtUrl(Players.active)
+        source: root.source || Players.getArtUrl(Players.active)
 
         layer.enabled: true
         layer.effect: Mask {
