@@ -8,12 +8,13 @@ namespace sylphrena::shell {
 
 using Qt::StringLiterals::operator""_s;
 
-Toast::Toast(QString title, QString message, QString icon, Type type, int timeout, QObject* parent)
+Toast::Toast(QString title, QString message, QString icon, Type type, int timeout, QString image, QObject* parent)
     : QObject(parent)
     , m_closed(false)
     , m_title(std::move(title))
     , m_message(std::move(message))
     , m_icon(std::move(icon))
+    , m_image(std::move(image))
     , m_type(type)
     , m_timeout(timeout) {
     QTimer::singleShot(timeout, this, &Toast::close);
@@ -66,6 +67,10 @@ QString Toast::icon() const {
     return m_icon;
 }
 
+QString Toast::image() const {
+    return m_image;
+}
+
 int Toast::timeout() const {
     return m_timeout;
 }
@@ -116,8 +121,9 @@ QQmlListProperty<Toast> Toaster::toasts() {
     return { this, &m_toasts };
 }
 
-void Toaster::toast(const QString& title, const QString& message, const QString& icon, Toast::Type type, int timeout) {
-    auto* const toast = new Toast(title, message, icon, type, timeout, this);
+void Toaster::toast(const QString& title, const QString& message, const QString& icon, Toast::Type type, int timeout,
+    const QString& image) {
+    auto* const toast = new Toast(title, message, icon, type, timeout, image, this);
     QObject::connect(toast, &Toast::finishedClose, this, [toast, this] {
         if (m_toasts.removeOne(toast)) {
             emit toastsChanged();

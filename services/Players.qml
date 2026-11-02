@@ -29,16 +29,23 @@ Singleton {
     function getArtUrl(player: MprisPlayer): string {
         if (!player)
             return "";
-        if (player.trackArtUrl)
-            return player.trackArtUrl;
+        const url = `${player.metadata["xesam:url"] ?? ""}`;
+        // Prefer YouTube CDN thumbs (watch / shorts / live / youtu.be) over the
+        // browser's local mpris cache, which is often a small cropped frame.
+        const ytId = url.match(/(?:[?&]v=|youtu\.be\/|\/(?:shorts|live)\/)([\w-]{11})/)?.[1];
+        if (ytId)
+            return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+        return player.trackArtUrl || "";
+    }
 
-        const url = player.metadata["xesam:url"] ?? "";
-        if (url.startsWith("https://www.youtube.com/watch")) {
-            // Fallback for youtube
-            const id = url.match(/[?&]v=([\w-]{11})/)?.[1];
-            return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
-        }
-        return "";
+    // YouTube muted autoplay previews (search/home/feed) keep the listing page in
+    // xesam:url; a real play switches to /watch|/shorts|/live. MPRIS Volume stays 1
+    // for HTML5-muted media, so volume alone cannot detect those previews.
+    function isListingPreview(player: MprisPlayer): bool {
+        const url = `${player.metadata["xesam:url"] ?? ""}`;
+        if (!/youtube\.com\//i.test(url))
+            return false;
+        return !/\/(watch|shorts|live)\b/i.test(url);
     }
 
     // Quickshell only emits postTrackChanged when trackid/url/title change, so late
@@ -52,20 +59,26 @@ Singleton {
         if (!player)
             return;
 
+        // Soft-mute when the player reports it (Spotify etc.). Do not record the key:
+        // unmuting / opening the real watch URL should still be allowed to toast.
+        if ((player.volumeSupported && player.volume <= 0) || root.isListingPreview(player))
+            return;
+
         const title = player.trackTitle ?? "";
         const artist = player.trackArtist ?? "";
         if (!title || !artist)
             return;
 
-        const key = `${getIdentity(player)}\0${player.uniqueId}\0${title}\0${artist}`;
+        // No uniqueId: Zen/Firefox rebind MPRIS on focus (new id) and would re-toast.
+        const key = `${getIdentity(player)}\0${title}\0${artist}`;
         if (key === lastNowPlayingKey)
             return;
 
         lastNowPlayingKey = key;
-        Toaster.toast(Tr.tr("Now playing"), Tr.trCtx("%1 - %2", "track artist and title").arg(artist).arg(title), "music_note");
+        Toaster.toast(Tr.tr("Now playing"), Tr.trCtx("%1 - %2", "track artist and title").arg(artist).arg(title), "music_note", Toast.Info, 5000, root.getArtUrl(player));
     }
 
-    onActiveChanged: lastNowPlayingKey = ""
+    // lastNowPlayingKey survives activeChanged: browser MPRIS rebinds on focus.
 
     Connections {
         function onPostTrackChanged(): void {
@@ -77,6 +90,10 @@ Singleton {
         }
 
         function onTrackArtistChanged(): void {
+            root.maybeToastNowPlaying();
+        }
+
+        function onVolumeChanged(): void {
             root.maybeToastNowPlaying();
         }
 

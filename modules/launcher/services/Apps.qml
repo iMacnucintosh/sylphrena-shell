@@ -72,13 +72,29 @@ Searcher {
         const pat = new RegExp(`^${key.replace(/[[\]]/g, "\\$&")}=.*$`, "m");
         if (pat.test(text))
             return text.replace(pat, line);
+        if (value === "")
+            return text;
         // Match [Desktop Entry] with optional \r
         if (/\[Desktop Entry\]\r?\n/.test(text))
             return text.replace(/\[Desktop Entry\]\r?\n/, m => `${m}${line}\n`);
         return `[Desktop Entry]\n${line}\n${text}`;
     }
 
-    function saveDesktopMetadata(id: string, name: string, comment: string, icon: string): bool {
+    /// Categories/Keywords: accept `,` or `;`, emit `A;B;` (desktop-entry form).
+    function normalizeDesktopList(value: string): string {
+        const parts = String(value || "").split(/[;,]/).map(p => p.trim()).filter(p => p.length > 0);
+        return parts.length ? `${parts.join(";")};` : "";
+    }
+
+    function formatDesktopList(values: var): string {
+        if (!values || !values.length)
+            return "";
+        return [...values].join("; ");
+    }
+
+    /// meta: name, comment, icon, genericName, exec, categories, keywords,
+    ///       startupClass, workingDirectory, terminal (bool)
+    function saveDesktopMetadata(id: string, meta: var): bool {
         const dest = root.localOverridePath(id);
         const src = root.resolveDesktopPath(id);
         if (!src) {
@@ -100,12 +116,27 @@ Searcher {
             return false;
         }
 
-        if (name !== undefined && name !== null)
-            text = root.setDesktopKey(root.setDesktopKey(root.setDesktopKey(text, "Name", name), "Name[es]", name), "Name[es_ES]", name);
-        if (comment !== undefined && comment !== null)
-            text = root.setDesktopKey(root.setDesktopKey(root.setDesktopKey(text, "Comment", comment), "Comment[es]", comment), "Comment[es_ES]", comment);
-        if (icon !== undefined && icon !== null)
-            text = root.setDesktopKey(text, "Icon", icon);
+        const m = meta || {};
+        if (m.name !== undefined && m.name !== null)
+            text = root.setDesktopKey(root.setDesktopKey(root.setDesktopKey(text, "Name", m.name), "Name[es]", m.name), "Name[es_ES]", m.name);
+        if (m.comment !== undefined && m.comment !== null)
+            text = root.setDesktopKey(root.setDesktopKey(root.setDesktopKey(text, "Comment", m.comment), "Comment[es]", m.comment), "Comment[es_ES]", m.comment);
+        if (m.genericName !== undefined && m.genericName !== null)
+            text = root.setDesktopKey(root.setDesktopKey(root.setDesktopKey(text, "GenericName", m.genericName), "GenericName[es]", m.genericName), "GenericName[es_ES]", m.genericName);
+        if (m.icon !== undefined && m.icon !== null)
+            text = root.setDesktopKey(text, "Icon", m.icon);
+        if (m.exec !== undefined && m.exec !== null)
+            text = root.setDesktopKey(text, "Exec", m.exec);
+        if (m.categories !== undefined && m.categories !== null)
+            text = root.setDesktopKey(text, "Categories", root.normalizeDesktopList(m.categories));
+        if (m.keywords !== undefined && m.keywords !== null)
+            text = root.setDesktopKey(text, "Keywords", root.normalizeDesktopList(m.keywords));
+        if (m.startupClass !== undefined && m.startupClass !== null)
+            text = root.setDesktopKey(text, "StartupWMClass", m.startupClass);
+        if (m.workingDirectory !== undefined && m.workingDirectory !== null)
+            text = root.setDesktopKey(text, "Path", m.workingDirectory);
+        if (m.terminal !== undefined && m.terminal !== null)
+            text = root.setDesktopKey(text, "Terminal", m.terminal ? "true" : "false");
 
         io.path = dest;
         io.setText(text);

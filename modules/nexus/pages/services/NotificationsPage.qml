@@ -37,6 +37,19 @@ PageBase {
     ]
     readonly property list<string> toastFullscreenValues: ["off", "important", "all"]
 
+    // Toast screen corner, mapped to GlobalConfig.utilities.toasts.position
+    readonly property list<MenuItem> toastPositionItems: [
+        MenuItem {
+            text: Tr.trCtx("Top", "toast position: top-right corner")
+            icon: "north_east"
+        },
+        MenuItem {
+            text: Tr.trCtx("Bottom", "toast position: bottom-right corner")
+            icon: "south_east"
+        }
+    ]
+    readonly property list<string> toastPositionValues: ["top", "bottom"]
+
     title: Tr.tr("Notifications")
 
     ColumnLayout {
@@ -108,6 +121,14 @@ PageBase {
             menuItems: root.toastFullscreenItems
             active: root.toastFullscreenItems[Math.max(0, root.toastFullscreenValues.indexOf(GlobalConfig.utilities.toasts.fullscreen))]
             onSelected: item => GlobalConfig.utilities.toasts.fullscreen = root.toastFullscreenValues[root.toastFullscreenItems.indexOf(item)]
+        }
+
+        SelectRow {
+            label: Tr.tr("Position")
+            subtext: Tr.tr("Screen corner where toasts appear")
+            menuItems: root.toastPositionItems
+            active: root.toastPositionItems[Math.max(0, root.toastPositionValues.indexOf(GlobalConfig.utilities.toasts.position))]
+            onSelected: item => GlobalConfig.utilities.toasts.position = root.toastPositionValues[root.toastPositionItems.indexOf(item)]
         }
 
         StepperRow {

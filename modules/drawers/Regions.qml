@@ -73,6 +73,12 @@ Region {
     }
 
     R {
+        panel: root.panels.toasts
+        y: root.panels.toasts.atBottom ? panel.y + root.borderThickness : 0
+        height: panel.height > 0 ? panel.height + root.borderThickness : 0
+    }
+
+    R {
         panel: root.panels.utilities
         y: root.win.height - height
         height: panel.height * (1 - root.panels.utilities.offsetScale) + root.borderThickness
