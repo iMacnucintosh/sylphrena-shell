@@ -2,16 +2,43 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Widgets
 import Sylphrena
 import Sylphrena.Config
 import qs.components
+import qs.components.containers
 import qs.services
 
+// Same list mechanics as the notification popups (modules/notifications/Content.qml): cards
+// slide in/out sideways, siblings shift with move/displaced and the lobe height animates on
+// the expressive spatial curve. Fed by Toaster, never by the notification list.
 Item {
     id: root
 
     readonly property int spacing: Tokens.spacing.small
-    property bool flag
+    readonly property int padding: Tokens.padding.large
+    readonly property int clampedPadding: CUtils.clamp(padding - Config.border.thickness, 0, padding)
+    readonly property bool atBottom: GlobalConfig.utilities.toasts.position === "bottom"
+    // Bumped when a card's height settles (text wrap lands after the delegate is counted).
+    property int relayout
+    readonly property real contentHeight: {
+        relayout;
+        const count = list.count;
+        if (count === 0)
+            return 0;
+
+        let height = (count - 1) * spacing;
+        for (let i = 0; i < count; i++)
+            height += (list.itemAtIndex(i) as ToastWrapper)?.nonAnimHeight ?? 0;
+        return height;
+    }
+
+    function bumpRelayout(): void {
+        relayout++;
+    }
+
+    // Pull into the border like notifications so PanelBg joins the shell edge.
+    readonly property real edgeOverlap: contentHeight > 0 ? 5 : 0
 
     function shouldShowToast(toast: Toast): bool {
         if (!Notifs.hasFullscreen())
@@ -23,132 +50,157 @@ Item {
         return false;
     }
 
-    implicitWidth: Tokens.sizes.utilities.toastWidth - Tokens.padding.medium * 2
-    implicitHeight: {
-        let h = -spacing;
-        for (let i = 0; i < repeater.count; i++) {
-            const item = repeater.itemAt(i) as ToastWrapper;
-            if (!item.modelData.closed && !item.previewHidden)
-                h += item.implicitHeight + spacing;
-        }
-        return h;
+    visible: height > 0
+    implicitWidth: Tokens.sizes.notifs.width
+    implicitHeight: contentHeight > 0 ? contentHeight + padding + clampedPadding : 0
+    // BlobRect/PanelBg reads width/height (not implicit*); keep them in sync.
+    width: implicitWidth
+    height: implicitHeight
+
+    Behavior on implicitHeight {
+        Anim {}
     }
 
-    Repeater {
-        id: repeater
+    // Fixed card column pinned right, like the notification cards when the lobe widens.
+    ClippingWrapperRectangle {
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.topMargin: root.atBottom ? root.padding : root.clampedPadding
+        anchors.bottomMargin: root.atBottom ? root.clampedPadding : root.padding
+        anchors.rightMargin: root.clampedPadding
+        width: root.implicitWidth - root.padding - root.clampedPadding
 
-        model: ScriptModel {
-            values: {
-                const toasts = [];
-                let count = 0;
-                for (const toast of Toaster.toasts) {
-                    if (!root.shouldShowToast(toast))
-                        continue;
-                    toasts.push(toast);
-                    if (!toast.closed) {
-                        count++;
-                        if (count > root.Config.utilities.maxToasts)
+        color: "transparent"
+        radius: Tokens.rounding.large
+
+        StyledListView {
+            id: list
+
+            model: ScriptModel {
+                values: {
+                    const toasts = [];
+                    for (const toast of Toaster.toasts) {
+                        if (toast.closed || !root.shouldShowToast(toast))
+                            continue;
+                        toasts.push(toast);
+                        if (toasts.length >= root.Config.utilities.maxToasts)
                             break;
                     }
+                    return toasts;
                 }
-                return toasts;
             }
-            onValuesChanged: root.flagChanged()
-        }
 
-        ToastWrapper {}
+            anchors.fill: parent
+
+            orientation: Qt.Vertical
+            // Toaster keeps the newest first: nearest the screen edge the lobe grows from, so
+            // the lobe reveals it as it opens (like the notification popups).
+            verticalLayoutDirection: root.atBottom ? ListView.BottomToTop : ListView.TopToBottom
+            spacing: 0
+            interactive: false
+            cacheBuffer: (QsWindow.window as QsWindow)?.screen.height ?? 0
+
+            delegate: ToastWrapper {}
+
+            move: Transition {
+                Anim {
+                    property: "y"
+                }
+            }
+
+            displaced: Transition {
+                Anim {
+                    property: "y"
+                }
+            }
+        }
     }
 
-    component ToastWrapper: MouseArea {
-        id: toast
+    component ToastWrapper: Item {
+        id: wrapper
 
-        required property int index
         required property Toast modelData
+        required property int index
+        readonly property real nonAnimHeight: toast.implicitHeight
+        property int idx
 
-        readonly property bool previewHidden: {
-            let extraHidden = 0;
-            for (let i = 0; i < index; i++)
-                if (Toaster.toasts[i].closed)
-                    extraHidden++;
-            return index >= Config.utilities.maxToasts + extraHidden;
+        onIndexChanged: {
+            if (index !== -1)
+                idx = index;
         }
+        // Deferred: itemAtIndex() only returns this delegate once the view has registered it.
+        onNonAnimHeightChanged: Qt.callLater(root.bumpRelayout)
+        Component.onCompleted: Qt.callLater(root.bumpRelayout)
 
-        onPreviewHiddenChanged: {
-            if (initAnim.running && previewHidden)
-                initAnim.stop();
-        }
+        implicitWidth: toast.implicitWidth
+        implicitHeight: toast.implicitHeight + (idx === 0 ? 0 : root.spacing)
 
-        opacity: modelData.closed || previewHidden ? 0 : 1
-        scale: modelData.closed || previewHidden ? 0.7 : 1
+        ListView.onRemove: removeAnim.start()
 
-        anchors.bottomMargin: {
-            root.flag; // Force update
-            let y = 0;
-            for (let i = 0; i < index; i++) {
-                const item = repeater.itemAt(i) as ToastWrapper;
-                if (item && !item.modelData.closed && !item.previewHidden)
-                    y += item.implicitHeight + root.spacing;
+        SequentialAnimation {
+            id: removeAnim
+
+            PropertyAction {
+                target: wrapper
+                property: "ListView.delayRemove"
+                value: true
             }
-            return y;
-        }
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        implicitHeight: toastInner.implicitHeight
-
-        acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
-        onClicked: modelData.close()
-
-        Component.onCompleted: modelData.lock(this)
-
-        Anim {
-            id: initAnim
-
-            Component.onCompleted: running = !toast.previewHidden
-
-            target: toast
-            properties: "opacity,scale"
-            from: 0
-            to: 1
-        }
-
-        ParallelAnimation {
-            running: toast.modelData.closed
-            onStarted: toast.anchors.bottomMargin = toast.anchors.bottomMargin
-            onFinished: toast.modelData.unlock(toast)
-
-            Anim {
-                type: Anim.DefaultEffects
-                target: toast
-                property: "opacity"
-                to: 0
+            PropertyAction {
+                target: wrapper
+                property: "enabled"
+                value: false
+            }
+            PropertyAction {
+                target: wrapper
+                property: "implicitHeight"
+                value: 0
+            }
+            PropertyAction {
+                target: wrapper
+                property: "z"
+                value: 1
             }
             Anim {
                 target: toast
-                property: "scale"
-                to: 0.7
+                property: "x"
+                to: root.implicitWidth * 2
+                duration: Tokens.anim.durations.normal
+                easing: Tokens.anim.emphasized
+            }
+            PropertyAction {
+                target: wrapper
+                property: "ListView.delayRemove"
+                value: false
             }
         }
 
-        ToastItem {
-            id: toastInner
+        ClipRect {
+            anchors.top: parent.top
+            anchors.topMargin: !root.atBottom && wrapper.idx !== 0 ? root.spacing : 0
 
-            modelData: toast.modelData
-        }
+            color: "transparent"
+            radius: toast.radius
+            implicitWidth: toast.implicitWidth
+            implicitHeight: toast.implicitHeight
 
-        Behavior on opacity {
-            Anim {
-                type: Anim.DefaultEffects
+            ToastItem {
+                id: toast
+
+                modelData: wrapper.modelData
+                implicitWidth: root.implicitWidth - root.padding - root.clampedPadding
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
+                    onClicked: toast.modelData.close()
+                }
             }
         }
+    }
 
-        Behavior on scale {
-            Anim {}
-        }
-
-        Behavior on anchors.bottomMargin {
-            Anim {}
-        }
+    component Anim: NumberAnimation {
+        duration: Tokens.anim.durations.expressiveDefaultSpatial
+        easing: Tokens.anim.expressiveDefaultSpatial
     }
 }

@@ -1092,7 +1092,7 @@ msgstr "Nombre de la aplicación"
 msgid "Description"
 msgstr "Descripción"
 
-#: modules/launcher/DesktopEditDialog.qml
+#: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/apps/AppInfo.qml
 msgid "Icon"
 msgstr "Icono"
 
@@ -1832,6 +1832,51 @@ msgstr "ID de la aplicación"
 #: modules/nexus/pages/apps/AppInfo.qml
 msgid "Command"
 msgstr "Comando"
+
+#: modules/nexus/pages/apps/AppInfo.qml
+msgid "Exec"
+msgstr "Exec"
+
+#: modules/nexus/pages/apps/AppInfo.qml
+msgid "Working directory"
+msgstr "Directorio de trabajo"
+
+#: modules/nexus/pages/apps/AppInfo.qml
+msgid "Startup class"
+msgstr "Clase de arranque"
+
+#: modules/nexus/pages/apps/AppInfo.qml
+msgctxt "desktop entry GenericName"
+msgid "Generic name"
+msgstr "Nombre genérico"
+
+#: modules/nexus/pages/apps/AppInfo.qml
+msgid "Categories"
+msgstr "Categorías"
+
+#: modules/nexus/pages/apps/AppInfo.qml
+msgid "Keywords"
+msgstr "Palabras clave"
+
+#: modules/nexus/pages/apps/AppInfo.qml
+msgid "Runs in a terminal"
+msgstr "Se ejecuta en un terminal"
+
+#: modules/nexus/pages/apps/AppInfo.qml
+msgid "Desktop file"
+msgstr "Archivo .desktop"
+
+#: modules/launcher/DesktopEditDialog.qml
+msgid "Exec line (%U, %f, … allowed)"
+msgstr "Línea Exec (se permiten %U, %f, …)"
+
+#: modules/launcher/DesktopEditDialog.qml
+msgid "Separated by ; or ,"
+msgstr "Separadas por ; o ,"
+
+#: modules/launcher/DesktopEditDialog.qml
+msgid "Run in terminal"
+msgstr "Ejecutar en un terminal"
 
 #: modules/nexus/pages/AppsPage.qml
 msgid "Default applications"
@@ -2897,6 +2942,7 @@ msgstr "Permite acciones que apagan o cierran la sesión"
 msgid "Fuzzy search"
 msgstr "Búsqueda difusa"
 
+#: modules/nexus/pages/apps/AppInfo.qml
 #: modules/nexus/pages/panels/LauncherPanel.qml
 msgid "Actions"
 msgstr "Acciones"
@@ -3393,6 +3439,24 @@ msgid "Visible toasts"
 msgstr "Avisos visibles"
 
 #: modules/nexus/pages/services/NotificationsPage.qml
+msgctxt "toast position: top-right corner"
+msgid "Top"
+msgstr "Superior"
+
+#: modules/nexus/pages/services/NotificationsPage.qml
+msgctxt "toast position: bottom-right corner"
+msgid "Bottom"
+msgstr "Inferior"
+
+#: modules/nexus/pages/services/NotificationsPage.qml
+msgid "Screen corner where toasts appear"
+msgstr "Esquina de la pantalla donde aparecen los avisos"
+
+#: modules/nexus/pages/services/NotificationsPage.qml
+msgid "Position"
+msgstr "Posición"
+
+#: modules/nexus/pages/services/NotificationsPage.qml
 msgid "Maximum number of toasts shown at once"
 msgstr "Número máximo de avisos emergentes mostrados a la vez"
 
@@ -3587,6 +3651,7 @@ msgstr "Lectura"
 msgid "Code"
 msgstr "Código"
 
+#: modules/nexus/pages/apps/AppInfo.qml
 #: modules/nexus/pages/ShellPage.qml services/Keybinds.qml
 msgid "Terminal"
 msgstr "Terminal"

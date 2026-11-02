@@ -14,6 +14,7 @@ class UtilitiesToasts : public settings::ObjectNode {
     CONFIG_NODE(UtilitiesToasts, settings::ObjectNode)
 
     CONFIG_PROPERTY(QString, fullscreen, u"off"_s)
+    CONFIG_PROPERTY(QString, position, u"top"_s)
     CONFIG_PROPERTY(bool, configLoaded, true)
     CONFIG_PROPERTY(bool, chargingChanged, true)
     CONFIG_PROPERTY(bool, gameModeChanged, true)

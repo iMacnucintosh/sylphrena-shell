@@ -65,7 +65,7 @@ QtObject {
             category: "input"
         },
 
-        // Devices (Display lives inside Connected devices as a subpage)
+        // Devices (Display settings inline on Connected devices)
         {
             id: "network",
             label: Tr.tr("Network"),

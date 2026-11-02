@@ -2,6 +2,22 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 2026-11-02
+
+### Now playing
+
+- No avisa en vistas previas mudas del listado de YouTube (la URL MPRIS sigue siendo la página de resultados/inicio, no `/watch`). Tampoco si el reproductor reporta volumen 0. Al enfocar Zen ya no se repite el aviso de la misma pista (el rebind MPRIS del navegador ya no cuenta como canción nueva).
+- El aviso de now playing muestra la portada con el mismo `CoverArt` animado del panel multimedia (sin arco de progreso). Cada aviso elige al azar una shape redondeada (cookies, soft burst, sunny, gem, ghostish, clover, pill, pentagon; sin Oval ni ClamShell).
+
+### Toasts integrados en el borde
+
+- Los avisos emergentes (Caps Lock, DnD, VPN, etc.) dejan de flotar como tarjeta suelta: usan el mismo `PanelBg` que las notificaciones y salen en la esquina superior derecha, con el borde de la shell extendiéndose alrededor del aviso.
+- Animación igual que los popups de notificación (`modules/notifications/Content.qml`): `ListView` con entrada/salida deslizando en horizontal, `move`/`displaced` para los hermanos y altura del lóbulo con la curva expresiva espacial. Siguen alimentados por `Toaster` y nunca entran en la lista de notificaciones.
+- Con la sidebar abierta el aviso sale **al lado** de ella en ambas posiciones (anclado a su borde izquierdo, unido al borde superior o inferior), en vez de meterse encima del panel; la sidebar lo empuja al abrirse. Solo se apila sobre los popups de notificación / utilities con la sidebar cerrada.
+- Nueva opción **Posición** (Superior / Inferior) en Nexus → Notificaciones → Avisos emergentes (`utilities.toasts.position`, requiere el plugin recompilado). En inferior el aviso sale en la esquina inferior derecha unido al borde inferior / utilities.
+- Aviso arriba apilado sobre los popups de notificación: unión recta (sin protuberancia ni costura). Shader de blobs: en la zona de mezcla solo pinta el dueño del píxel cuando su renderer lo cubre (antes el borde antialiasado se pintaba dos veces y dejaba un escalón subpíxel entre lóbulos). Incluye al marco: sus franjas llegan 2×smoothing más allá del borde interior, y donde terminaban (y≈50) el canto vertical de los lóbulos pasaba de doble a simple pintado con un escalón de ~0,25 px. Los empates (aviso apilado sobre el panel de notificaciones, filete lóbulo↔marco) se resuelven igual en todos los renderers (marco y luego índice menor), y los blobs con `exclude` mutuo ya se ven entre sí (la máscara sigue evitando el smin): antes ninguno sabía del otro y ambos pintaban los 4 px de solape. La regla de dueño único solo se aplica a la franja antialiasada: en el interior opaco, durante una animación los renderers pueden discrepar (movimientos subpíxel sin propagar, deform por frame) y si ambos cedían quedaba una línea de 1 px al crecer el aviso. Solape aviso↔panel subido a 12 px.
+- Borde superior: escalón subpíxel en el ancho del dashboard cerrado (su blob oculto, aparcado dentro del borde, hundía la pared interior). Los `PanelBg` de paneles ocultos ya no participan ni se renderizan.
+
 ## 2026-10-31
 
 ### Activities / esquema dinámico
@@ -16,6 +32,12 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - Nuevo explorador **Seeker** (etiqueta **Archivos**, repo `~/Desarrollo/seeker`, Qt6 QML): default en `apps.explorer`, Super+E y `FileManager1`.
 - `sylphrena-quiet.py` escribe `~/.config/seeker/theme.json` en cada apply de esquema (hot-reload M3 en Seeker).
 - Thunar deja de ser el default; sigue usable como alternativa.
+- Eliminado el explorador QML embebido (`FolderContents`/`HeaderBar`/…): wallpaper, avatar e icono de `.desktop` pasan por `FileDialog` → Seeker `--pick`.
+
+### Apps (`.desktop`)
+
+- El diálogo **Editar aplicación** (launcher y Nexus → Apps → detalle, botón de lápiz) edita también nombre genérico, `Exec`, categorías, palabras clave, `StartupWMClass`, directorio de trabajo y terminal. Las claves vacías que no existían no se escriben en el override.
+- Detalle de app en Nexus: muestra `Exec`, directorio de trabajo, clase de arranque, icono, categorías, palabras clave, terminal y ruta del `.desktop`.
 
 ### About / SylphOrb
 
@@ -36,7 +58,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 - Categorías visibles en el nav; agrupación tras feedback Jorge: **Escritorio y apariencia** (Activities, Panels, Complements), Entrada, **Dispositivos** (Network, Connected devices, Audio), Apps, Sistema, Acerca de.
 - Orden sidebar: Activities → Panels → Complements → Keyboard & mouse → Network → Bluetooth → Audio → Apps → Updates → Language & region → Tuning (`id: services`) → About.
-- **Display** (Hz/escala/VRR) es subpágina de **Connected devices** (no aparece sola en el sidebar); sin deep-links top-level a `display`.
+- **Display** (Hz/escala/VRR) va **inline** en **Connected devices** (mismo nivel que Bluetooth; sin subpágina ni entrada sola en el sidebar).
 - `smartScheme` se edita en Activities; incrementos volumen/brillo/max volume en Audio (paths `services.*` intactos).
 - Cross-links Activities ↔ Taskbar Workspaces, Clock → Complements (Timers), Status icons → Complements (Madison), Display → Compact layout en Utilities.
 - Docs: «Nexus → Shell» / «Services → Clipboard» alineados a Activities / Complements.

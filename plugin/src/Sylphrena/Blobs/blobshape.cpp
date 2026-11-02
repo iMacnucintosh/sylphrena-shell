@@ -278,9 +278,9 @@ void BlobShape::collectNearbyRects(float pad, QVector<BlobShape*>& rectShapes) {
         if (other->width() <= 0 || other->height() <= 0)
             continue;
 
-        if (isExcluded(other))
-            continue;
-
+        // Excluded neighbours stay in the list (the exclude mask skips their smin): the
+        // shader needs them to agree on pixel ownership, or both renderers draw the
+        // shared edge and it shifts outwards.
         const QPointF otherScene = other->mapToScene(QPointF(0, 0));
 
         // An inverted rect smins against every shape, others only against overlapping ones
