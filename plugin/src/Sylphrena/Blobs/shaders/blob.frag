@@ -67,11 +67,9 @@ float smaxSharpA(float a, float b, float k) {
 void main() {
     vec2 pixel = vec2(paddedX, paddedY) + qt_TexCoord0 * vec2(paddedW, paddedH);
 
-    // Phase 1: compute per-rect SDF, track owner. We can't smin yet because excluded
+    // Phase 1: compute per-rect SDF. We can't smin yet because excluded
     // pairs need to skip the smooth blend, which requires pairwise pass below.
     float dArr[16];
-    int owner = -2;
-    float minDist = 1e10;
 
     for (int i = 0; i < rectCount; i++) {
         vec4 rect = rectData[i * 5];         // cx, cy, hw, hh
@@ -144,10 +142,6 @@ void main() {
         }
 
         dArr[i] = d;
-        if (d < smoothFactor && d < minDist) {
-            minDist = d;
-            owner = i;
-        }
     }
 
     // Phase 2: hard-min baseline over all rects.
@@ -174,6 +168,7 @@ void main() {
         }
     }
 
+    float dFrameOwn = 1e10;
     if (hasInverted != 0) {
         float dOuter = sdBox(pixel, invertedOuter.xy, invertedOuter.zw) - 1.0;
         float dInner = sdRoundedBox(pixel, invertedInner.xy, invertedInner.zw, invertedRadius);
@@ -249,21 +244,62 @@ void main() {
                              min(innerLeft - outerLeft, outerRight - innerRight));
         float kFrame = clamp(min(smoothFactor, minThick - 1.0), 1.0, smoothFactor);
         float dFrame = smaxSharpA(dOuter, -dInner, kFrame);
+        dFrameOwn = dFrame;
 
         mergedSdf = smin(mergedSdf, dFrame, smoothFactor);
-        if (dFrame < minDist) {
-            owner = -1;
+    }
+
+    // Ownership. Abutting shapes (a toast stacked on the notifications panel, a lobe's
+    // fillet into the frame) share edges where their SDFs tie exactly, so a later shape
+    // (frame first, then rect order) only takes a pixel when it is nearer by TIE.
+    const float TIE = 0.1;
+    float ownerD = 1e10;
+    int owner = -2;
+    if (hasInverted != 0) {
+        owner = -1;
+        ownerD = dFrameOwn;
+    }
+    for (int i = 0; i < rectCount; i++) {
+        if (dArr[i] < smoothFactor && dArr[i] + TIE < ownerD) {
+            owner = i;
+            ownerD = dArr[i];
         }
     }
+
+    float fw = fwidth(mergedSdf);
 
     // Each renderer only outputs pixels it owns, but allow rendering
     // blend zones to prevent gaps (mergedSdf < smoothFactor means in blend)
     // myIndex == -1: inverted rect renders border-owned pixels
     // myIndex >= 0: individual rect renders its owned pixels
-    if (owner != myIndex && mergedSdf > smoothFactor)
-        discard;
+    if (owner != myIndex) {
+        if (mergedSdf > smoothFactor)
+            discard;
+        // Partial-alpha (AA edge) pixels must be drawn exactly once: every extra renderer
+        // blending the same partial alpha shifts the edge outwards, so a change in how
+        // many renderers reach an edge shows up as a sub-pixel step (e.g. where the
+        // frame's strips end, 2*smoothFactor past the inner border). Yield to the owner
+        // when its renderer surely covers this pixel and this renderer clearly loses.
+        // Opaque interior pixels never yield: renderers can briefly disagree on ownership
+        // (sub-pixel moves aren't propagated, motion deform runs per frame) and both
+        // skipping leaves a gap line while lobes animate; overdrawing them is invisible.
+        const float MARGIN = 0.05;
+        float myD = myIndex >= 0 ? dArr[myIndex] : dFrameOwn;
+        float bias = myIndex > owner ? TIE : -TIE;
+        if (owner != -2 && abs(mergedSdf) < fw + 0.5 && myD + bias - ownerD > MARGIN) {
+            bool ownerCovers;
+            if (owner == -1) {
+                vec2 holeHalf = invertedInner.zw - vec2(smoothFactor * 2.0 - 1.0);
+                ownerCovers = any(greaterThan(abs(pixel - invertedInner.xy), holeHalf));
+            } else {
+                vec2 quadHalf = rectData[owner * 5].zw + vec2(smoothFactor - 1.0);
+                ownerCovers = all(lessThan(abs(pixel - rectData[owner * 5].xy), quadHalf));
+            }
+            if (ownerCovers)
+                discard;
+        }
+    }
 
-    float fw = fwidth(mergedSdf);
     float alpha = 1.0 - smoothstep(-fw, fw, mergedSdf);
     fragColor = vec4(color.rgb * alpha, alpha) * qt_Opacity;
 }

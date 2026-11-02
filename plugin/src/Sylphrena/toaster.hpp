@@ -18,6 +18,7 @@ class Toast : public QObject {
     Q_PROPERTY(QString title READ title CONSTANT)
     Q_PROPERTY(QString message READ message CONSTANT)
     Q_PROPERTY(QString icon READ icon CONSTANT)
+    Q_PROPERTY(QString image READ image CONSTANT)
     Q_PROPERTY(int timeout READ timeout CONSTANT)
     Q_PROPERTY(Type type READ type CONSTANT)
 
@@ -30,12 +31,14 @@ public:
     };
     Q_ENUM(Type)
 
-    explicit Toast(QString title, QString message, QString icon, Type type, int timeout, QObject* parent = nullptr);
+    explicit Toast(QString title, QString message, QString icon, Type type, int timeout, QString image = {},
+        QObject* parent = nullptr);
 
     [[nodiscard]] bool closed() const;
     [[nodiscard]] QString title() const;
     [[nodiscard]] QString message() const;
     [[nodiscard]] QString icon() const;
+    [[nodiscard]] QString image() const;
     [[nodiscard]] int timeout() const;
     [[nodiscard]] Type type() const;
 
@@ -54,6 +57,7 @@ private:
     QString m_title;
     QString m_message;
     QString m_icon;
+    QString m_image;
     Type m_type;
     int m_timeout;
 };
@@ -72,7 +76,7 @@ public:
     [[nodiscard]] QQmlListProperty<Toast> toasts();
 
     Q_INVOKABLE void toast(const QString& title, const QString& message, const QString& icon = {},
-        sylphrena::shell::Toast::Type type = Toast::Type::Info, int timeout = 5000);
+        sylphrena::shell::Toast::Type type = Toast::Type::Info, int timeout = 5000, const QString& image = {});
 
 signals:
     void toastsChanged();

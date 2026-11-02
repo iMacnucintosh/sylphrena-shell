@@ -127,7 +127,7 @@ QtObject {
             }
         },
         Component {
-            // Connected devices (Bluetooth + Display subpage)
+            // Connected devices (Bluetooth + Display inline)
             StackPage {
                 Component {
                     BluetoothPage {}
@@ -137,9 +137,6 @@ QtObject {
                 }
                 Component {
                     BluetoothPairing {}
-                }
-                Component {
-                    DisplayPage {}
                 }
             }
         },

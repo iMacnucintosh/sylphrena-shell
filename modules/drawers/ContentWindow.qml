@@ -48,6 +48,10 @@ StyledWindow {
     readonly property real borderRounding: contentItem.Config.border.rounding * (1 - fsTransitionProg)
     readonly property real shadowOpacity: 0.7 * (1 - fsTransitionProg)
     readonly property real borderLayoutThickness: collapseBorder ? 0 : contentItem.Config.border.thickness
+    // With the sidebar open the toast sits beside it (both positions), so it only stacks on
+    // the notification popups / utilities while the sidebar is closed.
+    readonly property bool toastsJoinNotifs: panels.toasts.height > 0 && !panels.toasts.atBottom && panels.notifications.height > 0 && !panels.sidebar.visible
+    readonly property bool toastsJoinUtils: panels.toasts.height > 0 && panels.toasts.atBottom && panels.utilities.visible && !panels.sidebar.visible
 
     property color surfaceColour: Colours.tPalette.m3surface
 
@@ -105,6 +109,13 @@ StyledWindow {
         y: panels.notifications.y + root.borderThickness
         width: panels.notifications.width
         height: panels.notifications.height
+
+        Region {
+            x: panels.toasts.x + bar.implicitWidth
+            y: panels.toasts.y + root.borderThickness
+            width: panels.toasts.width
+            height: panels.toasts.height
+        }
 
         Region {
             x: root.width - width
@@ -220,7 +231,7 @@ StyledWindow {
             panel: panels.sidebar
             deformAmount: 0.03
             implicitHeight: panel.height * (1 / rawDeformMatrix.m22) + 2
-            exclude: panels.sidebar.offsetScale > 0.08 ? [] : [utilsBg]
+            exclude: panels.sidebar.offsetScale <= 0.08 ? [utilsBg] : []
             bottomLeftRadius: Math.max(0, Math.min(1, panels.sidebar.offsetScale / 0.3)) * radius
         }
 
@@ -237,6 +248,28 @@ StyledWindow {
             id: notifsBg
 
             panel: panels.notifications
+            exclude: root.toastsJoinNotifs ? [toastBg] : []
+            topLeftRadius: root.toastsJoinNotifs ? 0 : radius
+        }
+
+        PanelBg {
+            id: toastBg
+
+            panel: panels.toasts
+            // Soft-join with the neighbouring lobe (notifications on top, utilities at bottom).
+            exclude: {
+                const list = [];
+                if (root.toastsJoinNotifs)
+                    list.push(notifsBg);
+                if (root.toastsJoinUtils)
+                    list.push(utilsBg);
+                return list;
+            }
+            bottomLeftRadius: root.toastsJoinNotifs ? 0 : radius
+            // Overlap the lobe below so the hard (excluded) join leaves no AA seam, with room
+            // for both lobes' motion deform to drift apart while the toast resizes.
+            implicitHeight: panel.height + (root.toastsJoinNotifs ? 12 : 0)
+            topLeftRadius: radius
         }
 
         PanelBg {
@@ -244,7 +277,14 @@ StyledWindow {
 
             panel: panels.utilities
             deformAmount: panels.sidebar.visible ? 0.1 : 0.15
-            exclude: panels.sidebar.offsetScale > 0.08 ? [] : [sidebarBg]
+            exclude: {
+                const list = [];
+                if (panels.sidebar.offsetScale <= 0.08)
+                    list.push(sidebarBg);
+                if (root.toastsJoinUtils)
+                    list.push(toastBg);
+                return list;
+            }
             topLeftRadius: Math.max(0, Math.min(1, panels.sidebar.offsetScale / 0.3)) * radius
         }
 
@@ -305,6 +345,9 @@ StyledWindow {
             notifications.transform: Matrix4x4 {
                 matrix: notifsBg.deformMatrix
             }
+            toasts.transform: Matrix4x4 {
+                matrix: toastBg.deformMatrix
+            }
             utilities.transform: Matrix4x4 {
                 matrix: utilsBg.deformMatrix
             }
@@ -361,6 +404,10 @@ StyledWindow {
         y: panel.y + root.borderThickness
         implicitWidth: panel.width
         implicitHeight: panel.height
+        // Hidden panels park just past the screen edge, inside the border; a sized blob
+        // there still sinks the border's inner wall (sub-pixel step along its width).
+        width: panel.visible ? implicitWidth : 0
+        visible: panel.visible
         radius: Tokens.rounding.extraLarge
         deformScale: (deformAmount * Config.appearance.deformScale) / 10000
     }

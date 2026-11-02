@@ -70,8 +70,24 @@ Item {
         sessionPanel: sessionWrapper
         utilitiesPanel: utilities
 
-        anchors.top: parent.top
+        readonly property bool belowToasts: toasts.visible && !toasts.atBottom && !sidebar.visible
+
+        anchors.top: belowToasts ? toasts.bottom : parent.top
         anchors.right: parent.right
+        anchors.topMargin: belowToasts ? toasts.edgeOverlap : 0
+    }
+
+    Toasts.Toasts {
+        id: toasts
+
+        // Border lobe at top-right (default) or bottom-right, stacked on the notification
+        // popups / utilities; with the sidebar open it moves beside it in either corner.
+        // Vertical position via y, not anchors: toggling top/bottom anchors at runtime
+        // leaves both set and stretches it.
+        y: atBottom ? (utilities.visible && !sidebar.visible ? utilities.y : root.height) - height + edgeOverlap : -edgeOverlap
+        anchors.right: sidebar.visible ? sidebar.left : parent.right
+        // Stacked on the popups it shares their lobe width.
+        width: notifications.belowToasts && notifications.visible ? Math.max(implicitWidth, notifications.width) : implicitWidth
     }
 
     Item {
@@ -132,14 +148,6 @@ Item {
 
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-    }
-
-    Toasts.Toasts {
-        id: toasts
-
-        anchors.bottom: sidebar.visible ? parent.bottom : utilities.top
-        anchors.right: sidebar.left
-        anchors.margins: Tokens.padding.medium
     }
 
     Sidebar.Wrapper {
