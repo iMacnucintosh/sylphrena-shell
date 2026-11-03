@@ -172,8 +172,8 @@ StyledRect {
                     command: Config.session.commands.shutdown
                 }
                 SessionButton {
-                    icon: Config.session.icons.hibernate
-                    command: Config.session.commands.hibernate
+                    icon: Config.session.icons.suspend
+                    command: Config.session.commands.suspend
                 }
                 SessionButton {
                     icon: Config.session.icons.reboot

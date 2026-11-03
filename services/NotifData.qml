@@ -47,6 +47,9 @@ QtObject {
     property string appName
     property string desktopEntry
     property string image
+    // True when the sender was notify-send/libnotify: UI falls back to Material
+    // "notifications" only if there is no real app icon.
+    property bool useMaterialNotifIcon: false
     property var hints // Hints are not persisted across restarts
     property real expireTimeout: GlobalConfig.notifs.defaultExpireTimeout
     property int urgency: NotificationUrgency.Normal
@@ -141,18 +144,22 @@ QtObject {
 
         function onAppIconChanged(): void {
             notif.appIcon = notif.notification.appIcon;
+            notif.normalizeIdentity();
         }
 
         function onAppNameChanged(): void {
             notif.appName = notif.notification.appName;
+            notif.normalizeIdentity();
         }
 
         function onDesktopEntryChanged(): void {
             notif.desktopEntry = notif.notification.desktopEntry;
+            notif.normalizeIdentity();
         }
 
         function onImageChanged(): void {
             notif.image = notif.notification.image;
+            notif.normalizeIdentity();
             notif.maybeTriggerDummyImageLoader();
         }
 
@@ -182,6 +189,7 @@ QtObject {
 
         function onHintsChanged(): void {
             notif.hints = notif.notification.hints;
+            notif.normalizeIdentity();
         }
 
         target: notif.notification
@@ -212,6 +220,46 @@ QtObject {
             dummyImageLoader.active = true;
     }
 
+    // notify-send leaves application_name as "notify-send" and often ships the stock
+    // dialog-information glyph. Prefer the .desktop identity when present, drop the
+    // generic info art so Material "notifications" (or the real app icon) shows.
+    function isGenericNotifySender(name: string): bool {
+        const n = (name ?? "").trim().toLowerCase();
+        return n === "notify-send" || n === "notify send" || n === "libnotify";
+    }
+
+    function isGenericInfoIcon(icon: string): bool {
+        if (!icon)
+            return false;
+        const i = icon.toLowerCase();
+        const base = i.replace(/^image:\/\/icon\//, "").split("/").pop().split(".")[0] ?? "";
+        return ["dialog-information", "dialog-info", "dialog-question", "info", "gtk-dialog-info", "stock_dialog-info", "notification-information"].includes(base) || i.includes("dialog-information") || i.includes("dialog-info");
+    }
+
+    function normalizeIdentity(): void {
+        const entryId = (desktopEntry || hints?.desktopEntry || "").replace(/\.desktop$/i, "");
+        let entry = null;
+        if (entryId)
+            entry = DesktopEntries.byId(entryId) || DesktopEntries.byId(`${entryId}.desktop`);
+
+        const fromNotifySend = notif.isGenericNotifySender(appName);
+        useMaterialNotifIcon = fromNotifySend;
+
+        if (entry && (fromNotifySend || !appName))
+            appName = entry.name || appName;
+        else if (fromNotifySend)
+            appName = Tr.tr("Notification");
+
+        // Drop the stock blue "i" (and similar) so Material / app icon can take over.
+        if (notif.isGenericInfoIcon(image))
+            image = "";
+
+        if (entry && (!appIcon || notif.isGenericInfoIcon(appIcon)))
+            appIcon = entry.icon || "";
+        else if (notif.isGenericInfoIcon(appIcon))
+            appIcon = "";
+    }
+
     function lock(item: Item): void {
         locks.add(item);
     }
@@ -232,27 +280,28 @@ QtObject {
     }
 
     Component.onCompleted: {
-        if (!notification)
-            return;
+        if (notification) {
+            notificationId = notification.id;
+            summary = notification.summary;
+            body = notification.body;
+            appIcon = notification.appIcon;
+            appName = notification.appName;
+            desktopEntry = notification.desktopEntry;
+            image = notification.image;
+            expireTimeout = notification.expireTimeout;
+            hints = notification.hints;
+            urgency = notification.urgency;
+            resident = notification.resident;
+            hasActionIcons = notification.hasActionIcons;
 
-        notificationId = notification.id;
-        summary = notification.summary;
-        body = notification.body;
-        appIcon = notification.appIcon;
-        appName = notification.appName;
-        desktopEntry = notification.desktopEntry;
-        image = notification.image;
+            actions = (notification.actions as Array).map(a => ({
+                        identifier: a.identifier,
+                        text: a.text,
+                        invoke: () => a.invoke()
+                    }));
+        }
+
+        normalizeIdentity();
         maybeTriggerDummyImageLoader();
-        expireTimeout = notification.expireTimeout;
-        hints = notification.hints;
-        urgency = notification.urgency;
-        resident = notification.resident;
-        hasActionIcons = notification.hasActionIcons;
-
-        actions = (notification.actions as Array).map(a => ({
-                    identifier: a.identifier,
-                    text: a.text,
-                    invoke: () => a.invoke()
-                }));
     }
 }

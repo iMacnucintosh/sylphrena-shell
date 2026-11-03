@@ -46,7 +46,7 @@ Column {
         command: Config.session.commands.shutdown
 
         KeyNavigation.up: logout
-        KeyNavigation.down: hibernate
+        KeyNavigation.down: suspendBtn
     }
 
     Loader {
@@ -66,10 +66,10 @@ Column {
     }
 
     SessionButton {
-        id: hibernate
+        id: suspendBtn
 
-        icon: Config.session.icons.hibernate
-        command: Config.session.commands.hibernate
+        icon: Config.session.icons.suspend
+        command: Config.session.commands.suspend
 
         KeyNavigation.up: shutdown
         KeyNavigation.down: reboot
@@ -81,7 +81,7 @@ Column {
         icon: Config.session.icons.reboot
         command: Config.session.commands.reboot
 
-        KeyNavigation.up: hibernate
+        KeyNavigation.up: suspendBtn
     }
 
     component SessionButton: IconButton {

@@ -2,7 +2,17 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 2026-11-03
+
+### Notificaciones
+
+- Avisos enviados vía `notify-send`: si traen `desktop-entry` (p. ej. Timeshift) el grupo usa el nombre del `.desktop` en vez de «notify-send». Se quita el icono genérico azul de información; si hay icono de app se usa solo ese, y si no el glifo Material `notifications`.
+
 ## 2026-11-02
+
+### Sesión
+
+- Menú de apagado (y controles del lock): **Suspender** sustituye a Hibernar (icono `bedtime`, comando `suspend`). Hibernar no funcionaba en este equipo.
 
 ### Now playing
 
