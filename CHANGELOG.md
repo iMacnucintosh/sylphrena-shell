@@ -4,6 +4,15 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## 2026-11-03
 
+### Activities
+
+- Clic derecho en el icono de una activity de la barra: popout integrado (lóbulo del borde) con **Cerrar todas las ventanas**.
+- Overview (**Super + Tab**) ya no se bloquea con una ventana a pantalla completa (los drawers sí siguen gated). Con Exclusive keyboard focus y salida temporal de fullscreen (p. ej. juegos XWayland) el overlay recibe ratón/teclado; al cerrar en el mismo escritorio se restaura.
+
+### Utilities / grabación
+
+- Grabación integrada en Interruptores rápidos: última fila a ancho completo con «Grabar pantalla» (pantalla completa) y flecha para desplegar modos, lista y controles. Mientras graba se fuerza expandida.
+
 ### Notificaciones
 
 - Avisos enviados vía `notify-send`: si traen `desktop-entry` (p. ej. Timeshift) el grupo usa el nombre del `.desktop` en vez de «notify-send». Se quita el icono genérico azul de información; si hay icono de app se usa solo ese, y si no el glifo Material `notifications`.

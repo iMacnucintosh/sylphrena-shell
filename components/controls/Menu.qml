@@ -32,6 +32,12 @@ MouseArea {
     property MenuItem active: items[0] ?? null
     property bool expanded
 
+    // Window-local popup geometry for the drawers input mask (Regions.qml).
+    readonly property real regionX: menu.x
+    readonly property real regionY: menu.y
+    readonly property real regionWidth: menu.implicitWidth
+    readonly property real regionHeight: menu.implicitHeight
+
     signal itemSelected(item: MenuItem)
 
     parent: {

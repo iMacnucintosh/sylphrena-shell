@@ -29,7 +29,8 @@ Scope {
                 name: "activities-overview"
                 WlrLayershell.exclusionMode: ExclusionMode.Ignore
                 WlrLayershell.layer: WlrLayer.Overlay
-                WlrLayershell.keyboardFocus: Activities.overviewOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+                // Exclusive: OnDemand leaves keyboard/pointer with a fullscreen game.
+                WlrLayershell.keyboardFocus: Activities.overviewOpen ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
                 anchors.top: true
                 anchors.bottom: true

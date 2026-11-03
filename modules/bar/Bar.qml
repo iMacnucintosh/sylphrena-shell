@@ -252,6 +252,8 @@ ColumnLayout {
         ActivitiesStrip {
             screen: root.screen
             fullscreen: root.fullscreen
+            popouts: root.popouts
+            barItem: root
         }
     }
 }
