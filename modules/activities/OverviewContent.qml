@@ -43,6 +43,7 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
+            spacing: Tokens.spacing.small
 
             StyledText {
                 Layout.fillWidth: true
@@ -72,11 +73,21 @@ Item {
                     id: actCard
 
                     required property var modelData
+                    readonly property bool isCurrent: Activities.currentActivity?.id === modelData?.id
 
                     width: root.cardWidth + Tokens.padding.large * 2
                     height: actCol.implicitHeight + Tokens.padding.large * 2
                     radius: Tokens.rounding.extraLarge
-                    color: Colours.tPalette.m3surfaceContainer
+                    // Current activity: soft primaryContainer; others stay surface.
+                    color: actCard.isCurrent
+                           ? Colours.layer(Colours.palette.m3primaryContainer, 1)
+                           : Colours.tPalette.m3surfaceContainer
+                    border.width: actCard.isCurrent ? 1 : 0
+                    border.color: Qt.alpha(Colours.palette.m3primary, 0.45)
+
+                    Behavior on color {
+                        CAnim {}
+                    }
 
                     ActivityColumn {
                         id: actCol
@@ -96,7 +107,7 @@ Item {
         StyledText {
             Layout.alignment: Qt.AlignHCenter
             text: Tr.tr("Click a desktop to switch · Drag windows to move · Esc to close")
-            color: Colours.palette.m3outline
+            color: Colours.palette.m3onSurfaceVariant
             font: Tokens.font.label.medium
         }
     }
