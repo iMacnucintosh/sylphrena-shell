@@ -18,6 +18,8 @@ ColumnLayout {
 
     width: Math.max(360, Tokens.sizes.bar.networkWidth)
     spacing: Tokens.spacing.small
+    // Hairline inset past the leading device icon
+    readonly property real deviceTextInset: Tokens.font.icon.small.pointSize + Tokens.spacing.small + Tokens.spacing.extraSmall
 
     StyledText {
         Layout.topMargin: Tokens.padding.medium
@@ -62,112 +64,130 @@ ColumnLayout {
     }
 
     Repeater {
+        id: deviceRepeater
+
         model: ScriptModel {
             values: [...Bluetooth.devices.values].sort((a, b) => (b.connected - a.connected) || (b.paired - a.paired) || a.name.localeCompare(b.name)).slice(0, 5)
         }
 
-        RowLayout {
-            id: device
+        ColumnLayout {
+            id: deviceWrap
 
+            required property int index
             required property BluetoothDevice modelData
-            readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
 
             Layout.fillWidth: true
-            Layout.rightMargin: Tokens.padding.extraSmall
-            spacing: Tokens.spacing.small
+            spacing: Tokens.spacing.extraSmall
 
-            opacity: 0
-            scale: 0.7
+            RowLayout {
+                id: device
 
-            Component.onCompleted: {
-                opacity = 1;
-                scale = 1;
-            }
+                readonly property BluetoothDevice modelData: deviceWrap.modelData
+                readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
 
-            Behavior on opacity {
-                Anim {
-                    type: Anim.DefaultEffects
-                }
-            }
-
-            Behavior on scale {
-                Anim {}
-            }
-
-            MaterialIcon {
-                text: Icons.getBluetoothIcon(device.modelData.icon)
-            }
-
-            StyledText {
-                Layout.leftMargin: Tokens.spacing.extraSmall
-                Layout.rightMargin: Tokens.spacing.extraSmall
                 Layout.fillWidth: true
-                text: device.modelData.name
-                elide: Text.ElideRight
-            }
+                Layout.rightMargin: Tokens.padding.extraSmall
+                spacing: Tokens.spacing.small
 
-            MaterialIcon {
-                visible: device.modelData.state === BluetoothDeviceState.Connected
-                text: device.modelData.batteryAvailable ? Icons.getBatteryIcon(device.modelData.battery) : "battery_alert"
-                color: device.modelData.batteryAvailable && device.modelData.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
-            }
+                opacity: 0
+                scale: 0.7
 
-            StyledRect {
-                id: connectBtn
-
-                implicitWidth: implicitHeight
-                implicitHeight: connectIcon.implicitHeight + Tokens.padding.extraSmall
-
-                radius: Tokens.rounding.full
-                color: Qt.alpha(Colours.palette.m3primary, device.modelData.state === BluetoothDeviceState.Connected ? 1 : 0)
-
-                CircularIndicator {
-                    anchors.fill: parent
-                    running: device.loading
+                Component.onCompleted: {
+                    opacity = 1;
+                    scale = 1;
                 }
 
-                StateLayer {
-                    color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-                    disabled: device.loading
-                    onClicked: device.modelData.connected = !device.modelData.connected
+                Behavior on opacity {
+                    Anim {
+                        type: Anim.DefaultEffects
+                    }
+                }
+
+                Behavior on scale {
+                    Anim {}
                 }
 
                 MaterialIcon {
-                    id: connectIcon
+                    text: Icons.getBluetoothIcon(device.modelData.icon)
+                }
 
-                    anchors.centerIn: parent
-                    animate: true
-                    text: device.modelData.connected ? "link_off" : "link"
-                    color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                StyledText {
+                    Layout.leftMargin: Tokens.spacing.extraSmall
+                    Layout.rightMargin: Tokens.spacing.extraSmall
+                    Layout.fillWidth: true
+                    text: device.modelData.name
+                    elide: Text.ElideRight
+                }
 
-                    opacity: device.loading ? 0 : 1
+                MaterialIcon {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected
+                    text: device.modelData.batteryAvailable ? Icons.getBatteryIcon(device.modelData.battery) : "battery_alert"
+                    color: device.modelData.batteryAvailable && device.modelData.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+                }
 
-                    Behavior on opacity {
-                        Anim {
-                            type: Anim.DefaultEffects
+                StyledRect {
+                    id: connectBtn
+
+                    implicitWidth: implicitHeight
+                    implicitHeight: connectIcon.implicitHeight + Tokens.padding.extraSmall
+
+                    radius: Tokens.rounding.full
+                    color: Qt.alpha(Colours.palette.m3primary, device.modelData.state === BluetoothDeviceState.Connected ? 1 : 0)
+
+                    CircularIndicator {
+                        anchors.fill: parent
+                        running: device.loading
+                    }
+
+                    StateLayer {
+                        color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                        disabled: device.loading
+                        onClicked: device.modelData.connected = !device.modelData.connected
+                    }
+
+                    MaterialIcon {
+                        id: connectIcon
+
+                        anchors.centerIn: parent
+                        animate: true
+                        text: device.modelData.connected ? "link_off" : "link"
+                        color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+
+                        opacity: device.loading ? 0 : 1
+
+                        Behavior on opacity {
+                            Anim {
+                                type: Anim.DefaultEffects
+                            }
+                        }
+                    }
+                }
+
+                Loader {
+                    visible: status === Loader.Ready
+                    asynchronous: true
+                    active: device.modelData.bonded
+                    sourceComponent: Item {
+                        implicitWidth: connectBtn.implicitWidth
+                        implicitHeight: connectBtn.implicitHeight
+
+                        StateLayer {
+                            radius: Tokens.rounding.full
+                            onClicked: device.modelData.forget()
+                        }
+
+                        MaterialIcon {
+                            anchors.centerIn: parent
+                            text: "delete"
                         }
                     }
                 }
             }
 
-            Loader {
-                visible: status === Loader.Ready
-                asynchronous: true
-                active: device.modelData.bonded
-                sourceComponent: Item {
-                    implicitWidth: connectBtn.implicitWidth
-                    implicitHeight: connectBtn.implicitHeight
-
-                    StateLayer {
-                        radius: Tokens.rounding.full
-                        onClicked: device.modelData.forget()
-                    }
-
-                    MaterialIcon {
-                        anchors.centerIn: parent
-                        text: "delete"
-                    }
-                }
+            // Hairline under the name (inset past the leading icon), not after the last row
+            Hairline {
+                visible: deviceWrap.index < deviceRepeater.count - 1
+                Layout.leftMargin: root.deviceTextInset
             }
         }
     }
@@ -182,6 +202,14 @@ ColumnLayout {
         icon: "settings"
 
         onClicked: root.popouts.detachRequested("bluetooth")
+    }
+
+    component Hairline: StyledRect {
+        Layout.fillWidth: true
+        Layout.rightMargin: Tokens.padding.extraSmall
+        implicitHeight: 1
+        color: Colours.palette.m3outlineVariant
+        opacity: 0.4
     }
 
     component Toggle: RowLayout {
