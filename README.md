@@ -872,13 +872,13 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
         "icons": {
             "logout": "logout",
             "shutdown": "power_settings_new",
-            "hibernate": "downloading",
+            "suspend": "bedtime",
             "reboot": "cached"
         },
         "commands": {
             "logout": ["logout"],
             "shutdown": ["poweroff"],
-            "hibernate": ["hibernate"],
+            "suspend": ["suspend"],
             "reboot": ["reboot"]
         }
     },

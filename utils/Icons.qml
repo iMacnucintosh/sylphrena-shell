@@ -208,7 +208,8 @@ Singleton {
     }
 
     function getNotifIcon(summary: string, urgency: int): string {
-        const fallback = urgency === NotificationUrgency.Critical ? "release_alert" : "chat";
+        // Material You: "notifications" for bare/notify-send fallthrough (was "chat").
+        const fallback = urgency === NotificationUrgency.Critical ? "release_alert" : "notifications";
         return matchIcon(summary.toLowerCase(), notifIconRules, fallback);
     }
 

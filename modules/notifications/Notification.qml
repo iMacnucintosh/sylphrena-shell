@@ -18,6 +18,9 @@ StyledRect {
     required property NotifData modelData
     readonly property bool hasImage: modelData.image.length > 0
     readonly property bool hasAppIcon: modelData.appIcon.length > 0
+    // notify-send without app icon: Material "notifications"; prefer app icon alone when present.
+    readonly property bool useMaterialPrimary: !!modelData.useMaterialNotifIcon && !hasImage && !hasAppIcon
+    readonly property bool showAppIconMain: hasAppIcon && !useMaterialPrimary
     readonly property int bodyTextFormat: /[<*_`#\[\]]/.test(modelData.body) ? Text.MarkdownText : Text.PlainText
     readonly property var displayActions: Notifs.displayActions(root.modelData)
     readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? Tokens.spacing.extraSmall * 2 + appName.height + body.height + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
@@ -151,9 +154,11 @@ StyledRect {
                 anchors.right: root.hasImage ? image.right : undefined
                 anchors.bottom: root.hasImage ? image.bottom : undefined
 
-                sourceComponent: StyledRect {
+                sourceComponent: ClipRect {
                     radius: Tokens.rounding.full
-                    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.layer(Colours.palette.m3surfaceContainerHighest, 2) : Colours.palette.m3secondaryContainer
+                    // Transparent behind full-colour app icons (no tinted wedges on square marks).
+                    color: root.showAppIconMain && !root.hasImage ? "transparent" : root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.layer(Colours.palette.m3surfaceContainerHighest, 2) : Colours.palette.m3secondaryContainer
+                    // Badge-sized only when sitting on a real image; Material/app primary keeps full size.
                     implicitWidth: root.hasImage ? Tokens.sizes.notifs.badge : TokenConfig.sizes.notifs.image
                     implicitHeight: root.hasImage ? Tokens.sizes.notifs.badge : TokenConfig.sizes.notifs.image
 
@@ -161,12 +166,12 @@ StyledRect {
                         id: icon
 
                         asynchronous: true
-                        active: root.hasAppIcon
+                        active: root.showAppIconMain
 
+                        // Badge inset; primary app icon overscales into the circular mask.
                         anchors.centerIn: parent
-
-                        width: Math.round(parent.width * 0.6)
-                        height: Math.round(parent.width * 0.6)
+                        width: root.hasImage ? Math.round(parent.width * 0.6) : Math.round(parent.width * 1.2)
+                        height: root.hasImage ? Math.round(parent.width * 0.6) : Math.round(parent.height * 1.2)
 
                         sourceComponent: ColouredIcon {
                             anchors.fill: parent
@@ -178,12 +183,12 @@ StyledRect {
 
                     Loader {
                         asynchronous: true
-                        active: !root.hasAppIcon
+                        active: !root.showAppIconMain
                         anchors.centerIn: parent
                         anchors.verticalCenterOffset: 1
 
                         sourceComponent: MaterialIcon {
-                            text: Icons.getNotifIcon(root.modelData.summary, root.modelData.urgency)
+                            text: root.useMaterialPrimary ? "notifications" : Icons.getNotifIcon(root.modelData.summary, root.modelData.urgency)
                             color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
                             fontStyle: Tokens.font.icon.medium
                         }

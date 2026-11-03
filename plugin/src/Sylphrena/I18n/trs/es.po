@@ -1477,6 +1477,10 @@ msgstr[1] "%n notificaciones"
 msgid "Notifications"
 msgstr "Notificaciones"
 
+#: services/NotifData.qml
+msgid "Notification"
+msgstr "Notificación"
+
 #: modules/lock/NotifDock.qml
 msgid "Unlock for notifications"
 msgstr "Desbloquea para ver las notificaciones"
