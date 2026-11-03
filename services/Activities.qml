@@ -12,7 +12,9 @@ import qs.modules.launcher.services
 Singleton {
     id: root
 
-    readonly property bool enabled: GlobalConfig.activities.enabled
+    // Always on: one or many activities (Principal alone is valid). The old
+    // config toggle is ignored and forced true on startup for migration.
+    readonly property bool enabled: true
     property bool overviewOpen: false
     property Item overviewDragLayer: null
     property int overviewDropTargetWs: -1
@@ -861,6 +863,8 @@ Singleton {
     }
 
     Component.onCompleted: Qt.callLater(() => {
+        if (!GlobalConfig.activities.enabled)
+            GlobalConfig.activities.enabled = true;
         root.ensurePrincipal();
         root.applyRules();
         root.ensurePrincipalStyle();
