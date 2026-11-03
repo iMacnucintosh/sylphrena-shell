@@ -4,6 +4,14 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## 2026-11-03
 
+### Juegos
+
+- Heatmap del panel: clic en un día con sesión (o logro) filtra Sesiones / Total / Más larga a ese día; otro clic o cambiar de mes vuelve al mes completo.
+
+### Pantalla
+
+- Nexus → Display: resolución y frecuencia en selects separados (Hz de la resolución actual). Al aplicar modo/escala se espera a que `hyprctl eval` termine antes de refrescar (antes parecía que el clic no hacía nada).
+
 ### Activities
 
 - Clic derecho en el icono de una activity de la barra: popout integrado (lóbulo del borde) con **Cerrar todas las ventanas**.

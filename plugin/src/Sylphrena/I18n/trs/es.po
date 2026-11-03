@@ -2284,6 +2284,22 @@ msgid "Resolution & refresh rate"
 msgstr "Resolución y frecuencia"
 
 #: modules/nexus/pages/DisplayPage.qml
+msgid "Resolution"
+msgstr "Resolución"
+
+#: modules/nexus/pages/DisplayPage.qml
+msgid "Refresh rate"
+msgstr "Frecuencia de actualización"
+
+#: services/Displays.qml
+msgid "%1 Hz"
+msgstr "%1 Hz"
+
+#: services/Displays.qml
+msgid "%1×%2"
+msgstr "%1×%2"
+
+#: modules/nexus/pages/DisplayPage.qml
 msgid "Scale"
 msgstr "Escala"
 
