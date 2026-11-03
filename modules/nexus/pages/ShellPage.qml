@@ -164,16 +164,6 @@ PageBase {
 
         ToggleRow {
             first: true
-            text: Tr.tr("Enable activities")
-            subtext: Tr.tr("Show activity pills on the bar and use activity shortcuts")
-            checked: GlobalConfig.activities.enabled
-            onToggled: {
-                GlobalConfig.activities.enabled = checked;
-                Activities.syncSoon();
-            }
-        }
-
-        ToggleRow {
             text: Tr.tr("Show app icons on workspaces")
             subtext: Tr.tr("Use real application icons; when off, show category icons under the workspace marker")
             checked: GlobalConfig.activities.showWindowIcons
