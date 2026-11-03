@@ -146,6 +146,77 @@ Singleton {
         return max;
     }
 
+    // Unique "WxH" keys, largest first — for the Resolution select.
+    function resolutionsFromModes(availableModes: list<string>): list<string> {
+        const seen = ({});
+        const out = [];
+        for (let i = 0; i < availableModes.length; i++) {
+            const p = root.parseMode(availableModes[i]);
+            if (!p)
+                continue;
+            const key = `${p.w}x${p.h}`;
+            if (seen[key])
+                continue;
+            seen[key] = true;
+            out.push(key);
+        }
+        out.sort((a, b) => {
+            const pa = a.split("x");
+            const pb = b.split("x");
+            const aw = Number(pa[0]);
+            const ah = Number(pa[1]);
+            const bw = Number(pb[0]);
+            const bh = Number(pb[1]);
+            if (aw !== bw)
+                return bw - aw;
+            return bh - ah;
+        });
+        return out;
+    }
+
+    // Mode strings for one resolution, highest Hz first.
+    function ratesForResolution(availableModes: list<string>, resKey: string): list<string> {
+        const parts = String(resKey || "").split("x");
+        const w = Number(parts[0]);
+        const h = Number(parts[1]);
+        const out = [];
+        for (let i = 0; i < availableModes.length; i++) {
+            const mode = availableModes[i];
+            const p = root.parseMode(mode);
+            if (p && p.w === w && p.h === h)
+                out.push(mode);
+        }
+        out.sort((a, b) => {
+            const pa = root.parseMode(a);
+            const pb = root.parseMode(b);
+            return (pb?.hz ?? 0) - (pa?.hz ?? 0);
+        });
+        return out;
+    }
+
+    function formatResolutionLabel(resKey: string): string {
+        const parts = String(resKey || "").split("x");
+        if (parts.length !== 2)
+            return resKey;
+        return Tr.tr("%1×%2").arg(parts[0]).arg(parts[1]);
+    }
+
+    function formatRateLabel(modeStr: string): string {
+        const p = root.parseMode(modeStr);
+        if (!p)
+            return modeStr;
+        const rounded = Math.round(p.hz);
+        const hz = Math.abs(p.hz - rounded) < 0.051 ? rounded : Math.round(p.hz * 100) / 100;
+        return Tr.tr("%1 Hz").arg(hz);
+    }
+
+    function resolutionKeyOf(modeStr: string): string {
+        const p = root.parseMode(modeStr);
+        if (!p)
+            return "";
+        return `${p.w}x${p.h}`;
+    }
+
     function vrrLabel(vrr: int): string {
         const v = root.normalizeVrr(vrr);
         if (v === 1)
@@ -277,7 +348,9 @@ Singleton {
             });
         root.applyLive(mon);
         root.persist();
-        Qt.callLater(() => root.refresh());
+        // eval is async; refreshing immediately re-reads the old CRTC mode and
+        // makes the Nexus select look like the click did nothing.
+        postApplyRefresh.restart();
     }
 
     function setScale(name: string, scale: real): void {
@@ -286,7 +359,29 @@ Singleton {
             });
         root.applyLive(mon);
         root.persist();
-        Qt.callLater(() => root.refresh());
+        postApplyRefresh.restart();
+    }
+
+    function setResolution(name: string, resKey: string): void {
+        const mon = root.findMonitor(name);
+        if (!mon)
+            return;
+        const rates = root.ratesForResolution(mon.availableModes, resKey);
+        if (rates.length === 0)
+            return;
+        // Keep current Hz when the new resolution offers it; else take the max.
+        const cur = root.parseMode(mon.mode);
+        let pick = rates[0];
+        if (cur) {
+            for (let i = 0; i < rates.length; i++) {
+                const p = root.parseMode(rates[i]);
+                if (p && Math.abs(p.hz - cur.hz) < 0.6) {
+                    pick = rates[i];
+                    break;
+                }
+            }
+        }
+        root.setMode(name, pick);
     }
 
     function setVrr(name: string, vrr: int): void {
@@ -342,7 +437,17 @@ Singleton {
                         disabled: !!m.disabled
                     });
             }
+            const prevNames = [];
+            for (let i = 0; i < root.monitors.length; i++)
+                prevNames.push(String(root.monitors[i].name));
             root.monitors = next;
+            // HDMI→DP (or any connector rename) must rewrite sylphrena-monitors.lua
+            // so the live output keeps mode/VRR; unplugged blocks are still kept.
+            const nextNames = [];
+            for (let i = 0; i < next.length; i++)
+                nextNames.push(String(next[i].name));
+            if (prevNames.join("\n") !== nextNames.join("\n"))
+                Qt.callLater(() => root.persist());
         } catch (e) {
             root.lastError = Tr.tr("Could not read monitor list");
             console.warn("[Displays] parse failed", e);
@@ -353,6 +458,14 @@ Singleton {
         id: postVrrRefresh
 
         interval: 700
+        repeat: false
+        onTriggered: root.refresh()
+    }
+
+    Timer {
+        id: postApplyRefresh
+
+        interval: 350
         repeat: false
         onTriggered: root.refresh()
     }

@@ -61,6 +61,11 @@ ColumnLayout {
             }
             readonly property bool connectorLimited: monCol.maxHz > 0 && monCol.maxHz < 200 && monCol.currentHz >= 100
             readonly property int vrrPolicy: Displays.normalizeVrr(Number(mon.vrr) || 0)
+            // Stable lists for Variants — calling helpers inline in `model:` rebuilds
+            // the array every eval and can leave the SplitButton menu empty/unusable.
+            readonly property var resolutions: Displays.resolutionsFromModes(mon.availableModes)
+            readonly property string resKey: Displays.resolutionKeyOf(mon.mode)
+            readonly property var rates: Displays.ratesForResolution(mon.availableModes, monCol.resKey)
 
             Layout.fillWidth: true
             Layout.topMargin: index === 0 ? 0 : Tokens.spacing.large - parent.spacing
@@ -77,26 +82,51 @@ ColumnLayout {
             }
 
             SelectRow {
-                id: modeRow
+                id: resRow
 
                 first: true
-                label: Tr.tr("Resolution & refresh rate")
-                subtext: Displays.formatModeLabel(mon.mode)
-                active: modeItems.instances.find(i => Displays.modeForHypr(i.modelData) === Displays.modeForHypr(mon.mode)) ?? null
-                fallbackText: Displays.formatModeLabel(mon.mode)
-                onSelected: item => Displays.setMode(mon.name, item.modelData)
+                label: Tr.tr("Resolution")
+                subtext: Displays.formatResolutionLabel(monCol.resKey)
+                active: resItems.instances.find(i => i.modelData === monCol.resKey) ?? null
+                fallbackText: Displays.formatResolutionLabel(monCol.resKey)
+                onSelected: item => Displays.setResolution(mon.name, item.modelData)
 
-                menuItems: modeItems.instances
+                menuItems: resItems.instances
 
                 Variants {
-                    id: modeItems
+                    id: resItems
 
-                    model: mon.availableModes
+                    model: monCol.resolutions
 
                     MenuItem {
                         required property string modelData
 
-                        text: Displays.formatModeLabel(modelData)
+                        text: Displays.formatResolutionLabel(modelData)
+                    }
+                }
+            }
+
+            SelectRow {
+                id: rateRow
+
+                label: Tr.tr("Refresh rate")
+                subtext: Displays.formatRateLabel(mon.mode)
+                // Short list (same resolution only) so the menu stays inside Nexus.
+                active: rateItems.instances.find(i => Displays.modeForHypr(i.modelData) === Displays.modeForHypr(mon.mode)) ?? null
+                fallbackText: Displays.formatRateLabel(mon.mode)
+                onSelected: item => Displays.setMode(mon.name, item.modelData)
+
+                menuItems: rateItems.instances
+
+                Variants {
+                    id: rateItems
+
+                    model: monCol.rates
+
+                    MenuItem {
+                        required property string modelData
+
+                        text: Displays.formatRateLabel(modelData)
                     }
                 }
             }

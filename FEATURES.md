@@ -169,9 +169,9 @@ Credenciales en `~/.config/openfortivpn/config` (las mismas que Plasma; **no** v
 
 ## Pantalla (modos, escala, VRR)
 
-Subpágina **Nexus → Dispositivos conectados → Pantalla** (categoría Dispositivos; sin entrada propia en el sidebar), una tarjeta por monitor:
+Bloque **Pantalla** inline en **Nexus → Dispositivos conectados** (categoría Dispositivos; sin entrada propia en el sidebar), una tarjeta por monitor:
 
-- **Modo**: resolución + Hz (deduplicados y ordenados).
+- **Resolución** y **Frecuencia** por separado (la lista de Hz solo muestra modos de la resolución actual).
 - **Escala**.
 - **VRR / Adaptive Sync** con política estilo Plasma: **Nunca / Automático / Siempre** (Automático = solo mientras haya algo a pantalla completa).
 
