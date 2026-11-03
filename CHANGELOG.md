@@ -14,6 +14,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ### Activities
 
+- Overview: chip discreto de mute en miniaturas de ventanas con audio (PipeWire, match por PID/clase); clic silencia/reactiva esa app.
 - Quitado el interruptor **Activar actividades**: siempre on (puede haber solo Principal o varias). La barra usa siempre las pills; `activities.enabled` se fuerza a `true` al arrancar (migración).
 - Clic derecho en el icono de una activity de la barra: popout integrado (lóbulo del borde) con **Cerrar todas las ventanas**.
 - Overview (**Super + Tab**) ya no se bloquea con una ventana a pantalla completa (los drawers sí siguen gated). Con Exclusive keyboard focus y salida temporal de fullscreen (p. ej. juegos XWayland) el overlay recibe ratón/teclado; al cerrar en el mismo escritorio se restaura.

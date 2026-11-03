@@ -25,6 +25,7 @@ Sistema opcional (activado por defecto en este fork) que agrupa desktops de Hypr
 - Clic en un desktop para ir a él.
 - Arrastra ventanas entre desktops (también entre activities); al soltar se enfoca el destino y se aplica su look.
 - Apps **ancladas (pinned)** no se arrastran y muestran un icono de pin.
+- Si una ventana tiene audio (PipeWire), un chip pequeño de volumen abajo a la izquierda permite silenciarla / reactivarla sin salir del overview.
 - Cierra con Escape o clic fuera.
 
 ### Cambiar de actividad

@@ -106,6 +106,58 @@ Singleton {
         return stream.properties["application.name"] || stream.description || stream.name || Tr.trCtx("Unknown application", "unknown application audio stream");
     }
 
+    function streamProcessId(stream: PwNode): int {
+        return Number(stream?.properties?.["application.process.id"]) || 0;
+    }
+
+    function normalizeAppKey(s: string): string {
+        return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+    }
+
+    /// Match a Hyprland client (pid + class) to PipeWire output streams.
+    /// Prefer exact PID; fall back to application.name / process.binary vs class.
+    function streamsForClient(pid: int, className: string): list<PwNode> {
+        const out = [];
+        const pidN = Number(pid) || 0;
+        const cls = root.normalizeAppKey(className);
+        for (const stream of root.streams) {
+            if (!stream?.audio)
+                continue;
+            const sp = root.streamProcessId(stream);
+            if (pidN > 0 && sp === pidN) {
+                out.push(stream);
+                continue;
+            }
+            if (!cls)
+                continue;
+            const app = root.normalizeAppKey(stream.properties["application.name"]);
+            const bin = root.normalizeAppKey(stream.properties["application.process.binary"]);
+            if ((app && app === cls) || (bin && bin === cls))
+                out.push(stream);
+        }
+        return out;
+    }
+
+    function clientHasAudio(pid: int, className: string): bool {
+        return root.streamsForClient(pid, className).length > 0;
+    }
+
+    function clientAudioMuted(pid: int, className: string): bool {
+        const matched = root.streamsForClient(pid, className);
+        if (matched.length === 0)
+            return false;
+        return matched.every(s => !!s.audio?.muted);
+    }
+
+    function setClientMuted(pid: int, className: string, muted: bool): void {
+        for (const stream of root.streamsForClient(pid, className))
+            root.setStreamMuted(stream, muted);
+    }
+
+    function toggleClientMuted(pid: int, className: string): void {
+        root.setClientMuted(pid, className, !root.clientAudioMuted(pid, className));
+    }
+
     function refreshNodes(): void {
         const newSinks = [];
         const newSources = [];
