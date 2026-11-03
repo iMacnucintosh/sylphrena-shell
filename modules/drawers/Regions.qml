@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Sylphrena.Config
+import qs.components.controls
 import qs.modules.bar as Bar
 import qs.modules.launcher.services
 
@@ -41,6 +42,21 @@ Region {
         y: root.y
         width: Apps.editingDesktop ? root.width : 0
         height: Apps.editingDesktop ? root.height : 0
+        intersection: Intersection.Subtract
+    }
+
+    // Context menus from the bar (e.g. activity pill) open into the passthrough hole;
+    // without a subtract region they paint but never receive clicks.
+    Region {
+        readonly property var m: Menus.current
+        readonly property bool open: !!(m && m.expanded)
+        // Pad slightly for elevation shadow / rounding.
+        readonly property real pad: open ? Tokens.padding.small : 0
+
+        x: open ? m.regionX - pad : 0
+        y: open ? m.regionY - pad : 0
+        width: open ? m.regionWidth + pad * 2 : 0
+        height: open ? m.regionHeight + pad * 2 : 0
         intersection: Intersection.Subtract
     }
 

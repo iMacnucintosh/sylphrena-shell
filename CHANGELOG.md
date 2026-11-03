@@ -2,7 +2,34 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 2026-11-03
+
+### Juegos
+
+- Heatmap del panel: clic en un día con sesión (o logro) filtra Sesiones / Total / Más larga a ese día; otro clic o cambiar de mes vuelve al mes completo.
+
+### Pantalla
+
+- Nexus → Display: resolución y frecuencia en selects separados (Hz de la resolución actual). Al aplicar modo/escala se espera a que `hyprctl eval` termine antes de refrescar (antes parecía que el clic no hacía nada).
+
+### Activities
+
+- Clic derecho en el icono de una activity de la barra: popout integrado (lóbulo del borde) con **Cerrar todas las ventanas**.
+- Overview (**Super + Tab**) ya no se bloquea con una ventana a pantalla completa (los drawers sí siguen gated). Con Exclusive keyboard focus y salida temporal de fullscreen (p. ej. juegos XWayland) el overlay recibe ratón/teclado; al cerrar en el mismo escritorio se restaura.
+
+### Utilities / grabación
+
+- Grabación integrada en Interruptores rápidos: última fila a ancho completo con «Grabar pantalla» (pantalla completa) y flecha para desplegar modos, lista y controles. Mientras graba se fuerza expandida.
+
+### Notificaciones
+
+- Avisos enviados vía `notify-send`: si traen `desktop-entry` (p. ej. Timeshift) el grupo usa el nombre del `.desktop` en vez de «notify-send». Se quita el icono genérico azul de información; si hay icono de app se usa solo ese, y si no el glifo Material `notifications`.
+
 ## 2026-11-02
+
+### Sesión
+
+- Menú de apagado (y controles del lock): **Suspender** sustituye a Hibernar (icono `bedtime`, comando `suspend`). Hibernar no funcionaba en este equipo.
 
 ### Now playing
 

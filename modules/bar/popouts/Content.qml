@@ -175,6 +175,13 @@ Item {
             sourceComponent: LockStatus {}
         }
 
+        Popout {
+            name: "activitymenu"
+            sourceComponent: ActivityMenu {
+                popouts: root.popouts
+            }
+        }
+
         Repeater {
             model: ScriptModel {
                 values: SystemTray.items.values.filter(i => i.hasMenu && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id))

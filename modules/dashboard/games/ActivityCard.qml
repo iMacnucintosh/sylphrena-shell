@@ -17,6 +17,8 @@ StyledRect {
     property var markerTimes: [] // unix times highlighted with a dot (achievement unlocks)
     property real contentHeight: 4 * 44 + 3 * Tokens.spacing.small
     property int monthOffset: 0
+    /// 0 = whole month; otherwise 1..daysInMonth filters the stats column.
+    property int selectedDay: 0
     readonly property int maxMonthsBack: 24
 
     readonly property var qlocale: Qt.locale(Tr.locale.name)
@@ -29,6 +31,8 @@ StyledRect {
     readonly property int leading: (monthStart.getDay() - firstDow + 7) % 7
     readonly property real monthFrom: monthStart.getTime() / 1000
     readonly property real monthTo: new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 1).getTime() / 1000
+    readonly property real selectedDayFrom: selectedDay > 0 ? new Date(monthStart.getFullYear(), monthStart.getMonth(), selectedDay).getTime() / 1000 : 0
+    readonly property real selectedDayTo: selectedDay > 0 ? new Date(monthStart.getFullYear(), monthStart.getMonth(), selectedDay + 1).getTime() / 1000 : 0
 
     readonly property var monthSessions: sessions.filter(s => s.start >= monthFrom && s.start < monthTo)
     readonly property var dayMinutes: {
@@ -67,12 +71,67 @@ StyledRect {
         return out;
     }
 
-    readonly property int totalMinutes: dayMinutes.reduce((a, m) => a + m, 0)
-    readonly property int longestMinutes: monthSessions.reduce((m, s) => Math.max(m, Math.round((s.end - s.start) / 60)), 0)
+    // Sessions that overlap the selected calendar day (or the whole month).
+    readonly property var filteredSessions: {
+        if (selectedDay <= 0)
+            return monthSessions;
+        const from = selectedDayFrom;
+        const to = selectedDayTo;
+        return sessions.filter(s => s.start < to && s.end > from);
+    }
+    readonly property int totalMinutes: selectedDay > 0 ? (dayMinutes[selectedDay - 1] ?? 0) : dayMinutes.reduce((a, m) => a + m, 0)
+    // Minutes on a day that came only from Steam playtime deltas (shell was
+    // off) — no polled session rows, but the heatmap still has a value.
+    readonly property int residualDayMinutes: {
+        if (selectedDay <= 0)
+            return 0;
+        let tracked = 0;
+        const from = selectedDayFrom;
+        const to = selectedDayTo;
+        for (const s of filteredSessions) {
+            tracked += Math.max(0, Math.min(s.end, to) - Math.max(s.start, from));
+        }
+        return Math.max(0, totalMinutes - Math.round(tracked / 60));
+    }
+    readonly property int longestMinutes: {
+        if (selectedDay <= 0)
+            return monthSessions.reduce((m, s) => Math.max(m, Math.round((s.end - s.start) / 60)), 0);
+        // One play block that day (0–1 polled sessions ± Steam residual): Total == Longest.
+        if (filteredSessions.length <= 1)
+            return totalMinutes;
+        const from = selectedDayFrom;
+        const to = selectedDayTo;
+        let max = 0;
+        for (const s of filteredSessions) {
+            const secs = Math.min(s.end, to) - Math.max(s.start, from);
+            max = Math.max(max, Math.round(secs / 60));
+        }
+        return Math.max(max, residualDayMinutes);
+    }
+    readonly property int sessionCount: {
+        if (selectedDay <= 0)
+            return monthSessions.length;
+        // Count a synthetic session when Steam attributed playtime with no poll.
+        return filteredSessions.length + (residualDayMinutes > 0 && filteredSessions.length === 0 ? 1 : 0);
+    }
     readonly property int monthMarkers: dayMarkers.reduce((a, n) => a + n, 0)
-    readonly property bool hasPlay: totalMinutes > 0 || monthSessions.length > 0
+    readonly property bool hasPlay: dayMinutes.reduce((a, m) => a + m, 0) > 0 || monthSessions.length > 0
 
-    onGameKeyChanged: monthOffset = 0
+    function selectDay(day: int): void {
+        if (day <= 0 || day > daysInMonth)
+            return;
+        const mins = dayMinutes[day - 1] ?? 0;
+        const marks = dayMarkers[day - 1] ?? 0;
+        if (mins <= 0 && marks <= 0)
+            return;
+        selectedDay = selectedDay === day ? 0 : day;
+    }
+
+    onGameKeyChanged: {
+        monthOffset = 0;
+        selectedDay = 0;
+    }
+    onMonthOffsetChanged: selectedDay = 0
 
     readonly property real gap: Tokens.spacing.extraSmall
     readonly property real labelHeight: 14
@@ -197,6 +256,8 @@ StyledRect {
 
                             readonly property bool isToday: !!modelData && root.monthOffset === 0 && modelData.day === new Date().getDate()
                             readonly property bool isFuture: !!modelData && root.monthOffset === 0 && modelData.day > new Date().getDate()
+                            readonly property bool isSelected: !!modelData && root.selectedDay === modelData.day
+                            readonly property bool hasActivity: !!modelData && ((modelData.minutes ?? 0) > 0 || (modelData.markers ?? 0) > 0)
                             readonly property int lvl: modelData ? Math.max(root.level(modelData.minutes), modelData.markers > 0 ? 1 : 0) : 0
 
                             width: root.cellSize
@@ -207,9 +268,9 @@ StyledRect {
                                 visible: !!cell.modelData
                                 radius: Tokens.rounding.small
                                 color: root.levelColour(cell.lvl)
-                                opacity: cell.isFuture ? 0.4 : 1
-                                border.width: cell.isToday ? 2 : 0
-                                border.color: Colours.palette.m3tertiary
+                                opacity: cell.isFuture ? 0.4 : (root.selectedDay > 0 && !cell.isSelected ? 0.55 : 1)
+                                border.width: cell.isSelected ? 2 : (cell.isToday ? 2 : 0)
+                                border.color: cell.isSelected ? Colours.palette.m3primary : Colours.palette.m3tertiary
 
                                 scale: 0.6
                                 Component.onCompleted: scale = 1
@@ -222,6 +283,12 @@ StyledRect {
                                         Anim {
                                             type: Anim.FastSpatial
                                         }
+                                    }
+                                }
+
+                                Behavior on opacity {
+                                    Anim {
+                                        type: Anim.DefaultEffects
                                     }
                                 }
 
@@ -243,6 +310,12 @@ StyledRect {
                                     radius: Tokens.rounding.full
                                     color: Colours.palette.m3tertiary
                                 }
+
+                                StateLayer {
+                                    disabled: !cell.hasActivity || cell.isFuture
+                                    radius: parent.radius
+                                    onClicked: root.selectDay(cell.modelData.day)
+                                }
                             }
                         }
                     }
@@ -256,7 +329,7 @@ StyledRect {
 
                 Stat {
                     label: Tr.tr("Sessions")
-                    value: root.monthSessions.length
+                    value: root.sessionCount
                 }
 
                 Stat {
