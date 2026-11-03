@@ -31,7 +31,7 @@ ColumnLayout {
 
             MaterialIcon {
                 text: root.activity?.icon || "dashboard"
-                color: root.isCurrent ? Colours.palette.m3primary : Colours.palette.m3onSurface
+                color: root.isCurrent ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
                 fontStyle: Tokens.font.icon.large
             }
 

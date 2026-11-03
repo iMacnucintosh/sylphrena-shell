@@ -49,7 +49,9 @@ Item {
             radius: Tokens.rounding.large
             color: "transparent"
             border.width: root.dropHover ? 3 : (root.isActive ? 2 : 1)
-            border.color: root.dropHover ? Colours.palette.m3tertiary : (root.isActive ? Colours.palette.m3primary : Colours.palette.m3outlineVariant)
+            border.color: root.dropHover ? Colours.palette.m3tertiary
+                         : (root.isActive ? Colours.palette.m3primary
+                         : Colours.palette.m3outlineVariant)
 
             Behavior on border.color {
                 CAnim {}
@@ -61,7 +63,9 @@ Item {
                 anchors.fill: parent
                 anchors.margins: cardFrame.border.width
                 radius: Math.max(0, Tokens.rounding.large - anchors.margins)
-                color: root.dropHover ? Colours.palette.m3tertiaryContainer : (root.isActive ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainerHigh)
+                color: root.dropHover ? Colours.palette.m3tertiaryContainer
+                       : (root.isActive ? Colours.layer(Colours.palette.m3secondaryContainer, 1)
+                       : Colours.tPalette.m3surfaceContainerHigh)
 
                 Behavior on color {
                     CAnim {}
@@ -92,6 +96,25 @@ Item {
                             readonly property var toplevel: modelData
                             readonly property var ipc: modelData.lastIpcObject
                             readonly property bool pinned: Activities.isWindowPinned(modelData)
+                            readonly property int clientPid: Number(ipc?.pid) || 0
+                            readonly property string clientClass: String(ipc?.class || "")
+                            // Depend on Audio.streams so mute chips refresh when apps start/stop audio.
+                            readonly property var audioStreams: {
+                                const _ = Audio.streams;
+                                return Audio.streamsForClient(clientPid, clientClass);
+                            }
+                            readonly property bool hasAudio: audioStreams.length > 0
+                            readonly property bool audioMuted: {
+                                const streams = audioStreams;
+                                if (streams.length === 0)
+                                    return false;
+                                // Read each stream's muted so the binding tracks PipeWire updates.
+                                for (let i = 0; i < streams.length; i++) {
+                                    if (!streams[i]?.audio?.muted)
+                                        return false;
+                                }
+                                return true;
+                            }
                             readonly property real monX: root.monitor?.x ?? 0
                             readonly property real monY: root.monitor?.y ?? 0
                             readonly property real monW: Math.max(1, root.monitor?.width ?? screen.width)
@@ -262,6 +285,58 @@ Item {
                                     winItem.didDrag = false;
                                 }
                             }
+
+                            // Above dragArea so mute clicks are not eaten by window drag.
+                            Rectangle {
+                                id: muteChip
+
+                                // Flush to the thumbnail corner: square on the outer edges
+                                // (a bottom-left radius left a 1px preview hairline under the chip).
+                                anchors.left: parent.left
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: -1
+                                anchors.leftMargin: -1
+                                width: muteIcon.implicitWidth + 5
+                                height: muteIcon.implicitHeight + 5
+                                topRightRadius: Tokens.rounding.small
+                                visible: winItem.hasAudio && !winItem.dragging
+                                color: winItem.audioMuted
+                                       ? Colours.palette.m3errorContainer
+                                       : Colours.palette.m3secondaryContainer
+                                opacity: (dragArea.containsMouse || muteMa.containsMouse) ? 1 : 0.88
+                                z: 20
+
+                                Behavior on opacity {
+                                    Anim {
+                                        type: Anim.DefaultEffects
+                                    }
+                                }
+
+                                Behavior on color {
+                                    CAnim {}
+                                }
+
+                                MaterialIcon {
+                                    id: muteIcon
+
+                                    anchors.centerIn: parent
+                                    text: winItem.audioMuted ? "volume_off" : "volume_up"
+                                    color: winItem.audioMuted
+                                           ? Colours.palette.m3onErrorContainer
+                                           : Colours.palette.m3onSecondaryContainer
+                                    fontStyle: Tokens.font.icon.small
+                                }
+
+                                MouseArea {
+                                    id: muteMa
+
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    preventStealing: true
+                                    onClicked: Audio.toggleClientMuted(winItem.clientPid, winItem.clientClass)
+                                }
+                            }
                         }
                     }
 
@@ -275,13 +350,14 @@ Item {
                             text: "desktop_windows"
                             color: Colours.palette.m3outline
                             fontStyle: Tokens.font.icon.large
+                            opacity: 0.85
                         }
 
                         StyledText {
                             Layout.alignment: Qt.AlignHCenter
                             text: Tr.tr("Empty")
-                            color: Colours.palette.m3outline
-                            font: Tokens.font.label.small
+                            color: Colours.palette.m3onSurfaceVariant
+                            font: Tokens.font.label.medium
                         }
                     }
                 }
