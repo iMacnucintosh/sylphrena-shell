@@ -17,6 +17,12 @@ Singleton {
     property Item overviewDragLayer: null
     property int overviewDropTargetWs: -1
     property var overviewCards: []
+    // Fullscreen XWayland games keep pointer/keyboard grab over Overlay OnDemand;
+    // we briefly leave fullscreen while the overview is open, then restore on dismiss
+    // if the user is still on that workspace.
+    property string overviewFsAddr: ""
+    property int overviewFsMode: 0
+    property int overviewFsWs: -1
     property string rulesPath: `${Quickshell.env("HOME")}/.config/hypr/sylphrena-activity-rules.lua`
 
     readonly property var mappedActivities: {
@@ -29,9 +35,18 @@ Singleton {
             const ids = [];
             for (let w = 0; w < count; w++)
                 ids.push(next + w);
+            // Strip i18n mark / other C0 controls that once leaked into saved names.
+            const rawName = String(a.name || "");
+            let name = "";
+            for (let c = 0; c < rawName.length; c++) {
+                const code = rawName.charCodeAt(c);
+                if (code >= 32)
+                    name += rawName[c];
+            }
+            name = name.trim() || a.id || `Activity ${i + 1}`;
             list.push({
                 id: a.id || `activity-${i}`,
-                name: a.name || a.id || `Activity ${i + 1}`,
+                name: name,
                 icon: a.icon || "home",
                 workspaceCount: count,
                 startWs: next,
@@ -468,6 +483,30 @@ Singleton {
         root.focusWorkspace(act.startWs);
     }
 
+    // Graceful close of every mapped window on this activity's desktops.
+    function closeWindowsInActivity(activityId: string): void {
+        const act = root.activityById(activityId);
+        if (!act)
+            return;
+        const ignored = GlobalConfig.bar.workspaces.ignoredTags;
+        const tops = Hyprland.toplevels.values;
+        for (let i = 0; i < tops.length; i++) {
+            const t = tops[i];
+            const ws = t.workspace?.id ?? -1;
+            if (ws < act.startWs || ws > act.endWs)
+                continue;
+            if (Hypr.isToplevelIgnored(t, ignored))
+                continue;
+            const addr = root.normalizeAddress(t.address);
+            if (!addr)
+                continue;
+            if (Hypr.usingLua)
+                Hypr.dispatch(`hl.dsp.window.close({ window = "address:0x${addr}" })`);
+            else
+                Hypr.dispatch(`closewindow address:0x${addr}`);
+        }
+    }
+
     function focusWorkspaceInActivity(activityId: string, workspaceIndex: int): void {
         const act = root.activityById(activityId);
         if (!act)
@@ -522,6 +561,52 @@ Singleton {
         root.closeOverview();
     }
 
+    function suspendFullscreenForOverview(): void {
+        root.overviewFsAddr = "";
+        root.overviewFsMode = 0;
+        root.overviewFsWs = -1;
+        const tops = Hypr.focusedWorkspace?.toplevels?.values ?? [];
+        for (let i = 0; i < tops.length; i++) {
+            const t = tops[i];
+            const mode = t.lastIpcObject?.fullscreen ?? 0;
+            if (mode <= 1)
+                continue;
+            let raw = String(t.address ?? "");
+            if (!raw)
+                continue;
+            const addr = raw.startsWith("0x") ? raw : `0x${raw}`;
+            root.overviewFsAddr = addr;
+            root.overviewFsMode = mode;
+            root.overviewFsWs = t.workspace?.id ?? Hypr.activeWsId;
+            Hyprland.dispatch(`focuswindow address:${addr}`);
+            Hyprland.dispatch("fullscreenstate 0 0");
+            return;
+        }
+    }
+
+    function restoreFullscreenAfterOverview(): void {
+        const addr = root.overviewFsAddr;
+        const mode = root.overviewFsMode;
+        const ws = root.overviewFsWs;
+        root.overviewFsAddr = "";
+        root.overviewFsMode = 0;
+        root.overviewFsWs = -1;
+        if (!addr || mode <= 1)
+            return;
+        // User switched away — leave the game windowed on its desktop.
+        if (Hypr.activeWsId !== ws)
+            return;
+        const still = Hypr.toplevels.values.some(t => {
+            const raw = String(t.address ?? "");
+            const a = raw.startsWith("0x") ? raw : `0x${raw}`;
+            return a === addr;
+        });
+        if (!still)
+            return;
+        Hyprland.dispatch(`focuswindow address:${addr}`);
+        Hyprland.dispatch(`fullscreenstate ${mode} ${mode}`);
+    }
+
     function registerOverviewCard(card: var): void {
         if (!card || root.overviewCards.includes(card))
             return;
@@ -559,10 +644,13 @@ Singleton {
     }
 
     onOverviewOpenChanged: {
-        if (!root.overviewOpen) {
-            root.overviewDropTargetWs = -1;
-            root.overviewCards = [];
+        if (root.overviewOpen) {
+            root.suspendFullscreenForOverview();
+            return;
         }
+        root.overviewDropTargetWs = -1;
+        root.overviewCards = [];
+        root.restoreFullscreenAfterOverview();
     }
 
     function escapeLuaString(s: string): string {

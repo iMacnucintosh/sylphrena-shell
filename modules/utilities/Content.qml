@@ -15,8 +15,12 @@ Item {
     required property BarPopouts.Wrapper popouts
     required property matrix4x4 deformMatrix
 
-    readonly property int enabledCards: (idleInhibit.active ? 1 : 0) + (record.active ? 1 : 0) + (toggles.active ? 1 : 0)
-    readonly property real nonAnimHeight: ((idleInhibit.item as IdleInhibit)?.nonAnimHeight ?? 0) + ((record.item as Record)?.nonAnimHeight ?? 0) + ((toggles.item as Toggles)?.implicitHeight ?? 0) + layout.spacing * Math.max(0, enabledCards - 1)
+    readonly property real recordHeight: (record.item as Record)?.implicitHeight ?? 0
+    readonly property real recordTargetHeight: (record.item as Record)?.nonAnimHeight ?? 0
+    readonly property bool recordVisible: recordHeight > 0.5
+    readonly property int enabledCards: (idleInhibit.active ? 1 : 0) + (recordVisible ? 1 : 0) + (toggles.active ? 1 : 0)
+    // Gaps are Layout.topMargin (animated with the record card), not ColumnLayout.spacing.
+    readonly property real nonAnimHeight: ((idleInhibit.item as IdleInhibit)?.nonAnimHeight ?? 0) + ((record.item as Record)?.nonAnimHeight ?? 0) + ((toggles.item as Toggles)?.implicitHeight ?? 0) + Tokens.spacing.medium * Math.max(0, enabledCards - 1)
 
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
@@ -25,7 +29,8 @@ Item {
         id: layout
 
         anchors.fill: parent
-        spacing: Tokens.spacing.medium
+        // Per-item topMargin so the record gap collapses with the card instead of snapping off.
+        spacing: 0
 
         Loader {
             id: idleInhibit
@@ -40,33 +45,47 @@ Item {
         }
 
         Loader {
-            id: record
-
-            Layout.fillWidth: true
-            active: Config.utilities.cards.recorder
-            visible: active
-            z: 1
-
-            sourceComponent: Record {
-                objectName: "utilitiesScreenRecorder"
-
-                props: root.props
-                screenState: root.screenState
-            }
-        }
-
-        Loader {
             id: toggles
 
             Layout.fillWidth: true
+            Layout.topMargin: idleInhibit.active ? Tokens.spacing.medium : 0
             active: Config.utilities.cards.quickToggles
             visible: active
 
             sourceComponent: Toggles {
                 objectName: "utilitiesQuickToggles"
 
+                props: root.props
                 screenState: root.screenState
                 popouts: root.popouts
+            }
+        }
+
+        Loader {
+            id: record
+
+            Layout.fillWidth: true
+            // Target gap from nonAnimHeight so topMargin and card height start/stop together.
+            Layout.topMargin: root.recordTargetHeight > 0 && (toggles.active || idleInhibit.active) ? Tokens.spacing.medium : 0
+            Layout.preferredHeight: root.recordHeight
+            // Keep in the tree at height 0 — hiding would drop spacing in a final snap.
+            active: Config.utilities.cards.recorder
+            visible: active
+            clip: true
+            z: 1
+
+            Behavior on Layout.topMargin {
+                Anim {
+                    type: Anim.Emphasized
+                }
+            }
+
+            sourceComponent: Record {
+                objectName: "utilitiesScreenRecorder"
+
+                props: root.props
+                screenState: root.screenState
+                embeddedInToggles: Config.utilities.cards.quickToggles
             }
         }
     }

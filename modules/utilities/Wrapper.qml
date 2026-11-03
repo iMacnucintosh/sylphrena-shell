@@ -18,6 +18,7 @@ Item {
     property matrix4x4 deformMatrix
 
     readonly property PersistentProperties props: PersistentProperties {
+        property bool recordingCardExpanded: false
         property bool recordingListExpanded: false
         property string recordingConfirmDelete
         property string recordingMode
