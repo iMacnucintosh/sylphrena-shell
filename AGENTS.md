@@ -1,8 +1,11 @@
 # AGENTS.md — Referencia del fork
 
 Punto de referencia para cualquier agente/IDE/modelo que entre sin contexto. Si cambias algo respecto
-a este fichero, **actualízalo en el mismo commit**. Detalle de uso en [FEATURES.md](./FEATURES.md),
-cambio a cambio en [CHANGELOG.md](./CHANGELOG.md), instalación/config upstream en [README.md](./README.md).
+a este fichero, **actualízalo en el mismo commit**.
+
+Documentación por rol: [README.md](./README.md) = cara pública (features + install real);
+[FEATURES.md](./FEATURES.md) = guía de uso del fork; [CONFIG.md](./CONFIG.md) = referencia `shell.json`;
+[CHANGELOG.md](./CHANGELOG.md) = cambios recientes.
 
 ---
 
@@ -114,4 +117,4 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 
 ---
 
-*Última actualización: 2026-11-02 (toasts en borde + now playing CoverArt; Display inline en Connected devices; Seeker `--pick` sin explorador QML embebido). Repo GitHub `iMacnucintosh/sylphrena-shell`; versión propia `v0.1.0`, solo tags `v0.*`; greeter en `/etc/greetd/sylphrena` vía `scripts/install-system.sh`; flake de Nix y workflows de GitHub fuera del árbol; empaquetado AUR pendiente. Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*
+*Última actualización: 2026-11-03 (README cara pública Sylphrena + CONFIG.md; FEATURES como guía de uso). Repo GitHub `iMacnucintosh/sylphrena-shell`; versión propia `v0.1.0`, solo tags `v0.*`; greeter en `/etc/greetd/sylphrena` vía `scripts/install-system.sh`; flake de Nix y workflows de GitHub fuera del árbol; empaquetado AUR pendiente. Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*
