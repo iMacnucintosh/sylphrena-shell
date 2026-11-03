@@ -15,27 +15,136 @@ StyledRect {
 
     required property var props
     required property ScreenState screenState
-    readonly property real nonAnimHeight: btnLayout.implicitHeight + listOrControls.implicitHeight + layout.spacing + layout.anchors.margins * 2
+    // When true, collapsed quick-access lives in Toggles; this card is expand-only.
+    property bool embeddedInToggles: false
 
-    implicitHeight: layout.implicitHeight + layout.anchors.margins * 2
+    readonly property bool effectivelyExpanded: props.recordingCardExpanded || Recorder.running
+    readonly property bool showCollapsedChip: !embeddedInToggles && !effectivelyExpanded
+    readonly property real nonAnimHeight: {
+        if (embeddedInToggles && !effectivelyExpanded)
+            return 0;
+        if (showCollapsedChip)
+            return collapsedLayout.implicitHeight + collapsedLayout.anchors.margins * 2;
+        return expandedLayout.implicitHeight + expandedLayout.anchors.margins * 2;
+    }
+
+    implicitHeight: nonAnimHeight
 
     radius: Tokens.rounding.large
     color: Colours.tPalette.m3surfaceContainer
+    clip: true
+    // Never toggle visible here — parent Loader clips at height 0 so collapse stays continuous.
+
+    Behavior on implicitHeight {
+        Anim {
+            type: Anim.Emphasized
+        }
+    }
 
     Ref {
         service: Recorder
     }
 
-    ColumnLayout {
-        id: layout
+    // Standalone fallback when the quick-toggles card is disabled.
+    Row {
+        id: collapsedLayout
 
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.margins: Tokens.padding.large
+        spacing: Math.floor(Tokens.spacing.extraSmall / 2)
+        visible: root.showCollapsedChip
+        enabled: visible
+
+        readonly property color colour: Colours.palette.m3primary
+        readonly property color textColour: Colours.palette.m3onPrimary
+        readonly property bool startDisabled: Recorder.running || Recorder.arming
+        readonly property real horizontalPadding: Tokens.padding.medium
+        readonly property real verticalPadding: Tokens.padding.small
+
+        StyledRect {
+            radius: implicitHeight / 2 * Math.min(1, Tokens.rounding.scale)
+            topRightRadius: Tokens.rounding.medium / 2
+            bottomRightRadius: Tokens.rounding.medium / 2
+            color: collapsedLayout.startDisabled ? Qt.alpha(Colours.palette.m3onSurface, 0.1) : collapsedLayout.colour
+
+            implicitWidth: collapsedRow.implicitWidth + collapsedLayout.horizontalPadding * 2
+            implicitHeight: expandChip.implicitHeight
+
+            StateLayer {
+                topRightRadius: parent.topRightRadius
+                bottomRightRadius: parent.bottomRightRadius
+                color: collapsedLayout.textColour
+                disabled: collapsedLayout.startDisabled
+                onClicked: Recorder.start()
+            }
+
+            Row {
+                id: collapsedRow
+
+                anchors.centerIn: parent
+                spacing: Tokens.spacing.small
+
+                MaterialIcon {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: 1
+                    text: "screen_record"
+                    color: collapsedLayout.startDisabled ? Qt.alpha(Colours.palette.m3onSurface, 0.38) : collapsedLayout.textColour
+                    fill: 1
+                }
+
+                StyledText {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: Tr.tr("Record screen")
+                    color: collapsedLayout.startDisabled ? Qt.alpha(Colours.palette.m3onSurface, 0.38) : collapsedLayout.textColour
+                    font: Tokens.font.body.medium
+                }
+            }
+        }
+
+        StyledRect {
+            id: expandChip
+
+            radius: implicitHeight / 2 * Math.min(1, Tokens.rounding.scale)
+            topLeftRadius: Tokens.rounding.medium / 2
+            bottomLeftRadius: Tokens.rounding.medium / 2
+            color: collapsedLayout.colour
+
+            implicitWidth: implicitHeight
+            implicitHeight: expandIcon.implicitHeight + collapsedLayout.verticalPadding * 2
+
+            StateLayer {
+                rect.topLeftRadius: parent.topLeftRadius
+                rect.bottomLeftRadius: parent.bottomLeftRadius
+                color: collapsedLayout.textColour
+                onClicked: root.props.recordingCardExpanded = true
+            }
+
+            MaterialIcon {
+                id: expandIcon
+
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: -Math.floor(collapsedLayout.verticalPadding / 4)
+                text: "expand_more"
+                color: collapsedLayout.textColour
+            }
+        }
+    }
+
+    ColumnLayout {
+        id: expandedLayout
+
+        // Top/left/right only: keep natural height while the parent clips during collapse.
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.margins: Tokens.padding.large
         spacing: Tokens.spacing.medium
+        // Stay in tree while parent height animates; opacity avoids hit-testing when collapsed.
+        opacity: root.implicitHeight > 0.5 ? 1 : 0
+        enabled: root.effectivelyExpanded
 
         RowLayout {
-            id: btnLayout
-
             spacing: Tokens.spacing.medium
 
             StyledRect {
@@ -59,30 +168,13 @@ StyledRect {
                 }
             }
 
-            ColumnLayout {
+            Item {
                 Layout.fillWidth: true
-                spacing: 0
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: Tr.tr("Screen recorder")
-                    font: Tokens.font.body.medium
-                    elide: Text.ElideRight
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: Recorder.paused ? Tr.trCtx("Paused", "recorder state") : Recorder.running ? Tr.trCtx("Running...", "recorder state") : Tr.trCtx("Ready", "recorder state")
-                    color: Colours.palette.m3onSurfaceVariant
-                    font: Tokens.font.body.small
-                    elide: Text.ElideRight
-                    animate: true
-                }
             }
 
             SplitButton {
-                // While recording the main chip must not re-fire start (toggle-stop race)
                 disabled: Recorder.running || Recorder.arming
+                menuOnTop: true
 
                 active: menuItems.find(m => root.props.recordingMode === m.icon + m.text) ?? menuItems[0]
                 menu.onItemSelected: item => root.props.recordingMode = item.icon + item.text
@@ -268,7 +360,6 @@ StyledRect {
                     }
 
                     implicitWidth: {
-                        // Ensure even size so icon is centered properly
                         const h = label.implicitHeight + Tokens.padding.large * 2;
                         if (h % 2 !== 0)
                             return h + 1;
@@ -286,7 +377,6 @@ StyledRect {
                     onClicked: Recorder.stop()
 
                     implicitWidth: {
-                        // Ensure even size so icon is centered properly
                         const h = label.implicitHeight + Tokens.padding.large * 2;
                         if (h % 2 !== 0)
                             return h + 1;

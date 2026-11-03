@@ -38,11 +38,12 @@ Sistema opcional (activado por defecto en este fork) que agrupa desktops de Hypr
 
 - En lugar del strip clásico de workspaces, ves una **pill por actividad** (icono + sus desktops).
 - Clic en el icono de la actividad → salta a su primer desktop.
+- Clic derecho en el icono → popout integrado junto a la barra (p. ej. cerrar todas las ventanas de esa activity).
 - El scroll de workspaces se queda **dentro** de la actividad actual (no salta a otra actividad).
 
 ### Overview
 
-- Atajo por defecto: **Super + Tab** (remapeable).
+- Atajo por defecto: **Super + Tab** (remapeable); también funciona con una app a pantalla completa (p. ej. un juego).
 - Vista a pantalla completa de todas las actividades y sus desktops.
 - Clic en un desktop para ir a él.
 - Arrastra ventanas entre desktops (también entre activities); al soltar se enfoca el destino y se aplica su look.

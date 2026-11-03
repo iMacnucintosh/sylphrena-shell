@@ -349,7 +349,8 @@ PageBase {
                                 verticalPadding: Tokens.padding.small
                                 // Outlined field cuts a notch for placeholderText — use it as the label
                                 placeholderText: Tr.tr("Name")
-                                text: actRow.modelData.name ? Tr.trMarked(actRow.modelData.name) : ""
+                                // User-editable: never Tr.trMarked — the mark byte (\u0001) would be saved back.
+                                text: actRow.modelData.name || ""
                                 onEditingFinished: {
                                     actRow.modelData.name = text;
                                     Activities.syncSoon();

@@ -136,11 +136,9 @@ Scope {
     CustomShortcut {
         name: "activityOverview"
         description: "Toggle activities overview"
-        onPressed: {
-            if (root.hasFullscreen)
-                return;
-            Activities.toggleOverview();
-        }
+        // Allowed over fullscreen so Super+Tab can escape a game into the overview
+        // (workspace/activity switches already work; drawers stay gated).
+        onPressed: Activities.toggleOverview()
     }
 
     IpcHandler {

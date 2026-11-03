@@ -12,6 +12,8 @@ Column {
 
     required property ShellScreen screen
     required property bool fullscreen
+    required property var popouts
+    required property Item barItem
 
     spacing: Tokens.spacing.small
 
@@ -24,6 +26,8 @@ Column {
             screen: root.screen
             fullscreen: root.fullscreen
             activity: modelData
+            popouts: root.popouts
+            barItem: root.barItem
         }
     }
 }

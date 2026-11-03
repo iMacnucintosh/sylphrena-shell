@@ -98,7 +98,8 @@ Singleton {
 
     readonly property var notifIconRules: [
         [["reboot"], "restart_alt"],
-        [["recording"], "screen_record"],
+        // Screen recorder (EN/ES summary text from sylph record)
+        [["recording", "grabaci", "grabando", "grabar"], "screen_record"],
         [["battery"], "power"],
         [["screenshot"], "screenshot_monitor"],
         [["welcome"], "waving_hand"],

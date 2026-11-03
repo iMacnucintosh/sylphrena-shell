@@ -16,6 +16,9 @@ ClipRect {
     required property ShellScreen screen
     required property bool fullscreen
     required property var activity // mapped activity from Activities.mappedActivities
+    // Bar popouts Wrapper (aliases currentName / activityMenuId / …).
+    required property var popouts
+    required property Item barItem
 
     readonly property HyprlandMonitor monitor: Hypr.monitorFor(screen)
     readonly property bool onSpecial: monitor?.lastIpcObject.specialWorkspace?.name !== ""
@@ -77,9 +80,27 @@ ClipRect {
                 StateLayer {
                     anchors.fill: parent
                     radius: Tokens.rounding.full
-                    onClicked: {
-                        if (root.activity)
-                            Activities.focusActivity(root.activity.id);
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: event => {
+                        if (!root.activity)
+                            return;
+                        if (event.button === Qt.RightButton) {
+                            const already = root.popouts.hasCurrent && root.popouts.currentName === "activitymenu" && root.popouts.activityMenuId === root.activity.id;
+                            if (already) {
+                                root.popouts.hasCurrent = false;
+                                return;
+                            }
+                            root.popouts.activityMenuId = root.activity.id;
+                            root.popouts.currentName = "activitymenu";
+                            // Align the lobe to the activity icon (not the window strip below).
+                            root.popouts.currentCenter = Qt.binding(() => headerHit.mapToItem(root.barItem, headerHit.width / 2, headerHit.height / 2).y);
+                            root.popouts.hasCurrent = true;
+                            event.accepted = true;
+                            return;
+                        }
+                        if (root.popouts.currentName === "activitymenu")
+                            root.popouts.hasCurrent = false;
+                        Activities.focusActivity(root.activity.id);
                     }
                 }
             }

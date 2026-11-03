@@ -3287,6 +3287,10 @@ msgstr "Muestra la tarjeta del inhibidor de inactividad"
 msgid "Screen recorder"
 msgstr "Grabador de pantalla"
 
+#: modules/utilities/cards/Toggles.qml modules/utilities/cards/Record.qml
+msgid "Record screen"
+msgstr "Grabar pantalla"
+
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
 msgid "Show the screen recorder card"
 msgstr "Muestra la tarjeta del grabador de pantalla"
@@ -3937,6 +3941,14 @@ msgstr "Buscar apps"
 #: modules/nexus/pages/ShellPage.qml
 msgid "Add activity"
 msgstr "Añadir actividad"
+
+#: modules/bar/popouts/ActivityMenu.qml
+msgid "Close all windows"
+msgstr "Cerrar todas las ventanas"
+
+#: modules/bar/popouts/ActivityMenu.qml
+msgid "Activity"
+msgstr "Actividad"
 
 #: modules/nexus/pages/ShellPage.qml
 msgid "New activity"
@@ -5971,9 +5983,6 @@ msgstr "Configura el shell"
 
 #~ msgid "Window class"
 #~ msgstr "Clase de ventana"
-
-#~ msgid "Activity"
-#~ msgstr "Actividad"
 
 #~ msgid "Target activity for this app"
 #~ msgstr "Actividad de destino para esta app"
