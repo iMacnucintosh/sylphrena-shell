@@ -95,11 +95,9 @@ ColumnLayout {
             const specialWs = mon?.lastIpcObject.specialWorkspace.name;
             if (specialWs?.length > 0) {
                 Hypr.dispatch(Hypr.usingLua ? `hl.dsp.workspace.toggle_special("${specialWs.slice(8)}")` : `togglespecialworkspace ${specialWs.slice(8)}`);
-            } else if (GlobalConfig.activities.enabled) {
+            } else {
                 // Stay within the current activity; activity switching uses dedicated shortcuts
                 Activities.focusNextInActivity(angleDelta.y > 0 ? -1 : 1);
-            } else if (angleDelta.y < 0 || mon.activeWorkspace?.id > 1) {
-                Hypr.dispatch(Hypr.usingLua ? `hl.dsp.focus({ workspace = "r${angleDelta.y > 0 ? "-" : "+"}1" })` : `workspace r${angleDelta.y > 0 ? "-" : "+"}1`);
             }
         } else if (y < screen.height / 2 && Config.bar.scrollActions.volume) {
             // Volume scroll on top half
@@ -149,7 +147,7 @@ ColumnLayout {
                     Loader {
                         objectName: "taskbarWorkspaces"
                         active: true
-                        sourceComponent: GlobalConfig.activities.enabled ? activitiesComp : workspacesComp
+                        sourceComponent: activitiesComp
                     }
                 }
             }
@@ -235,15 +233,6 @@ ColumnLayout {
         implicitHeight: item?.implicitHeight ?? 0
 
         children: item
-    }
-
-    Component {
-        id: workspacesComp
-
-        Workspaces {
-            screen: root.screen
-            fullscreen: root.fullscreen
-        }
     }
 
     Component {
