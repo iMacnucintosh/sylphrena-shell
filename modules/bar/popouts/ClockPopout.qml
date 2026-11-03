@@ -124,6 +124,21 @@ ColumnLayout {
                 to: 180
                 value: 30
                 editable: true
+                // Show unit in the field (same msgid as preset chips)
+                textFromValue: (value, locale) => Tr.trN("%n min", "%n mins", Math.round(value))
+                valueFromText: (text, locale) => {
+                    const m = String(text).match(/-?\d+/);
+                    return m ? Number(m[0]) : Number.NaN;
+                }
+                validator: RegularExpressionValidator {
+                    // Allow optional "min"/"mins" while editing
+                    regularExpression: /^\s*\d{0,3}\s*[a-zA-Z.]*\s*$/
+                }
+
+                Component.onCompleted: {
+                    if (contentItem)
+                        contentItem.implicitWidth = 96;
+                }
 
                 Keys.onReturnPressed: root.addCustomTimer()
                 Keys.onEnterPressed: root.addCustomTimer()
@@ -138,7 +153,13 @@ ColumnLayout {
             }
 
             IconButton {
-                isRound: true
+                // Rounded square matching the manual minutes spinner height (not a FAB circle)
+                isRound: false
+                defaultRadius: Tokens.rounding.medium
+                Layout.preferredHeight: customMins.implicitHeight
+                Layout.preferredWidth: customMins.implicitHeight
+                implicitHeight: customMins.implicitHeight
+                implicitWidth: customMins.implicitHeight
                 icon: "add"
                 type: IconButton.Tonal
                 onClicked: root.addCustomTimer()
@@ -156,15 +177,48 @@ ColumnLayout {
         Repeater {
             model: Timers.timers
 
-            StyledRect {
+            // ClipRect (RoundedMask) — Rectangle.clip does not honour radius, so a
+            // thin remaining fill would otherwise poke past the pill corners.
+            ClipRect {
                 id: timerRow
 
                 required property var modelData
+                // Local clock — don't drive the fill from Timers list churn.
+                property int clock: 0
+                readonly property real remainingMs: {
+                    clock;
+                    return Math.max(0, (Number(modelData.endAt) || 0) - Date.now());
+                }
+                readonly property real progress: {
+                    const d = Number(modelData.durationMs) || 0;
+                    if (d <= 0)
+                        return 0;
+                    return Math.max(0, Math.min(1, remainingMs / d));
+                }
 
                 Layout.fillWidth: true
                 implicitHeight: timerInner.implicitHeight + Tokens.padding.small * 2
                 radius: Tokens.rounding.large
                 color: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+
+                Timer {
+                    interval: 50
+                    running: true
+                    repeat: true
+                    onTriggered: timerRow.clock++
+                }
+
+                // Remaining fill from the left; parent mask keeps corners clean when thin
+                StyledRect {
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    width: parent.width * timerRow.progress
+                    visible: width >= 1
+                    topRightRadius: Math.min(timerRow.radius, height / 2)
+                    bottomRightRadius: topRightRadius
+                    color: Colours.palette.m3secondaryContainer
+                }
 
                 RowLayout {
                     id: timerInner
@@ -190,7 +244,7 @@ ColumnLayout {
                         }
 
                         StyledText {
-                            text: Timers.formatRemaining(timerRow.modelData.remainingMs)
+                            text: Timers.formatRemaining(timerRow.remainingMs)
                             color: Colours.palette.m3onSurfaceVariant
                             font: Tokens.font.mono.small
                         }
