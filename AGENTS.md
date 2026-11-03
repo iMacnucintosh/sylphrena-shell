@@ -77,7 +77,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 
 ## 5. Features del fork (resumen)
 
-1. **Activities** — Principal (no eliminable; las demás heredan su look), Juegos, Trabajo. Look por activity: wallpaper + esquema + modo + transparencia + light apps. Apps ancladas por desktop (reglas regex **RE2** con `(?i)`, sin `silent` para que el foco siga la ventana, reintento ~700 ms). Overview `Super+Tab` con drag & drop de ventanas (pins no arrastran). Atajos `Super+Ctrl+←/→` y toggle "saltar entre actividades".
+1. **Activities** — Siempre on (1+ activities; solo Principal es válido). Principal (no eliminable; las demás heredan su look), Juegos, Trabajo. Look por activity: wallpaper + esquema + modo + transparencia + light apps. Apps ancladas por desktop (reglas regex **RE2** con `(?i)`, sin `silent` para que el foco siga la ventana, reintento ~700 ms). Overview `Super+Tab` con drag & drop de ventanas (pins no arrastran). Atajos `Super+Ctrl+←/→` y toggle "saltar entre actividades". Sin interruptor Activar/desactivar en Nexus.
 2. **Pantalla** — modo/escala/VRR por monitor con política Nunca/Automático/Siempre.
 3. **Juegos (Steam)** — complemento opt-in: stats en shapes M3, hero con portada, carrusel por `lastPlayed`, logros (rareza + bloqueados, descripción siempre visible), heatmap mensual navegable, juegos no Steam + Millennium + sesiones reales Steam.
 4. **Updates** — página Nexus + icono/badge en la barra (solo si hay paquetes) + popout; password popup → update en bg con logs en vivo en Nexus.
