@@ -1,32 +1,9 @@
-# Qué incluye este fork
+# Guía de uso (Sylphrena)
 
-Documento orientado a **usuarios finales**: diferencias y mejoras respecto al proyecto original (crédito en el [README](./README.md)).
+Detalle de cómo usar las piezas del fork. Listado corto y cara pública: **[README.md](./README.md)**.  
+Opciones `shell.json`: **[CONFIG.md](./CONFIG.md)**. Changelog: **[CHANGELOG.md](./CHANGELOG.md)**.
 
-Repositorio: [iMacnucintosh/sylphrena-shell](https://github.com/iMacnucintosh/sylphrena-shell).
-
----
-
-## Resumen rápido
-
-| Área | Qué ganas |
-| --- | --- |
-| **Activities** | Espacios de trabajo agrupados (Casa / Trabajo / Juegos…), overview, estilo por actividad |
-| **Barra** | Pills de actividades, iconos de apps en workspaces, indicador **REC**, tray y status más claros |
-| **Reloj** | Popout con calendario (o hidratación) + temporizadores (con sonido y persistencia) |
-| **Grabación** | Estable (no se corta al salir del panel); guarda en `~/Vídeos/Videocapturas de pantalla` |
-| **Notificaciones** | Clic → enfoca la app; hover en la esquina superior derecha abre la sidebar |
-| **Nexus** | Página **Activities** para configurar activities y aspecto |
-| **Launcher** | Hover inferior, edición de `.desktop`, iconos Papirus |
-| **Kitty / GTK** | Paleta alineada a la activity (Kitty + Thunar/Material) |
-| **Madison VPN** | Complemento on/off en Nexus; icono OTP / desconectar; engranaje config; limpia túnel tras sleep |
-| **Complementos** | Nexus → Complementos: Madison VPN + Timers + Hidratación + Juegos/Steam (on/off) |
-| **Utilities** | Mantener activo (café) en interruptores rápidos, ON por defecto |
-| **Clipboard** | Historial estilo Plasma (cliphist): Super+Shift+V, pegar en la ventana enfocada, favoritos |
-| **Updates** | Arch / AUR / Flatpak: icono+badge, popout, Nexus; update en fondo (panel) o con logs (Nexus) |
-| **Pantalla** | Nexus → Dispositivos conectados → Pantalla: modo (Hz), escala y VRR por monitor (Nunca / Automático / Siempre) |
-| **Atajos** | Remapeables desde Nexus; Super+E → Thunar; Super+\` última ventana; foco al hover o al clic; atajos de activities |
-| **Tiempo** | Buscar ciudad en Nexus → Idioma y región, o ubicación automática por IP |
-| **Lock** | Columna derecha: notificaciones (35 %) con scroll arriba, compañera **Sylphrena** (65 %) abajo (igual que el greeter; orbe SoftBurst vía `SylphOrb`, también en Nexus → About) |
+Repositorio: [iMacnucintosh/sylphrena-shell](https://github.com/iMacnucintosh/sylphrena-shell). Crédito a la base caelestia en el README.
 
 ---
 
@@ -84,7 +61,7 @@ Hyprland aplica esas reglas al arrancar (archivo generado `~/.config/hypr/sylphr
 - Look por activity
 - Pin de apps por desktop
 
-Defaults de ejemplo: Home (2 desktops), Games (1), Work (2).
+Defaults de ejemplo: Principal (2 desktops), Juegos (1), Trabajo (2).
 
 ### Setup Hyprland (importante)
 
@@ -119,7 +96,7 @@ require("sylphrena-activity-rules")  -- reglas de activities / pins (Nexus → A
 - Indicador **REC** / **PAUSE** bajo el reloj en la barra mientras hay grabación activa.
 - El chip principal del recorder no re-dispara start mientras ya está grabando (evita toggle-stop accidental).
 - Archivos en **`~/Vídeos/Videocapturas de pantalla`** (override: env `SYLPHRENA_RECORDINGS_DIR`).
-- Desde la lista: reproducir, abrir carpeta (Thunar) o borrar.
+- Desde la lista: reproducir, abrir carpeta (Seeker) o borrar.
 
 ---
 
@@ -403,8 +380,7 @@ La shell **carga el plugin compilado en `~/.local`**, no el del paquete AUR (que
 
 ## Notas
 
-- Esto es un **fork**: no sustituye la documentación de instalación de upstream ([README](./README.md)).
-- Historial de cambios recientes: [CHANGELOG.md](./CHANGELOG.md).
+- Instalación y listado de features: [README.md](./README.md). Historial: [CHANGELOG.md](./CHANGELOG.md).
 - Algunas piezas siguen en evolución; si algo no aparece tras actualizar, reinicia la shell (`sylph shell -r`) y comprueba los `require(...)` de Hyprland.
 - `scripts/sylphrena-quiet.py` evita spamear OSC a todos los PTY al cambiar el tema (recarga Kitty, sync Papirus en qt6ct, GTK/`colors.css`).
 - `scripts/apply-activity-style.py` aplica wallpaper + esquema de la activity en un solo proceso.

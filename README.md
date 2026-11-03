@@ -1,1045 +1,214 @@
-<h1 align=center>Sylphrena</h1>
+<h1 align="center">Sylphrena</h1>
 
-Shell de escritorio para Hyprland, hecha con Quickshell.
+<p align="center">
+Shell de escritorio <strong>Material You</strong> para <a href="https://hypr.land">Hyprland</a>, hecha con <a href="https://quickshell.outfoxxed.me">Quickshell</a> / QML.<br/>
+CLI: <code>sylph</code> · instancia: <code>qs -c sylphrena</code> · config Lua de Hyprland.
+</p>
 
-Basada en [caelestia-shell](https://github.com/caelestia-dots/shell), de soramane.
+<p align="center">
+Fork de <a href="https://github.com/caelestia-dots/shell">caelestia-shell</a> (soramane), rebranded y ampliado.<br/>
+Repo: <a href="https://github.com/iMacnucintosh/sylphrena-shell">iMacnucintosh/sylphrena-shell</a> · tags propios <code>v0.*</code>
+</p>
 
-<div align=center>
+<div align="center">
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/iMacnucintosh/sylphrena-shell?style=for-the-badge&labelColor=101418&color=9ccbfb)
 ![GitHub Repo stars](https://img.shields.io/github/stars/iMacnucintosh/sylphrena-shell?style=for-the-badge&labelColor=101418&color=b9c8da)
 ![GitHub repo size](https://img.shields.io/github/repo-size/iMacnucintosh/sylphrena-shell?style=for-the-badge&labelColor=101418&color=d3bfe6)
-[![Ko-Fi donate](https://img.shields.io/badge/donate-kofi?style=for-the-badge&logo=ko-fi&logoColor=ffffff&label=ko-fi&labelColor=101418&color=f16061&link=https%3A%2F%2Fko-fi.com%2Fsoramane)](https://ko-fi.com/soramane)
-[![Discord invite](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscordapp.com%2Fapi%2Finvites%2FBGDCFCmMBk%3Fwith_counts%3Dtrue&query=approximate_member_count&style=for-the-badge&logo=discord&logoColor=ffffff&label=discord&labelColor=101418&color=96f1f1&link=https%3A%2F%2Fdiscord.gg%2FBGDCFCmMBk)][discord]
 
 </div>
 
 https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
-> [!IMPORTANT]
-> Resumen de este fork:
->
-> - **Activities**: escritorios agrupados (Principal/Juegos/Trabajo), overview (`Super+Tab`), look por actividad (wallpaper, esquema, modo, transparencia, light apps) y apps ancladas por desktop
-> - **Panel Juegos (Steam)**: complemento opt-in con stats Material You, logros por rareza, mapa de calor mensual y juegos no Steam (Millennium)
-> - **System updates**: página Nexus + icono/badge en la barra + popout; actualización con password popup y proceso en segundo plano
-> - **Historial de portapapeles** (cliphist): `Super+Shift+V`, pegar en la ventana enfocada, favoritos
-> - **Madison VPN**: icono en la barra, diálogo OTP integrado, configuración local, heal tras suspender
-> - **Complementos** (Nexus): VPN, Timers e Hidratación on/off con limpieza al desactivar
-> - **Timers** del reloj (persistentes), **grabación** estable en `~/Vídeos/Videocapturas de pantalla` con chip REC
-> - **Atajos remapeables** desde Nexus (incluye F13–F35), página **Pantalla** (modo/escala/VRR por monitor), modo **layout compacto**
-> - Thunar/GTK/Papirus y **Kitty** alineados al esquema de la actividad; **i18n español** completo; launcher con edición de `.desktop`
->
-> Documentación del fork (visible en GitHub, no dentro de la shell):
-> **[FEATURES.md](./FEATURES.md)** (qué incluye y cómo usarlo) y **[CHANGELOG.md](./CHANGELOG.md)** (cambios recientes).
-> La instalación y la configuración base siguen documentadas abajo (upstream).
+## Funcionalidades
 
-## Components
+### Activities
 
-- Widgets: [`Quickshell`](https://quickshell.outfoxxed.me)
-- Window manager: [`Hyprland`](https://hypr.land)
-- Dots: [`sylphrena`][dots-repo]
+- Espacios de trabajo agrupados (p. ej. Principal, Juegos, Trabajo) con **pills** en la barra.
+- **Overview** a pantalla completa (`Super+Tab`): drag & drop de ventanas entre desktops/actividades; pins no se arrastran.
+- **Look por actividad**: wallpaper, esquema, modo claro/oscuro, transparencia y light apps (apply atómico).
+- Apps **ancladas** por desktop (reglas Hyprland generadas).
+- Atajos `Super+Ctrl+←/→` y opción de saltar entre actividades.
 
-## Installation
+### Barra y paneles
+
+- Tray / status con pastilla unificada al hover; trays Electron/Flatpak sobreviviendo a reinicios de la shell.
+- Indicador **REC** / **PAUSE** bajo el reloj; grabación desacoplada del panel.
+- **Clipboard** (cliphist): `Super+Shift+V`, favoritos, previews, pegar en la ventana enfocada.
+- **Updates** (Arch / AUR / Flatpak): badge solo si hay paquetes, popout y página Nexus; update en segundo plano con password en RAM.
+- **Madison VPN** (opt-in): OTP en popout, settings, heal tras suspender.
+- Popouts, toasts en borde (posición superior/inferior) y now playing con portada animada.
+
+### Nexus
+
+- Página **Activities** (comportamiento + look; Principal = look general heredable).
+- **Complementos**: VPN, Timers, Hidratación, Juegos/Steam, Clipboard — on/off con limpieza al desactivar.
+- **Pantalla** inline en Dispositivos conectados: resolución, Hz, escala y VRR (Nunca / Automático / Siempre) por monitor.
+- Atajos remapeables (incl. F13–F35), última ventana, foco al hover o al clic.
+- Sidebar por categorías; saltos por `id` estable; **i18n español** completo.
+
+### Dashboard y lock
+
+- Pestaña **Juegos** (Steam opt-in): stats Material You, logros, heatmap, no-Steam / Millennium, caché en disco.
+- **Hidratación** (opt-in): depósito con waves, meta diaria, recordatorio.
+- Timers del reloj persistentes (presets + duración manual + sonido).
+- **Lock**: notificaciones con scroll (35 %) + compañera Sylphrena (65 %); orbe SoftBurst compartido con el greeter.
+- **Greeter** Material You (greetd) instalable con un solo `sudo`.
+
+### Theming y apps
+
+- Kitty, GTK/Seeker, qt6ct y Papirus alineados al esquema de la actividad (`sylphrena-quiet`).
+- Explorador por defecto **Seeker**; Thunar como fallback.
+- Layout **compacto** (barra izquierda, gaps/rounding/border a 0).
+- Keep-awake (café) por defecto, persistente entre reinicios de la shell.
+- Launcher con hover inferior y edición de `.desktop`.
+
+### Base (heredada de caelestia)
+
+Launcher, dashboard, utilities, notificaciones, media/MPRIS, lock PAM, switcher de wallpapers/esquemas, IPC vía CLI, y el resto del shell Quickshell Material You.
+
+---
+
+## Documentación
+
+| Documento | Contenido |
+| --- | --- |
+| **[FEATURES.md](./FEATURES.md)** | Guía detallada de uso del fork |
+| **[CHANGELOG.md](./CHANGELOG.md)** | Cambios recientes |
+| **[CONFIG.md](./CONFIG.md)** | Referencia de `shell.json` / tokens |
+| **[AGENTS.md](./AGENTS.md)** | Mapa para agentes/devs (convenciones, trampas, roadmap) |
+
+---
+
+## Instalación
 
 > [!NOTE]
-> This repo is for Sylphrena's desktop shell only. If you want installation instructions
-> for the entire dotfiles (which include this shell), head to [the main repo][dots-repo] instead.
+> Empaquetado **AUR pendiente**. Hoy el flujo soportado es clone + build user-local del plugin C++.
 
-### Arch Linux
+### Dependencias
 
-> [!WARNING]
-> If you want to make your own changes/tweaks to the shell, do NOT edit the files installed by the AUR
-> package. Instead, follow the instructions in the [manual installation section](#manual-installation).
+Runtime / sistema (Arch):
 
-The shell is available from the AUR as `sylphrena-shell`. You can install it with an AUR helper (recommended),
-like [`paru`](https://github.com/morganamilo/paru), or by manually downloading the PKGBUILD and running `makepkg -si`.
+- [`quickshell-git`](https://git.outfoxxed.me/quickshell/quickshell) (versión git, no solo el tag estable)
+- CLI user-local **`sylph`** (paquete `sylphrena-cli` cuando exista; mientras tanto el binario en `~/.local/bin`)
+- `ddcutil`, `brightnessctl`, `libcava`, `networkmanager`, `lm_sensors`, `aubio`, `libpipewire`, `libqalculate`, `power-profiles-daemon`
+- Fuentes: `ttf-material-symbols-variable`, `ttf-rubik-vf`, `ttf-cascadia-code-nerd`
+- Qt 6: `qt6-base`, `qt6-declarative`, `qt6-imageformats`, `qt6-multimedia`, [`qt6-m3shapes-git`](https://github.com/soramanew/m3shapes)
+- `swappy`, `fish`, `bash`
+- Clipboard: `cliphist`, `wl-clipboard`, `wtype`
+- Hyprland + portales (`xdg-desktop-portal-hyprland`, `xdg-desktop-portal-gtk`), `qt6ct`, tema de iconos Papirus (recomendado)
 
-A package following the latest commit also exists as `sylphrena-shell-git`. This is bleeding-edge
-and likely to be unstable/have bugs. Regular users are recommended to use the stable package (`sylphrena-shell`).
+Build: `cmake`, `ninja`, `qt6-shadertools`.
 
-### Manual installation
+Opcionales según complementos: `yay` (updates AUR), Flatpak, `openfortivpn` (Madison VPN), Steam, Blender (+ `.thumbnailer` local; Arch no lo registra en el paquete).
 
-Dependencies:
+### Clone
 
-- [`sylphrena-cli`](https://github.com/iMacnucintosh/sylphrena-shell)
-- [`quickshell-git`](https://git.outfoxxed.me/quickshell/quickshell) - this has to be the git version, not the latest tagged version
-- `glibc`
-- `gcc-libs`
-- [`ddcutil`](https://github.com/rockowitz/ddcutil)
-- [`brightnessctl`](https://github.com/Hummer12007/brightnessctl)
-- [`libcava`](https://github.com/LukashonakV/cava)
-- [`networkmanager`](https://gitlab.freedesktop.org/NetworkManager/NetworkManager)
-- [`lm_sensors`](https://github.com/lm-sensors/lm-sensors)
-- [`aubio`](https://github.com/aubio/aubio)
-- [`libpipewire`](https://github.com/PipeWire/pipewire)
-- [`libqalculate`](https://github.com/Qalculate/libqalculate)
-- [`power-profiles-daemon`](https://gitlab.freedesktop.org/upower/power-profiles-daemon)
-- [`ttf-material-symbols-variable`](https://github.com/google/material-design-icons)
-- [`ttf-rubik-vf`](https://github.com/googlefonts/rubik)
-- [`ttf-cascadia-code-nerd`](https://github.com/ryanoasis/nerd-fonts)
-- `qt6-base`
-- `qt6-declarative`
-- `qt6-imageformats`
-- `qt6-multimedia`
-- [`qt6-m3shapes-git`](https://github.com/soramanew/m3shapes)
-- [`swappy`](https://github.com/jtheoof/swappy)
-- [`fish`](https://github.com/fish-shell/fish-shell)
-- [`bash`](https://www.gnu.org/software/bash)
-- [`cliphist`](https://github.com/sentriz/cliphist) — clipboard history (fork)
-- [`wl-clipboard`](https://github.com/bugaevc/wl-clipboard) — Wayland clipboard (fork)
-- [`wtype`](https://github.com/atx/wtype) — paste into the focused window (fork)
-
-Build dependencies:
-
-- [`cmake`](https://gitlab.kitware.com/cmake/cmake)
-- [`ninja`](https://github.com/ninja-build/ninja)
-- `qt6-shadertools`
-
-> [!IMPORTANT]
-> The commands below (and in the "Updating" section) assume `$XDG_CONFIG_HOME` is set.
-> If it is unset, substitute it with the path to your config folder (typically `~/.config`).
-
-To install the shell manually, install all dependencies and clone this repo to `$XDG_CONFIG_HOME/quickshell/sylphrena`.
-Then build and install using CMake.
+El código que **corre** es el checkout (no un paquete en `/etc/xdg`):
 
 ```sh
-cd $XDG_CONFIG_HOME/quickshell
-git clone https://github.com/iMacnucintosh/sylphrena-shell.git sylphrena
-
-cd sylphrena
-cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/
-cmake --build build
-sudo cmake --install build
+mkdir -p ~/.config/quickshell
+git clone https://github.com/iMacnucintosh/sylphrena-shell.git ~/.config/quickshell/sylphrena
+cd ~/.config/quickshell/sylphrena
 ```
 
-> [!TIP]
-> You can customise the installation location via the CMake flags `INSTALL_LIBDIR`, `INSTALL_QMLDIR`, and
-> `INSTALL_QSCONFDIR` for the libraries (e.g. the version helper), QML plugin, and Quickshell config directories
-> respectively. If you set the `INSTALL_LIBDIR` flag, the `SYLPHRENA_LIB_DIR` variable must also be set to
-> the same directory in your system's environment.
->
-> For example, installing to `~/.config/quickshell/sylphrena` for easy local changes:
->
-> ```sh
-> mkdir -p ~/.config/quickshell/sylphrena
-> cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/ -DINSTALL_QSCONFDIR="$HOME/.config/quickshell/sylphrena"
-> cmake --build build
-> sudo cmake --install build
-> sudo chown -R $USER ~/.config/quickshell/sylphrena
-> ```
+### Plugin C++ (user-local)
 
-## Usage
+```sh
+cmake -B build -DCMAKE_BUILD_TYPE=Release \
+  -DENABLE_MODULES=plugin \
+  -DCMAKE_INSTALL_PREFIX="$HOME/.local"
+cmake --build build
+cmake --install build   # sin sudo; instala en ~/.local
+```
 
-You can start the shell by running `sylphrena shell -d` (preferred) or `qs -c sylphrena -n -d`.
-You may omit `-d` from the command to keep the shell attached to the current terminal if necessary,
-though you likely want it to be detached (so it doesn't close when the terminal is closed).
+Con `ENABLE_MODULES=plugin` **no** se sobrescribe `shell.qml`. La shell carga el plugin vía
+`QT_ADDITIONAL_PACKAGES_PREFIX_PATH` en `shell.qml` → `~/.local/lib/qt6/qml`.
 
-If using the [Sylphrena dotfiles][dots-repo], the shell will be autostarted on login
-via a `hl.on("hyprland.start", ...)` function in the Hyprland config.
+Tras cambios de i18n, recompila e instala el mismo módulo.
 
-### Shortcuts/IPC
+### Hyprland
 
-Shell and window-manager shortcuts can be remapped from **Nexus → Keyboard & mouse**.
-The shell writes `~/.config/hypr/sylphrena-binds.lua` and reloads Hyprland when you change a bind.
-
-Wire that file into your Hyprland Lua config (and avoid duplicating the same binds elsewhere):
+En tu config Lua:
 
 ```lua
--- Managed by Sylphrena Keybinds (Nexus → Keyboard & mouse)
-require("sylphrena-binds")
-
--- Activity workspace rules + app pinning (Nexus → Activities)
-require("sylphrena-activity-rules")
+require("sylphrena-binds")            -- atajos (Nexus → Keyboard & mouse)
+require("sylphrena-activity-rules")   -- activities / pins
+require("sylphrena-monitors")         -- VRR / modos (Nexus → Pantalla)
+-- require("sylphrena-input")         -- follow_mouse (si lo usas desde Nexus)
 ```
 
-Multimedia keys that you prefer to keep outside the mapper (e.g. volume via `wpctl`) can stay in
-`hyprland.lua` as normal `hl.bind(...)` entries.
+Arranque recomendado (watcher SNI + shell): `scripts/start-shell-with-tray-watcher.sh`
+(o equivalente en tu `hyprland.lua`). El PATH del compositor a menudo **no** incluye `~/.local/bin`; usa ruta absoluta a `sylph` si hace falta.
 
-Global shortcuts are also available via Hyprland
-[global shortcuts](https://wiki.hypr.land/Configuring/Basics/Binds/#dbus-global-shortcuts).
-If using the [Sylphrena dotfiles][dots-repo], the keybinds are already configured for you.
-Otherwise, wire global shortcuts the same way the original project does (credit at the top of this file).
-contains an example of how to use global shortcuts.
-
-All IPC commands can be accessed via `sylphrena shell ...`, for example:
+### Greeter (opcional)
 
 ```sh
-sylphrena shell mpris getActive trackTitle
+./scripts/install-system.sh   # un solo prompt de root; greeter Material You + drop-ins logind
 ```
 
-You can view the list of available IPC commands by running `sylphrena shell -s`.
-
-### PFP/Wallpapers
-
-The profile picture for the dashboard is read from the file `~/.face`. You can set it by clicking it in the dashboard,
-or by manually copying or symlinking your image to the path.
-
-The wallpapers for the wallpaper switcher are read from `~/Pictures/Wallpapers`
-by default. To change it, modify `paths.wallpaperDir` in `~/.config/sylphrena/shell.json`.
-
-To set the wallpaper, you can type `>wallpaper` in the launcher to open the wallpaper switcher.
-Alternatively, you can also use `sylphrena wallpaper -f <path_to_wallpaper>` to set the wallpaper directly.
-Use `sylphrena wallpaper -h` for more info about this command.
-
-## Updating
-
-### Packaged install (AUR)
-
-If using the full dotfiles or the CLI, run `sylphrena update` to perform a full system update and
-update the dots.
-Otherwise, if you installed the shell on its own, update your system using your AUR helper (e.g., `paru`).
-
-### Manual install
-
-If you installed the shell manually by cloning the repo, you can update by pulling the changes from git
-in the local checkout.
-
-For example, if you installed to `$XDG_CONFIG_HOME/quickshell/sylphrena`:
+### Arranque
 
 ```sh
-cd $XDG_CONFIG_HOME/quickshell/sylphrena
+sylph shell -d          # detach
+sylph shell -r          # reiniciar tras cambios QML
+# equivalente: qs -c sylphrena -n -d
+```
+
+Runtime de config: `~/.config/sylphrena/` (`shell.json`, `keybinds.json`, `cli.json`, `templates/`).
+Estado: `~/.local/state/sylphrena/`.
+
+---
+
+## Uso rápido
+
+```sh
+sylph shell -s                          # IPC disponibles
+sylph wallpaper -f ~/Imágenes/foo.jpg
+sylph scheme set -n dynamic
+```
+
+- Avatar del dashboard: `~/.face` (o clic en el dashboard).
+- Wallpapers del launcher: `~/Imágenes` / `paths.wallpaperDir` en `shell.json` (por defecto `~/Pictures/Wallpapers` en configs en inglés).
+- Cada **activity** puede guardar su propio wallpaper/esquema; al cambiar de activity se reaplica el look.
+
+Detalle de cada feature: **[FEATURES.md](./FEATURES.md)**. Opciones: **[CONFIG.md](./CONFIG.md)**.
+
+---
+
+## Actualizar
+
+```sh
+cd ~/.config/quickshell/sylphrena
 git pull
+# si cambió el plugin C++ / i18n:
+cmake --build build && cmake --install build
+sylph shell -r
 ```
 
-## Configuring
+---
 
-All configuration options belong in `~/.config/sylphrena/shell.json`. This file is _not_ created by
-default; you must create it manually. Options that you omit from the config file will use their default
-values.
+## FAQ breve
 
-### Per-monitor configuration
+**¿Cómo desactivo una feature?**  
+Complementos on/off en Nexus, o la clave correspondiente en [`CONFIG.md`](./CONFIG.md) / `shell.json`. Si no hay opción: [issue](https://github.com/iMacnucintosh/sylphrena-shell/issues/new).
 
-You can configure per-monitor options in `~/.config/sylphrena/monitors/<monitor_name>/shell.json`.
-List the names of your available monitors by running:
+**¿El esquema no sigue al wallpaper?**  
+`sylph wallpaper -f …` y `sylph scheme set -n dynamic`, o el look de cada activity en Nexus → Activities.
 
-```sh
-hyprctl monitors -j | jq -r '.[].name'
-```
+**¿No veo wallpapers en el launcher?**  
+Revisa `paths.wallpaperDir`. El grid del launcher muestra un número impar de miniaturas.
 
-Options set in these files will **override** the respective options in the global config. Any options not present in
-per-monitor configs will inherit their values from the global config.
+**¿Los trays (Teams, etc.) desaparecen tras `sylph shell -r`?**  
+El StatusNotifierWatcher debe vivir fuera de `qs` (`scripts/status-notifier-watcher.py` vía `start-shell-with-tray-watcher.sh`).
 
-For example, to automatically hide the bar on the monitor named `DP-1`:
+---
 
-**`~/.config/sylphrena/monitors/DP-1/shell.json`**
+## Créditos
 
-```json
-{
-    "bar": {
-        "persistent": false
-    }
-}
-```
+- Base: [caelestia-shell](https://github.com/caelestia-dots/shell) — soramane
+- [Quickshell](https://github.com/outfoxxed/quickshell) — [@outfoxxed](https://github.com/outfoxxed)
+- Inspiración de aprendizaje: [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland), [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
+- Comunidad Hyprland (#rice-discussion)
 
-> [!NOTE]
-> Not all options respect per-monitor overrides. Most notably, the following options will only read
-> from the global config, and ignore the respective option in per-monitor config files.
->
-> <details><summary>Ignored options</summary>
->
-> - `appearance`: `anim.*`, `transparency.*`
-> - `bar.tray`: `hiddenIcons`, `iconSubs`
-> - `bar.workspaces`: `ignoredTags`, `specialWorkspaceIcons`, `windowIcons`, `workspaceIcons`
-> - `dashboard`: `mediaUpdateInterval`, `resourceUpdateInterval`
-> - `general`: `apps.*`, `battery.*`, `idle.*`, `logo`
-> - `launcher`: `actionPrefix`, `actions`, `enableDangerousActions`, `favouriteApps`, `hiddenApps`, `specialPrefix`, `useFuzzy.*`, `vimKeybinds`
-> - `lock`: `enableFprint`, `enableHowdy`, `maxFprintTries`, `maxHowdyTries`, `triggerHowdyOnWake`
-> - `nexus`: `networkRescanInterval`
-> - `notifs`: `actionOnClick`, `defaultExpireTimeout`, `expire`, `fullscreen`, `fullscreenExpireTimeout`
-> - `paths`: `lyricsDir`, `wallpaperDir`
-> - `services`: `audioIncrement`, `brightnessIncrement`, `clockFormat`, `dataUnits`, `defaultPlayer`, `gpuType`, `lyricsBackend`, `maxVolume`, `playerAliases`, `sensorUnits`, `smartScheme`, `visualiserBars`, `weatherLocation`, `weatherUnits`
-> - `utilities`: `toasts.*`, `vpn.*`
->
-> </details>
-
-### Example configuration
-
-> [!WARNING]
-> The example configuration includes **ALL** configuration options in `shell.json`. It is
-> **not** recommended to copy and paste this entire configuration into `shell.json`,
-> as options or their default values may change across updates, resulting in a stale config.
->
-> This is meant to serve as a reference of all the available options, and you should
-> <ins>only add the ones you want to change</ins> to `shell.json`.
-
-<details><summary>Example config</summary>
-
-```json
-{
-    "enabled": true,
-    "appearance": {
-        "deformScale": 1,
-        "rounding": {
-            "scale": 1
-        },
-        "spacing": {
-            "scale": 1
-        },
-        "padding": {
-            "scale": 1
-        },
-        "font": {
-            "scale": 1,
-            "clock": "Rubik",
-            "workspaces": "Rubik",
-            "headline": {
-                "family": "GoogleSansFlex",
-                "large": {
-                    "size": 32,
-                    "weight": 500,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                },
-                "medium": {
-                    "size": 28,
-                    "weight": 500,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                },
-                "small": {
-                    "size": 24,
-                    "weight": 500,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                }
-            },
-            "title": {
-                "family": "GoogleSansFlex",
-                "large": {
-                    "size": 22,
-                    "weight": 500,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                },
-                "medium": {
-                    "size": 16,
-                    "weight": 500,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                },
-                "small": {
-                    "size": 14,
-                    "weight": 500,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                }
-            },
-            "body": {
-                "family": "GoogleSansFlex",
-                "large": {
-                    "size": 16,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                },
-                "medium": {
-                    "size": 14,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                },
-                "small": {
-                    "size": 12,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                }
-            },
-            "label": {
-                "family": "GoogleSansFlex",
-                "large": {
-                    "size": 14,
-                    "weight": 500,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                },
-                "medium": {
-                    "size": 12,
-                    "weight": 500,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                },
-                "small": {
-                    "size": 11,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": { "ROND": 25 }
-                }
-            },
-            "mono": {
-                "family": "CaskaydiaCove NF",
-                "large": {
-                    "size": 16,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": {}
-                },
-                "medium": {
-                    "size": 14,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": {}
-                },
-                "small": {
-                    "size": 12,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": {}
-                }
-            },
-            "icon": {
-                "family": "Material Symbols Rounded",
-                "extraLarge": {
-                    "size": 36,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": {}
-                },
-                "large": {
-                    "size": 24,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": {}
-                },
-                "medium": {
-                    "size": 18,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": {}
-                },
-                "small": {
-                    "size": 15,
-                    "weight": 400,
-                    "italic": false,
-                    "vaxes": {}
-                }
-            }
-        },
-        "anim": {
-            "durations": {
-                "scale": 1
-            }
-        },
-        "transparency": {
-            "enabled": false,
-            "base": 0.85,
-            "layers": 0.4
-        }
-    },
-    "general": {
-        "logo": "",
-        "showOverFullscreen": false,
-        "mediaGifSpeedAdjustment": 300,
-        "sessionGifSpeed": 0.7,
-        "apps": {
-            "terminal": ["foot"],
-            "audio": ["pwvucontrol"],
-            "playback": ["mpv"],
-            "explorer": ["seeker"]
-        },
-        "idle": {
-            "lockBeforeSleep": true,
-            "inhibitWhenAudio": true,
-            "inhibitWhenCharging": false,
-            "timeouts": [
-                {
-                    "timeout": 180,
-                    "idleAction": "lock",
-                    "inhibitWhenAudio": false,
-                    "inhibitWhenCharging": false,
-                    "respectInhibitors": true
-                },
-                {
-                    "timeout": 300,
-                    "idleAction": "dpms off",
-                    "returnAction": "dpms on"
-                },
-                {
-                    "timeout": 600,
-                    "idleAction": ["suspendThenHibernate"]
-                }
-            ]
-        },
-        "battery": {
-            "warnLevels": [
-                {
-                    "level": 20,
-                    "title": "Low battery",
-                    "message": "You might want to plug in a charger",
-                    "icon": "battery_android_frame_2"
-                },
-                {
-                    "level": 10,
-                    "title": "Did you see the previous message?",
-                    "message": "You should probably plug in a charger <b>now</b>",
-                    "icon": "battery_android_frame_1"
-                },
-                {
-                    "level": 5,
-                    "title": "Critical battery level",
-                    "message": "PLUG THE CHARGER RIGHT NOW!!",
-                    "icon": "battery_android_alert",
-                    "critical": true
-                }
-            ],
-            "criticalLevel": 3
-        }
-    },
-    "background": {
-        "enabled": true,
-        "wallpaperEnabled": true,
-        "desktopClock": {
-            "enabled": false,
-            "scale": 1.0,
-            "position": "bottom-right",
-            "invertColors": false,
-            "background": {
-                "enabled": false,
-                "opacity": 0.7,
-                "blur": true
-            },
-            "shadow": {
-                "enabled": true,
-                "opacity": 0.7,
-                "blur": 0.4
-            }
-        },
-        "visualiser": {
-            "enabled": false,
-            "autoHide": true,
-            "blur": false,
-            "rounding": 1,
-            "spacing": 1
-        }
-    },
-    "bar": {
-        "persistent": true,
-        "showOnHover": true,
-        "dragThreshold": 20,
-        "scrollActions": {
-            "workspaces": true,
-            "volume": true,
-            "brightness": true
-        },
-        "popouts": {
-            "activeWindow": true,
-            "tray": true,
-            "statusIcons": true
-        },
-        "workspaces": {
-            "shown": 5,
-            "activeIndicator": true,
-            "occupiedBg": false,
-            "showUnoccupied": true,
-            "perMonitor": true,
-            "showWindows": true,
-            "showWindowsOnSpecialWorkspaces": true,
-            "maxWindowIcons": 5,
-            "activeTrail": false,
-            "displayType": "shapes",
-            "specialDisplayType": "icons",
-            "label": "  ",
-            "occupiedLabel": "󰮯",
-            "activeLabel": "󰮯",
-            "capitalisation": "preserve",
-            "workspaceIcons": [],
-            "specialWorkspaceIcons": [
-                {
-                    "name": "special",
-                    "icon": "star"
-                },
-                {
-                    "name": "communication",
-                    "icon": "forum"
-                },
-                {
-                    "name": "music",
-                    "icon": "music_cast"
-                },
-                {
-                    "name": "todo",
-                    "icon": "checklist"
-                },
-                {
-                    "name": "sysmon",
-                    "icon": "monitor_heart"
-                }
-            ],
-            "ignoredTags": ["hide_in_bar", "xwl_popup"],
-            "windowIcons": [
-                {
-                    "regex": "steam(_app_(default|[0-9]+))?",
-                    "icon": "sports_esports"
-                }
-            ]
-        },
-        "activeWindow": {
-            "compact": false,
-            "inverted": false,
-            "showOnHover": true
-        },
-        "tray": {
-            "background": false,
-            "recolour": false,
-            "compact": false,
-            "iconSubs": [],
-            "hiddenIcons": []
-        },
-        "clock": {
-            "background": false,
-            "showDate": false,
-            "showIcon": true
-        },
-        "statusIcons": [
-            {
-                "id": "lockStatus",
-                "enabled": true
-            },
-            {
-                "id": "audio",
-                "enabled": false
-            },
-            {
-                "id": "microphone",
-                "enabled": false
-            },
-            {
-                "id": "kbLayout",
-                "enabled": false
-            },
-            {
-                "id": "network",
-                "enabled": true
-            },
-            {
-                "id": "bluetooth",
-                "enabled": true
-            },
-            {
-                "id": "vpn",
-                "enabled": true
-            },
-            {
-                "id": "battery",
-                "enabled": true
-            }
-        ],
-        "entries": [
-            {
-                "id": "logo",
-                "enabled": true
-            },
-            {
-                "id": "workspaces",
-                "enabled": true
-            },
-            {
-                "id": "spacer",
-                "enabled": true
-            },
-            {
-                "id": "activeWindow",
-                "enabled": true
-            },
-            {
-                "id": "spacer",
-                "enabled": true
-            },
-            {
-                "id": "tray",
-                "enabled": true
-            },
-            {
-                "id": "clock",
-                "enabled": true
-            },
-            {
-                "id": "statusIcons",
-                "enabled": true
-            },
-            {
-                "id": "power",
-                "enabled": true
-            }
-        ],
-        "excludedScreens": []
-    },
-    "border": {
-        "thickness": 10,
-        "rounding": 25,
-        "smoothing": 20
-    },
-    "dashboard": {
-        "enabled": true,
-        "showOnHover": true,
-        "showDashboard": true,
-        "showMedia": true,
-        "showPerformance": true,
-        "showWeather": true,
-        "mediaUpdateInterval": 500,
-        "resourceUpdateInterval": 1000,
-        "dragThreshold": 50,
-        "performance": {
-            "showBattery": true,
-            "showGpu": true,
-            "showCpu": true,
-            "showMemory": true,
-            "showStorage": true,
-            "showNetwork": true
-        }
-    },
-    "launcher": {
-        "enabled": true,
-        "showOnHover": false,
-        "maxShown": 7,
-        "maxWallpapers": 9,
-        "specialPrefix": "@",
-        "actionPrefix": ">",
-        "enableDangerousActions": false,
-        "dragThreshold": 50,
-        "vimKeybinds": false,
-        "favouriteApps": [],
-        "hiddenApps": [],
-        "useFuzzy": {
-            "apps": false,
-            "actions": false,
-            "schemes": false,
-            "variants": false,
-            "wallpapers": false
-        },
-        "actions": [
-            {
-                "name": "Calculator",
-                "icon": "calculate",
-                "description": "Do simple math equations (powered by Qalc)",
-                "command": ["autocomplete", "calc"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Scheme",
-                "icon": "palette",
-                "description": "Change the current colour scheme",
-                "command": ["autocomplete", "scheme"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Wallpaper",
-                "icon": "image",
-                "description": "Change the current wallpaper",
-                "command": ["autocomplete", "wallpaper"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Variant",
-                "icon": "colors",
-                "description": "Change the current scheme variant",
-                "command": ["autocomplete", "variant"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Random",
-                "icon": "casino",
-                "description": "Switch to a random wallpaper",
-                "command": ["sylphrena", "wallpaper", "-r"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Light",
-                "icon": "light_mode",
-                "description": "Change the scheme to light mode",
-                "command": ["setMode", "light"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Dark",
-                "icon": "dark_mode",
-                "description": "Change the scheme to dark mode",
-                "command": ["setMode", "dark"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Shutdown",
-                "icon": "power_settings_new",
-                "description": "Shutdown the system",
-                "command": ["poweroff"],
-                "enabled": true,
-                "dangerous": true
-            },
-            {
-                "name": "Reboot",
-                "icon": "cached",
-                "description": "Reboot the system",
-                "command": ["reboot"],
-                "enabled": true,
-                "dangerous": true
-            },
-            {
-                "name": "Logout",
-                "icon": "exit_to_app",
-                "description": "Log out of the current session",
-                "command": ["logout"],
-                "enabled": true,
-                "dangerous": true
-            },
-            {
-                "name": "Lock",
-                "icon": "lock",
-                "description": "Lock the current session",
-                "command": ["loginctl", "lock-session"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Sleep",
-                "icon": "bedtime",
-                "description": "Suspend then hibernate",
-                "command": ["suspendThenHibernate"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Settings",
-                "icon": "settings",
-                "description": "Configure the shell",
-                "command": ["sylphrena", "shell", "nexus", "open"],
-                "enabled": true,
-                "dangerous": false
-            }
-        ]
-    },
-    "lock": {
-        "enabled": true,
-        "useWallpaper": false,
-        "recolourLogo": true,
-        "enableFprint": true,
-        "maxFprintTries": 3,
-        "enableHowdy": true,
-        "maxHowdyTries": 3,
-        "triggerHowdyOnWake": true,
-        "hideNotifs": false,
-        "enableSessionControls": true
-    },
-    "nexus": {
-        "wallpapersPerRow": 4,
-        "networkRescanInterval": 15000
-    },
-    "notifs": {
-        "expire": true,
-        "fullscreen": "On",
-        "defaultExpireTimeout": 5000,
-        "fullscreenExpireTimeout": 2000,
-        "clearThreshold": 0.3,
-        "expandThreshold": 20,
-        "actionOnClick": false,
-        "groupPreviewNum": 3,
-        "openExpanded": false
-    },
-    "osd": {
-        "enabled": true,
-        "hideDelay": 2000,
-        "enableBrightness": true,
-        "enableMicrophone": false
-    },
-    "services": {
-        "weatherLocation": "",
-        "weatherUnits": "Auto",
-        "sensorUnits": "Celsius",
-        "dataUnits": "Binary",
-        "clockFormat": "Auto",
-        "gpuType": "Auto",
-        "visualiserBars": 60,
-        "audioIncrement": 0.1,
-        "brightnessIncrement": 0.1,
-        "maxVolume": 1.0,
-        "smartScheme": true,
-        "defaultPlayer": "Spotify",
-        "playerAliases": [
-            { "from": "com.github.th_ch.youtube_music", "to": "YT Music" }
-        ],
-        "lyricsBackend": "Auto"
-    },
-    "session": {
-        "enabled": true,
-        "dragThreshold": 30,
-        "vimKeybinds": false,
-        "icons": {
-            "logout": "logout",
-            "shutdown": "power_settings_new",
-            "suspend": "bedtime",
-            "reboot": "cached"
-        },
-        "commands": {
-            "logout": ["logout"],
-            "shutdown": ["poweroff"],
-            "suspend": ["suspend"],
-            "reboot": ["reboot"]
-        }
-    },
-    "sidebar": {
-        "enabled": true,
-        "showOnHover": false,
-        "minHoverThreshold": 200,
-        "dragThreshold": 80
-    },
-    "utilities": {
-        "enabled": true,
-        "maxToasts": 4,
-        "toasts": {
-            "fullscreen": "off",
-            "configLoaded": true,
-            "chargingChanged": true,
-            "gameModeChanged": true,
-            "dndChanged": true,
-            "audioOutputChanged": true,
-            "audioInputChanged": true,
-            "capsLockChanged": true,
-            "numLockChanged": true,
-            "kbLayoutChanged": true,
-            "kbLimit": true,
-            "vpnChanged": true,
-            "nowPlaying": false
-        },
-        "vpn": {
-            "enabled": false,
-            "provider": [
-                {
-                    "name": "wireguard",
-                    "interface": "your-connection-name",
-                    "displayName": "Wireguard (Your VPN)",
-                    "enabled": false
-                }
-            ]
-        },
-        "quickToggles": [
-            {
-                "id": "wifi",
-                "enabled": true
-            },
-            {
-                "id": "bluetooth",
-                "enabled": true
-            },
-            {
-                "id": "mic",
-                "enabled": true
-            },
-            {
-                "id": "settings",
-                "enabled": true
-            },
-            {
-                "id": "gameMode",
-                "enabled": true
-            },
-            {
-                "id": "dnd",
-                "enabled": true
-            },
-            {
-                "id": "vpn",
-                "enabled": false
-            }
-        ]
-    },
-    "paths": {
-        "wallpaperDir": "~/Pictures/Wallpapers",
-        "lyricsDir": "~/Music/lyrics/",
-        "sessionGif": "root:/assets/kurukuru.gif",
-        "mediaGif": "root:/assets/bongocat.gif",
-        "noNotifsPic": "root:/assets/dino.png",
-        "lockNoNotifsPic": "root:/assets/dino.png"
-    }
-}
-```
-
-</details>
-
-### Advanced configuration
-
-> [!CAUTION]
-> Do NOT change any of these options unless you know what you are doing. These options control the
-> tokens used internally within the shell, and can cause visual issues if modified incorrectly.
-> The available options may change or be removed without notice across versions.
-
-A separate `~/.config/sylphrena/shell-tokens.json` file allows editing the internal tokens without
-touching the source code of the shell. These tokens affect the dimensions and appearance of visual elements,
-including individual rounding, spacing, padding, font size, animation durations and curves, and the sizes of
-certain components. The appearance scale values in `shell.json` are multiplied against these base
-token values to produce the final computed values.
-
-Per-monitor token overrides are also available at
-`~/.config/sylphrena/monitors/<monitor_name>/shell-tokens.json`.
-
-## FAQ
-
-### Need help or support?
-
-You can join the Sylphrena Discord server for assistance and discussion [here][discord].
-
-### I want to make my own changes to the Hyprland config!
-
-Check out the configuring section in this README and in [FEATURES.md](./FEATURES.md).
-
-### I want to make my own changes to other stuff!
-
-See the [manual installation](#manual-installation) section for the corresponding repo.
-
-### I want to disable \_\_\_ feature!
-
-Please read the [configuring](#configuring) section.
-If there is no corresponding option, make a [feature request](https://github.com/iMacnucintosh/sylphrena-shell/issues/new).
-
-### How do I make my colour scheme change to match my wallpaper?
-
-Set a wallpaper via `>wallpaper` in the launcher or `sylphrena wallpaper`, and set the scheme to the dynamic scheme via
-`>scheme` in the launcher or `sylphrena scheme set`, e.g.:
-
-```sh
-sylphrena wallpaper -f <path_to_wallpaper>
-sylphrena scheme set -n dynamic
-```
-
-In this fork, each **activity** can keep its own wallpaper/scheme. Switching activity (bar, keybinds, or overview)
-re-applies that look via `scripts/apply-activity-style.py` (single process; activity mode wins over `smartScheme`).
-GTK/Thunar and Kitty follow the same palette — see [FEATURES.md](./FEATURES.md) (Activities, Kitty, Explorador GTK).
-
-### My wallpapers aren't showing up in the launcher!
-
-The launcher pulls wallpapers from `~/Pictures/Wallpapers` by default. You can change this in the config. Additionally,
-the launcher only shows an odd number of wallpapers at one time. If you only have 2 wallpapers, consider getting more
-(or just putting one).
-
-## Credits
-
-Thanks to the Hyprland Discord community (especially the homies in #rice-discussion) for all the help and suggestions
-for improving these dots!
-
-A special thanks to [@outfoxxed](https://github.com/outfoxxed) for making Quickshell and the effort put into fixing issues
-and implementing various feature requests.
-
-Another special thanks to [@end_4](https://github.com/end-4) for his [config](https://github.com/end-4/dots-hyprland)
-which helped me a lot with learning how to use Quickshell.
-
-Finally, another thank you to all the configs I took inspiration from (only one for now):
-
-- [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
-
-## Stonks 📈
-
-<a href="https://www.star-history.com/#iMacnucintosh/sylphrena-shell&Date">
-    <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=iMacnucintosh/sylphrena-shell&type=Date&theme=dark" />
-        <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=iMacnucintosh/sylphrena-shell&type=Date" />
-        <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=iMacnucintosh/sylphrena-shell&type=Date" />
-    </picture>
-</a>
-
-[dots-repo]: https://github.com/iMacnucintosh/sylphrena-shell
-[discord]: https://github.com/iMacnucintosh/sylphrena-shell
+Sylphrena (fork, greeter, Activities, complementos, i18n ES, Seeker, etc.): [iMacnucintosh](https://github.com/iMacnucintosh).
