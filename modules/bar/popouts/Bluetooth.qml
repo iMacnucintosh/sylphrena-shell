@@ -249,7 +249,7 @@ ColumnLayout {
             {
                 id: "auto",
                 icon: "auto_awesome",
-                label: Tr.tr("Auto")
+                label: Tr.trCtx("Auto", "bluetooth audio mode")
             }
         ]
         readonly property int currentIndex: Math.max(0, modes.findIndex(m => m.id === current))
@@ -261,11 +261,11 @@ ColumnLayout {
         color: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
 
         StyledRect {
-            readonly property Item target: segRepeater.itemAt(sel.currentIndex)
+            readonly property real segWidth: segments.width / sel.modes.length
 
-            x: sel.pad + (target?.x ?? 0)
+            x: sel.pad + sel.currentIndex * segWidth
             y: sel.pad
-            width: target?.width ?? 0
+            width: segWidth
             height: parent.height - sel.pad * 2
             radius: Tokens.rounding.full
             color: Colours.palette.m3primary
@@ -274,9 +274,6 @@ ColumnLayout {
                 Anim {}
             }
 
-            Behavior on width {
-                Anim {}
-            }
         }
 
         RowLayout {
@@ -312,7 +309,7 @@ ColumnLayout {
                         id: segRow
 
                         anchors.centerIn: parent
-                        spacing: Tokens.spacing.extraSmall
+                        spacing: Tokens.spacing.extraSmall / 2
 
                         MaterialIcon {
                             anchors.verticalCenter: parent.verticalCenter

@@ -296,6 +296,11 @@ msgid "Performance degraded"
 msgstr "Rendimiento reducido"
 
 #: modules/bar/popouts/Bluetooth.qml
+msgctxt "bluetooth audio mode"
+msgid "Auto"
+msgstr "Auto"
+
+#: modules/bar/popouts/Bluetooth.qml
 msgid "Calls"
 msgstr "Llamadas"
 
