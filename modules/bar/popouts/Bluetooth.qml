@@ -123,61 +123,6 @@ ColumnLayout {
                     elide: Text.ElideRight
                 }
 
-                // AirPods: left bud, right bud and charging case, each with its own level
-                RowLayout {
-                    visible: device.modelData.state === BluetoothDeviceState.Connected && !!device.pods
-                    spacing: Tokens.spacing.medium
-
-                    PodLevel {
-                        prefix: Tr.trCtx("L", "left earbud")
-                        level: device.pods?.left ?? -1
-                    }
-
-                    PodLevel {
-                        prefix: Tr.trCtx("R", "right earbud")
-                        level: device.pods?.right ?? -1
-                    }
-
-                    PodLevel {
-                        icon: "inventory_2"
-                        level: device.pods?.case ?? -1
-                    }
-
-                    Item {
-                        implicitWidth: refreshIcon.implicitWidth + Tokens.padding.small
-                        implicitHeight: implicitWidth
-
-                        StateLayer {
-                            radius: Tokens.rounding.full
-                            disabled: BluetoothAudio.pollingBattery
-                            onClicked: BluetoothAudio.pollBattery(true)
-                        }
-
-                        MaterialIcon {
-                            id: refreshIcon
-
-                            anchors.centerIn: parent
-                            text: "refresh"
-                            color: Colours.palette.m3onSurfaceVariant
-                            opacity: BluetoothAudio.pollingBattery ? 0.5 : 1
-
-                            RotationAnimator on rotation {
-                                running: BluetoothAudio.pollingBattery
-                                loops: Animation.Infinite
-                                from: 0
-                                to: 360
-                                duration: 900
-                            }
-
-                            Behavior on opacity {
-                                Anim {
-                                    type: Anim.DefaultEffects
-                                }
-                            }
-                        }
-                    }
-                }
-
                 StyledText {
                     visible: device.modelData.state === BluetoothDeviceState.Connected && !device.pods && device.battery >= 0
                     text: `${Math.round(device.battery * 100)}%`
@@ -263,6 +208,10 @@ ColumnLayout {
                 sourceComponent: ColumnLayout {
                     spacing: Tokens.spacing.medium
 
+                    PodsStrip {
+                        pods: BluetoothAudio.podsFor(deviceWrap.modelData.address)
+                    }
+
                     ModeSelector {
                         address: deviceWrap.modelData.address
                     }
@@ -293,8 +242,8 @@ ColumnLayout {
         onClicked: root.popouts.detachRequested("bluetooth")
     }
 
-    // One AirPods component as a progress ring (letter inside for the buds, case icon for the
-    // case) plus its percentage; "—" and an empty ring when it is not reported.
+    // One AirPods component: progress ring (letter for a bud, icon for the case) + percentage.
+    // "—" and an empty ring when it is not reported.
     component PodLevel: RowLayout {
         id: pod
 
@@ -303,19 +252,20 @@ ColumnLayout {
         required property real level
         readonly property bool low: level >= 0 && level < 0.2
 
-        spacing: Tokens.spacing.extraSmall
+        spacing: Tokens.spacing.small
 
         Item {
-            implicitWidth: Tokens.font.icon.small.pixelSize + Tokens.padding.small
-            implicitHeight: implicitWidth
+            implicitWidth: 32
+            implicitHeight: 32
 
             CircularProgress {
                 anchors.fill: parent
                 value: pod.level >= 0 ? pod.level : 0
-                strokeWidth: 3
+                strokeWidth: 4
                 spacing: 0
+                hasEndIndicator: false
                 fgColour: pod.low ? Colours.palette.m3error : Colours.palette.m3primary
-                bgColour: Colours.palette.m3secondaryContainer
+                bgColour: Qt.alpha(Colours.palette.m3onSurface, 0.12)
             }
 
             StyledText {
@@ -330,15 +280,107 @@ ColumnLayout {
                 anchors.centerIn: parent
                 visible: pod.icon.length > 0
                 text: pod.icon
-                scale: 0.65
+                scale: 0.7
                 color: Colours.palette.m3onSurface
             }
         }
 
         StyledText {
             text: pod.level >= 0 ? `${Math.round(pod.level * 100)}%` : "—"
-            color: pod.low ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+            color: pod.low ? Colours.palette.m3error : Colours.palette.m3onSurface
             font: Tokens.font.body.small
+        }
+    }
+
+    // Left bud, right bud and case on one rounded strip (same look as the mode selector),
+    // with the refresh button at the end.
+    component PodsStrip: StyledRect {
+        id: strip
+
+        required property var pods
+
+        visible: !!pods
+        Layout.fillWidth: true
+        implicitHeight: stripRow.implicitHeight + Tokens.padding.small * 2
+        radius: Tokens.rounding.full
+        color: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+
+        RowLayout {
+            id: stripRow
+
+            anchors.fill: parent
+            anchors.leftMargin: Tokens.padding.medium
+            anchors.rightMargin: Tokens.padding.small
+            spacing: 0
+
+            Repeater {
+                model: [
+                    {
+                        prefix: Tr.trCtx("L", "left earbud"),
+                        key: "left"
+                    },
+                    {
+                        prefix: Tr.trCtx("R", "right earbud"),
+                        key: "right"
+                    },
+                    {
+                        icon: "inventory_2",
+                        key: "case"
+                    }
+                ]
+
+                Item {
+                    id: cell
+
+                    required property var modelData
+
+                    Layout.fillWidth: true
+                    implicitHeight: pod.implicitHeight
+
+                    PodLevel {
+                        id: pod
+
+                        anchors.centerIn: parent
+                        prefix: cell.modelData.prefix ?? ""
+                        icon: cell.modelData.icon ?? ""
+                        level: strip.pods?.[cell.modelData.key] ?? -1
+                    }
+                }
+            }
+
+            Item {
+                implicitWidth: refreshIcon.implicitWidth + Tokens.padding.medium
+                implicitHeight: implicitWidth
+
+                StateLayer {
+                    radius: Tokens.rounding.full
+                    disabled: BluetoothAudio.pollingBattery
+                    onClicked: BluetoothAudio.pollBattery(true)
+                }
+
+                MaterialIcon {
+                    id: refreshIcon
+
+                    anchors.centerIn: parent
+                    text: "refresh"
+                    color: Colours.palette.m3onSurfaceVariant
+                    opacity: BluetoothAudio.pollingBattery ? 0.5 : 1
+
+                    RotationAnimator on rotation {
+                        running: BluetoothAudio.pollingBattery
+                        loops: Animation.Infinite
+                        from: 0
+                        to: 360
+                        duration: 900
+                    }
+
+                    Behavior on opacity {
+                        Anim {
+                            type: Anim.DefaultEffects
+                        }
+                    }
+                }
+            }
         }
     }
 
