@@ -188,6 +188,13 @@ ColumnLayout {
                     color: device.battery >= 0 && device.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
                 }
 
+                // Audio mode (music / calls / auto), small and icon-only, on the name row
+                BtModeSelector {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && !!BluetoothAudio.cardFor(device.modelData.address)
+                    address: device.modelData.address
+                    showLabels: false
+                }
+
                 // Mute toggle: filled when this headset's output is muted
                 StyledRect {
                     visible: device.modelData.state === BluetoothDeviceState.Connected && !!device.sink?.audio
@@ -275,14 +282,15 @@ ColumnLayout {
                 }
             }
 
-            // Audio profile (music / calls / auto) for connected headsets with a PipeWire card
+            // Battery levels (AirPods) and volume (non-active output) below the name row
             Loader {
                 Layout.fillWidth: true
                 Layout.leftMargin: root.deviceTextInset
                 Layout.rightMargin: Tokens.padding.extraSmall
                 Layout.topMargin: Tokens.spacing.extraSmall
                 Layout.bottomMargin: Tokens.spacing.medium
-                active: deviceWrap.modelData.state === BluetoothDeviceState.Connected && !!BluetoothAudio.cardFor(deviceWrap.modelData.address)
+                // Only when there is something to show: AirPods levels or a volume slider (non-active output)
+                active: deviceWrap.modelData.state === BluetoothDeviceState.Connected && (!!device.pods || (!!device.sink?.audio && !device.playing))
                 visible: active
 
                 sourceComponent: ColumnLayout {
@@ -291,11 +299,6 @@ ColumnLayout {
                     BtPodsStrip {
                         pods: BluetoothAudio.podsFor(deviceWrap.modelData.address)
                         plain: true
-                    }
-
-                    BtModeSelector {
-                        address: deviceWrap.modelData.address
-                        showLabels: false
                     }
 
                     BtOutputVolume {
