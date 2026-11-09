@@ -269,11 +269,29 @@ ColumnLayout {
             }
 
             StyledText {
+                id: letter
+
+                // Centre the glyph itself (not the line box): offset by its tight bounds
                 anchors.centerIn: parent
+                anchors.horizontalCenterOffset: width / 2 - (glyph.tightBoundingRect.x + glyph.tightBoundingRect.width / 2)
+                anchors.verticalCenterOffset: height / 2 - (metrics.ascent + glyph.tightBoundingRect.y + glyph.tightBoundingRect.height / 2)
                 visible: pod.prefix.length > 0
                 text: pod.prefix
                 color: Colours.palette.m3onSurface
                 font: Tokens.font.body.builders.small.weight(Font.Medium).build()
+
+                FontMetrics {
+                    id: metrics
+
+                    font: letter.font
+                }
+
+                TextMetrics {
+                    id: glyph
+
+                    font: letter.font
+                    text: letter.text
+                }
             }
 
             MaterialIcon {
@@ -288,7 +306,7 @@ ColumnLayout {
         StyledText {
             text: pod.level >= 0 ? `${Math.round(pod.level * 100)}%` : "—"
             color: pod.low ? Colours.palette.m3error : Colours.palette.m3onSurface
-            font: Tokens.font.body.small
+            font: Tokens.font.body.builders.small.weight(Font.Medium).build()
         }
     }
 
