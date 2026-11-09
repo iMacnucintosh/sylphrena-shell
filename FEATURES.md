@@ -83,6 +83,7 @@ require("sylphrena-activity-rules")  -- reglas de activities / pins (Nexus → A
 - Se cierra al sacar el puntero (como el dashboard), con Escape, al elegir una app, o al perder el foco.
   Si lo abriste con el atajo, se mantiene hasta Escape / elegir app (igual que el resto de paneles por tecla).
 - Se puede desactivar el hover en **Nexus → Panels → Launcher → Show on hover**.
+- La búsqueda normal compara el **nombre**; después de esos resultados se añaden las apps cuyo `Keywords` del `.desktop` tenga una palabra que empiece por lo escrito (mín. 3 letras). Así «seeker» encuentra *Archivos* y «things» encuentra *Paquetes*.
 - **Clic derecho** sobre una app: menú contextual (un solo menú abierto a la vez) con:
   - Editar nombre / descripción / icono (diálogo centrado; el launcher no se cierra al editar)
   - Override guardado en `~/.local/share/applications`
