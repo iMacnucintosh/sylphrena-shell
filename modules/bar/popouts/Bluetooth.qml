@@ -135,21 +135,35 @@ ColumnLayout {
                     Anim {}
                 }
 
-                // Accent circle behind the icon when this headset is the active output (same look as
-                // the connect button). The circle overflows the cell so the row layout does not shift.
+                // The icon is the connect/disconnect button. Circle: accent when this headset is the
+                // active output, soft tone when connected, none when disconnected. It overflows the
+                // cell so the row layout does not shift.
                 Item {
                     implicitWidth: deviceIcon.implicitWidth
                     implicitHeight: deviceIcon.implicitHeight
 
                     StyledRect {
+                        id: connectBtn
+
                         anchors.centerIn: parent
                         width: height
-                        height: deviceIcon.implicitHeight + Tokens.padding.extraSmall
+                        height: deviceIcon.implicitHeight + Tokens.padding.small
                         radius: Tokens.rounding.full
-                        color: Qt.alpha(Colours.palette.m3primary, device.playing ? 1 : 0)
+                        color: device.playing ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3secondaryContainer, device.modelData.state === BluetoothDeviceState.Connected ? 1 : 0)
 
                         Behavior on color {
                             CAnim {}
+                        }
+
+                        CircularIndicator {
+                            anchors.fill: parent
+                            running: device.loading
+                        }
+
+                        StateLayer {
+                            color: device.playing ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                            disabled: device.loading
+                            onClicked: device.modelData.connected = !device.modelData.connected
                         }
                     }
 
@@ -158,10 +172,17 @@ ColumnLayout {
 
                         anchors.centerIn: parent
                         text: Icons.getBluetoothIcon(device.modelData.icon)
-                        color: device.playing ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                        color: device.playing ? Colours.palette.m3onPrimary : device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+                        opacity: device.loading ? 0 : 1
 
                         Behavior on color {
                             CAnim {}
+                        }
+
+                        Behavior on opacity {
+                            Anim {
+                                type: Anim.DefaultEffects
+                            }
                         }
                     }
                 }
@@ -194,51 +215,13 @@ ColumnLayout {
                     showLabels: false
                 }
 
-                StyledRect {
-                    id: connectBtn
-
-                    implicitWidth: implicitHeight
-                    implicitHeight: connectIcon.implicitHeight + Tokens.padding.extraSmall
-
-                    radius: Tokens.rounding.full
-                    color: Qt.alpha(Colours.palette.m3primary, device.modelData.state === BluetoothDeviceState.Connected ? 1 : 0)
-
-                    CircularIndicator {
-                        anchors.fill: parent
-                        running: device.loading
-                    }
-
-                    StateLayer {
-                        color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-                        disabled: device.loading
-                        onClicked: device.modelData.connected = !device.modelData.connected
-                    }
-
-                    MaterialIcon {
-                        id: connectIcon
-
-                        anchors.centerIn: parent
-                        animate: true
-                        text: device.modelData.connected ? "link_off" : "link"
-                        color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-
-                        opacity: device.loading ? 0 : 1
-
-                        Behavior on opacity {
-                            Anim {
-                                type: Anim.DefaultEffects
-                            }
-                        }
-                    }
-                }
-
                 Loader {
                     visible: status === Loader.Ready
                     asynchronous: true
                     active: device.modelData.bonded
                     sourceComponent: Item {
-                        implicitWidth: connectBtn.implicitWidth
-                        implicitHeight: connectBtn.implicitHeight
+                        implicitWidth: forgetIcon.implicitHeight + Tokens.padding.small
+                        implicitHeight: implicitWidth
 
                         StateLayer {
                             radius: Tokens.rounding.full
@@ -246,6 +229,8 @@ ColumnLayout {
                         }
 
                         MaterialIcon {
+                            id: forgetIcon
+
                             anchors.centerIn: parent
                             text: "delete"
                         }
