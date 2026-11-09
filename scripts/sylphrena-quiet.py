@@ -343,22 +343,48 @@ def _patch_theme() -> None:
 
     orig_apply_gtk = theme.apply_gtk
 
+    scheme_key = "/org/gnome/desktop/interface/color-scheme"
+
     def apply_gtk_fixed(colours: dict[str, str], mode: str, icon_theme: str | None = None) -> None:
+        flag = _STATE / "force-apps-light"
+        light_apps = flag.is_file()
+        real_run = subprocess.run
+
+        def run_keep_scheme(cmd, *args, **kwargs):
+            # Upstream writes prefer-{mode} (dark in dark activities). With light apps
+            # that dark value would only be undone ~20 ms later, and apps that follow
+            # the portal live (Zen, Electron) flash dark→light on every apply.
+            if isinstance(cmd, (list, tuple)) and scheme_key in cmd:
+                return subprocess.CompletedProcess(cmd, 0)
+            return real_run(cmd, *args, **kwargs)
+
         # Upstream always writes adw-gtk3-dark; use the light variant for light mode.
-        orig_apply_gtk(colours, mode, icon_theme)
+        if light_apps:
+            subprocess.run = run_keep_scheme
+        try:
+            orig_apply_gtk(colours, mode, icon_theme)
+        finally:
+            subprocess.run = real_run
         _sync_gtk_settings(mode)
         _trigger_gtk_color_reload()
-        # apply_gtk sets prefer-{mode}; if light-apps is active, put prefer-light
-        # back so Adwaita/Qt apps stay light while Thunar keeps scheme CSS.
-        flag = _STATE / "force-apps-light"
-        if flag.is_file():
+        # Light apps: keep prefer-light so Adwaita/Qt apps stay light while Thunar
+        # keeps scheme CSS. Only write it when it is not already set.
+        if light_apps:
             try:
-                subprocess.run(
-                    ["dconf", "write", "/org/gnome/desktop/interface/color-scheme", "'prefer-light'"],
+                cur = real_run(
+                    ["dconf", "read", scheme_key],
                     check=False,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                )
+                    capture_output=True,
+                    text=True,
+                    stdin=subprocess.DEVNULL,
+                ).stdout.strip()
+                if cur != "'prefer-light'":
+                    real_run(
+                        ["dconf", "write", scheme_key, "'prefer-light'"],
+                        check=False,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
             except OSError:
                 pass
 
