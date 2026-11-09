@@ -295,6 +295,18 @@ msgstr "Calculando el tiempo hasta la carga completa..."
 msgid "Performance degraded"
 msgstr "Rendimiento reducido"
 
+#: modules/bar/popouts/Bluetooth.qml
+msgid "Calls"
+msgstr "Llamadas"
+
+#: services/BluetoothAudio.qml
+msgid "Now: call quality (%1), mic on"
+msgstr "Ahora: calidad de llamada (%1), con micro"
+
+#: services/BluetoothAudio.qml
+msgid "Now: high quality (%1), no mic"
+msgstr "Ahora: alta calidad (%1), sin micro"
+
 #: modules/bar/popouts/Bluetooth.qml modules/nexus/pages/BluetoothPage.qml
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 #: modules/nexus/pages/panels/UtilitiesPanel.qml

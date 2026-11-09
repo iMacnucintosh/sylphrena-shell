@@ -367,6 +367,20 @@ El panel del lock usa tokens Material de la sesión (`Tokens` / `Colours`) y PAM
 
 ---
 
+## Auriculares Bluetooth: modo de audio
+
+En el popout de Bluetooth (barra), cada dispositivo conectado con tarjeta de audio muestra bajo su
+nombre un selector **Música / Llamadas / Auto** y una línea con el estado real (códec y si hay micro):
+
+- **Música**: A2DP fijo (alta calidad, sin micro).
+- **Llamadas**: perfil de manos libres fijo (micro siempre disponible). Sirve para Teams: solo lista
+  el micro si existe al **entrar** en la reunión, así que conviene tener este modo antes de unirte.
+- **Auto**: WirePlumber cambia a manos libres cuando una app graba y vuelve después (comportamiento por defecto).
+
+Implementación: `services/BluetoothAudio.qml` (lee `pactl -f json list cards`, escucha `pactl subscribe`,
+aplica con `pactl set-card-profile`). «Auto» es el ajuste **global** de WirePlumber
+`bluetooth.autoswitch-to-headset-profile` (se guarda con `wpctl settings --save`), no es por dispositivo.
+
 ## Plugin C++ (build user-local)
 
 La shell **carga el plugin compilado en `~/.local`**, no el del paquete AUR (que vive en

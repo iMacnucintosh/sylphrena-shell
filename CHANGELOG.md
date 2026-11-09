@@ -2,6 +2,14 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 2026-11-09
+
+### Bluetooth
+
+- Popout de Bluetooth: selector **Música / Llamadas / Auto** por dispositivo conectado (perfil A2DP/manos libres) con línea de estado (códec y micro).
+- Iconos de notificación recibidos como URL `file://` (Claude) ya no salen como el cuadro de «icono no encontrado».
+- Iconos de la bandeja oscuros (p. ej. Claude) se detectan midiendo el icono y se fuerzan a claro.
+
 ## 2026-11-03
 
 ### Juegos
