@@ -381,6 +381,11 @@ Implementación: `services/BluetoothAudio.qml` (lee `pactl -f json list cards`, 
 aplica con `pactl set-card-profile`). «Auto» es el ajuste **global** de WirePlumber
 `bluetooth.autoswitch-to-headset-profile` (se guarda con `wpctl settings --save`), no es por dispositivo.
 
+**Batería de AirPods.** BlueZ no la publica, así que `scripts/airpods-battery.py` la lee del propio auricular por el
+canal de accesorios de Apple (L2CAP, solo lectura, ~2 s) y `BluetoothAudio` la sondea cada 2 min mientras haya unos
+AirPods conectados. El popout muestra el nivel del auricular más bajo. Si el derecho no reporta (fuera de uso o en el
+estuche), se usa el que sí lo hace. Para otros dispositivos se sigue usando la batería de BlueZ.
+
 **mSBC desactivado (MediaTek).** El adaptador Bluetooth de este equipo (`0e8d:0616`) rompía el enlace SCO de los
 AirPods con el códec de manos libres mSBC (`SCO packet for unknown connection handle`, nodos en `error`, micro
 mudo). `~/.config/wireplumber/wireplumber.conf.d/52-bluetooth-no-msbc.conf` pone `bluez5.enable-msbc = false` y
