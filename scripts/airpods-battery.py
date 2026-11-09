@@ -19,7 +19,8 @@ PSM = 0x1001
 HANDSHAKE = bytes.fromhex("00000400010002000000000000000000")
 SUBSCRIBE = bytes.fromhex("040004000F00FFFFFFFF")
 BATTERY_HEADER = bytes.fromhex("040004000400")
-COMPONENTS = {1: "right", 2: "left", 4: "case"}
+# Component ids in the battery packet: 2 = right bud, 4 = left bud, 8 = case
+COMPONENTS = {2: "right", 4: "left", 8: "case"}
 
 
 def parse(packet: bytes):
@@ -31,8 +32,8 @@ def parse(packet: bytes):
         if len(entry) < 5 or entry[0] not in COMPONENTS:
             continue
         level = entry[2]
-        # status 3 = disconnected (e.g. bud in the case); levels above 100 are "unknown"
-        out[COMPONENTS[entry[0]]] = level if entry[3] != 3 and level <= 100 else None
+        # status 4 = not available (e.g. case while the buds are out); levels above 100 are "unknown"
+        out[COMPONENTS[entry[0]]] = level if entry[3] != 4 and level <= 100 else None
     return out
 
 
