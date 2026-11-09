@@ -253,15 +253,15 @@ ColumnLayout {
                 }
             }
 
-            // Battery levels (AirPods) and volume (non-active output) below the name row
+            // Battery levels (AirPods) below the name row
             Loader {
                 Layout.fillWidth: true
                 Layout.leftMargin: root.deviceTextInset
                 Layout.rightMargin: Tokens.padding.extraSmall
                 Layout.topMargin: Tokens.spacing.extraSmall
                 Layout.bottomMargin: Tokens.spacing.medium
-                // Only when there is something to show: AirPods levels or a volume slider (non-active output)
-                active: deviceWrap.modelData.state === BluetoothDeviceState.Connected && (!!device.pods || (!!device.sink?.audio && !device.playing))
+                // AirPods levels, only when the headset reports them
+                active: deviceWrap.modelData.state === BluetoothDeviceState.Connected && !!device.pods
                 visible: active
 
                 sourceComponent: ColumnLayout {
@@ -272,9 +272,6 @@ ColumnLayout {
                         plain: true
                     }
 
-                    BtOutputVolume {
-                        sink: BluetoothAudio.sinkFor(deviceWrap.modelData.address)
-                    }
                 }
             }
 
