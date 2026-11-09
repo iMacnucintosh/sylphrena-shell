@@ -293,23 +293,51 @@ ColumnLayout {
         onClicked: root.popouts.detachRequested("bluetooth")
     }
 
-    // One AirPods component: "L 81%", "R 80%" or [case icon] "83%"; "—" when not reported
+    // One AirPods component as a progress ring (letter inside for the buds, case icon for the
+    // case) plus its percentage; "—" and an empty ring when it is not reported.
     component PodLevel: RowLayout {
+        id: pod
+
         property string prefix
         property string icon
         required property real level
+        readonly property bool low: level >= 0 && level < 0.2
 
-        spacing: Tokens.spacing.extraSmall / 2
+        spacing: Tokens.spacing.extraSmall
 
-        MaterialIcon {
-            visible: parent.icon.length > 0
-            text: parent.icon
-            color: parent.level >= 0 && parent.level < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+        Item {
+            implicitWidth: Tokens.font.icon.small.pixelSize + Tokens.padding.small
+            implicitHeight: implicitWidth
+
+            CircularProgress {
+                anchors.fill: parent
+                value: pod.level >= 0 ? pod.level : 0
+                strokeWidth: 3
+                spacing: 0
+                fgColour: pod.low ? Colours.palette.m3error : Colours.palette.m3primary
+                bgColour: Colours.palette.m3secondaryContainer
+            }
+
+            StyledText {
+                anchors.centerIn: parent
+                visible: pod.prefix.length > 0
+                text: pod.prefix
+                color: Colours.palette.m3onSurface
+                font: Tokens.font.body.builders.small.weight(Font.Medium).build()
+            }
+
+            MaterialIcon {
+                anchors.centerIn: parent
+                visible: pod.icon.length > 0
+                text: pod.icon
+                scale: 0.65
+                color: Colours.palette.m3onSurface
+            }
         }
 
         StyledText {
-            text: (parent.prefix ? `${parent.prefix} ` : "") + (parent.level >= 0 ? `${Math.round(parent.level * 100)}%` : "—")
-            color: parent.level >= 0 && parent.level < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+            text: pod.level >= 0 ? `${Math.round(pod.level * 100)}%` : "—"
+            color: pod.low ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
             font: Tokens.font.body.small
         }
     }
