@@ -390,7 +390,8 @@ ColumnLayout {
         required property var sink
         readonly property bool muted: !!sink?.audio?.muted
 
-        visible: !!sink?.audio
+        // Only for a headset that is not the active output: for the active one this is the system volume
+        visible: !!sink?.audio && sink !== Audio.sink
         Layout.fillWidth: true
         spacing: Tokens.spacing.small
 
