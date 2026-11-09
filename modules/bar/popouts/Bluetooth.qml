@@ -18,7 +18,7 @@ ColumnLayout {
 
     required property PopoutState popouts
 
-    width: Math.max(480, Tokens.sizes.bar.networkWidth)
+    width: Math.max(520, Tokens.sizes.bar.networkWidth)
     spacing: Tokens.spacing.small
     // Hairline inset past the leading device icon
     readonly property real deviceTextInset: Tokens.font.icon.small.pointSize + Tokens.spacing.small + Tokens.spacing.extraSmall
@@ -198,7 +198,14 @@ ColumnLayout {
                     elide: Text.ElideRight
                 }
 
-                // Battery of any other device as a small ring (AirPods have their own row below)
+                // AirPods: left bud | case | right bud, compact, on the name row
+                BtPodsStrip {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && !!device.pods
+                    pods: device.pods
+                    compact: true
+                }
+
+                // Battery of any other device as a ring with the value inside
                 BtBatteryRing {
                     visible: device.modelData.state === BluetoothDeviceState.Connected && !device.pods && device.battery >= 0
                     size: 32
@@ -234,27 +241,6 @@ ColumnLayout {
                             text: "delete"
                         }
                     }
-                }
-            }
-
-            // Battery levels (AirPods) below the name row
-            Loader {
-                Layout.fillWidth: true
-                Layout.leftMargin: root.deviceTextInset
-                Layout.rightMargin: Tokens.padding.extraSmall
-                Layout.topMargin: Tokens.spacing.extraSmall
-                Layout.bottomMargin: Tokens.spacing.medium
-                // AirPods levels, only when the headset reports them
-                active: deviceWrap.modelData.state === BluetoothDeviceState.Connected && !!device.pods
-                visible: active
-
-                sourceComponent: ColumnLayout {
-                    spacing: Tokens.spacing.small
-
-                    BtPodsStrip {
-                        pods: BluetoothAudio.podsFor(deviceWrap.modelData.address)
-                    }
-
                 }
             }
 

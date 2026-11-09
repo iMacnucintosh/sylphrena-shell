@@ -81,7 +81,7 @@ StyledRect {
                 readonly property bool active: modelData.id === sel.current
 
                 Layout.fillWidth: true
-                implicitWidth: segRow.implicitWidth + Tokens.padding.medium * 2
+                implicitWidth: segRow.implicitWidth + (sel.compact ? Tokens.padding.small : Tokens.padding.medium) * 2
                 implicitHeight: segRow.implicitHeight + Tokens.padding.extraSmall * 2
 
                 StateLayer {
