@@ -85,6 +85,9 @@ ColumnLayout {
                 readonly property BluetoothDevice modelData: deviceWrap.modelData
                 readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
                 // BlueZ battery, or the accessory-channel one for AirPods (-1 = unknown)
+                // Output node of this headset in its current profile (null when not connected)
+                readonly property var sink: BluetoothAudio.sinkFor(modelData.address)
+                readonly property bool muted: !!sink?.audio?.muted
                 readonly property real battery: modelData.batteryAvailable ? modelData.battery : BluetoothAudio.batteryFor(modelData.address)
                 // AirPods: { left, right, case } levels, null for every other device
                 readonly property var pods: BluetoothAudio.podsFor(modelData.address)
@@ -134,6 +137,34 @@ ColumnLayout {
                     visible: device.modelData.state === BluetoothDeviceState.Connected && !device.pods
                     text: device.battery >= 0 ? Icons.getBatteryIcon(device.battery) : "battery_unknown"
                     color: device.battery >= 0 && device.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+                }
+
+                // Mute toggle: filled when this headset's output is muted
+                StyledRect {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && !!device.sink?.audio
+                    implicitWidth: implicitHeight
+                    implicitHeight: muteIcon.implicitHeight + Tokens.padding.extraSmall
+
+                    radius: Tokens.rounding.full
+                    color: Qt.alpha(Colours.palette.m3errorContainer, device.muted ? 1 : 0)
+
+                    Behavior on color {
+                        CAnim {}
+                    }
+
+                    StateLayer {
+                        color: device.muted ? Colours.palette.m3onErrorContainer : Colours.palette.m3onSurface
+                        onClicked: device.sink.audio.muted = !device.sink.audio.muted
+                    }
+
+                    MaterialIcon {
+                        id: muteIcon
+
+                        anchors.centerIn: parent
+                        animate: true
+                        text: device.muted ? "volume_off" : "volume_up"
+                        color: device.muted ? Colours.palette.m3onErrorContainer : Colours.palette.m3onSurface
+                    }
                 }
 
                 StyledRect {
