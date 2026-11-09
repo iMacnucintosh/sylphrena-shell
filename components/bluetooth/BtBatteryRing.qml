@@ -15,6 +15,8 @@ RowLayout {
     // Ring diameter (same everywhere: popout rows, AirPods strip, Nexus)
     property int size: 26
     property string prefix
+    // Show the percentage (digits only) inside the ring instead of next to it
+    property bool valueInside: false
     property string icon
     required property real level
     readonly property bool low: level >= 0 && level < 0.2
@@ -43,7 +45,7 @@ RowLayout {
             visible: pod.prefix.length > 0
             text: pod.prefix
             color: Colours.palette.m3onSurface
-            font: Tokens.font.body.builders.small.weight(Font.Medium).scale(0.85).build()
+            font: Tokens.font.body.builders.small.weight(Font.Medium).scale(pod.prefix.length > 2 ? 0.7 : 0.85).build()
 
             FontMetrics {
                 id: metrics
@@ -69,6 +71,7 @@ RowLayout {
     }
 
     StyledText {
+        visible: !pod.valueInside
         text: pod.level >= 0 ? `${Math.round(pod.level * 100)}%` : "—"
         color: pod.low ? Colours.palette.m3error : Colours.palette.m3onSurface
         font: Tokens.font.body.builders.small.weight(Font.Medium).build()
