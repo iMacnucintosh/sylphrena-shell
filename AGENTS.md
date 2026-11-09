@@ -67,7 +67,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 
 ### Scripts (`scripts/`)
 - `apply-activity-style.py` — apply de look completo en un solo proceso (~0,38 s).
-- `sylphrena-quiet.py` — aplica tema sin volcar secuencias OSC a los PTYs; recarga Kitty, sync Papirus en qt6ct, GTK/colors.css, `~/.config/seeker/theme.json` (Seeker).
+- `sylphrena-quiet.py` — aplica tema sin volcar secuencias OSC a los PTYs; recarga Kitty, sync Papirus en qt6ct, GTK/colors.css, `~/.config/seeker/theme.json` (Seeker) y `~/.config/things/theme.json` (Things, gestor de paquetes en `~/Desarrollo/things`).
 - `sync-light-apps-cli.py` — reescrituras de `cli.json` **deben conservar** el postHook de Kitty.
 - `steam-nonsteam.py` — VDF + IDs ocultos + sesiones Millennium + caché de historial.
 - `steam-activity.py` — poll de procesos `reaper` (sesiones reales) + delta de `playtime_forever` como respaldo; `snapshot` lee JSON por **stdin** (argv sigue para debug).
