@@ -16,7 +16,7 @@ ColumnLayout {
 
     required property PopoutState popouts
 
-    width: Math.max(360, Tokens.sizes.bar.networkWidth)
+    width: Math.max(440, Tokens.sizes.bar.networkWidth)
     spacing: Tokens.spacing.small
     // Hairline inset past the leading device icon
     readonly property real deviceTextInset: Tokens.font.icon.small.pointSize + Tokens.spacing.small + Tokens.spacing.extraSmall
@@ -86,7 +86,8 @@ ColumnLayout {
                 readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
                 // BlueZ battery, or the accessory-channel one for AirPods (-1 = unknown)
                 readonly property real battery: modelData.batteryAvailable ? modelData.battery : BluetoothAudio.batteryFor(modelData.address)
-                readonly property real caseBattery: BluetoothAudio.caseFor(modelData.address)
+                // AirPods: { left, right, case } levels, null for every other device
+                readonly property var pods: BluetoothAudio.podsFor(modelData.address)
 
                 Layout.fillWidth: true
                 Layout.rightMargin: Tokens.padding.extraSmall
@@ -122,31 +123,36 @@ ColumnLayout {
                     elide: Text.ElideRight
                 }
 
-                // Charging case (AirPods only)
-                StyledText {
-                    visible: device.modelData.state === BluetoothDeviceState.Connected && device.caseBattery >= 0
-                    text: `${Math.round(device.caseBattery * 100)}%`
-                    color: device.caseBattery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
-                    font: Tokens.font.body.small
+                // AirPods: left bud, right bud and charging case, each with its own level
+                RowLayout {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && !!device.pods
+                    spacing: Tokens.spacing.medium
+
+                    PodLevel {
+                        prefix: Tr.trCtx("L", "left earbud")
+                        level: device.pods?.left ?? -1
+                    }
+
+                    PodLevel {
+                        prefix: Tr.trCtx("R", "right earbud")
+                        level: device.pods?.right ?? -1
+                    }
+
+                    PodLevel {
+                        icon: "inventory_2"
+                        level: device.pods?.case ?? -1
+                    }
                 }
 
-                MaterialIcon {
-                    visible: device.modelData.state === BluetoothDeviceState.Connected && device.caseBattery >= 0
-                    Layout.leftMargin: -Tokens.spacing.extraSmall
-                    Layout.rightMargin: Tokens.spacing.small
-                    text: "inventory_2"
-                    color: device.caseBattery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
-                }
-
                 StyledText {
-                    visible: device.modelData.state === BluetoothDeviceState.Connected && device.battery >= 0
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && !device.pods && device.battery >= 0
                     text: `${Math.round(device.battery * 100)}%`
                     color: device.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
                     font: Tokens.font.body.small
                 }
 
                 MaterialIcon {
-                    visible: device.modelData.state === BluetoothDeviceState.Connected
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && !device.pods
                     text: device.battery >= 0 ? Icons.getBatteryIcon(device.battery) : "battery_unknown"
                     color: device.battery >= 0 && device.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
                 }
@@ -251,6 +257,27 @@ ColumnLayout {
         icon: "settings"
 
         onClicked: root.popouts.detachRequested("bluetooth")
+    }
+
+    // One AirPods component: "L 81%", "R 80%" or [case icon] "83%"; "—" when not reported
+    component PodLevel: RowLayout {
+        property string prefix
+        property string icon
+        required property real level
+
+        spacing: Tokens.spacing.extraSmall / 2
+
+        MaterialIcon {
+            visible: parent.icon.length > 0
+            text: parent.icon
+            color: parent.level >= 0 && parent.level < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+        }
+
+        StyledText {
+            text: (parent.prefix ? `${parent.prefix} ` : "") + (parent.level >= 0 ? `${Math.round(parent.level * 100)}%` : "—")
+            color: parent.level >= 0 && parent.level < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+            font: Tokens.font.body.small
+        }
     }
 
     component OutputVolume: RowLayout {

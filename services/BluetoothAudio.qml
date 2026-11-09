@@ -38,10 +38,17 @@ Singleton {
         return buds.length ? Math.min(...buds) / 100 : -1;
     }
 
-    // Charging case level (0..1), or -1 when not reported
-    function caseFor(address: string): real {
-        const v = root.batteries[String(address).toUpperCase()]?.case;
-        return v === null || v === undefined ? -1 : v / 100;
+    // Per-component levels (0..1, -1 = not reported) or null when there is no accessory-channel data
+    function podsFor(address: string): var {
+        const b = root.batteries[String(address).toUpperCase()];
+        if (!b)
+            return null;
+        const f = v => v === null || v === undefined ? -1 : v / 100;
+        return {
+            left: f(b.left),
+            right: f(b.right),
+            "case": f(b.case)
+        };
     }
 
     function pollBattery(force: bool): void {
