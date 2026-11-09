@@ -107,7 +107,6 @@ ColumnLayout {
                 // BlueZ battery, or the accessory-channel one for AirPods (-1 = unknown)
                 // Output node of this headset in its current profile (null when not connected)
                 readonly property var sink: BluetoothAudio.sinkFor(modelData.address)
-                readonly property bool muted: !!sink?.audio?.muted
                 // This headset is the system's active output (where the sound is going right now)
                 readonly property bool playing: !!sink && sink === Audio.sink
                 readonly property real battery: modelData.batteryAvailable ? modelData.battery : BluetoothAudio.batteryFor(modelData.address)
@@ -193,34 +192,6 @@ ColumnLayout {
                     visible: device.modelData.state === BluetoothDeviceState.Connected && !!BluetoothAudio.cardFor(device.modelData.address)
                     address: device.modelData.address
                     showLabels: false
-                }
-
-                // Mute toggle: filled when this headset's output is muted
-                StyledRect {
-                    visible: device.modelData.state === BluetoothDeviceState.Connected && !!device.sink?.audio
-                    implicitWidth: implicitHeight
-                    implicitHeight: muteIcon.implicitHeight + Tokens.padding.extraSmall
-
-                    radius: Tokens.rounding.full
-                    color: Qt.alpha(Colours.palette.m3errorContainer, device.muted ? 1 : 0)
-
-                    Behavior on color {
-                        CAnim {}
-                    }
-
-                    StateLayer {
-                        color: device.muted ? Colours.palette.m3onErrorContainer : Colours.palette.m3onSurface
-                        onClicked: device.sink.audio.muted = !device.sink.audio.muted
-                    }
-
-                    MaterialIcon {
-                        id: muteIcon
-
-                        anchors.centerIn: parent
-                        animate: true
-                        text: device.muted ? "volume_off" : "volume_up"
-                        color: device.muted ? Colours.palette.m3onErrorContainer : Colours.palette.m3onSurface
-                    }
                 }
 
                 StyledRect {
