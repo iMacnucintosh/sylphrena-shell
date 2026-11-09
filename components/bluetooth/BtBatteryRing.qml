@@ -61,6 +61,16 @@ RowLayout {
             }
         }
 
+        // "Not reported" mark: a drawn dash (a text dash is never optically centred)
+        Rectangle {
+            anchors.centerIn: parent
+            visible: pod.valueInside && pod.level < 0
+            width: Math.round(pod.size * 0.32)
+            height: 2
+            radius: 1
+            color: Colours.palette.m3onSurfaceVariant
+        }
+
         MaterialIcon {
             anchors.centerIn: parent
             visible: pod.icon.length > 0

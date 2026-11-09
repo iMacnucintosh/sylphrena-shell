@@ -84,7 +84,7 @@ StyledRect {
                     BtBatteryRing {
                         size: strip.compact ? 26 : 32
                         valueInside: true
-                        prefix: cell.level >= 0 ? `${Math.round(cell.level * 100)}` : "—"
+                        prefix: cell.level >= 0 ? `${Math.round(cell.level * 100)}` : ""
                         level: cell.level
                     }
                 }
