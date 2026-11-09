@@ -252,20 +252,6 @@ ColumnLayout {
         }
     }
 
-    IconTextButton {
-        Layout.fillWidth: true
-        Layout.topMargin: Tokens.spacing.medium
-        inactiveColour: Colours.palette.m3primaryContainer
-        inactiveOnColour: Colours.palette.m3onPrimaryContainer
-        verticalPadding: Tokens.padding.extraSmall
-        text: Tr.tr("Open settings")
-        icon: "settings"
-
-        onClicked: root.popouts.detachRequested("bluetooth")
-    }
-
-    // Plain progress ring: full background track and a rounded arc from 12 o'clock. (The stock
-    // CircularProgress leaves a gap between arc and track, which looks off at the start.)
     component PodRing: Item {
         id: ring
 
