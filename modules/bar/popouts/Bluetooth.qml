@@ -136,17 +136,34 @@ ColumnLayout {
                     Anim {}
                 }
 
-                MaterialIcon {
-                    text: Icons.getBluetoothIcon(device.modelData.icon)
-                    color: device.playing ? Colours.palette.m3primary : Colours.palette.m3onSurface
-                    fill: device.playing ? 1 : 0
+                // Accent circle behind the icon when this headset is the active output (same look as
+                // the connect button). The circle overflows the cell so the row layout does not shift.
+                Item {
+                    implicitWidth: deviceIcon.implicitWidth
+                    implicitHeight: deviceIcon.implicitHeight
 
-                    Behavior on color {
-                        CAnim {}
+                    StyledRect {
+                        anchors.centerIn: parent
+                        width: height
+                        height: deviceIcon.implicitHeight + Tokens.padding.extraSmall
+                        radius: Tokens.rounding.full
+                        color: Qt.alpha(Colours.palette.m3primary, device.playing ? 1 : 0)
+
+                        Behavior on color {
+                            CAnim {}
+                        }
                     }
 
-                    Behavior on fill {
-                        Anim {}
+                    MaterialIcon {
+                        id: deviceIcon
+
+                        anchors.centerIn: parent
+                        text: Icons.getBluetoothIcon(device.modelData.icon)
+                        color: device.playing ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+
+                        Behavior on color {
+                            CAnim {}
+                        }
                     }
                 }
 
@@ -155,19 +172,7 @@ ColumnLayout {
                     Layout.rightMargin: Tokens.spacing.extraSmall
                     Layout.fillWidth: true
                     text: device.modelData.name
-                    color: device.playing ? Colours.palette.m3primary : Colours.palette.m3onSurface
                     elide: Text.ElideRight
-
-                    Behavior on color {
-                        CAnim {}
-                    }
-                }
-
-                // Sound is going out through this device
-                MaterialIcon {
-                    visible: device.playing
-                    text: "graphic_eq"
-                    color: Colours.palette.m3primary
                 }
 
                 StyledText {
