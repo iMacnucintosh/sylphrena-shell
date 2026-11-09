@@ -253,7 +253,6 @@ ColumnLayout {
 
                     BtPodsStrip {
                         pods: BluetoothAudio.podsFor(deviceWrap.modelData.address)
-                        plain: true
                     }
 
                 }

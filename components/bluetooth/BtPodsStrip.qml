@@ -32,19 +32,20 @@ StyledRect {
         anchors.rightMargin: Tokens.padding.small
         spacing: 0
 
+        // Left bud | case | right bud, like the tabs of the mode selector
         Repeater {
             model: [
                 {
-                    prefix: "L",
+                    label: "L",
                     key: "left"
-                },
-                {
-                    prefix: "R",
-                    key: "right"
                 },
                 {
                     icon: "inventory_2",
                     key: "case"
+                },
+                {
+                    label: "R",
+                    key: "right"
                 }
             ]
 
@@ -52,17 +53,37 @@ StyledRect {
                 id: cell
 
                 required property var modelData
+                readonly property real level: strip.pods?.[modelData.key] ?? -1
 
                 Layout.fillWidth: true
-                implicitHeight: pod.implicitHeight
+                implicitHeight: cellRow.implicitHeight
 
-                BtBatteryRing {
-                    id: pod
+                RowLayout {
+                    id: cellRow
 
                     anchors.centerIn: parent
-                    prefix: cell.modelData.prefix ?? ""
-                    icon: cell.modelData.icon ?? ""
-                    level: strip.pods?.[cell.modelData.key] ?? -1
+                    spacing: Tokens.spacing.small
+
+                    // What it is: bud letter or case icon; the level lives inside the ring
+                    StyledText {
+                        visible: !!cell.modelData.label
+                        text: cell.modelData.label ?? ""
+                        color: Colours.palette.m3onSurfaceVariant
+                        font: Tokens.font.body.builders.small.weight(Font.Medium).build()
+                    }
+
+                    MaterialIcon {
+                        visible: !!cell.modelData.icon
+                        text: cell.modelData.icon ?? ""
+                        color: Colours.palette.m3onSurfaceVariant
+                    }
+
+                    BtBatteryRing {
+                        size: 32
+                        valueInside: true
+                        prefix: cell.level >= 0 ? `${Math.round(cell.level * 100)}` : "—"
+                        level: cell.level
+                    }
                 }
             }
         }
