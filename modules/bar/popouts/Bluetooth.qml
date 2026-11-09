@@ -201,6 +201,9 @@ ColumnLayout {
                 // Battery of any other device as a small ring (AirPods have their own row below)
                 BtBatteryRing {
                     visible: device.modelData.state === BluetoothDeviceState.Connected && !device.pods && device.battery >= 0
+                    size: 32
+                    valueInside: true
+                    prefix: `${Math.round(device.battery * 100)}`
                     level: device.battery
                 }
 
