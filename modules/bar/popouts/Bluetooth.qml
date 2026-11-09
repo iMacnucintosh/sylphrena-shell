@@ -49,6 +49,11 @@ ColumnLayout {
         }
     }
 
+    // Separates the adapter toggles from the device list
+    Hairline {
+        Layout.topMargin: Tokens.spacing.small
+    }
+
     Repeater {
         id: deviceRepeater
 
