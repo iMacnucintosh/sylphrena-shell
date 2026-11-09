@@ -3,7 +3,6 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Sylphrena.I18n
 
 // Audio profile of connected Bluetooth headsets (music = A2DP, calls = HFP/HSP).
 //
@@ -44,33 +43,6 @@ Singleton {
         return !!root.cardFor(address)?.profile.startsWith("headset-head-unit");
     }
 
-    function profileLabel(profile: string): string {
-        switch (profile) {
-        case "a2dp-sink":
-            return "AAC";
-        case "a2dp-sink-sbc_xq":
-            return "SBC-XQ";
-        case "a2dp-sink-sbc":
-            return "SBC";
-        case "headset-head-unit":
-            return "mSBC";
-        case "headset-head-unit-cvsd":
-            return "CVSD";
-        default:
-            return profile;
-        }
-    }
-
-    // One-line state shown under the selector.
-    function describe(address: string): string {
-        const c = root.cardFor(address);
-        if (!c)
-            return "";
-        const call = c.profile.startsWith("headset-head-unit");
-        const codec = c.codecs[c.profile] ?? root.profileLabel(c.profile);
-        return call ? Tr.tr("Calls · %1 · mic on").arg(codec) : Tr.tr("High quality · %1 · no mic").arg(codec);
-    }
-
     function setMode(address: string, mode: string): void {
         const c = root.cardFor(address);
         if (!c || applyProc.running)
@@ -86,17 +58,6 @@ Singleton {
     function refresh(): void {
         listProc.running = true;
         settingProc.running = true;
-    }
-
-    // "... (HSP/HFP, codec CVSD)" -> { "headset-head-unit": "CVSD", ... }
-    function codecsOf(profiles: var): var {
-        const out = {};
-        for (const name of Object.keys(profiles)) {
-            const m = String(profiles[name].description ?? "").match(/codec ([\w-]+)/);
-            if (m)
-                out[name] = m[1];
-        }
-        return out;
     }
 
     function best(profiles: var, order: list<string>): string {
@@ -125,7 +86,6 @@ Singleton {
             out[address] = {
                 card: c.name,
                 profile: c.active_profile ?? "",
-                codecs: root.codecsOf(c.profiles),
                 a2dp: root.best(c.profiles, ["a2dp-sink", "a2dp-sink-sbc_xq", "a2dp-sink-sbc"]),
                 headset: root.best(c.profiles, ["headset-head-unit", "headset-head-unit-cvsd"])
             };

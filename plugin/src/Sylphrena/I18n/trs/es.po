@@ -304,14 +304,6 @@ msgstr "Auto"
 msgid "Calls"
 msgstr "Llamadas"
 
-#: services/BluetoothAudio.qml
-msgid "Calls · %1 · mic on"
-msgstr "Llamadas · %1 · con micro"
-
-#: services/BluetoothAudio.qml
-msgid "High quality · %1 · no mic"
-msgstr "Alta calidad · %1 · sin micro"
-
 #: modules/bar/popouts/Bluetooth.qml modules/nexus/pages/BluetoothPage.qml
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
