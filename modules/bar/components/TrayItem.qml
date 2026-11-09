@@ -26,8 +26,8 @@ Item {
     readonly property string trayId: String(modelData.id || "").toLowerCase()
     readonly property string trayIcon: String(modelData.icon || "").toLowerCase()
 
-    // Cursor / Steam (and similar) ship a near-black tray glyph that vanishes on dark bars.
-    readonly property bool forceLightIcon: trayId.includes("cursor") || trayId.includes("steam") || trayIcon.includes("steam")
+    // Cursor / Claude / Steam (and similar) ship a near-black tray glyph that vanishes on dark bars.
+    readonly property bool forceLightIcon: trayId.includes("cursor") || trayId.includes("claude") || trayId.includes("steam") || trayIcon.includes("steam")
     readonly property bool colourise: Config.bar.tray.recolour || forceLightIcon
     readonly property bool menuOpen: popouts?.hasCurrent && popouts?.currentName === `traymenu${index}`
     readonly property bool highlighted: hover.containsMouse || menuOpen
