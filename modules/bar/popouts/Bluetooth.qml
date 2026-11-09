@@ -16,7 +16,7 @@ ColumnLayout {
 
     required property PopoutState popouts
 
-    width: Math.max(440, Tokens.sizes.bar.networkWidth)
+    width: Math.max(480, Tokens.sizes.bar.networkWidth)
     spacing: Tokens.spacing.small
     // Hairline inset past the leading device icon
     readonly property real deviceTextInset: Tokens.font.icon.small.pointSize + Tokens.spacing.small + Tokens.spacing.extraSmall
