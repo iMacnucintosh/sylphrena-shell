@@ -2,6 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Bluetooth
 import Quickshell.Io
 
 // Audio profile of connected Bluetooth headsets (music = A2DP, calls = HFP/HSP).
@@ -20,8 +21,36 @@ Singleton {
     property var cards: ({})
     property bool autoswitch: true
 
+    // AirPods battery (BlueZ does not publish it): upper-case MAC -> { left, right, case } in %
+    property var batteries: ({})
+    property real lastBatteryPoll: 0
+
     function cardFor(address: string): var {
         return root.cards[String(address).toUpperCase()] ?? null;
+    }
+
+    // Lowest bud level (0..1) for headsets whose battery comes from the accessory channel, or -1
+    function batteryFor(address: string): real {
+        const b = root.batteries[String(address).toUpperCase()];
+        if (!b)
+            return -1;
+        const buds = [b.left, b.right].filter(v => v !== null && v !== undefined);
+        return buds.length ? Math.min(...buds) / 100 : -1;
+    }
+
+    function pollBattery(force: bool): void {
+        if (batteryProc.running || (!force && Date.now() - root.lastBatteryPoll < 30000))
+            return;
+        const dev = Bluetooth.devices.values.find(d => d.connected && /airpods/i.test(d.name));
+        if (!dev) {
+            if (Object.keys(root.batteries).length)
+                root.batteries = ({});
+            return;
+        }
+        root.lastBatteryPoll = Date.now();
+        batteryProc.address = dev.address.toUpperCase();
+        batteryProc.command = ["python3", "-I", `${Quickshell.shellDir}/scripts/airpods-battery.py`, batteryProc.address];
+        batteryProc.running = true;
     }
 
     function modeFor(address: string): string {
@@ -58,6 +87,7 @@ Singleton {
     function refresh(): void {
         listProc.running = true;
         settingProc.running = true;
+        root.pollBattery(false);
     }
 
     function best(profiles: var, order: list<string>): string {
@@ -115,6 +145,30 @@ Singleton {
                     root.autoswitch = m[1] === "true";
             }
         }
+    }
+
+    Process {
+        id: batteryProc
+
+        property string address
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                try {
+                    const b = JSON.parse(text);
+                    const all = Object.assign({}, root.batteries);
+                    all[batteryProc.address] = b;
+                    root.batteries = all;
+                } catch (e) {}
+            }
+        }
+    }
+
+    Timer {
+        interval: 120000
+        repeat: true
+        running: true
+        onTriggered: root.pollBattery(true)
     }
 
     Process {

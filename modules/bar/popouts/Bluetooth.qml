@@ -84,6 +84,8 @@ ColumnLayout {
 
                 readonly property BluetoothDevice modelData: deviceWrap.modelData
                 readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
+                // BlueZ battery, or the accessory-channel one for AirPods (-1 = unknown)
+                readonly property real battery: modelData.batteryAvailable ? modelData.battery : BluetoothAudio.batteryFor(modelData.address)
 
                 Layout.fillWidth: true
                 Layout.rightMargin: Tokens.padding.extraSmall
@@ -120,16 +122,16 @@ ColumnLayout {
                 }
 
                 StyledText {
-                    visible: device.modelData.state === BluetoothDeviceState.Connected && device.modelData.batteryAvailable
-                    text: `${Math.round(device.modelData.battery * 100)}%`
-                    color: device.modelData.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && device.battery >= 0
+                    text: `${Math.round(device.battery * 100)}%`
+                    color: device.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
                     font: Tokens.font.body.small
                 }
 
                 MaterialIcon {
                     visible: device.modelData.state === BluetoothDeviceState.Connected
-                    text: device.modelData.batteryAvailable ? Icons.getBatteryIcon(device.modelData.battery) : "battery_unknown"
-                    color: device.modelData.batteryAvailable && device.modelData.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+                    text: device.battery >= 0 ? Icons.getBatteryIcon(device.battery) : "battery_unknown"
+                    color: device.battery >= 0 && device.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
                 }
 
                 StyledRect {
