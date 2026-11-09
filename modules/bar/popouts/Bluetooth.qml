@@ -355,7 +355,7 @@ ColumnLayout {
                 visible: pod.prefix.length > 0
                 text: pod.prefix
                 color: Colours.palette.m3onSurface
-                font: Tokens.font.body.builders.small.weight(Font.Medium).build()
+                font: Tokens.font.body.builders.small.weight(Font.Medium).scale(0.85).build()
 
                 FontMetrics {
                     id: metrics
@@ -411,11 +411,11 @@ ColumnLayout {
             Repeater {
                 model: [
                     {
-                        prefix: Tr.trCtx("L", "left earbud"),
+                        prefix: "L",
                         key: "left"
                     },
                     {
-                        prefix: Tr.trCtx("R", "right earbud"),
+                        prefix: "R",
                         key: "right"
                     },
                     {

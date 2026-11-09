@@ -301,16 +301,6 @@ msgid "Auto"
 msgstr "Auto"
 
 #: modules/bar/popouts/Bluetooth.qml
-msgctxt "left earbud"
-msgid "L"
-msgstr "I"
-
-#: modules/bar/popouts/Bluetooth.qml
-msgctxt "right earbud"
-msgid "R"
-msgstr "D"
-
-#: modules/bar/popouts/Bluetooth.qml
 msgid "Calls"
 msgstr "Llamadas"
 
