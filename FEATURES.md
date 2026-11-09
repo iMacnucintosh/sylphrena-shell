@@ -174,6 +174,7 @@ require("sylphrena-monitors")
 ## Explorador y theming GTK
 
 - Explorador por defecto: **Seeker** (`general.apps.explorer: ["seeker"]` + Super+E + `xdg-mime` para carpetas). Repo aparte `~/Desarrollo/seeker`; tema M3 vía `~/.config/seeker/theme.json` (escrito por `sylphrena-quiet.py`). Thunar sigue disponible como alternativa. Los pickers internos (wallpaper, avatar, icono de `.desktop`) usan `components/filedialog/FileDialog.qml` → `seeker --pick` (sin explorador QML embebido).
+- Gestor de paquetes: **Things** (lanzador «Paquetes», repo aparte `~/Desarrollo/things`, pacman + AUR + Flatpak). Tema M3 vía `~/.config/things/theme.json`, escrito por `_sync_things` en `sylphrena-quiet.py` (mismo formato que Seeker; hot-reload).
 - Para que Thunar/GTK sigan el esquema de Sylphrena: `adw-gtk-theme`, `papirus-icon-theme`, y `GTK_MODULES=colorreload-gtk-module` (Hyprland + `settings.ini`; el módulo está **vendorizado** en `~/.local/share/gtk-3.0/modules/`, ver abajo).
 - Iconos de apps en el launcher: tema **Papirus** (sincronizado en `~/.config/qt6ct/qt6ct.conf [Appearance] icon_theme` al aplicar el esquema).
 - Diálogos `pkexec` (Timeshift, VPN helper, etc.): activa `hyprpolkitagent.service` (`systemctl --user enable --now hyprpolkitagent`).
