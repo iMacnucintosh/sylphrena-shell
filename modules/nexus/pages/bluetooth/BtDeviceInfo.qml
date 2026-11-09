@@ -7,6 +7,7 @@ import Sylphrena.Components
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
+import qs.components.bluetooth
 import qs.components.controls
 import qs.services
 import qs.utils
@@ -18,6 +19,27 @@ PageBase {
     readonly property BluetoothDevice device: nState.selectedBtDevice
     readonly property bool connected: device?.state === BluetoothDeviceState.Connected
     readonly property bool loading: device?.state === BluetoothDeviceState.Connecting || device?.state === BluetoothDeviceState.Disconnecting
+    readonly property string address: device?.address ?? ""
+    // Audio controls need a connected headset with a PipeWire card
+    readonly property bool hasAudio: connected && !!BluetoothAudio.cardFor(address)
+    // AirPods: { left, right, case } levels, null otherwise
+    readonly property var pods: BluetoothAudio.podsFor(address)
+    readonly property var card: BluetoothAudio.cardFor(address)
+    readonly property string audioMode: BluetoothAudio.modeFor(address)
+    readonly property list<MenuItem> musicQualityItems: [
+        MenuItem {
+            text: "AAC"
+            value: "a2dp-sink"
+        },
+        MenuItem {
+            text: "SBC-XQ"
+            value: "a2dp-sink-sbc_xq"
+        },
+        MenuItem {
+            text: "SBC"
+            value: "a2dp-sink-sbc"
+        }
+    ]
 
     readonly property string statusText: {
         if (!device)
@@ -149,6 +171,93 @@ PageBase {
             }
         }
 
+        // Audio profile, channel and output of the connected headset
+        SectionHeader {
+            visible: root.hasAudio
+            first: true
+            text: Tr.tr("Audio")
+        }
+
+        ConnectedRect {
+            visible: root.hasAudio
+            Layout.fillWidth: true
+            first: true
+            implicitHeight: modeLayout.implicitHeight + Tokens.padding.large * 2
+
+            ColumnLayout {
+                id: modeLayout
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: Tokens.padding.large
+                spacing: Tokens.spacing.small
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: Tr.tr("Audio mode")
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: root.audioMode === "call" ? Tr.tr("Microphone always available, call quality") : root.audioMode === "music" ? Tr.tr("Best sound quality, no microphone") : Tr.tr("High quality until an app uses the microphone")
+                    color: Colours.palette.m3outline
+                    font: Tokens.font.label.small
+                    wrapMode: Text.WordWrap
+                }
+
+                BtModeSelector {
+                    address: root.address
+                }
+            }
+        }
+
+        InfoRow {
+            visible: root.hasAudio
+            label: Tr.tr("Channel")
+            value: {
+                const profile = root.card?.profile ?? "";
+                const codec = BluetoothAudio.codecLabel(profile);
+                return profile.startsWith("headset") ? Tr.tr("Calls · %1").arg(codec) : Tr.tr("High quality · %1").arg(codec);
+            }
+        }
+
+        SelectRow {
+            visible: root.hasAudio && BluetoothAudio.a2dpOptions(root.address).length > 1
+            label: Tr.tr("Music quality")
+            subtext: root.audioMode === "call" ? Tr.tr("Applies when the headset is in music mode") : Tr.tr("Codec used to play music")
+            menuItems: root.musicQualityItems.filter(i => BluetoothAudio.a2dpOptions(root.address).includes(i.value))
+            active: root.musicQualityItems.find(i => i.value === root.card?.profile) ?? root.musicQualityItems[0]
+            onSelected: item => BluetoothAudio.setProfile(root.address, item.value)
+        }
+
+        ConnectedRect {
+            visible: root.hasAudio && !!BluetoothAudio.sinkFor(root.address)?.audio
+            Layout.fillWidth: true
+            last: true
+            implicitHeight: outputLayout.implicitHeight + Tokens.padding.large * 2
+
+            ColumnLayout {
+                id: outputLayout
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: Tokens.padding.large
+                spacing: Tokens.spacing.small
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: Tr.trCtx("Output", "audio output")
+                }
+
+                BtOutputVolume {
+                    sink: BluetoothAudio.sinkFor(root.address)
+                    alwaysVisible: true
+                }
+            }
+        }
+
         // Connection group
         ToggleRow {
             verticalPadding: Tokens.padding.large
@@ -211,15 +320,20 @@ PageBase {
                     }
 
                     StyledText {
+                        visible: !root.pods
                         text: root.device?.batteryAvailable ? Strings.percentOne(root.device.battery) : Tr.trCtx("Unavailable", "bluetooth device state")
                         color: Colours.palette.m3outline
                         font: Tokens.font.body.small
                     }
                 }
 
+                BtPodsStrip {
+                    pods: root.pods
+                }
+
                 Loader {
                     Layout.fillWidth: true
-                    active: root.device?.batteryAvailable ?? false
+                    active: (root.device?.batteryAvailable ?? false) && !root.pods
                     visible: active
                     asynchronous: true
 
