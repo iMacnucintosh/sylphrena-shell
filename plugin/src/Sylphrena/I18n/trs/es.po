@@ -305,12 +305,12 @@ msgid "Calls"
 msgstr "Llamadas"
 
 #: services/BluetoothAudio.qml
-msgid "Now: call quality (%1), mic on"
-msgstr "Ahora: calidad de llamada (%1), con micro"
+msgid "Calls · %1 · mic on"
+msgstr "Llamadas · %1 · con micro"
 
 #: services/BluetoothAudio.qml
-msgid "Now: high quality (%1), no mic"
-msgstr "Ahora: alta calidad (%1), sin micro"
+msgid "High quality · %1 · no mic"
+msgstr "Alta calidad · %1 · sin micro"
 
 #: modules/bar/popouts/Bluetooth.qml modules/nexus/pages/BluetoothPage.qml
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml

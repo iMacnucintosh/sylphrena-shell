@@ -34,6 +34,12 @@ Singleton {
         return c.profile.startsWith("headset-head-unit") ? "call" : "music";
     }
 
+    // Output node of the headset in its current profile (A2DP and HFP have separate sinks).
+    function sinkFor(address: string): var {
+        const key = `bluez_output.${String(address).replace(/:/g, "_")}`;
+        return Audio.sinks.find(n => n.name.startsWith(key)) ?? null;
+    }
+
     function inCall(address: string): bool {
         return !!root.cardFor(address)?.profile.startsWith("headset-head-unit");
     }
@@ -61,8 +67,8 @@ Singleton {
         if (!c)
             return "";
         const call = c.profile.startsWith("headset-head-unit");
-        const codec = root.profileLabel(c.profile);
-        return call ? Tr.tr("Now: call quality (%1), mic on").arg(codec) : Tr.tr("Now: high quality (%1), no mic").arg(codec);
+        const codec = c.codecs[c.profile] ?? root.profileLabel(c.profile);
+        return call ? Tr.tr("Calls · %1 · mic on").arg(codec) : Tr.tr("High quality · %1 · no mic").arg(codec);
     }
 
     function setMode(address: string, mode: string): void {
@@ -73,13 +79,24 @@ Singleton {
         const profile = mode === "call" ? c.headset : c.a2dp;
         if (!profile)
             return;
-        applyProc.command = ["sh", "-c", 'wpctl settings --save bluetooth.autoswitch-to-headset-profile "$1" && pactl set-card-profile "$2" "$3"', "sh", mode === "auto" ? "true" : "false", c.card, profile];
+        applyProc.command = ["sh", "-c", 'wpctl settings --save bluetooth.autoswitch-to-headset-profile "$1" && pactl set-card-profile "$2" "$3"; sleep 1; for s in $(pactl list short sinks | cut -f2 | grep "^bluez_output\\.$4\\."); do pactl set-sink-mute "$s" 0; done', "sh", mode === "auto" ? "true" : "false", c.card, profile, String(address).replace(/:/g, "_")];
         applyProc.running = true;
     }
 
     function refresh(): void {
         listProc.running = true;
         settingProc.running = true;
+    }
+
+    // "... (HSP/HFP, codec CVSD)" -> { "headset-head-unit": "CVSD", ... }
+    function codecsOf(profiles: var): var {
+        const out = {};
+        for (const name of Object.keys(profiles)) {
+            const m = String(profiles[name].description ?? "").match(/codec ([\w-]+)/);
+            if (m)
+                out[name] = m[1];
+        }
+        return out;
     }
 
     function best(profiles: var, order: list<string>): string {
@@ -108,6 +125,7 @@ Singleton {
             out[address] = {
                 card: c.name,
                 profile: c.active_profile ?? "",
+                codecs: root.codecsOf(c.profiles),
                 a2dp: root.best(c.profiles, ["a2dp-sink", "a2dp-sink-sbc_xq", "a2dp-sink-sbc"]),
                 headset: root.best(c.profiles, ["headset-head-unit", "headset-head-unit-cvsd"])
             };

@@ -199,6 +199,10 @@ ColumnLayout {
                         address: deviceWrap.modelData.address
                     }
 
+                    OutputVolume {
+                        sink: BluetoothAudio.sinkFor(deviceWrap.modelData.address)
+                    }
+
                     StyledText {
                         Layout.fillWidth: true
                         Layout.leftMargin: Tokens.padding.small
@@ -228,6 +232,47 @@ ColumnLayout {
         icon: "settings"
 
         onClicked: root.popouts.detachRequested("bluetooth")
+    }
+
+    component OutputVolume: RowLayout {
+        id: vol
+
+        required property var sink
+        readonly property bool muted: !!sink?.audio?.muted
+
+        visible: !!sink?.audio
+        Layout.fillWidth: true
+        spacing: Tokens.spacing.small
+
+        Item {
+            implicitWidth: muteIcon.implicitWidth + Tokens.padding.small
+            implicitHeight: implicitWidth
+
+            StateLayer {
+                radius: Tokens.rounding.full
+                onClicked: vol.sink.audio.muted = !vol.sink.audio.muted
+            }
+
+            MaterialIcon {
+                id: muteIcon
+
+                anchors.centerIn: parent
+                animate: true
+                text: vol.muted ? "volume_off" : (vol.sink?.audio?.volume ?? 0) < 0.01 ? "volume_mute" : "volume_up"
+                color: vol.muted ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+            }
+        }
+
+        StyledSlider {
+            Layout.fillWidth: true
+            implicitHeight: Tokens.padding.medium * 3
+
+            value: vol.muted ? 0 : (vol.sink?.audio?.volume ?? 0)
+            onInteraction: value => {
+                vol.sink.audio.muted = false;
+                vol.sink.audio.volume = Math.max(0, Math.min(1, value));
+            }
+        }
     }
 
     component ModeSelector: StyledRect {
