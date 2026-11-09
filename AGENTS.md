@@ -74,7 +74,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 - `steam-activity.py` — poll de procesos `reaper` (sesiones reales) + delta de `playtime_forever` como respaldo; `snapshot` lee JSON por **stdin** (argv sigue para debug).
 - `check-system-updates.py` / `run-system-update.sh` — chequeo (stdin `DEVNULL` + timeout) y update.
 - `record.sh` / `record-start.sh` — grabación desacoplada del panel; directorio en `SYLPHRENA_RECORDINGS_DIR`.
-- `install-system.sh` — piezas de `/etc` con **un solo** `sudo` (se reejecuta a sí mismo). Cada paso es `scripts/system/NN-nombre.sh` con `step_main`. Hoy: `10-greeter.sh` (`/etc/greetd/sylphrena`, `config.toml`, drop-ins de logind). `20-bluetooth.sh` (BlueZ `Experimental = true` en `/etc/bluetooth/main.conf`, con backup `.sylphrena.bak`, para que PipeWire publique la batería de los AirPods; reinicia `bluetooth`). `greeter/install-greeter.sh` solo llama a este.
+- `install-system.sh` — piezas de `/etc` con **un solo** `sudo` (se reejecuta a sí mismo). Cada paso es `scripts/system/NN-nombre.sh` con `step_main`. Hoy: `10-greeter.sh` (`/etc/greetd/sylphrena`, `config.toml`, drop-ins de logind). `greeter/install-greeter.sh` solo llama a este.
 
 ## 5. Features del fork (resumen)
 
