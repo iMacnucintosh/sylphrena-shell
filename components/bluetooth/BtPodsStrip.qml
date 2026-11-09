@@ -15,22 +15,24 @@ StyledRect {
     id: strip
 
     required property var pods
-    // No surface of its own (the popout); the Nexus page keeps the rounded strip
-    property bool plain: false
+    // Compact: small rings, no surface and no refresh button, sized to fit on a device name row
+    // (the popout). The Nexus page uses the full rounded strip.
+    property bool compact: false
 
     visible: !!pods
-    Layout.fillWidth: true
-    implicitHeight: stripRow.implicitHeight + Tokens.padding.small * 2
+    Layout.fillWidth: !compact
+    implicitWidth: compact ? stripRow.implicitWidth : 0
+    implicitHeight: stripRow.implicitHeight + (compact ? 0 : Tokens.padding.small * 2)
     radius: Tokens.rounding.full
-    color: plain ? "transparent" : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+    color: compact ? "transparent" : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
 
     RowLayout {
         id: stripRow
 
         anchors.fill: parent
-        anchors.leftMargin: Tokens.padding.medium
-        anchors.rightMargin: Tokens.padding.small
-        spacing: 0
+        anchors.leftMargin: strip.compact ? 0 : Tokens.padding.medium
+        anchors.rightMargin: strip.compact ? 0 : Tokens.padding.small
+        spacing: strip.compact ? Tokens.spacing.small : 0
 
         // Left bud | case | right bud, like the tabs of the mode selector
         Repeater {
@@ -55,14 +57,15 @@ StyledRect {
                 required property var modelData
                 readonly property real level: strip.pods?.[modelData.key] ?? -1
 
-                Layout.fillWidth: true
+                Layout.fillWidth: !strip.compact
+                implicitWidth: cellRow.implicitWidth
                 implicitHeight: cellRow.implicitHeight
 
                 RowLayout {
                     id: cellRow
 
                     anchors.centerIn: parent
-                    spacing: Tokens.spacing.small
+                    spacing: strip.compact ? Tokens.spacing.extraSmall / 2 : Tokens.spacing.small
 
                     // What it is: bud letter or case icon; the level lives inside the ring
                     StyledText {
@@ -79,7 +82,7 @@ StyledRect {
                     }
 
                     BtBatteryRing {
-                        size: 32
+                        size: strip.compact ? 26 : 32
                         valueInside: true
                         prefix: cell.level >= 0 ? `${Math.round(cell.level * 100)}` : "—"
                         level: cell.level
@@ -89,6 +92,7 @@ StyledRect {
         }
 
         Item {
+            visible: !strip.compact
             implicitWidth: refreshIcon.implicitWidth + Tokens.padding.medium
             implicitHeight: implicitWidth
 
