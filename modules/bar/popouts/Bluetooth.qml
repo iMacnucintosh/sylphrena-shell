@@ -9,6 +9,7 @@ import Sylphrena.I18n
 import qs.components
 import qs.components.bluetooth
 import qs.components.controls
+import qs.modules.nexus
 import qs.services
 import qs.utils
 
@@ -41,7 +42,10 @@ ColumnLayout {
 
             StateLayer {
                 radius: Tokens.rounding.full
-                onClicked: root.popouts.detachRequested("bluetooth")
+                onClicked: {
+                    root.popouts.hasCurrent = false;
+                    WindowFactory.openPage("bluetooth");
+                }
             }
 
             MaterialIcon {
