@@ -15,12 +15,14 @@ StyledRect {
     id: strip
 
     required property var pods
+    // No surface of its own (the popout); the Nexus page keeps the rounded strip
+    property bool plain: false
 
     visible: !!pods
     Layout.fillWidth: true
     implicitHeight: stripRow.implicitHeight + Tokens.padding.small * 2
     radius: Tokens.rounding.full
-    color: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+    color: plain ? "transparent" : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
 
     RowLayout {
         id: stripRow
