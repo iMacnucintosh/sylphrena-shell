@@ -369,8 +369,11 @@ El panel del lock usa tokens Material de la sesión (`Tokens` / `Colours`) y PAM
 
 ## Auriculares Bluetooth: modo de audio
 
-En el popout de Bluetooth (barra), cada dispositivo conectado con tarjeta de audio muestra bajo su
-nombre un selector **Música / Llamadas / Auto** y una fila con silencio + volumen de su salida (solo si ese dispositivo no es la salida activa; si lo es, es el volumen del sistema):
+El popout de Bluetooth (barra) es una lista de una línea por dispositivo: **el icono es el botón de
+conectar/desconectar** (círculo de acento = salida de audio activa, tono suave = conectado, sin círculo =
+desconectado), nombre, batería (un anillo con el porcentaje dentro; los AirPods muestran L · estuche · R),
+un selector pequeño **Música / Llamadas / Auto** (solo iconos) y el botón de olvidar. El engranaje junto al título
+abre una ventana normal de Nexus en Dispositivos conectados. Los modos:
 
 - **Música**: A2DP fijo (alta calidad, sin micro).
 - **Llamadas**: perfil de manos libres fijo (micro siempre disponible). Sirve para Teams: solo lista
@@ -384,9 +387,9 @@ aplica con `pactl set-card-profile`). «Auto» es el ajuste **global** de WirePl
 **Página del dispositivo (Nexus → Dispositivos conectados → engranaje del dispositivo).** Con unos auriculares
 conectados aparece una sección **Audio**: selector de modo (Música / Llamadas / Auto) con su descripción, el canal
 actual (alta calidad o llamadas, con códec), la calidad de la música (AAC / SBC-XQ / SBC, si el dispositivo ofrece
-varios) y el volumen de la salida con su silencio. En **Batería**, los AirPods muestran los tres anillos (L, R y
-estuche). Los componentes son los mismos del popout y viven en `components/bluetooth/`. El engranaje junto al título
-del popout de Bluetooth abre esta sección de Nexus.
+varios) y el volumen de la salida con su silencio (el popout no los tiene: el volumen y el silencio solo se
+tocan aquí). En **Batería**, los AirPods muestran los tres anillos (L, estuche y R) en una franja. Los componentes
+(selector de modo, anillos, franja de baterías, volumen) son compartidos y viven en `components/bluetooth/`.
 
 **Batería de AirPods.** BlueZ no la publica, así que `scripts/airpods-battery.py` la lee del propio auricular por el
 canal de accesorios de Apple (L2CAP, solo lectura, ~2 s) y `BluetoothAudio` la sondea cada 2 min mientras haya unos
