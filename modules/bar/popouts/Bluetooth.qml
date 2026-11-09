@@ -467,6 +467,12 @@ ColumnLayout {
                         from: 0
                         to: 360
                         duration: 900
+
+                        // Rotated text is drawn unsmoothed: never leave the icon stopped at an angle
+                        onRunningChanged: {
+                            if (!running)
+                                refreshIcon.rotation = 0;
+                        }
                     }
 
                     Behavior on opacity {
