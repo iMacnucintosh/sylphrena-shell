@@ -15,6 +15,12 @@ Singleton {
         nexusComp.createObject(parent ?? dummy, props);
     }
 
+    // Normal Nexus window opened straight on a page (PageRegistry id), e.g. "bluetooth"
+    function openPage(pageId: string): void {
+        Updates.pendingNexusPageId = pageId;
+        root.create();
+    }
+
     QtObject {
         id: dummy
     }
