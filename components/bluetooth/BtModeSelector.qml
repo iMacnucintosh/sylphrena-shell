@@ -15,6 +15,8 @@ StyledRect {
     required property string address
     // Icon-only tabs when false (the popout); the Nexus page shows the labels
     property bool showLabels: true
+    // Icon-only means compact: a small fixed-width control (fits in the device row)
+    readonly property bool compact: !showLabels
     readonly property string current: BluetoothAudio.modeFor(address)
     readonly property var modes: [
         {
@@ -36,7 +38,8 @@ StyledRect {
     readonly property int currentIndex: Math.max(0, modes.findIndex(m => m.id === current))
     readonly property real pad: Tokens.padding.extraSmall / 2
 
-    Layout.fillWidth: true
+    Layout.fillWidth: !compact
+    implicitWidth: compact ? segments.implicitWidth + pad * 2 : 0
     implicitHeight: segments.implicitHeight + pad * 2
     radius: Tokens.rounding.full
     color: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
@@ -78,6 +81,7 @@ StyledRect {
                 readonly property bool active: modelData.id === sel.current
 
                 Layout.fillWidth: true
+                implicitWidth: segRow.implicitWidth + Tokens.padding.medium * 2
                 implicitHeight: segRow.implicitHeight + Tokens.padding.extraSmall * 2
 
                 StateLayer {
