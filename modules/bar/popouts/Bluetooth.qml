@@ -189,11 +189,13 @@ ColumnLayout {
                 Layout.fillWidth: true
                 Layout.leftMargin: root.deviceTextInset
                 Layout.rightMargin: Tokens.padding.extraSmall
+                Layout.topMargin: Tokens.spacing.extraSmall
+                Layout.bottomMargin: Tokens.spacing.medium
                 active: deviceWrap.modelData.state === BluetoothDeviceState.Connected && !!BluetoothAudio.cardFor(deviceWrap.modelData.address)
                 visible: active
 
                 sourceComponent: ColumnLayout {
-                    spacing: Tokens.spacing.small
+                    spacing: Tokens.spacing.medium
 
                     ModeSelector {
                         address: deviceWrap.modelData.address
