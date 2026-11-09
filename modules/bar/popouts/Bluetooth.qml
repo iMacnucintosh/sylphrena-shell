@@ -108,6 +108,8 @@ ColumnLayout {
                 // Output node of this headset in its current profile (null when not connected)
                 readonly property var sink: BluetoothAudio.sinkFor(modelData.address)
                 readonly property bool muted: !!sink?.audio?.muted
+                // This headset is the system's active output (where the sound is going right now)
+                readonly property bool playing: !!sink && sink === Audio.sink
                 readonly property real battery: modelData.batteryAvailable ? modelData.battery : BluetoothAudio.batteryFor(modelData.address)
                 // AirPods: { left, right, case } levels, null for every other device
                 readonly property var pods: BluetoothAudio.podsFor(modelData.address)
@@ -136,6 +138,16 @@ ColumnLayout {
 
                 MaterialIcon {
                     text: Icons.getBluetoothIcon(device.modelData.icon)
+                    color: device.playing ? Colours.palette.m3primary : Colours.palette.m3onSurface
+                    fill: device.playing ? 1 : 0
+
+                    Behavior on color {
+                        CAnim {}
+                    }
+
+                    Behavior on fill {
+                        Anim {}
+                    }
                 }
 
                 StyledText {
@@ -143,7 +155,19 @@ ColumnLayout {
                     Layout.rightMargin: Tokens.spacing.extraSmall
                     Layout.fillWidth: true
                     text: device.modelData.name
+                    color: device.playing ? Colours.palette.m3primary : Colours.palette.m3onSurface
                     elide: Text.ElideRight
+
+                    Behavior on color {
+                        CAnim {}
+                    }
+                }
+
+                // Sound is going out through this device
+                MaterialIcon {
+                    visible: device.playing
+                    text: "graphic_eq"
+                    color: Colours.palette.m3primary
                 }
 
                 StyledText {
