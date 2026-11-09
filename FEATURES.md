@@ -381,6 +381,12 @@ Implementación: `services/BluetoothAudio.qml` (lee `pactl -f json list cards`, 
 aplica con `pactl set-card-profile`). «Auto» es el ajuste **global** de WirePlumber
 `bluetooth.autoswitch-to-headset-profile` (se guarda con `wpctl settings --save`), no es por dispositivo.
 
+**mSBC desactivado (MediaTek).** El adaptador Bluetooth de este equipo (`0e8d:0616`) rompía el enlace SCO de los
+AirPods con el códec de manos libres mSBC (`SCO packet for unknown connection handle`, nodos en `error`, micro
+mudo). `~/.config/wireplumber/wireplumber.conf.d/52-bluetooth-no-msbc.conf` pone `bluez5.enable-msbc = false` y
+fuerza CVSD (voz más «telefónica», sin tocar la música). Fichero fuera del repo: para revertir, borrarlo y
+`systemctl --user restart wireplumber`.
+
 ## Plugin C++ (build user-local)
 
 La shell **carga el plugin compilado en `~/.local`**, no el del paquete AUR (que vive en
