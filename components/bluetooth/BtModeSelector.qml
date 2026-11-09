@@ -13,6 +13,8 @@ StyledRect {
     id: sel
 
     required property string address
+    // Icon-only tabs when false (the popout); the Nexus page shows the labels
+    property bool showLabels: true
     readonly property string current: BluetoothAudio.modeFor(address)
     readonly property var modes: [
         {
@@ -102,6 +104,7 @@ StyledRect {
 
                     StyledText {
                         anchors.verticalCenter: parent.verticalCenter
+                        visible: sel.showLabels
                         text: seg.modelData.label
                         color: seg.active ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant
                         font: Tokens.font.body.small

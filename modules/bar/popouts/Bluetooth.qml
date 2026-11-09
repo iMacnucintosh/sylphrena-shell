@@ -18,7 +18,7 @@ ColumnLayout {
 
     required property PopoutState popouts
 
-    width: Math.max(480, Tokens.sizes.bar.networkWidth)
+    width: Math.max(420, Tokens.sizes.bar.networkWidth)
     spacing: Tokens.spacing.small
     // Hairline inset past the leading device icon
     readonly property real deviceTextInset: Tokens.font.icon.small.pointSize + Tokens.spacing.small + Tokens.spacing.extraSmall
@@ -286,14 +286,16 @@ ColumnLayout {
                 visible: active
 
                 sourceComponent: ColumnLayout {
-                    spacing: Tokens.spacing.medium
+                    spacing: Tokens.spacing.small
 
                     BtPodsStrip {
                         pods: BluetoothAudio.podsFor(deviceWrap.modelData.address)
+                        plain: true
                     }
 
                     BtModeSelector {
                         address: deviceWrap.modelData.address
+                        showLabels: false
                     }
 
                     BtOutputVolume {
