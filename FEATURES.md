@@ -370,7 +370,7 @@ El panel del lock usa tokens Material de la sesión (`Tokens` / `Colours`) y PAM
 ## Auriculares Bluetooth: modo de audio
 
 En el popout de Bluetooth (barra), cada dispositivo conectado con tarjeta de audio muestra bajo su
-nombre un selector **Música / Llamadas / Auto** y una línea con el estado real (códec y si hay micro):
+nombre un selector **Música / Llamadas / Auto** y una fila con silencio + volumen de su salida:
 
 - **Música**: A2DP fijo (alta calidad, sin micro).
 - **Llamadas**: perfil de manos libres fijo (micro siempre disponible). Sirve para Teams: solo lista

@@ -193,7 +193,7 @@ ColumnLayout {
                 visible: active
 
                 sourceComponent: ColumnLayout {
-                    spacing: Tokens.spacing.extraSmall
+                    spacing: Tokens.spacing.small
 
                     ModeSelector {
                         address: deviceWrap.modelData.address
@@ -201,16 +201,6 @@ ColumnLayout {
 
                     OutputVolume {
                         sink: BluetoothAudio.sinkFor(deviceWrap.modelData.address)
-                    }
-
-                    StyledText {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: Tokens.padding.small
-                        Layout.topMargin: -Tokens.spacing.extraSmall / 2
-                        text: BluetoothAudio.describe(deviceWrap.modelData.address)
-                        color: Colours.palette.m3onSurfaceVariant
-                        font: Tokens.font.body.small
-                        elide: Text.ElideRight
                     }
                 }
             }
