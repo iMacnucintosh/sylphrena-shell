@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Shapes
 import Quickshell
 import Quickshell.Bluetooth
 import Sylphrena.Config
@@ -273,6 +274,54 @@ ColumnLayout {
         onClicked: root.popouts.detachRequested("bluetooth")
     }
 
+    // Plain progress ring: full background track and a rounded arc from 12 o'clock. (The stock
+    // CircularProgress leaves a gap between arc and track, which looks off at the start.)
+    component PodRing: Item {
+        id: ring
+
+        property real value
+        property int strokeWidth: 4
+        property color fgColour: Colours.palette.m3primary
+        property color bgColour: Qt.alpha(Colours.palette.m3onSurface, 0.14)
+        readonly property real radius: (Math.min(width, height) - strokeWidth) / 2
+
+        Shape {
+            anchors.fill: parent
+            preferredRendererType: Shape.CurveRenderer
+
+            ShapePath {
+                fillColor: "transparent"
+                strokeColor: ring.bgColour
+                strokeWidth: ring.strokeWidth
+
+                PathAngleArc {
+                    centerX: ring.width / 2
+                    centerY: ring.height / 2
+                    radiusX: ring.radius
+                    radiusY: ring.radius
+                    startAngle: -90
+                    sweepAngle: 359.99
+                }
+            }
+
+            ShapePath {
+                fillColor: "transparent"
+                strokeColor: ring.value > 0 ? ring.fgColour : "transparent"
+                strokeWidth: ring.strokeWidth
+                capStyle: ShapePath.RoundCap
+
+                PathAngleArc {
+                    centerX: ring.width / 2
+                    centerY: ring.height / 2
+                    radiusX: ring.radius
+                    radiusY: ring.radius
+                    startAngle: -90
+                    sweepAngle: Math.max(0.1, Math.min(1, ring.value) * 359.99)
+                }
+            }
+        }
+    }
+
     // One AirPods component: progress ring (letter for a bud, icon for the case) + percentage.
     // "—" and an empty ring when it is not reported.
     component PodLevel: RowLayout {
@@ -289,14 +338,11 @@ ColumnLayout {
             implicitWidth: 32
             implicitHeight: 32
 
-            CircularProgress {
+            PodRing {
                 anchors.fill: parent
                 value: pod.level >= 0 ? pod.level : 0
-                strokeWidth: 4
-                spacing: 0
-                hasEndIndicator: false
                 fgColour: pod.low ? Colours.palette.m3error : Colours.palette.m3primary
-                bgColour: Qt.alpha(Colours.palette.m3onSurface, 0.12)
+                bgColour: Qt.alpha(Colours.palette.m3onSurface, 0.14)
             }
 
             StyledText {
