@@ -253,7 +253,8 @@ Singleton {
     function getBatteryIcon(percentage: real, charging = false): string {
         if (percentage === 1)
             return charging ? "battery_charging_full" : "battery_full";
-        let level = Math.floor(percentage * 7);
+        // Round (not floor) so 28% reads as 2 bars, not 1; battery_N_bar only exists for N = 0..6
+        let level = Math.min(6, Math.round(percentage * 7));
         if (charging && (level === 4 || level === 1))
             level--;
         return charging ? `battery_charging_${(level + 3) * 10}` : `battery_${level}_bar`;
