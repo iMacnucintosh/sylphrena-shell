@@ -206,6 +206,7 @@ ColumnLayout {
                     StyledText {
                         Layout.fillWidth: true
                         Layout.leftMargin: Tokens.padding.small
+                        Layout.topMargin: -Tokens.spacing.extraSmall / 2
                         text: BluetoothAudio.describe(deviceWrap.modelData.address)
                         color: Colours.palette.m3onSurfaceVariant
                         font: Tokens.font.body.small
@@ -265,12 +266,28 @@ ColumnLayout {
 
         StyledSlider {
             Layout.fillWidth: true
-            implicitHeight: Tokens.padding.medium * 3
+            implicitHeight: Tokens.padding.medium * 2
 
             value: vol.muted ? 0 : (vol.sink?.audio?.volume ?? 0)
             onInteraction: value => {
                 vol.sink.audio.muted = false;
                 vol.sink.audio.volume = Math.max(0, Math.min(1, value));
+            }
+        }
+
+        StyledText {
+            // Fixed width so the slider does not resize while dragging (100% vs 9%)
+            Layout.preferredWidth: pctMetrics.width
+            horizontalAlignment: Text.AlignRight
+            text: vol.muted ? "—" : `${Math.round((vol.sink?.audio?.volume ?? 0) * 100)}%`
+            color: vol.muted ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+            font: Tokens.font.body.small
+
+            TextMetrics {
+                id: pctMetrics
+
+                font: Tokens.font.body.small
+                text: "100%"
             }
         }
     }
