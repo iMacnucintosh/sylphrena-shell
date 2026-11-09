@@ -38,6 +38,12 @@ Singleton {
         return buds.length ? Math.min(...buds) / 100 : -1;
     }
 
+    // Charging case level (0..1), or -1 when not reported
+    function caseFor(address: string): real {
+        const v = root.batteries[String(address).toUpperCase()]?.case;
+        return v === null || v === undefined ? -1 : v / 100;
+    }
+
     function pollBattery(force: bool): void {
         if (batteryProc.running || (!force && Date.now() - root.lastBatteryPoll < 30000))
             return;

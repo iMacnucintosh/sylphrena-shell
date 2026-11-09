@@ -86,6 +86,7 @@ ColumnLayout {
                 readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
                 // BlueZ battery, or the accessory-channel one for AirPods (-1 = unknown)
                 readonly property real battery: modelData.batteryAvailable ? modelData.battery : BluetoothAudio.batteryFor(modelData.address)
+                readonly property real caseBattery: BluetoothAudio.caseFor(modelData.address)
 
                 Layout.fillWidth: true
                 Layout.rightMargin: Tokens.padding.extraSmall
@@ -119,6 +120,22 @@ ColumnLayout {
                     Layout.fillWidth: true
                     text: device.modelData.name
                     elide: Text.ElideRight
+                }
+
+                // Charging case (AirPods only)
+                StyledText {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && device.caseBattery >= 0
+                    text: `${Math.round(device.caseBattery * 100)}%`
+                    color: device.caseBattery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+                    font: Tokens.font.body.small
+                }
+
+                MaterialIcon {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && device.caseBattery >= 0
+                    Layout.leftMargin: -Tokens.spacing.extraSmall
+                    Layout.rightMargin: Tokens.spacing.small
+                    text: "inventory_2"
+                    color: device.caseBattery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
                 }
 
                 StyledText {
