@@ -208,6 +208,14 @@ Singleton {
         return weatherIcons[code] ?? "air";
     }
 
+    // Notification appIcon may be a theme name, an absolute path or a file:// URL
+    // (Electron apps such as Claude send the latter); iconPath() only handles the first two.
+    function notifIconSource(appIcon: string): string {
+        if (appIcon.startsWith("file://"))
+            return appIcon;
+        return Quickshell.iconPath(appIcon);
+    }
+
     function getNotifIcon(summary: string, urgency: int): string {
         // Material You: "notifications" for bare/notify-send fallthrough (was "chat").
         const fallback = urgency === NotificationUrgency.Critical ? "release_alert" : "notifications";
