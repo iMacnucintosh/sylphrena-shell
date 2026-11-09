@@ -159,6 +159,7 @@ ColumnLayout {
                             anchors.centerIn: parent
                             width: Math.round(deviceIcon.implicitHeight * 0.8)
                             height: width
+                            strokeWidth: 2
                             running: device.loading
                         }
 
