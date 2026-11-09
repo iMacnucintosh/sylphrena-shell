@@ -391,6 +391,7 @@ def _patch_theme() -> None:
             pass
         _sync_qt6ct(colours, mode)
         _sync_seeker(colours, mode)
+        _sync_things(colours, mode)
         _sync_greeter(colours)
         # OpenCode TUI: theme file + cli.json mode follow the activity scheme.
         _sync_opencode_theme(colours, mode)
@@ -401,12 +402,11 @@ def _patch_theme() -> None:
     theme.apply_colours = apply_colours_quiet
 
 
-def _sync_seeker(colours: dict[str, str], mode: str) -> None:
-    """Write Material tokens for Seeker (Qt/QML file manager).
+def _write_qt_app_theme(app: str, colours: dict[str, str], mode: str) -> None:
+    """Write Material tokens for a Qt/QML app that hot-reloads ~/.config/<app>/theme.json.
 
-    Seeker watches ~/.config/seeker/theme.json and hot-reloads the QML palette.
-    Colours are stored without '#'; Seeker accepts both forms.
-    Transparency mirrors shell appearance.transparency so Seeker matches drawers.
+    Colours are stored without '#'; the apps accept both forms.
+    Transparency mirrors shell appearance.transparency so the apps match drawers.
     """
     import json as _json
 
@@ -430,8 +430,18 @@ def _sync_seeker(colours: dict[str, str], mode: str) -> None:
         "colours": {k: (v[1:] if isinstance(v, str) and v.startswith("#") else v) for k, v in colours.items()},
         "transparency": {"enabled": tr_enabled, "base": tr_base},
     }
-    out = _XDG_CONFIG / "seeker" / "theme.json"
+    out = _XDG_CONFIG / app / "theme.json"
     _atomic_write(out, _json.dumps(payload, indent=2) + "\n")
+
+
+def _sync_seeker(colours: dict[str, str], mode: str) -> None:
+    """Seeker (Qt/QML file manager) watches ~/.config/seeker/theme.json."""
+    _write_qt_app_theme("seeker", colours, mode)
+
+
+def _sync_things(colours: dict[str, str], mode: str) -> None:
+    """Things (Qt/QML package manager) watches ~/.config/things/theme.json."""
+    _write_qt_app_theme("things", colours, mode)
 
 
 def _sync_opencode_theme(colours: dict[str, str], mode: str) -> None:
