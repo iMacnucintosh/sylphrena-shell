@@ -318,7 +318,6 @@ ColumnLayout {
                             anchors.verticalCenter: parent.verticalCenter
                             text: seg.modelData.icon
                             color: seg.active ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant
-                            font.pointSize: Tokens.font.icon.small.pointSize
 
                             Behavior on color {
                                 CAnim {}
