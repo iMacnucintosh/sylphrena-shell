@@ -79,10 +79,11 @@ StyledRect {
                         visible: !!cell.modelData.icon
                         text: cell.modelData.icon ?? ""
                         color: Colours.palette.m3onSurfaceVariant
+                        scale: 0.8
                     }
 
                     BtBatteryRing {
-                        size: strip.compact ? 26 : 32
+                        size: strip.compact ? 28 : 32
                         valueInside: true
                         prefix: cell.level >= 0 ? `${Math.round(cell.level * 100)}` : ""
                         level: cell.level

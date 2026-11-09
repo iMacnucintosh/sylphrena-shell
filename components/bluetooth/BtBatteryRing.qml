@@ -45,7 +45,7 @@ RowLayout {
             visible: pod.prefix.length > 0
             text: pod.prefix
             color: Colours.palette.m3onSurface
-            font: Tokens.font.body.builders.small.weight(Font.Medium).scale((pod.prefix.length > 2 ? 0.7 : 0.85) * Math.min(1, pod.size / 32 + 0.1)).build()
+            font: Tokens.font.body.builders.small.weight(Font.Medium).scale((pod.prefix.length > 2 ? 0.62 : 0.78) * Math.min(1, pod.size / 32 + 0.1)).build()
 
             FontMetrics {
                 id: metrics
