@@ -156,7 +156,9 @@ ColumnLayout {
                         }
 
                         CircularIndicator {
-                            anchors.fill: parent
+                            anchors.centerIn: parent
+                            width: Math.round(deviceIcon.implicitHeight * 0.8)
+                            height: width
                             running: device.loading
                         }
 
