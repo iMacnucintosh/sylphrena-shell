@@ -12,8 +12,8 @@ import qs.services
 RowLayout {
     id: pod
 
-    // Ring diameter; the stroke gets thinner for small rings
-    property int size: 32
+    // Ring diameter (same everywhere: popout rows, AirPods strip, Nexus)
+    property int size: 26
     property string prefix
     property string icon
     required property real level
@@ -63,7 +63,7 @@ RowLayout {
             anchors.centerIn: parent
             visible: pod.icon.length > 0
             text: pod.icon
-            scale: 0.7
+            scale: 0.6
             color: Colours.palette.m3onSurface
         }
     }
