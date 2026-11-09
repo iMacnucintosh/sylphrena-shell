@@ -381,6 +381,13 @@ Implementación: `services/BluetoothAudio.qml` (lee `pactl -f json list cards`, 
 aplica con `pactl set-card-profile`). «Auto» es el ajuste **global** de WirePlumber
 `bluetooth.autoswitch-to-headset-profile` (se guarda con `wpctl settings --save`), no es por dispositivo.
 
+**Página del dispositivo (Nexus → Dispositivos conectados → engranaje del dispositivo).** Con unos auriculares
+conectados aparece una sección **Audio**: selector de modo (Música / Llamadas / Auto) con su descripción, el canal
+actual (alta calidad o llamadas, con códec), la calidad de la música (AAC / SBC-XQ / SBC, si el dispositivo ofrece
+varios) y el volumen de la salida con su silencio. En **Batería**, los AirPods muestran los tres anillos (L, R y
+estuche). Los componentes son los mismos del popout y viven en `components/bluetooth/`. El engranaje junto al título
+del popout de Bluetooth abre esta sección de Nexus.
+
 **Batería de AirPods.** BlueZ no la publica, así que `scripts/airpods-battery.py` la lee del propio auricular por el
 canal de accesorios de Apple (L2CAP, solo lectura, ~2 s) y `BluetoothAudio` la sondea cada 2 min mientras haya unos
 AirPods conectados. El popout muestra el nivel del auricular más bajo. Si el derecho no reporta (fuera de uso o en el

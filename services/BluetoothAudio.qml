@@ -82,6 +82,41 @@ Singleton {
         return Audio.sinks.find(n => n.name.startsWith(key)) ?? null;
     }
 
+    function codecLabel(profile: string): string {
+        switch (profile) {
+        case "a2dp-sink":
+            return "AAC";
+        case "a2dp-sink-sbc_xq":
+            return "SBC-XQ";
+        case "a2dp-sink-sbc":
+            return "SBC";
+        case "headset-head-unit":
+            return "HFP";
+        case "headset-head-unit-cvsd":
+            return "CVSD";
+        default:
+            return profile;
+        }
+    }
+
+    // A2DP (music) profiles the headset offers, best first
+    function a2dpOptions(address: string): var {
+        return root.cardFor(address)?.a2dpAll ?? [];
+    }
+
+    function isMusic(address: string): bool {
+        return !!root.cardFor(address)?.profile.startsWith("a2dp");
+    }
+
+    // Pick a specific profile (e.g. the music codec) without touching the auto-switch setting
+    function setProfile(address: string, profile: string): void {
+        const c = root.cardFor(address);
+        if (!c || applyProc.running)
+            return;
+        applyProc.command = ["pactl", "set-card-profile", c.card, profile];
+        applyProc.running = true;
+    }
+
     function inCall(address: string): bool {
         return !!root.cardFor(address)?.profile.startsWith("headset-head-unit");
     }
@@ -131,6 +166,7 @@ Singleton {
                 card: c.name,
                 profile: c.active_profile ?? "",
                 a2dp: root.best(c.profiles, ["a2dp-sink", "a2dp-sink-sbc_xq", "a2dp-sink-sbc"]),
+                a2dpAll: ["a2dp-sink", "a2dp-sink-sbc_xq", "a2dp-sink-sbc"].filter(n => c.profiles[n] && c.profiles[n].available !== "no"),
                 headset: root.best(c.profiles, ["headset-head-unit", "headset-head-unit-cvsd"])
             };
         }

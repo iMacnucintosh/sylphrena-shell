@@ -300,6 +300,46 @@ msgctxt "bluetooth audio mode"
 msgid "Auto"
 msgstr "Auto"
 
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Audio mode"
+msgstr "Modo de audio"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Microphone always available, call quality"
+msgstr "Micro siempre disponible, calidad de llamada"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Best sound quality, no microphone"
+msgstr "La mejor calidad de sonido, sin micro"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "High quality until an app uses the microphone"
+msgstr "Alta calidad hasta que una app use el micro"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Channel"
+msgstr "Canal"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Calls · %1"
+msgstr "Llamadas · %1"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "High quality · %1"
+msgstr "Alta calidad · %1"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Music quality"
+msgstr "Calidad de la música"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Applies when the headset is in music mode"
+msgstr "Se aplica cuando los auriculares están en modo música"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Codec used to play music"
+msgstr "Códec con el que se reproduce la música"
+
 #: modules/bar/popouts/Bluetooth.qml
 msgid "Calls"
 msgstr "Llamadas"
