@@ -295,6 +295,55 @@ msgstr "Calculando el tiempo hasta la carga completa..."
 msgid "Performance degraded"
 msgstr "Rendimiento reducido"
 
+#: modules/bar/popouts/Bluetooth.qml
+msgctxt "bluetooth audio mode"
+msgid "Auto"
+msgstr "Auto"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Audio mode"
+msgstr "Modo de audio"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Microphone always available, call quality"
+msgstr "Micro siempre disponible, calidad de llamada"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Best sound quality, no microphone"
+msgstr "La mejor calidad de sonido, sin micro"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "High quality until an app uses the microphone"
+msgstr "Alta calidad hasta que una app use el micro"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Channel"
+msgstr "Canal"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Calls · %1"
+msgstr "Llamadas · %1"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "High quality · %1"
+msgstr "Alta calidad · %1"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Music quality"
+msgstr "Calidad de la música"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Applies when the headset is in music mode"
+msgstr "Se aplica cuando los auriculares están en modo música"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Codec used to play music"
+msgstr "Códec con el que se reproduce la música"
+
+#: modules/bar/popouts/Bluetooth.qml
+msgid "Calls"
+msgstr "Llamadas"
+
 #: modules/bar/popouts/Bluetooth.qml modules/nexus/pages/BluetoothPage.qml
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
@@ -315,15 +364,7 @@ msgctxt "bluetooth adapter state"
 msgid "Discovering"
 msgstr "Buscando"
 
-#. TRANSLATORS: %n = total paired devices, %1 = how many of them are connected
-#: modules/bar/popouts/Bluetooth.qml
-#, qt-format, qt-plural-format
-msgid "%n device available (%1 connected)"
-msgid_plural "%n devices available (%1 connected)"
-msgstr[0] "%n dispositivo disponible (conectados: %1)"
-msgstr[1] "%n dispositivos disponibles (conectados: %1)"
-
-#: modules/bar/popouts/Bluetooth.qml modules/bar/popouts/Network.qml
+#: modules/bar/popouts/Network.qml
 #, qt-plural-format
 msgid "%n device available"
 msgid_plural "%n devices available"

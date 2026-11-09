@@ -83,6 +83,7 @@ require("sylphrena-activity-rules")  -- reglas de activities / pins (Nexus → A
 - Se cierra al sacar el puntero (como el dashboard), con Escape, al elegir una app, o al perder el foco.
   Si lo abriste con el atajo, se mantiene hasta Escape / elegir app (igual que el resto de paneles por tecla).
 - Se puede desactivar el hover en **Nexus → Panels → Launcher → Show on hover**.
+- La búsqueda normal compara el **nombre**; después de esos resultados se añaden las apps cuyo `Keywords` del `.desktop` tenga una palabra que empiece por lo escrito (mín. 3 letras). Así «seeker» encuentra *Archivos* y «things» encuentra *Paquetes*.
 - **Clic derecho** sobre una app: menú contextual (un solo menú abierto a la vez) con:
   - Editar nombre / descripción / icono (diálogo centrado; el launcher no se cierra al editar)
   - Override guardado en `~/.local/share/applications`
@@ -365,6 +366,41 @@ La columna derecha del lock (tras CPU/RAM) se parte **35/65**:
 El panel del lock usa tokens Material de la sesión (`Tokens` / `Colours`) y PAM (`lock.pam`), no el `Theme`/`Auth` del greeter.
 
 ---
+
+## Auriculares Bluetooth: modo de audio
+
+El popout de Bluetooth (barra) es una lista de una línea por dispositivo: **el icono es el botón de
+conectar/desconectar** (círculo de acento = salida de audio activa, tono suave = conectado, sin círculo =
+desconectado), nombre, batería (un anillo con el porcentaje dentro; los AirPods muestran L · estuche · R),
+un selector pequeño **Música / Llamadas / Auto** (solo iconos) y el botón de olvidar. El engranaje junto al título
+abre una ventana normal de Nexus en Dispositivos conectados. Los modos:
+
+- **Música**: A2DP fijo (alta calidad, sin micro).
+- **Llamadas**: perfil de manos libres fijo (micro siempre disponible). Sirve para Teams: solo lista
+  el micro si existe al **entrar** en la reunión, así que conviene tener este modo antes de unirte.
+- **Auto**: WirePlumber cambia a manos libres cuando una app graba y vuelve después (comportamiento por defecto).
+
+Implementación: `services/BluetoothAudio.qml` (lee `pactl -f json list cards`, escucha `pactl subscribe`,
+aplica con `pactl set-card-profile`). «Auto» es el ajuste **global** de WirePlumber
+`bluetooth.autoswitch-to-headset-profile` (se guarda con `wpctl settings --save`), no es por dispositivo.
+
+**Página del dispositivo (Nexus → Dispositivos conectados → engranaje del dispositivo).** Con unos auriculares
+conectados aparece una sección **Audio**: selector de modo (Música / Llamadas / Auto) con su descripción, el canal
+actual (alta calidad o llamadas, con códec), la calidad de la música (AAC / SBC-XQ / SBC, si el dispositivo ofrece
+varios) y el volumen de la salida con su silencio (el popout no los tiene: el volumen y el silencio solo se
+tocan aquí). En **Batería**, los AirPods muestran los tres anillos (L, estuche y R) en una franja. Los componentes
+(selector de modo, anillos, franja de baterías, volumen) son compartidos y viven en `components/bluetooth/`.
+
+**Batería de AirPods.** BlueZ no la publica, así que `scripts/airpods-battery.py` la lee del propio auricular por el
+canal de accesorios de Apple (L2CAP, solo lectura, ~2 s) y `BluetoothAudio` la sondea cada 2 min mientras haya unos
+AirPods conectados. El popout muestra el nivel del auricular más bajo. Si el derecho no reporta (fuera de uso o en el
+estuche), se usa el que sí lo hace. Para otros dispositivos se sigue usando la batería de BlueZ.
+
+**mSBC desactivado (MediaTek).** El adaptador Bluetooth de este equipo (`0e8d:0616`) rompía el enlace SCO de los
+AirPods con el códec de manos libres mSBC (`SCO packet for unknown connection handle`, nodos en `error`, micro
+mudo). `~/.config/wireplumber/wireplumber.conf.d/52-bluetooth-no-msbc.conf` pone `bluez5.enable-msbc = false` y
+fuerza CVSD (voz más «telefónica», sin tocar la música). Fichero fuera del repo: para revertir, borrarlo y
+`systemctl --user restart wireplumber`.
 
 ## Plugin C++ (build user-local)
 

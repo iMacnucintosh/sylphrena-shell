@@ -7,7 +7,9 @@ import Quickshell.Bluetooth
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
+import qs.components.bluetooth
 import qs.components.controls
+import qs.modules.nexus
 import qs.services
 import qs.utils
 
@@ -16,16 +18,44 @@ ColumnLayout {
 
     required property PopoutState popouts
 
-    width: Math.max(360, Tokens.sizes.bar.networkWidth)
+    width: Math.max(520, Tokens.sizes.bar.networkWidth)
     spacing: Tokens.spacing.small
     // Hairline inset past the leading device icon
     readonly property real deviceTextInset: Tokens.font.icon.small.pointSize + Tokens.spacing.small + Tokens.spacing.extraSmall
 
-    StyledText {
+    RowLayout {
         Layout.topMargin: Tokens.padding.medium
+        Layout.fillWidth: true
         Layout.rightMargin: Tokens.padding.extraSmall
-        text: Tr.tr("Bluetooth")
-        font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
+        spacing: Tokens.spacing.small
+
+        StyledText {
+            Layout.fillWidth: true
+            text: Tr.tr("Bluetooth")
+            font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
+        }
+
+        // Opens Nexus on the connected devices page
+        Item {
+            implicitWidth: gearIcon.implicitWidth + Tokens.padding.small
+            implicitHeight: implicitWidth
+
+            StateLayer {
+                radius: Tokens.rounding.full
+                onClicked: {
+                    root.popouts.hasCurrent = false;
+                    WindowFactory.openPage("bluetooth");
+                }
+            }
+
+            MaterialIcon {
+                id: gearIcon
+
+                anchors.centerIn: parent
+                text: "settings"
+                color: Colours.palette.m3onSurfaceVariant
+            }
+        }
     }
 
     Toggle {
@@ -48,19 +78,9 @@ ColumnLayout {
         }
     }
 
-    StyledText {
+    // Separates the adapter toggles from the device list
+    Hairline {
         Layout.topMargin: Tokens.spacing.small
-        Layout.rightMargin: Tokens.padding.extraSmall
-        text: {
-            const devices = Bluetooth.devices.values;
-            const connected = devices.filter(d => d.connected).length;
-            if (connected > 0)
-                // TRANSLATORS: %n = total paired devices, %1 = how many of them are connected
-                return Tr.trN("%n device available (%1 connected)", "%n devices available (%1 connected)", devices.length).arg(connected);
-            return Tr.trN("%n device available", "%n devices available", devices.length);
-        }
-        color: Colours.palette.m3onSurfaceVariant
-        font: Tokens.font.body.small
     }
 
     Repeater {
@@ -84,6 +104,14 @@ ColumnLayout {
 
                 readonly property BluetoothDevice modelData: deviceWrap.modelData
                 readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
+                // BlueZ battery, or the accessory-channel one for AirPods (-1 = unknown)
+                // Output node of this headset in its current profile (null when not connected)
+                readonly property var sink: BluetoothAudio.sinkFor(modelData.address)
+                // This headset is the system's active output (where the sound is going right now)
+                readonly property bool playing: !!sink && sink === Audio.sink
+                readonly property real battery: modelData.batteryAvailable ? modelData.battery : BluetoothAudio.batteryFor(modelData.address)
+                // AirPods: { left, right, case } levels, null for every other device
+                readonly property var pods: BluetoothAudio.podsFor(modelData.address)
 
                 Layout.fillWidth: true
                 Layout.rightMargin: Tokens.padding.extraSmall
@@ -107,8 +135,59 @@ ColumnLayout {
                     Anim {}
                 }
 
-                MaterialIcon {
-                    text: Icons.getBluetoothIcon(device.modelData.icon)
+                // The icon is the connect/disconnect button. Circle: accent when this headset is the
+                // active output, soft tone when connected, none when disconnected. It overflows the
+                // cell so the row layout does not shift.
+                Item {
+                    implicitWidth: deviceIcon.implicitWidth
+                    implicitHeight: deviceIcon.implicitHeight
+
+                    StyledRect {
+                        id: connectBtn
+
+                        anchors.centerIn: parent
+                        width: height
+                        height: deviceIcon.implicitHeight + Tokens.padding.small
+                        radius: Tokens.rounding.full
+                        color: device.playing ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3secondaryContainer, device.modelData.state === BluetoothDeviceState.Connected ? 1 : 0)
+
+                        Behavior on color {
+                            CAnim {}
+                        }
+
+                        CircularIndicator {
+                            anchors.centerIn: parent
+                            width: Math.round(deviceIcon.implicitHeight * 0.8)
+                            height: width
+                            strokeWidth: 3
+                            running: device.loading
+                        }
+
+                        StateLayer {
+                            color: device.playing ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                            disabled: device.loading
+                            onClicked: device.modelData.connected = !device.modelData.connected
+                        }
+                    }
+
+                    MaterialIcon {
+                        id: deviceIcon
+
+                        anchors.centerIn: parent
+                        text: Icons.getBluetoothIcon(device.modelData.icon)
+                        color: device.playing ? Colours.palette.m3onPrimary : device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+                        opacity: device.loading ? 0 : 1
+
+                        Behavior on color {
+                            CAnim {}
+                        }
+
+                        Behavior on opacity {
+                            Anim {
+                                type: Anim.DefaultEffects
+                            }
+                        }
+                    }
                 }
 
                 StyledText {
@@ -119,48 +198,27 @@ ColumnLayout {
                     elide: Text.ElideRight
                 }
 
-                MaterialIcon {
-                    visible: device.modelData.state === BluetoothDeviceState.Connected
-                    text: device.modelData.batteryAvailable ? Icons.getBatteryIcon(device.modelData.battery) : "battery_alert"
-                    color: device.modelData.batteryAvailable && device.modelData.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+                // AirPods: left bud | case | right bud, compact, on the name row
+                BtPodsStrip {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && !!device.pods
+                    pods: device.pods
+                    compact: true
                 }
 
-                StyledRect {
-                    id: connectBtn
+                // Battery of any other device as a ring with the value inside
+                BtBatteryRing {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && !device.pods && device.battery >= 0
+                    size: 28
+                    valueInside: true
+                    prefix: `${Math.round(device.battery * 100)}`
+                    level: device.battery
+                }
 
-                    implicitWidth: implicitHeight
-                    implicitHeight: connectIcon.implicitHeight + Tokens.padding.extraSmall
-
-                    radius: Tokens.rounding.full
-                    color: Qt.alpha(Colours.palette.m3primary, device.modelData.state === BluetoothDeviceState.Connected ? 1 : 0)
-
-                    CircularIndicator {
-                        anchors.fill: parent
-                        running: device.loading
-                    }
-
-                    StateLayer {
-                        color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-                        disabled: device.loading
-                        onClicked: device.modelData.connected = !device.modelData.connected
-                    }
-
-                    MaterialIcon {
-                        id: connectIcon
-
-                        anchors.centerIn: parent
-                        animate: true
-                        text: device.modelData.connected ? "link_off" : "link"
-                        color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-
-                        opacity: device.loading ? 0 : 1
-
-                        Behavior on opacity {
-                            Anim {
-                                type: Anim.DefaultEffects
-                            }
-                        }
-                    }
+                // Audio mode (music / calls / auto), small and icon-only, on the name row
+                BtModeSelector {
+                    visible: device.modelData.state === BluetoothDeviceState.Connected && !!BluetoothAudio.cardFor(device.modelData.address)
+                    address: device.modelData.address
+                    showLabels: false
                 }
 
                 Loader {
@@ -168,8 +226,8 @@ ColumnLayout {
                     asynchronous: true
                     active: device.modelData.bonded
                     sourceComponent: Item {
-                        implicitWidth: connectBtn.implicitWidth
-                        implicitHeight: connectBtn.implicitHeight
+                        implicitWidth: forgetIcon.implicitHeight + Tokens.padding.small
+                        implicitHeight: implicitWidth
 
                         StateLayer {
                             radius: Tokens.rounding.full
@@ -177,6 +235,8 @@ ColumnLayout {
                         }
 
                         MaterialIcon {
+                            id: forgetIcon
+
                             anchors.centerIn: parent
                             text: "delete"
                         }
@@ -190,18 +250,6 @@ ColumnLayout {
                 Layout.leftMargin: root.deviceTextInset
             }
         }
-    }
-
-    IconTextButton {
-        Layout.fillWidth: true
-        Layout.topMargin: Tokens.spacing.medium
-        inactiveColour: Colours.palette.m3primaryContainer
-        inactiveOnColour: Colours.palette.m3onPrimaryContainer
-        verticalPadding: Tokens.padding.extraSmall
-        text: Tr.tr("Open settings")
-        icon: "settings"
-
-        onClicked: root.popouts.detachRequested("bluetooth")
     }
 
     component Hairline: StyledRect {

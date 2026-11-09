@@ -53,6 +53,7 @@ Documentación por rol: [README.md](./README.md) = cara pública (features + ins
 | `Updates` | Poll 30 min (Arch/AUR/Flatpak); update: password popup → `sudo -S -v` de comprobación → script en bg con askpass **en RAM** (helper + socket, sin fichero). Nunca `yay --sudoloop` (bloquea con faillock). yay/pacman con `--sudoflags=-A` / `sudo -A`; no usar `-n` (el timestamp de sudo es por TTY y el Process no tiene TTY) |
 | `Clipboard` | cliphist + `wl-clipboard`; paste con foco restaurado (~220 ms) + `send_shortcut` / `wtype` |
 | `MadisonVpn` | Status exige ping a intranet (no basta `ppp0`); teardown/heal tras suspender; popout OTP + settings |
+| `BluetoothAudio` | Perfil de audio de auriculares BT (Música/Llamadas/Auto) desde el popout de Bluetooth: `pactl` + ajuste global `bluetooth.autoswitch-to-headset-profile` de WirePlumber (`wpctl settings --save`); batería de AirPods vía `scripts/airpods-battery.py` (L2CAP 0x1001, BlueZ no la publica) |
 | `Displays` | `hyprctl monitors -j`; VRR **por conector** (Nunca/Automático/Siempre) → `sylphrena-monitors.lua` + `hyprctl reload` (sin reload VRR off no llega al CRTC) |
 | `Hydration` / `Timers` | Complementos on/off; al off limpian estado/procesos y ocultan su UI |
 | `Keybinds` | Grabación de teclas con submap vacío de Hyprland (inhibe binds), soporte F13–F35, diálogo de conflicto → `sylphrena-binds.lua`; incluye `focusLast` (última ventana cross-desktop) |

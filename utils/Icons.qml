@@ -208,6 +208,14 @@ Singleton {
         return weatherIcons[code] ?? "air";
     }
 
+    // Notification appIcon may be a theme name, an absolute path or a file:// URL
+    // (Electron apps such as Claude send the latter); iconPath() only handles the first two.
+    function notifIconSource(appIcon: string): string {
+        if (appIcon.startsWith("file://"))
+            return appIcon;
+        return Quickshell.iconPath(appIcon);
+    }
+
     function getNotifIcon(summary: string, urgency: int): string {
         // Material You: "notifications" for bare/notify-send fallthrough (was "chat").
         const fallback = urgency === NotificationUrgency.Critical ? "release_alert" : "notifications";
@@ -245,7 +253,8 @@ Singleton {
     function getBatteryIcon(percentage: real, charging = false): string {
         if (percentage === 1)
             return charging ? "battery_charging_full" : "battery_full";
-        let level = Math.floor(percentage * 7);
+        // Round (not floor) so 28% reads as 2 bars, not 1; battery_N_bar only exists for N = 0..6
+        let level = Math.min(6, Math.round(percentage * 7));
         if (charging && (level === 4 || level === 1))
             level--;
         return charging ? `battery_charging_${(level + 3) * 10}` : `battery_${level}_bar`;
