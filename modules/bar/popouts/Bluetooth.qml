@@ -49,21 +49,6 @@ ColumnLayout {
         }
     }
 
-    StyledText {
-        Layout.topMargin: Tokens.spacing.small
-        Layout.rightMargin: Tokens.padding.extraSmall
-        text: {
-            const devices = Bluetooth.devices.values;
-            const connected = devices.filter(d => d.connected).length;
-            if (connected > 0)
-                // TRANSLATORS: %n = total paired devices, %1 = how many of them are connected
-                return Tr.trN("%n device available (%1 connected)", "%n devices available (%1 connected)", devices.length).arg(connected);
-            return Tr.trN("%n device available", "%n devices available", devices.length);
-        }
-        color: Colours.palette.m3onSurfaceVariant
-        font: Tokens.font.body.small
-    }
-
     Repeater {
         id: deviceRepeater
 

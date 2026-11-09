@@ -324,15 +324,7 @@ msgctxt "bluetooth adapter state"
 msgid "Discovering"
 msgstr "Buscando"
 
-#. TRANSLATORS: %n = total paired devices, %1 = how many of them are connected
-#: modules/bar/popouts/Bluetooth.qml
-#, qt-format, qt-plural-format
-msgid "%n device available (%1 connected)"
-msgid_plural "%n devices available (%1 connected)"
-msgstr[0] "%n dispositivo disponible (conectados: %1)"
-msgstr[1] "%n dispositivos disponibles (conectados: %1)"
-
-#: modules/bar/popouts/Bluetooth.qml modules/bar/popouts/Network.qml
+#: modules/bar/popouts/Network.qml
 #, qt-plural-format
 msgid "%n device available"
 msgid_plural "%n devices available"
