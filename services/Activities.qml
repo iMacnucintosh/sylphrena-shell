@@ -20,11 +20,12 @@ Singleton {
     property int overviewDropTargetWs: -1
     property var overviewCards: []
     // Fullscreen XWayland games keep pointer/keyboard grab over Overlay OnDemand;
-    // we briefly leave fullscreen while the overview is open, then restore on dismiss
-    // if the user is still on that workspace.
+    // we briefly leave fullscreen while the overview is open, then restore on dismiss,
+    // or on the next visit to that workspace if the user jumped elsewhere.
     property string overviewFsAddr: ""
     property int overviewFsMode: 0
     property int overviewFsWs: -1
+    property bool overviewFsPending: false
     property string rulesPath: `${Quickshell.env("HOME")}/.config/hypr/sylphrena-activity-rules.lua`
 
     readonly property var mappedActivities: {
@@ -564,9 +565,6 @@ Singleton {
     }
 
     function suspendFullscreenForOverview(): void {
-        root.overviewFsAddr = "";
-        root.overviewFsMode = 0;
-        root.overviewFsWs = -1;
         const tops = Hypr.focusedWorkspace?.toplevels?.values ?? [];
         for (let i = 0; i < tops.length; i++) {
             const t = tops[i];
@@ -577,6 +575,7 @@ Singleton {
             if (!raw)
                 continue;
             const addr = raw.startsWith("0x") ? raw : `0x${raw}`;
+            root.overviewFsPending = false;
             root.overviewFsAddr = addr;
             root.overviewFsMode = mode;
             root.overviewFsWs = t.workspace?.id ?? Hypr.activeWsId;
@@ -590,14 +589,17 @@ Singleton {
         const addr = root.overviewFsAddr;
         const mode = root.overviewFsMode;
         const ws = root.overviewFsWs;
+        if (!addr || mode <= 1)
+            return;
+        // fullscreenstate acts on the focused window: wait until the user is back there.
+        if (Hypr.activeWsId !== ws) {
+            root.overviewFsPending = true;
+            return;
+        }
+        root.overviewFsPending = false;
         root.overviewFsAddr = "";
         root.overviewFsMode = 0;
         root.overviewFsWs = -1;
-        if (!addr || mode <= 1)
-            return;
-        // User switched away — leave the game windowed on its desktop.
-        if (Hypr.activeWsId !== ws)
-            return;
         const still = Hypr.toplevels.values.some(t => {
             const raw = String(t.address ?? "");
             const a = raw.startsWith("0x") ? raw : `0x${raw}`;
@@ -831,6 +833,8 @@ Singleton {
         target: root
 
         function onActiveWsIdChanged(): void {
+            if (root.overviewFsPending && !root.overviewOpen && Hypr.activeWsId === root.overviewFsWs)
+                root.restoreFullscreenAfterOverview();
             const id = root.styleTargetId();
             if (id === root.lastStyleActivityId)
                 return;
