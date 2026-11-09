@@ -56,7 +56,7 @@ StyledRect {
                 Layout.fillWidth: true
                 implicitHeight: pod.implicitHeight
 
-                PodLevel {
+                BtBatteryRing {
                     id: pod
 
                     anchors.centerIn: parent
@@ -108,114 +108,4 @@ StyledRect {
         }
     }
 
-    component PodRing: Item {
-        id: ring
-
-        property real value
-        property int strokeWidth: 4
-        property color fgColour: Colours.palette.m3primary
-        property color bgColour: Qt.alpha(Colours.palette.m3onSurface, 0.14)
-        readonly property real radius: (Math.min(width, height) - strokeWidth) / 2
-
-        Shape {
-            anchors.fill: parent
-            preferredRendererType: Shape.CurveRenderer
-
-            ShapePath {
-                fillColor: "transparent"
-                strokeColor: ring.bgColour
-                strokeWidth: ring.strokeWidth
-
-                PathAngleArc {
-                    centerX: ring.width / 2
-                    centerY: ring.height / 2
-                    radiusX: ring.radius
-                    radiusY: ring.radius
-                    startAngle: -90
-                    sweepAngle: 359.99
-                }
-            }
-
-            ShapePath {
-                fillColor: "transparent"
-                strokeColor: ring.value > 0 ? ring.fgColour : "transparent"
-                strokeWidth: ring.strokeWidth
-                capStyle: ShapePath.RoundCap
-
-                PathAngleArc {
-                    centerX: ring.width / 2
-                    centerY: ring.height / 2
-                    radiusX: ring.radius
-                    radiusY: ring.radius
-                    startAngle: -90
-                    sweepAngle: Math.max(0.1, Math.min(1, ring.value) * 359.99)
-                }
-            }
-        }
-    }
-
-    // One AirPods component: progress ring (letter for a bud, icon for the case) + percentage.
-    // "—" and an empty ring when it is not reported.
-    component PodLevel: RowLayout {
-        id: pod
-
-        property string prefix
-        property string icon
-        required property real level
-        readonly property bool low: level >= 0 && level < 0.2
-
-        spacing: Tokens.spacing.small
-
-        Item {
-            implicitWidth: 32
-            implicitHeight: 32
-
-            PodRing {
-                anchors.fill: parent
-                value: pod.level >= 0 ? pod.level : 0
-                fgColour: pod.low ? Colours.palette.m3error : Colours.palette.m3primary
-                bgColour: Qt.alpha(Colours.palette.m3onSurface, 0.14)
-            }
-
-            StyledText {
-                id: letter
-
-                // Centre the glyph itself (not the line box): offset by its tight bounds
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: width / 2 - (glyph.tightBoundingRect.x + glyph.tightBoundingRect.width / 2)
-                anchors.verticalCenterOffset: height / 2 - (metrics.ascent + glyph.tightBoundingRect.y + glyph.tightBoundingRect.height / 2)
-                visible: pod.prefix.length > 0
-                text: pod.prefix
-                color: Colours.palette.m3onSurface
-                font: Tokens.font.body.builders.small.weight(Font.Medium).scale(0.85).build()
-
-                FontMetrics {
-                    id: metrics
-
-                    font: letter.font
-                }
-
-                TextMetrics {
-                    id: glyph
-
-                    font: letter.font
-                    text: letter.text
-                }
-            }
-
-            MaterialIcon {
-                anchors.centerIn: parent
-                visible: pod.icon.length > 0
-                text: pod.icon
-                scale: 0.7
-                color: Colours.palette.m3onSurface
-            }
-        }
-
-        StyledText {
-            text: pod.level >= 0 ? `${Math.round(pod.level * 100)}%` : "—"
-            color: pod.low ? Colours.palette.m3error : Colours.palette.m3onSurface
-            font: Tokens.font.body.builders.small.weight(Font.Medium).build()
-        }
-    }
 }

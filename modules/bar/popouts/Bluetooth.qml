@@ -198,17 +198,11 @@ ColumnLayout {
                     elide: Text.ElideRight
                 }
 
-                StyledText {
+                // Battery of any other device as a small ring (AirPods have their own row below)
+                BtBatteryRing {
                     visible: device.modelData.state === BluetoothDeviceState.Connected && !device.pods && device.battery >= 0
-                    text: `${Math.round(device.battery * 100)}%`
-                    color: device.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
-                    font: Tokens.font.body.small
-                }
-
-                MaterialIcon {
-                    visible: device.modelData.state === BluetoothDeviceState.Connected && !device.pods
-                    text: device.battery >= 0 ? Icons.getBatteryIcon(device.battery) : "battery_unknown"
-                    color: device.battery >= 0 && device.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+                    size: 26
+                    level: device.battery
                 }
 
                 // Audio mode (music / calls / auto), small and icon-only, on the name row
