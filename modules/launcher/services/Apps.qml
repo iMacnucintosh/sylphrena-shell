@@ -197,6 +197,26 @@ Searcher {
             entry.execute();
     }
 
+    // Plain searches match the app name only. Append apps whose .desktop Keywords
+    // contain a word starting with the query (e.g. "seeker" → Archivos, "things" →
+    // Paquetes), after the name matches. Prefix-only keeps fuzzy noise out.
+    function withKeywordMatches(search: string, byName: var): var {
+        const q = search.trim().toLowerCase();
+        if (q.length < 3)
+            return byName;
+
+        const seen = new Set(byName.map(e => e.id));
+        const extra = [];
+        for (const item of list) {
+            const entry = item.entry;
+            if (!entry || seen.has(entry.id))
+                continue;
+            if ((item.keywords || "").toLowerCase().split(/\s+/).some(w => w.startsWith(q)))
+                extra.push(entry);
+        }
+        return extra.length ? [...byName, ...extra] : byName;
+    }
+
     function search(search: string): var {
         const prefix = GlobalConfig.launcher.specialPrefix;
 
@@ -226,7 +246,7 @@ Searcher {
             weights = [1];
 
             if (!search.startsWith(`${prefix}t `))
-                return query(search).map(e => e.entry);
+                return root.withKeywordMatches(search, query(search).map(e => e.entry));
         }
 
         const results = query(search.slice(prefix.length + 2)).map(e => e.entry);
