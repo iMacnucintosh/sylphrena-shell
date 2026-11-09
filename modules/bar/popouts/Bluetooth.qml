@@ -142,6 +142,40 @@ ColumnLayout {
                         icon: "inventory_2"
                         level: device.pods?.case ?? -1
                     }
+
+                    Item {
+                        implicitWidth: refreshIcon.implicitWidth + Tokens.padding.small
+                        implicitHeight: implicitWidth
+
+                        StateLayer {
+                            radius: Tokens.rounding.full
+                            disabled: BluetoothAudio.pollingBattery
+                            onClicked: BluetoothAudio.pollBattery(true)
+                        }
+
+                        MaterialIcon {
+                            id: refreshIcon
+
+                            anchors.centerIn: parent
+                            text: "refresh"
+                            color: Colours.palette.m3onSurfaceVariant
+                            opacity: BluetoothAudio.pollingBattery ? 0.5 : 1
+
+                            RotationAnimator on rotation {
+                                running: BluetoothAudio.pollingBattery
+                                loops: Animation.Infinite
+                                from: 0
+                                to: 360
+                                duration: 900
+                            }
+
+                            Behavior on opacity {
+                                Anim {
+                                    type: Anim.DefaultEffects
+                                }
+                            }
+                        }
+                    }
                 }
 
                 StyledText {

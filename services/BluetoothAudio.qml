@@ -24,6 +24,7 @@ Singleton {
     // AirPods battery (BlueZ does not publish it): upper-case MAC -> { left, right, case } in %
     property var batteries: ({})
     property real lastBatteryPoll: 0
+    readonly property bool pollingBattery: batteryProc.running
 
     function cardFor(address: string): var {
         return root.cards[String(address).toUpperCase()] ?? null;
