@@ -40,9 +40,9 @@ StyledRect {
             Layout.alignment: Qt.AlignHCenter
             spacing: Tokens.spacing.large
 
-            CircularProgress {
+            StatRing {
                 fgColour: root.accent
-                value: root.percentage
+                reading: root.percentage
                 implicitSize: usageColumn.implicitHeight + thickness + Tokens.padding.large * 2
                 startAngle: -225
                 sweepAngle: 270

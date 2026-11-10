@@ -24,7 +24,7 @@ StyledRect {
     implicitWidth: Tokens.sizes.dashboard.perfHeroCardWidth
     implicitHeight: Math.max(tempProg.implicitHeight + detailsRow.implicitHeight + Tokens.spacing.large, usageShape.implicitHeight + usageLabel.implicitHeight) + Tokens.padding.large * 2
 
-    CircularProgress {
+    StatRing {
         id: tempProg
 
         anchors.left: parent.left
@@ -36,7 +36,7 @@ StyledRect {
         spacing: Tokens.spacing.extraSmall
         strokeWidth: Tokens.padding.extraSmall
         implicitSize: Math.max(icon.implicitWidth, icon.implicitHeight) + Tokens.padding.medium * 2
-        value: root.usage
+        reading: root.usage
 
         Behavior on clampedVal {
             Anim {}
@@ -101,7 +101,14 @@ StyledRect {
         }
 
         StyledProgressBar {
-            value: root.temperature / 100
+            // Like StatRing: follow only changes of 2 °C or more, or the bar animates non-stop
+            readonly property real reading: root.temperature / 100
+
+            onReadingChanged: {
+                if (isNaN(reading) || Math.abs(reading - value) >= 0.02)
+                    value = reading;
+            }
+            Component.onCompleted: value = reading
             implicitHeight: Tokens.padding.small
             fgColour: root.accent
             indeterminate: isNaN(root.usage) || isNaN(root.temperature)

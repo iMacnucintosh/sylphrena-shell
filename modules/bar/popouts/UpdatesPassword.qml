@@ -21,6 +21,7 @@ ColumnLayout {
     function closeDialog(): void {
         Updates.cancelPassword();
         passwordField.text = "";
+        passwordField.reveal = false;
         if (root.popouts.currentName === "updatesPassword")
             root.popouts.currentName = "updates";
     }
@@ -144,6 +145,8 @@ ColumnLayout {
 
             StyledText {
                 Layout.fillWidth: true
+                // Wrapped text: don't let its one-line width widen the whole popout
+                Layout.preferredWidth: 1
                 text: Tr.tr("Enter your password to update the system in the background.")
                 font: Tokens.font.body.small
                 color: Colours.palette.m3onSurfaceVariant
@@ -155,19 +158,39 @@ ColumnLayout {
     StyledTextField {
         id: passwordField
 
+        // Eye button inside the field: shows what was typed (handy when the password is rejected)
+        property bool reveal: false
+
         Layout.fillWidth: true
         placeholderText: Tr.tr("Password")
-        echoMode: TextInput.Password
+        echoMode: reveal ? TextInput.Normal : TextInput.Password
         enabled: !Updates.installing
         focus: root.shouldBeVisible
+        rightPadding: horizontalPadding + revealBtn.width + Tokens.spacing.small
 
         Keys.onReturnPressed: root.submit()
         Keys.onEnterPressed: root.submit()
+
+        IconButton {
+            id: revealBtn
+
+            anchors.right: parent.right
+            anchors.rightMargin: Tokens.padding.small
+            anchors.verticalCenter: parent.verticalCenter
+            icon: passwordField.reveal ? "visibility_off" : "visibility"
+            type: IconButton.Text
+            isRound: true
+            onClicked: {
+                passwordField.reveal = !passwordField.reveal;
+                passwordField.forceActiveFocus();
+            }
+        }
     }
 
     StyledText {
         visible: Updates.authError.length > 0
         Layout.fillWidth: true
+        Layout.preferredWidth: 1
         wrapMode: Text.Wrap
         text: Updates.authError
         color: Colours.palette.m3error

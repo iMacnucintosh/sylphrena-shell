@@ -53,7 +53,9 @@ StyledRect {
             SparklineItem {
                 id: sparkline
 
-                property real targetMax: 1024
+                // Start with the real scale of the data already collected: starting at 1 KiB/s
+                // and animating up on the next sample showed the graph stretched for a second
+                property real targetMax: Math.max(NetworkUsage.downloadBuffer.maximum, NetworkUsage.uploadBuffer.maximum, 1024)
                 property real smoothMax: targetMax
 
                 anchors.fill: parent
@@ -74,6 +76,9 @@ StyledRect {
 
                     target: NetworkUsage.downloadBuffer
                 }
+
+                // Moving from the moment the panel opens, not from the next sample (~1 s later)
+                Component.onCompleted: slideAnim.start()
 
                 NumberAnimation {
                     id: slideAnim
