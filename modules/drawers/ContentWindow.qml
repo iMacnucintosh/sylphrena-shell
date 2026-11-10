@@ -143,8 +143,6 @@ StyledWindow {
                 return true;
             if (!conf.dashboard.showOnHover && s.dashboard && conf.dashboard.enabled)
                 return true;
-            if (s.dashboard && s.dashboardTyping)
-                return true;
             if (panels.popouts.currentName.startsWith("traymenu") && (panels.popouts.current as StackView)?.depth > 1)
                 return true;
             return false;

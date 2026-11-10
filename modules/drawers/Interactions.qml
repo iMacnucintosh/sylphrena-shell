@@ -76,7 +76,7 @@ CustomMouseArea {
                 root.panels.osd.hovered = false;
             }
 
-            if (!dashboardShortcutActive && !screenState.dashboardTyping)
+            if (!dashboardShortcutActive)
                 screenState.dashboard = false;
 
             // Keep utilities/sidebar open while recording — closing the panel was
@@ -233,7 +233,7 @@ CustomMouseArea {
         const showDashboard = Config.dashboard.showOnHover && inTopPanel(panels.dashboard, x, y);
 
         // Always update visibility based on hover if not in shortcut mode
-        if (!dashboardShortcutActive && !screenState.dashboardTyping) {
+        if (!dashboardShortcutActive) {
             screenState.dashboard = showDashboard;
         } else if (showDashboard) {
             // If hovering over dashboard area while in shortcut mode, transition to hover control

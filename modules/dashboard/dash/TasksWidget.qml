@@ -71,22 +71,40 @@ Item {
             Layout.fillWidth: true
             spacing: Tokens.spacing.small
 
-            StyledTextField {
+            TextFieldBase {
                 id: input
 
                 Layout.fillWidth: true
-                placeholderText: Tr.tr("New task")
-                type: StyledTextField.Filled
-                verticalPadding: Tokens.padding.small
-                horizontalPadding: Tokens.padding.medium
-                radius: Tokens.rounding.full
+                leftPadding: Tokens.padding.large
+                rightPadding: Tokens.padding.large
+                topPadding: Tokens.padding.medium
+                bottomPadding: Tokens.padding.medium
                 maximumLength: 500
-
+                // Placeholder is drawn below (TextFieldBase leaves it to the field)
                 onAccepted: root.submit()
                 Keys.onEscapePressed: root.endTyping()
 
-                TapHandler {
-                    onTapped: root.beginTyping()
+                background: StyledRect {
+                    radius: Tokens.rounding.small
+                    color: Colours.palette.m3surfaceContainerHigh
+                    border.width: input.activeFocus ? 2 : 0
+                    border.color: Colours.palette.m3primary
+
+                    StateLayer {
+                        cursorShape: Qt.IBeamCursor
+                        disabled: input.activeFocus
+                        onClicked: root.beginTyping()
+                    }
+                }
+
+                StyledText {
+                    anchors.left: parent.left
+                    anchors.leftMargin: input.leftPadding
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: !input.text && !input.preeditText
+                    text: Tr.tr("New task")
+                    color: Colours.palette.m3onSurfaceVariant
+                    font: input.font
                 }
             }
 
