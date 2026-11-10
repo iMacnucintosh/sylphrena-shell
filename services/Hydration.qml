@@ -220,7 +220,7 @@ Singleton {
         notif.actions = [
             {
                 identifier: "add-small",
-                text: `+${p0} ml`,
+                text: `${p0} ml`,
                 invoke: () => {
                     root.addMl(p0);
                     notif.close();
@@ -228,7 +228,7 @@ Singleton {
             },
             {
                 identifier: "add-sip",
-                text: `+${p1} ml`,
+                text: `${p1} ml`,
                 invoke: () => {
                     root.addMl(p1);
                     notif.close();
