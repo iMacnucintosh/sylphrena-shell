@@ -79,16 +79,15 @@ PageBase {
             onToggled: FortiVpn.setEnabled(checked)
         }
 
-        ToggleRow {
-            leadingIcon: "mouse"
-            text: Tr.tr("Razer mouse battery")
-            subtext: RazerMouse.enabled
-                ? (RazerMouse.available
-                    ? (RazerMouse.charging ? Tr.tr("Basilisk V4 Pro · %1 % · charging") : Tr.tr("Basilisk V4 Pro · %1 %")).arg(RazerMouse.percent)
-                    : Tr.tr("Mouse not found — needs synapsex-cli"))
-                : Tr.tr("Shows the mouse battery in the dashboard, in place of storage")
-            checked: GlobalConfig.addons.razerMouse.enabled
-            onToggled: RazerMouse.setEnabled(checked)
+        // Optional extensions of type "addon" (see services/Extensions.qml)
+        Repeater {
+            model: Extensions.discovered.filter(d => d.manifest.type === "addon")
+
+            delegate: ExtensionCard {
+                required property var modelData
+
+                item: modelData
+            }
         }
 
         ConnectedRect {
