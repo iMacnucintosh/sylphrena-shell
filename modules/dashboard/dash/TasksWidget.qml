@@ -251,7 +251,7 @@ Item {
 
             Rectangle {
                 anchors.fill: parent
-                radius: width / 2
+                radius: 6
                 color: row.modelData.done ? Colours.palette.m3primary : "transparent"
                 border.width: row.modelData.done ? 0 : 2
                 border.color: Colours.palette.m3outline
