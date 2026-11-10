@@ -8,6 +8,7 @@ import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
 import qs.components.filedialog
+import qs.services
 
 Item {
     id: root
@@ -41,13 +42,12 @@ Item {
                 text: Tr.tr("Weather"),
                 enabled: Config.dashboard.showWeather
             },
-            {
-                component: gamesComponent,
-                iconName: "sports_esports",
-                text: Tr.tr("Games"),
-                enabled: GlobalConfig.addons.steam.enabled
-            }
-        ];
+        ].concat(Extensions.dashboardTabs.map(t => ({
+                    entry: t,
+                    iconName: t.icon ?? "extension",
+                    text: Tr.tr(t.text),
+                    enabled: true
+                })));
         return allTabs.filter(tab => tab.enabled);
     }
 
@@ -145,7 +145,19 @@ Item {
 
                         Layout.alignment: Qt.AlignTop
 
-                        sourceComponent: modelData.component
+                        sourceComponent: modelData.entry ? extTabComp : modelData.component
+
+                        // A tab contributed by an extension (e.g. Games), placed with its service
+                        Component {
+                            id: extTabComp
+
+                            ExtensionSlot {
+                                entry: paneLoader.modelData.entry
+                                props: ({
+                                        screenState: root.screenState
+                                    })
+                            }
+                        }
 
                         Component.onCompleted: active = Qt.binding(() => {
                             if (index === view.currentIndex)
@@ -185,12 +197,6 @@ Item {
                 id: weatherComponent
 
                 WeatherTab {}
-            }
-
-            Component {
-                id: gamesComponent
-
-                GamesTab {}
             }
 
             Behavior on contentX {

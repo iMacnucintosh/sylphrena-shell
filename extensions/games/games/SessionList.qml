@@ -11,6 +11,9 @@ import qs.services
 StyledRect {
     id: root
 
+    // Injected by the games tab (the extension's service)
+    required property var service
+
     required property var sessions
     property bool tracked
     property int maxItems: 4
@@ -188,7 +191,7 @@ StyledRect {
                         }
 
                         StyledText {
-                            text: Steam.formatPlaytime(row.minutes)
+                            text: root.service.formatPlaytime(row.minutes)
                             font: Tokens.font.label.builders.small.weight(Font.DemiBold).build()
                             color: row.modelData.live ? Colours.palette.m3onTertiaryContainer : Colours.palette.m3onSecondaryContainer
                         }

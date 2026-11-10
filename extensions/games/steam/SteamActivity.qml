@@ -13,7 +13,7 @@ QtObject {
 
     property string _snapshotPayload: ""
 
-    readonly property string activityScript: Quickshell.shellPath("scripts/steam-activity.py")
+    readonly property string activityScript: `${root.host.ext.dir}/scripts/steam-activity.py`
 
     function applyActivity(text: string): void {
         const raw = text || "{}";

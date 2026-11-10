@@ -13,10 +13,13 @@ import qs.services
 RowLayout {
     id: root
 
+    // Injected by the games tab (the extension's service)
+    required property var service
+
     readonly property color stateColour: {
-        if (Steam.profile?.gameExtraInfo)
+        if (root.service.profile?.gameExtraInfo)
             return Colours.palette.m3tertiary;
-        if ((Steam.profile?.personaState ?? 0) > 0)
+        if ((root.service.profile?.personaState ?? 0) > 0)
             return Colours.palette.m3primary;
         return Colours.palette.m3outline;
     }
@@ -34,7 +37,7 @@ RowLayout {
 
             FadeImage {
                 anchors.fill: parent
-                source: Steam.profile?.avatarUrl ?? ""
+                source: root.service.profile?.avatarUrl ?? ""
             }
         }
 
@@ -62,7 +65,7 @@ RowLayout {
 
         StyledText {
             Layout.fillWidth: true
-            text: Steam.profile?.personaName ?? ""
+            text: root.service.profile?.personaName ?? ""
             font: Tokens.font.body.builders.large.size(24).weight(Font.DemiBold).build()
             color: Colours.palette.m3onSurface
             elide: Text.ElideRight
@@ -70,16 +73,16 @@ RowLayout {
 
         StyledText {
             Layout.fillWidth: true
-            text: Steam.profile?.gameExtraInfo ? Tr.tr("Playing %1").arg(Steam.profile.gameExtraInfo) : Steam.personaStateLabel
+            text: root.service.profile?.gameExtraInfo ? Tr.tr("Playing %1").arg(root.service.profile.gameExtraInfo) : root.service.personaStateLabel
             font: Tokens.font.body.small
-            color: Steam.profile?.gameExtraInfo ? Colours.palette.m3tertiary : Colours.palette.m3onSurfaceVariant
+            color: root.service.profile?.gameExtraInfo ? Colours.palette.m3tertiary : Colours.palette.m3onSurfaceVariant
             elide: Text.ElideRight
         }
     }
 
     StyledText {
         Layout.alignment: Qt.AlignVCenter
-        visible: Steam.steamLevel > 0
+        visible: root.service.steamLevel > 0
         text: Tr.tr("Level")
         font: Tokens.font.body.small
         color: Colours.palette.m3onSurfaceVariant
@@ -87,14 +90,14 @@ RowLayout {
 
     MaterialShape {
         Layout.alignment: Qt.AlignVCenter
-        visible: Steam.steamLevel > 0
+        visible: root.service.steamLevel > 0
         implicitSize: 52
         shape: MaterialShape.Cookie9Sided
         color: Colours.palette.m3secondaryContainer
 
         StyledText {
             anchors.centerIn: parent
-            text: Steam.steamLevel
+            text: root.service.steamLevel
             font: Tokens.font.title.builders.medium.weight(Font.DemiBold).build()
             color: Colours.palette.m3onSecondaryContainer
         }
@@ -110,9 +113,9 @@ RowLayout {
             anchors.centerIn: parent
             type: IconButton.Text
             icon: "refresh"
-            opacity: Steam.loading ? 0 : 1
-            disabled: Steam.loading
-            onClicked: Steam.reload()
+            opacity: root.service.loading ? 0 : 1
+            disabled: root.service.loading
+            onClicked: root.service.reload()
 
             Behavior on opacity {
                 Anim {
@@ -124,8 +127,8 @@ RowLayout {
         CircularIndicator {
             anchors.centerIn: parent
             implicitSize: refreshBtn.implicitHeight - Tokens.padding.small
-            running: Steam.loading
-            opacity: Steam.loading ? 1 : 0
+            running: root.service.loading
+            opacity: root.service.loading ? 1 : 0
 
             Behavior on opacity {
                 Anim {

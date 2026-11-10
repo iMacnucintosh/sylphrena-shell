@@ -14,8 +14,13 @@ import qs.services
 Item {
     id: root
 
-    readonly property bool hasProfile: !!Steam.profile
-    readonly property real achPercent: Steam.libraryAchievements?.percent ?? 0
+    // Injected by the base: the extension, its service, and the screen state
+    required property var ext
+    required property var service
+    property var screenState
+
+    readonly property bool hasProfile: !!root.service.profile
+    readonly property real achPercent: root.service.libraryAchievements?.percent ?? 0
     property bool steamShowsSessions
     property string lastFocusAppId
 
@@ -23,20 +28,20 @@ Item {
     implicitHeight: layout.implicitHeight
 
     Component.onCompleted: {
-        Steam.gamesTabVisible = Qt.binding(() => root.visible && Steam.enabled);
-        if (Steam.enabled && Steam.configured && !Steam.profile && !Steam.loading)
-            Steam.reload();
+        root.service.gamesTabVisible = Qt.binding(() => root.visible && root.service.enabled);
+        if (root.service.enabled && root.service.configured && !root.service.profile && !root.service.loading)
+            root.service.reload();
     }
 
     // Leave no stale "visible" flag behind us when the loader deactivates.
-    Component.onDestruction: Steam.gamesTabVisible = false
+    Component.onDestruction: root.service.gamesTabVisible = false
 
     Connections {
-        target: Steam
+        target: root.service
         function onFocusAppIdChanged(): void {
-            if (root.lastFocusAppId && root.lastFocusAppId !== Steam.focusAppId)
+            if (root.lastFocusAppId && root.lastFocusAppId !== root.service.focusAppId)
                 root.steamShowsSessions = false;
-            root.lastFocusAppId = Steam.focusAppId;
+            root.lastFocusAppId = root.service.focusAppId;
         }
     }
 
@@ -49,19 +54,19 @@ Item {
 
         Loader {
             Layout.fillWidth: true
-            active: !Steam.configured || (Steam.error.length > 0 && !root.hasProfile)
+            active: !root.service.configured || (root.service.error.length > 0 && !root.hasProfile)
             visible: active
             sourceComponent: PlaceholderCard {
-                icon: !Steam.configured ? "key" : "error"
-                title: !Steam.configured ? Tr.tr("Configure Steam") : Tr.tr("Could not load Steam data")
-                body: !Steam.configured ? Tr.tr("Add your API key and Steam ID in Nexus → Complements.") : Steam.error
+                icon: !root.service.configured ? "key" : "error"
+                title: !root.service.configured ? Tr.tr("Configure Steam") : Tr.tr("Could not load Steam data")
+                body: !root.service.configured ? Tr.tr("Add your API key and Steam ID in Nexus → Complements.") : root.service.error
             }
         }
 
         Loader {
             Layout.fillWidth: true
             Layout.preferredHeight: 320
-            active: Steam.configured && !root.hasProfile && Steam.error.length === 0
+            active: root.service.configured && !root.hasProfile && root.service.error.length === 0
             visible: active
             sourceComponent: Item {
                 LoadingIndicator {
@@ -71,6 +76,8 @@ Item {
         }
 
         ProfileHeader {
+
+            service: root.service
             Layout.fillWidth: true
             Layout.leftMargin: Tokens.padding.large
             Layout.rightMargin: Tokens.padding.small
@@ -89,7 +96,7 @@ Item {
                 icon: "sports_esports"
                 label: Tr.tr("Games")
                 caption: Tr.tr("in your library")
-                value: Steam.gameCount > 0 ? Steam.gameCount : -1
+                value: root.service.gameCount > 0 ? root.service.gameCount : -1
                 shape: MaterialShape.Cookie9Sided
                 accent: Colours.palette.m3primary
                 shapeColour: Colours.palette.m3primaryContainer
@@ -100,7 +107,7 @@ Item {
                     spacing: Tokens.spacing.extraSmall
 
                     Repeater {
-                        model: Steam.topGamesByPlaytime.slice(0, 4)
+                        model: root.service.topGamesByPlaytime.slice(0, 4)
 
                         ClipRect {
                             id: capsule
@@ -127,8 +134,8 @@ Item {
                 revealDelay: 60
                 icon: "schedule"
                 label: Tr.tr("Hours")
-                caption: Steam.recentPlaytimeMinutes > 0 ? Tr.tr("+%1 in 2 weeks").arg(Steam.formatPlaytime(Steam.recentPlaytimeMinutes)) : Tr.tr("played in total")
-                value: Steam.totalPlaytimeMinutes > 0 ? Steam.totalPlaytimeMinutes / 60 : -1
+                caption: root.service.recentPlaytimeMinutes > 0 ? Tr.tr("+%1 in 2 weeks").arg(root.service.formatPlaytime(root.service.recentPlaytimeMinutes)) : Tr.tr("played in total")
+                value: root.service.totalPlaytimeMinutes > 0 ? root.service.totalPlaytimeMinutes / 60 : -1
                 formatter: v => String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, Tr.locale.groupSeparator)
                 shape: MaterialShape.Clover4Leaf
                 accent: Colours.palette.m3secondary
@@ -145,7 +152,7 @@ Item {
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: Steam.topGamesByPlaytime.length > 0 ? Tr.tr("Top: %1").arg(Steam.topGamesByPlaytime[0].name) : ""
+                        text: root.service.topGamesByPlaytime.length > 0 ? Tr.tr("Top: %1").arg(root.service.topGamesByPlaytime[0].name) : ""
                         font: Tokens.font.label.small
                         color: Colours.palette.m3onSurfaceVariant
                         elide: Text.ElideRight
@@ -159,8 +166,8 @@ Item {
                 revealDelay: 120
                 icon: "emoji_events"
                 label: Tr.tr("Achievements")
-                caption: Steam.libraryAchievements ? Tr.tr("%1 / %2 unlocked").arg(Steam.libraryAchievements.unlocked).arg(Steam.libraryAchievements.total) : (Steam.libraryAchievementsLoading ? Tr.tr("Loading…") : "")
-                value: Steam.libraryAchievements ? root.achPercent * 100 : -1
+                caption: root.service.libraryAchievements ? Tr.tr("%1 / %2 unlocked").arg(root.service.libraryAchievements.unlocked).arg(root.service.libraryAchievements.total) : (root.service.libraryAchievementsLoading ? Tr.tr("Loading…") : "")
+                value: root.service.libraryAchievements ? root.achPercent * 100 : -1
                 formatter: v => `${Math.round(v)}%`
                 shape: {
                     if (root.achPercent >= 0.66)
@@ -183,7 +190,7 @@ Item {
                         value: root.achPercent
                         fgColour: Colours.palette.m3tertiary
                         bgColour: Colours.palette.m3tertiaryContainer
-                        indeterminate: Steam.libraryAchievementsLoading && !Steam.libraryAchievements
+                        indeterminate: root.service.libraryAchievementsLoading && !root.service.libraryAchievements
                     }
 
                     RowLayout {
@@ -197,7 +204,7 @@ Item {
                         }
 
                         StyledText {
-                            text: Tr.tr("%1 perfect games").arg(Steam.libraryAchievements?.perfect ?? 0)
+                            text: Tr.tr("%1 perfect games").arg(root.service.libraryAchievements?.perfect ?? 0)
                             font: Tokens.font.label.small
                             color: Colours.palette.m3onSurfaceVariant
                         }
@@ -211,8 +218,8 @@ Item {
                 revealDelay: 180
                 icon: "group"
                 label: Tr.tr("Friends")
-                caption: Steam.friendsOnline >= 0 ? Tr.tr("online · %1 in game").arg(Math.max(0, Steam.friendsInGame)) : Tr.tr("Private")
-                value: Steam.friendsOnline
+                caption: root.service.friendsOnline >= 0 ? Tr.tr("online · %1 in game").arg(Math.max(0, root.service.friendsInGame)) : Tr.tr("Private")
+                value: root.service.friendsOnline
                 shape: MaterialShape.Pentagon
                 accent: Colours.palette.m3primary
                 shapeColour: Colours.palette.m3primaryContainer
@@ -226,14 +233,18 @@ Item {
         }
 
         FocusHero {
+
+            service: root.service
             Layout.fillWidth: true
             visible: root.hasProfile
         }
 
         RecentGamesRow {
+
+            service: root.service
             Layout.fillWidth: true
             Layout.topMargin: Tokens.spacing.extraSmall
-            visible: root.hasProfile && Steam.pickerGames.length > 1
+            visible: root.hasProfile && root.service.pickerGames.length > 1
         }
 
         RowLayout {
@@ -242,35 +253,41 @@ Item {
             spacing: Tokens.spacing.medium
 
             SessionList {
+
+                service: root.service
                 Layout.fillWidth: true
                 Layout.preferredWidth: 1
                 Layout.alignment: Qt.AlignTop
-                visible: Steam.focusNonSteam || root.steamShowsSessions
-                sessions: Steam.focusNonSteam ? (Steam.focusGame?.sessions ?? []) : Steam.focusSessions
-                tracked: !Steam.focusNonSteam || !!Steam.focusGame?.tracked
-                switchIcon: Steam.focusNonSteam ? "" : "trophy"
+                visible: root.service.focusNonSteam || root.steamShowsSessions
+                sessions: root.service.focusNonSteam ? (root.service.focusGame?.sessions ?? []) : root.service.focusSessions
+                tracked: !root.service.focusNonSteam || !!root.service.focusGame?.tracked
+                switchIcon: root.service.focusNonSteam ? "" : "trophy"
                 onSwitchRequested: root.steamShowsSessions = false
             }
 
             AchievementList {
+
+                service: root.service
                 Layout.fillWidth: true
                 Layout.preferredWidth: 1
                 Layout.alignment: Qt.AlignTop
-                visible: !Steam.focusNonSteam && !root.steamShowsSessions
-                emptyText: Steam.focusLoading ? Tr.tr("Loading…") : Steam.focusError || Tr.tr("No achievements unlocked yet")
-                model: Steam.focusAchievements
+                visible: !root.service.focusNonSteam && !root.steamShowsSessions
+                emptyText: root.service.focusLoading ? Tr.tr("Loading…") : root.service.focusError || Tr.tr("No achievements unlocked yet")
+                model: root.service.focusAchievements
                 switchIcon: "history"
                 onSwitchRequested: root.steamShowsSessions = true
             }
 
             ActivityCard {
+
+                service: root.service
                 Layout.fillWidth: true
                 Layout.preferredWidth: 1
                 Layout.alignment: Qt.AlignTop
-                gameKey: Steam.focusAppId
-                sessions: Steam.focusNonSteam ? (Steam.focusGame?.sessions ?? []) : Steam.focusSessions
-                dailyMinutes: Steam.focusNonSteam ? ({}) : (Steam.dailyPlaytime[Steam.focusAppId] ?? {})
-                markerTimes: Steam.focusNonSteam ? [] : Steam.focusUnlockTimes
+                gameKey: root.service.focusAppId
+                sessions: root.service.focusNonSteam ? (root.service.focusGame?.sessions ?? []) : root.service.focusSessions
+                dailyMinutes: root.service.focusNonSteam ? ({}) : (root.service.dailyPlaytime[root.service.focusAppId] ?? {})
+                markerTimes: root.service.focusNonSteam ? [] : root.service.focusUnlockTimes
             }
         }
     }
@@ -278,8 +295,8 @@ Item {
     component PlaytimeShareBar: Item {
         id: bar
 
-        readonly property var games: Steam.topGamesByPlaytime.slice(0, 4)
-        readonly property real total: Math.max(1, Steam.totalPlaytimeMinutes)
+        readonly property var games: root.service.topGamesByPlaytime.slice(0, 4)
+        readonly property real total: Math.max(1, root.service.totalPlaytimeMinutes)
         readonly property real topSum: games.reduce((acc, g) => acc + g.playtimeForever, 0)
         readonly property real gap: 3
         readonly property real usable: Math.max(0, width - gap * games.length)
@@ -325,7 +342,7 @@ Item {
         spacing: -8
 
         Repeater {
-            model: Steam.friendsPreview.slice(0, 6)
+            model: root.service.friendsPreview.slice(0, 6)
 
             StyledRect {
                 id: avatar
@@ -352,7 +369,7 @@ Item {
         }
 
         StyledRect {
-            visible: Steam.friendsOnline > 6
+            visible: root.service.friendsOnline > 6
             implicitWidth: 30
             implicitHeight: 30
             radius: Tokens.rounding.full
@@ -360,14 +377,14 @@ Item {
 
             StyledText {
                 anchors.centerIn: parent
-                text: `+${Steam.friendsOnline - 6}`
+                text: `+${root.service.friendsOnline - 6}`
                 font: Tokens.font.label.builders.small.weight(Font.DemiBold).build()
                 color: Colours.palette.m3onPrimaryContainer
             }
         }
 
         MaterialIcon {
-            visible: Steam.friendsOnline < 0
+            visible: root.service.friendsOnline < 0
             text: "lock"
             color: Colours.palette.m3outline
             fontStyle: Tokens.font.icon.medium

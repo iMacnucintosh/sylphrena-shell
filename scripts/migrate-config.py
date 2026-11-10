@@ -16,6 +16,7 @@ ENABLES = {
     "addons.hydration.enabled": ("extensions.enabled", "hydration"),  # Hydration too (v0.2)
     "addons.razerMouse.enabled": ("extensions.enabled", "razer-mouse"),
     "addons.fortiVpn.enabled": ("extensions.enabled", "vpn-forticlient"),
+    "addons.steam.enabled": ("extensions.enabled", "games"),
 }
 
 # Old shell.json setting -> (extension id, key in ~/.config/sylphrena/extensions/<id>.json).
@@ -29,6 +30,9 @@ TO_EXTENSION_CONFIG = {
     "addons.hydration.presetMl3": ("hydration", "presetMl3"),
     "addons.razerMouse.cliPath": ("razer-mouse", "cliPath"),
     "addons.razerMouse.refreshMinutes": ("razer-mouse", "refreshMinutes"),
+    "addons.steam.apiKey": ("games", "apiKey"),
+    "addons.steam.steamId": ("games", "steamId"),
+    "addons.steam.refreshMinutes": ("games", "refreshMinutes"),
 }
 
 RENAMES = {

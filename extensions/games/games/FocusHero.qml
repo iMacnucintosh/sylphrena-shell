@@ -15,10 +15,13 @@ import qs.services
 StyledRect {
     id: root
 
-    readonly property var progress: Steam.focusProgress?.appId === Steam.focusAppId ? Steam.focusProgress : null
+    // Injected by the games tab (the extension's service)
+    required property var service
+
+    readonly property var progress: root.service.focusProgress?.appId === root.service.focusAppId ? root.service.focusProgress : null
     readonly property real percent: progress?.percent ?? 0
-    readonly property var game: Steam.focusGame
-    readonly property bool recent: Steam.recentGames.some(g => g.appId === Steam.focusAppId)
+    readonly property var game: root.service.focusGame
+    readonly property bool recent: root.service.recentGames.some(g => g.appId === root.service.focusAppId)
 
     implicitHeight: 196
     radius: Tokens.rounding.extraLarge
@@ -35,7 +38,7 @@ StyledRect {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: height * 460 / 215
-            candidates: Steam.artCandidates(Steam.focusAppId, root.game?.headerUrl ?? "")
+            candidates: root.service.artCandidates(root.service.focusAppId, root.game?.headerUrl ?? "")
 
             layer.enabled: true
             layer.effect: Mask {
@@ -75,7 +78,7 @@ StyledRect {
         anchors.rightMargin: Tokens.spacing.extraLarge
         spacing: Tokens.spacing.small
 
-        opacity: Steam.focusLoading ? 0.5 : 1
+        opacity: root.service.focusLoading ? 0.5 : 1
 
         Behavior on opacity {
             Anim {
@@ -88,9 +91,9 @@ StyledRect {
             implicitHeight: chipRow.implicitHeight + Tokens.padding.extraSmall * 2
             radius: Tokens.rounding.full
             color: {
-                if (Steam.focusPlayingNow)
+                if (root.service.focusPlayingNow)
                     return Colours.palette.m3tertiaryContainer;
-                if (Steam.focusNonSteam)
+                if (root.service.focusNonSteam)
                     return Colours.palette.m3primaryContainer;
                 return Colours.palette.m3secondaryContainer;
             }
@@ -103,9 +106,9 @@ StyledRect {
 
                 MaterialIcon {
                     text: {
-                        if (Steam.focusPlayingNow)
+                        if (root.service.focusPlayingNow)
                             return "play_circle";
-                        if (Steam.focusNonSteam)
+                        if (root.service.focusNonSteam)
                             return "videogame_asset";
                         if (root.recent)
                             return "history";
@@ -114,9 +117,9 @@ StyledRect {
                     fill: 1
                     fontStyle: Tokens.font.icon.small
                     color: {
-                        if (Steam.focusPlayingNow)
+                        if (root.service.focusPlayingNow)
                             return Colours.palette.m3onTertiaryContainer;
-                        if (Steam.focusNonSteam)
+                        if (root.service.focusNonSteam)
                             return Colours.palette.m3onPrimaryContainer;
                         return Colours.palette.m3onSecondaryContainer;
                     }
@@ -124,9 +127,9 @@ StyledRect {
 
                 StyledText {
                     text: {
-                        if (Steam.focusPlayingNow)
+                        if (root.service.focusPlayingNow)
                             return Tr.tr("Playing now");
-                        if (Steam.focusNonSteam)
+                        if (root.service.focusNonSteam)
                             return Tr.tr("Non-Steam");
                         if (root.recent)
                             return Tr.tr("Played recently");
@@ -136,9 +139,9 @@ StyledRect {
                     }
                     font: Tokens.font.label.builders.small.weight(Font.DemiBold).build()
                     color: {
-                        if (Steam.focusPlayingNow)
+                        if (root.service.focusPlayingNow)
                             return Colours.palette.m3onTertiaryContainer;
-                        if (Steam.focusNonSteam)
+                        if (root.service.focusNonSteam)
                             return Colours.palette.m3onPrimaryContainer;
                         return Colours.palette.m3onSecondaryContainer;
                     }
@@ -148,7 +151,7 @@ StyledRect {
 
         StyledText {
             Layout.fillWidth: true
-            text: Steam.focusGameName || Tr.tr("No recently played games")
+            text: root.service.focusGameName || Tr.tr("No recently played games")
             font: Tokens.font.body.builders.large.size(23).weight(Font.DemiBold).build()
             color: Colours.palette.m3onSurface
             elide: Text.ElideRight
@@ -170,13 +173,13 @@ StyledRect {
 
             Meta {
                 icon: "schedule"
-                text: Steam.formatPlaytime(root.game?.playtimeForever ?? 0)
+                text: root.service.formatPlaytime(root.game?.playtimeForever ?? 0)
             }
 
             Meta {
                 visible: (root.game?.playtime2Weeks ?? 0) > 0
                 icon: "trending_up"
-                text: Tr.tr("%1 in 2 weeks").arg(Steam.formatPlaytime(root.game?.playtime2Weeks ?? 0))
+                text: Tr.tr("%1 in 2 weeks").arg(root.service.formatPlaytime(root.game?.playtime2Weeks ?? 0))
             }
         }
 
@@ -199,9 +202,9 @@ StyledRect {
                 text: {
                     if (root.progress)
                         return Tr.tr("%1 of %2 achievements").arg(root.progress.unlocked).arg(root.progress.total);
-                    if (Steam.focusLoading)
+                    if (root.service.focusLoading)
                         return Tr.tr("Loading…");
-                    return Steam.focusError;
+                    return root.service.focusError;
                 }
                 font: Tokens.font.label.small
                 color: Colours.palette.m3onSurfaceVariant

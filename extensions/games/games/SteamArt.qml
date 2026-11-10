@@ -1,4 +1,5 @@
 import QtQuick
+import qs.components.images
 
 // Steam artwork that survives missing images: some apps have no header.jpg on the CDN (404) but do
 // have a library hero or a capsule. Tries each candidate in order when one fails to load.
