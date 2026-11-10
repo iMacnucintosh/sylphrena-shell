@@ -82,7 +82,8 @@ StyledRect {
             }
 
             TrayItem {
-                anchors.horizontalCenter: parent.horizontalCenter
+                // parent is null for a moment while a removed icon is destroyed
+                anchors.horizontalCenter: parent?.horizontalCenter
                 popouts: root.popouts
             }
         }
