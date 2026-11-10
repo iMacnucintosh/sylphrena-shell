@@ -149,23 +149,70 @@ adoptes (está parado y sin fusionar), pero **reutiliza sus nombres de campos y 
 enganche donde encajen**, para abaratar una convergencia futura. Resume al usuario lo que
 encuentres antes de decidir.
 
-### 5.3 Carga
+### 5.3 Carga (diseño validado el 2026-11-10)
 
-Un singleton nuevo en la base (`services/Extensions.qml`) que:
-- descubre las carpetas de `extensions/` (y, a futuro, un directorio de usuario) y lee sus manifiestos;
-- sabe qué extensiones están **activadas** (lista en config) y solo carga esas;
-- instancia el `service` de cada extensión activa y lo expone por id;
-- ofrece a la base listas por punto de enganche (`widgets`, `statusIcons`, `dashboardTabs`…), que
-  las superficies de la base recorren con `Loader`/`Repeater` en lugar de nombrar componentes.
+El mecanismo ya está **probado en la shell real** y el código de partida está en el repo, sin
+conectar. No lo rediseñes: complétalo.
 
-`services/DashWidgets.qml` y el `sourceComponent` fijo de `WidgetCarousel.qml` son el precedente:
-se sustituyen por estas listas.
+**Código que ya existe**
+- `services/Extensions.qml` — singleton cargador. Lanza `scripts/list-extensions.py` sobre los
+  directorios de extensiones, compila los QML con `Qt.createComponent("file://…")`, crea el
+  servicio de cada extensión y expone `loaded`, `widgets` y `service(id)`. Tiene un `IpcHandler`
+  de depuración: `qs -c sylphrena ipc call extensions status`.
+- `components/ExtensionSlot.qml` — coloca un componente aportado por una extensión, creándolo con
+  `ext` y `service` ya asignados.
+- `scripts/list-extensions.py` — devuelve los manifiestos en JSON (valida el `id`, el primero gana).
+- `docs/examples/extension-spike/` — extensión de ejemplo con la forma exacta: `manifest.json`,
+  `Service.qml`, `Widget.qml`, un fichero hermano y una subcarpeta.
 
-**Riesgo técnico a validar primero (fase 3):** hoy los servicios de las extensiones son singletons
-QML (`Hydration.xxx`) usados por nombre. Cargados dinámicamente desde una carpeta no pueden ser
-singletons registrados; hay que comprobar con una prueba mínima qué funciona en Quickshell
-(p. ej. `Qt.createComponent` con URL + objeto servicio pasado a los componentes de la extensión
-como propiedad requerida). No migres nada hasta tener esa prueba funcionando.
+Nada referencia todavía a `Extensions`, así que no se instancia (un singleton QML solo se crea al
+usarlo). La fase 3 lo conecta.
+
+**Contrato de una extensión**
+- El **servicio no es un singleton**. Es un fichero cuya raíz es un `Scope` (de Quickshell) con
+  `required property var ext`. La base crea **una** instancia y la guarda.
+- Cada componente visual de la extensión declara `required property var ext` y
+  `required property var service`, y los recibe al crearse. Dentro de la extensión todo se pasa
+  por propiedades: `Hydration.drunkMl` pasa a ser `root.service.drunkMl`.
+- `ext` es `{ id, dir, manifest, service }`. Los scripts propios se localizan con `ext.dir`.
+- **La base nunca nombra una extensión** ni importa sus ficheros; solo recorre las listas de
+  `Extensions`. Y una extensión nunca importa ficheros de otra.
+
+**Lo que se comprobó que funciona** (y por tanto puedes dar por hecho)
+- Cargar desde dentro del repo (`extensions/`) **y desde fuera** (`~/.local/share/sylphrena/extensions/`):
+  en ambos casos los ficheros de la extensión pueden hacer `import qs.services`, `qs.components`,
+  `qs.utils`, `Sylphrena.Config`, `Sylphrena.I18n` y usar `Colours`, `Tokens`, `Paths`,
+  `GlobalConfig`, `Tr.tr`.
+- Ficheros hermanos por nombre de tipo (`Sibling {}`) y subcarpetas con `import "parts"`.
+- Un shader propio: la extensión incluye el `.qsb` ya compilado y lo usa con
+  `fragmentShader: Qt.resolvedUrl("water.frag.qsb")`. Hay que distribuir el `.qsb`, no el `.frag`
+  (se genera con `/usr/lib/qt6/bin/qsb`; el build del plugin lo deja en
+  `build/plugin/src/Sylphrena/Shaders/.qsb/`). Así el shader de hidratación puede salir del plugin.
+- El widget pintado en el carrusel con su servicio actualizándose en vivo.
+- **Aislamiento de fallos**: una extensión con un error de sintaxis o un import inexistente deja
+  un aviso claro en el log (`Extensions: <id>/<fichero>: <error>`), queda marcada con `error`, y ni
+  la base ni las demás extensiones se ven afectadas.
+- Con la carpeta `extensions/` borrada, la shell arranca sin errores.
+- Coste en reposo del cargador: 0 % de CPU.
+
+**Lo que NO se probó y te toca a ti en la fase 3**
+- La **lista de extensiones activadas** (hoy carga todo lo que encuentra) y activar o desactivar
+  en caliente: al desactivar hay que destruir el servicio (`destroy()`) y quitar sus aportaciones.
+- La **config por extensión** (§5.4).
+- Los demás puntos de enganche (`statusIcon`, `popouts`, `dashboardTab`, `resourceRing`,
+  `nexusSection`): sigue el mismo patrón que `widgets` (lista plana en `Extensions` +
+  `ExtensionSlot` en la superficie de la base).
+- Extensiones grandes con mucho estado compartido (Juegos): el servicio único pasado por
+  propiedades debería bastar, pero no está probado a esa escala.
+- Añadir o quitar una carpeta con la shell en marcha (hoy solo se lee al arrancar; basta con eso).
+
+**Trampas encontradas**
+- `Loader.sourceComponent` no permite pasar propiedades `required`: por eso existe
+  `ExtensionSlot`, que usa `component.createObject(padre, { ext, service })`.
+- `Qt.createComponent` devuelve el error en `errorString()` cuando `status !== Component.Ready`;
+  compruébalo siempre antes de crear.
+- El nombre de fichero que viene del manifiesto es entrada externa: `Extensions.component()` ya
+  rechaza rutas con `..` o caracteres raros. Mantén esa validación en todo lo que venga del manifiesto.
 
 ### 5.4 Configuración y traducciones
 
@@ -222,8 +269,9 @@ reiniciada, log sin errores nuevos, `AGENTS.md`/`FEATURES.md`/`CONFIG.md`/`CHANG
 - **Hecho cuando**: Complementos ya no los lista y ambos funcionan igual.
 
 ### Fase 3 — Armazón de extensiones + primera migración (Tareas)
-- Prueba mínima de carga dinámica (ver 5.3). Enseña el resultado al usuario.
-- Implementar `Extensions`, el manifiesto, la config por extensión y el punto de enganche `widgets`.
+- La prueba de carga dinámica **ya está hecha** (§5.3). Parte del código existente.
+- Conectar `Extensions` (referenciarlo en `shell.qml`), y completar: lista de extensiones
+  activadas, config por extensión y el punto de enganche `widgets` en el carrusel.
 - Migrar **Tareas** (la más simple: servicio + widget, sin shader ni notificaciones). El
   calendario pasa a ser un widget incluido en la base usando el mismo punto de enganche.
 - Sustituir la sección «Carrusel de widgets» de Nexus para que liste lo que haya, sin nombres fijos.

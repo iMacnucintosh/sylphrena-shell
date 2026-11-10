@@ -1,0 +1,2 @@
+{ "id": "spike", "type": "widget", "name": "Spike spike", "icon": "science", "version": "0.0.1", "apiVersion": 1,
+  "contributes": { "service": "Service.qml", "widgets": [{ "id": "spike", "component": "Widget.qml" }] } }
