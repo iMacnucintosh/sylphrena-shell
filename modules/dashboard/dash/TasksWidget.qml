@@ -93,7 +93,7 @@ Item {
             IconButton {
                 icon: "add"
                 type: IconButton.Tonal
-                isRound: true
+                isRound: false
                 enabled: input.text.trim().length > 0
                 opacity: enabled ? 1 : 0.5
                 onClicked: root.submit()

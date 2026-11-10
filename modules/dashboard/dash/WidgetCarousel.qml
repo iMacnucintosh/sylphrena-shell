@@ -304,12 +304,12 @@ Item {
 
         StyledRect {
             anchors.fill: parent
-            radius: width / 2
+            radius: Tokens.rounding.small
             color: Colours.palette.m3surfaceContainerHighest
             opacity: 0.9
 
             StateLayer {
-                radius: Tokens.rounding.full
+                radius: Tokens.rounding.small
                 onClicked: arrow.clicked()
             }
         }
