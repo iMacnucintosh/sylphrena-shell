@@ -146,6 +146,8 @@ PageBase {
 
         StyledText {
             Layout.fillWidth: true
+            Layout.leftMargin: Tokens.padding.small
+            Layout.rightMargin: Tokens.padding.small
             Layout.bottomMargin: Tokens.spacing.small
             text: Tr.tr("The centre of the Dashboard shows one widget at a time; switch with the arrows, the dots or by dragging. Reorder them here.")
             color: Colours.palette.m3outline
