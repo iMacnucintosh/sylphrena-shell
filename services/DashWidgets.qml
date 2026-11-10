@@ -8,14 +8,17 @@ import qs.services
 
 // Registry of the widgets that can live in the dashboard carousel (centre of the Dashboard tab).
 //
-// To add a widget: add an entry to `all`, make `isEnabled()` say when it shows, add a case in
-// modules/dashboard/dash/WidgetCarousel.qml and (if it has options) a card in the Nexus
-// Dashboard page. The order lives in config (`dashboard.widgetOrder`); unknown ids are ignored and
-// missing ones are appended, so old configs keep working when widgets are added.
+// Two sources, one list:
+//   - `builtin`: widgets the shell ships itself (the calendar; Hydration until it becomes an
+//     extension in phase 4 of docs/PLAN-MODULAR.md);
+//   - widgets declared by extensions (services/Extensions.qml), found through their manifests.
+//     Extensions are never named here: adding one needs no change to this file.
+// The order lives in config (`dashboard.widgetOrder`); unknown ids are ignored and missing ones are
+// appended, so configs keep working when widgets come and go.
 Singleton {
     id: root
 
-    readonly property var all: [
+    readonly property var builtin: [
         {
             id: "calendar",
             title: Tr.tr("Calendar"),
@@ -27,14 +30,18 @@ Singleton {
             title: Tr.tr("Hydration"),
             subtext: Tr.tr("Water intake tracker with reminders"),
             icon: "water_drop"
-        },
-        {
-            id: "tasks",
-            title: Tr.tr("Tasks"),
-            subtext: Tr.tr("Checklist: create, complete and delete tasks"),
-            icon: "checklist"
         }
     ]
+
+    // Every widget that exists, enabled or not. Extension strings are looked up in the shell's
+    // translations (Tr.tr works with any key present in es.po).
+    readonly property var all: builtin.concat(Extensions.widgetDecls.map(w => ({
+                id: w.id,
+                ext: w.extId,
+                title: Tr.tr(w.title),
+                subtext: w.subtext ? Tr.tr(w.subtext) : "",
+                icon: w.icon
+            })))
 
     // All widgets in the user's order (enabled or not)
     readonly property var order: {
@@ -51,26 +58,43 @@ Singleton {
         return out;
     }
 
-    // Widgets actually shown in the carousel, in order
-    readonly property var active: order.filter(w => isEnabled(w.id))
+    // Widgets actually shown in the carousel, in order. An extension widget carries its `entry`
+    // ({ id, ext, component }); one whose extension failed to load is left out.
+    readonly property var active: {
+        const out = [];
+        for (const w of order) {
+            if (!isEnabled(w.id))
+                continue;
+            if (w.ext) {
+                const entry = Extensions.widgets.find(x => x.id === w.id);
+                if (entry)
+                    out.push(Object.assign({}, w, { entry }));
+            } else {
+                out.push(w);
+            }
+        }
+        return out;
+    }
 
     function isEnabled(id: string): bool {
+        const w = all.find(x => x.id === id);
+        if (w?.ext)
+            return Extensions.isEnabled(w.ext);
         if (id === "hydration")
             return Hydration.enabled;
         if (id === "calendar")
             return GlobalConfig.dashboard.calendarEnabled;
-        if (id === "tasks")
-            return Tasks.enabled;
         return false;
     }
 
     function setEnabled(id: string, on: bool): void {
-        if (id === "hydration")
+        const w = all.find(x => x.id === id);
+        if (w?.ext)
+            Extensions.setEnabled(w.ext, on);
+        else if (id === "hydration")
             Hydration.setEnabled(on);
         else if (id === "calendar")
             GlobalConfig.dashboard.calendarEnabled = on;
-        else if (id === "tasks")
-            GlobalConfig.dashboard.tasksEnabled = on;
     }
 
     // Move a widget one place up (-1) or down (+1) in the order

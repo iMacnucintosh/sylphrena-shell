@@ -13,14 +13,18 @@ import qs.services
 Item {
     id: root
 
-    required property ScreenState screenState
+    // Injected by the base: the extension, its service, and (for dashboard slots) the screen state
+    required property var ext
+    required property var service
+    property var screenState
 
     implicitHeight: 270
 
     // The dashboard does not take the keyboard by itself: ask for it while typing (see
     // ScreenState.dashboardTyping → ContentWindow/Interactions), and give it back when done.
     function beginTyping(): void {
-        root.screenState.dashboardTyping = true;
+        if (root.screenState)
+            root.screenState.dashboardTyping = true;
         Qt.callLater(() => input.forceActiveFocus());
     }
 
@@ -32,13 +36,14 @@ Item {
 
     function endTyping(): void {
         input.focus = false;
-        root.screenState.dashboardTyping = false;
+        if (root.screenState)
+            root.screenState.dashboardTyping = false;
     }
 
     function submit(): void {
         if (!input.text.trim())
             return;
-        Tasks.add(input.text);
+        root.service.add(input.text);
         input.clear();
         list.contentY = 0;
     }
@@ -66,7 +71,7 @@ Item {
             }
 
             StyledText {
-                text: Tasks.pending.length > 0 ? Tr.trN("%n pending", "%n pending", Tasks.pending.length) : ""
+                text: root.service.pending.length > 0 ? Tr.trN("%n pending", "%n pending", root.service.pending.length) : ""
                 color: Colours.palette.m3outline
                 font: Tokens.font.label.small
             }
@@ -169,8 +174,8 @@ Item {
                 // Nothing left to do: a faint "all done" watermark, centred in the list area
                 Item {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: Tasks.items.length === 0 ? list.height : 96
-                    visible: Tasks.pending.length === 0
+                    Layout.preferredHeight: root.service.items.length === 0 ? list.height : 96
+                    visible: root.service.pending.length === 0
 
                     Column {
                         anchors.centerIn: parent
@@ -187,7 +192,7 @@ Item {
 
                         StyledText {
                             anchors.horizontalCenter: parent.horizontalCenter
-                            text: Tasks.items.length === 0 ? Tr.tr("Nothing to do") : Tr.tr("All done")
+                            text: root.service.items.length === 0 ? Tr.tr("Nothing to do") : Tr.tr("All done")
                             color: Colours.palette.m3onSurfaceVariant
                             font: Tokens.font.label.large
                         }
@@ -195,16 +200,18 @@ Item {
                 }
 
                 Repeater {
-                    model: Tasks.pending
+                    model: root.service.pending
 
-                    delegate: TaskRow {}
+                    delegate: TaskRow {
+                        service: root.service
+                    }
                 }
 
                 // Completed section header (collapsible)
                 RowLayout {
                     Layout.fillWidth: true
                     Layout.topMargin: Tokens.spacing.small
-                    visible: Tasks.done.length > 0
+                    visible: root.service.done.length > 0
                     spacing: Tokens.spacing.small
 
                     StyledRect {
@@ -215,7 +222,7 @@ Item {
 
                         StateLayer {
                             radius: Tokens.rounding.full
-                            onClicked: Tasks.setDoneCollapsed(!Tasks.doneCollapsed)
+                            onClicked: root.service.setDoneCollapsed(!root.service.doneCollapsed)
                         }
 
                         RowLayout {
@@ -229,7 +236,7 @@ Item {
                             MaterialIcon {
                                 text: "expand_more"
                                 color: Colours.palette.m3onSurfaceVariant
-                                rotation: Tasks.doneCollapsed ? -90 : 0
+                                rotation: root.service.doneCollapsed ? -90 : 0
 
                                 Behavior on rotation {
                                     Anim {
@@ -239,7 +246,7 @@ Item {
                             }
 
                             StyledText {
-                                text: Tr.tr("Completed (%1)").arg(Tasks.done.length)
+                                text: Tr.tr("Completed (%1)").arg(root.service.done.length)
                                 color: Colours.palette.m3onSurfaceVariant
                                 font: Tokens.font.label.medium
                             }
@@ -250,14 +257,16 @@ Item {
                         icon: "delete_sweep"
                         type: IconButton.Text
                         isRound: true
-                        onClicked: Tasks.clearDone()
+                        onClicked: root.service.clearDone()
                     }
                 }
 
                 Repeater {
-                    model: Tasks.doneCollapsed ? [] : Tasks.done
+                    model: root.service.doneCollapsed ? [] : root.service.done
 
-                    delegate: TaskRow {}
+                    delegate: TaskRow {
+                        service: root.service
+                    }
                 }
             }
         }
@@ -267,13 +276,14 @@ Item {
         id: row
 
         required property var modelData
+        property var service
 
         Layout.fillWidth: true
         implicitHeight: Math.max(rowText.implicitHeight, 24) + Tokens.padding.small * 2
 
         // A task that was just (un)checked lands here as a new row: fade it in and pop its box
         Component.onCompleted: {
-            if (Tasks.lastToggledId === modelData.id)
+            if (row.service.lastToggledId === modelData.id)
                 intro.start();
         }
 
@@ -341,7 +351,7 @@ Item {
                 anchors.fill: parent
                 anchors.margins: -6
                 cursorShape: Qt.PointingHandCursor
-                onClicked: Tasks.toggle(row.modelData.id)
+                onClicked: row.service.toggle(row.modelData.id)
             }
         }
 
@@ -371,7 +381,7 @@ Item {
             type: IconButton.Text
             isRound: true
             opacity: rowHover.hovered ? 1 : 0
-            onClicked: Tasks.remove(row.modelData.id)
+            onClicked: row.service.remove(row.modelData.id)
 
             Behavior on opacity {
                 Anim {

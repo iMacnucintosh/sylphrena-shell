@@ -10,6 +10,11 @@ import os
 import sys
 from pathlib import Path
 
+# Old boolean switch -> id added to a list when it was on. The old key is always removed.
+ENABLES = {
+    "dashboard.tasksEnabled": ("extensions.enabled", "tasks"),  # Tasks became an extension (v0.2)
+}
+
 RENAMES = {
     "addons.madisonVpn": "addons.fortiVpn",  # Madison VPN -> VPN FortiClient (v0.2)
 }
@@ -47,6 +52,19 @@ def main() -> int:
         if found:
             put(data, new, value)
             changed = True
+    for old, (list_path, item) in ENABLES.items():
+        value, found = take(data, old)
+        if not found:
+            continue
+        changed = True
+        if value:
+            *parents, leaf = list_path.split(".")
+            node = data
+            for p in parents:
+                node = node.setdefault(p, {})
+            items = node.setdefault(leaf, [])
+            if item not in items:
+                items.append(item)
     if changed:
         tmp = path.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(data, indent=4, ensure_ascii=False) + "\n")
