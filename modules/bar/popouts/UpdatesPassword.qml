@@ -145,6 +145,8 @@ ColumnLayout {
 
             StyledText {
                 Layout.fillWidth: true
+                // Wrapped text: don't let its one-line width widen the whole popout
+                Layout.preferredWidth: 1
                 text: Tr.tr("Enter your password to update the system in the background.")
                 font: Tokens.font.body.small
                 color: Colours.palette.m3onSurfaceVariant
@@ -188,6 +190,7 @@ ColumnLayout {
     StyledText {
         visible: Updates.authError.length > 0
         Layout.fillWidth: true
+        Layout.preferredWidth: 1
         wrapMode: Text.Wrap
         text: Updates.authError
         color: Colours.palette.m3error
