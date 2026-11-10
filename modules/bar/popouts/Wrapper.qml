@@ -76,17 +76,11 @@ Item {
                 return;
             }
         }
-        if (currentName === "vpnOtp" && content.item) {
-            const otpPopout = (content.item as Content)?.children.find(c => c.name === "vpnOtp");
-            if (otpPopout && otpPopout.item) {
-                otpPopout.item.closeDialog();
-                return;
-            }
-        }
-        if (currentName === "vpnSettings" && content.item) {
-            const settingsPopout = (content.item as Content)?.children.find(c => c.name === "vpnSettings");
-            if (settingsPopout && settingsPopout.item) {
-                settingsPopout.item.closeDialog();
+        // Dialogs of extensions (e.g. the VPN's OTP / settings): same forwarding
+        if (isExtensionDialog && content.item) {
+            const extPopout = (content.item as Content)?.children.find(c => c.name === currentName);
+            if (extPopout && extPopout.item) {
+                extPopout.item.closeDialog();
                 return;
             }
         }
@@ -102,7 +96,7 @@ Item {
 
     Keys.onPressed: event => {
         // Don't intercept keys when password/OTP/settings popout is active - let it handle them
-        if (currentName === "wirelesspassword" || currentName === "vpnOtp" || currentName === "vpnSettings" || currentName === "updatesPassword") {
+        if (currentName === "wirelesspassword" || isExtensionDialog || currentName === "updatesPassword") {
             event.accepted = false;
         }
     }
@@ -113,7 +107,10 @@ Item {
         onDetachRequested: mode => root.detach(mode)
     }
 
-    readonly property bool needsKeyboard: root.isDetached || (root.hasCurrent && (root.currentName === "wirelesspassword" || root.currentName === "vpnOtp" || root.currentName === "vpnSettings" || root.currentName === "updatesPassword" || root.currentName === "clock"))
+    // The current popout is a dialog contributed by an extension (needs the keyboard)
+    readonly property bool isExtensionDialog: hasCurrent && Extensions.popouts.some(p => p.dialog && p.name === currentName)
+
+    readonly property bool needsKeyboard: root.isDetached || (root.hasCurrent && (root.currentName === "wirelesspassword" || root.isExtensionDialog || root.currentName === "updatesPassword" || root.currentName === "clock"))
     readonly property bool exclusiveKeyboard: root.hasCurrent && root.currentName === "updatesPassword"
 
     HyprlandFocusGrab {

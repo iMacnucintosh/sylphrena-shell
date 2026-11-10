@@ -7,12 +7,6 @@ namespace sylphrena::shell::config {
 
 using Qt::StringLiterals::operator""_s;
 
-class AddonsFortiVpn : public settings::ObjectNode {
-    CONFIG_NODE(AddonsFortiVpn, settings::ObjectNode)
-
-    CONFIG_PROPERTY(bool, enabled, true)
-};
-
 class AddonsTimers : public settings::ObjectNode {
     CONFIG_NODE(AddonsTimers, settings::ObjectNode)
 
@@ -36,7 +30,6 @@ class AddonsSteam : public settings::ObjectNode {
 class AddonsConfig : public settings::ObjectNode {
     CONFIG_NODE(AddonsConfig, settings::ObjectNode)
 
-    CONFIG_GLOBAL_SUBOBJECT(AddonsFortiVpn, fortiVpn)
     CONFIG_GLOBAL_SUBOBJECT(AddonsTimers, timers)
     CONFIG_GLOBAL_SUBOBJECT(AddonsSteam, steam)
 };

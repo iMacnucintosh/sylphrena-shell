@@ -15,6 +15,7 @@ ENABLES = {
     "dashboard.tasksEnabled": ("extensions.enabled", "tasks"),  # Tasks became an extension (v0.2)
     "addons.hydration.enabled": ("extensions.enabled", "hydration"),  # Hydration too (v0.2)
     "addons.razerMouse.enabled": ("extensions.enabled", "razer-mouse"),
+    "addons.fortiVpn.enabled": ("extensions.enabled", "vpn-forticlient"),
 }
 
 # Old shell.json setting -> (extension id, key in ~/.config/sylphrena/extensions/<id>.json).

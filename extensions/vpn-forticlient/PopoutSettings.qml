@@ -12,7 +12,11 @@ import qs.services
 ColumnLayout {
     id: root
 
-    required property PopoutState popouts
+    // Injected by the base: the extension and its service (see services/Extensions.qml)
+    required property var ext
+    required property var service
+
+    required property var popouts
 
     readonly property bool shouldBeVisible: root.popouts.currentName === "vpnSettings"
     property bool showPassword: false
@@ -26,12 +30,12 @@ ColumnLayout {
     }
 
     function save(): void {
-        FortiVpn.cfgHost = hostField.text;
-        FortiVpn.cfgPort = portField.text;
-        FortiVpn.cfgUsername = userField.text;
-        FortiVpn.cfgPassword = passField.text;
-        FortiVpn.cfgRealm = realmField.text;
-        if (FortiVpn.saveConfig())
+        root.service.cfgHost = hostField.text;
+        root.service.cfgPort = portField.text;
+        root.service.cfgUsername = userField.text;
+        root.service.cfgPassword = passField.text;
+        root.service.cfgRealm = realmField.text;
+        if (root.service.saveConfig())
             root.closeDialog();
     }
 
@@ -42,13 +46,13 @@ ColumnLayout {
 
     onShouldBeVisibleChanged: {
         if (shouldBeVisible) {
-            FortiVpn.reloadConfig();
+            root.service.reloadConfig();
             Qt.callLater(() => {
-                hostField.text = FortiVpn.cfgHost;
-                portField.text = FortiVpn.cfgPort;
-                userField.text = FortiVpn.cfgUsername;
-                passField.text = FortiVpn.cfgPassword;
-                realmField.text = FortiVpn.cfgRealm;
+                hostField.text = root.service.cfgHost;
+                portField.text = root.service.cfgPort;
+                userField.text = root.service.cfgUsername;
+                passField.text = root.service.cfgPassword;
+                realmField.text = root.service.cfgRealm;
                 root.showPassword = false;
                 hostField.forceActiveFocus();
             });
@@ -101,7 +105,7 @@ ColumnLayout {
             verticalPadding: Tokens.padding.small
             placeholderText: Tr.trCtx("Host", "vpn server hostname")
             leadingIcon: "dns"
-            text: FortiVpn.cfgHost
+            text: root.service.cfgHost
             onAccepted: portField.forceActiveFocus()
         }
 
@@ -117,7 +121,7 @@ ColumnLayout {
                 verticalPadding: Tokens.padding.small
                 placeholderText: Tr.trCtx("Port", "vpn server port")
                 leadingIcon: "tag"
-                text: FortiVpn.cfgPort
+                text: root.service.cfgPort
                 inputMethodHints: Qt.ImhDigitsOnly
                 onAccepted: realmField.forceActiveFocus()
             }
@@ -129,7 +133,7 @@ ColumnLayout {
                 verticalPadding: Tokens.padding.small
                 placeholderText: Tr.trCtx("Realm", "vpn authentication realm")
                 leadingIcon: "domain"
-                text: FortiVpn.cfgRealm
+                text: root.service.cfgRealm
                 onAccepted: userField.forceActiveFocus()
             }
         }
@@ -141,7 +145,7 @@ ColumnLayout {
             verticalPadding: Tokens.padding.small
             placeholderText: Tr.trCtx("Username", "vpn username")
             leadingIcon: "person"
-            text: FortiVpn.cfgUsername
+            text: root.service.cfgUsername
             onAccepted: passField.forceActiveFocus()
         }
 
@@ -156,7 +160,7 @@ ColumnLayout {
                 verticalPadding: Tokens.padding.small
                 placeholderText: Tr.trCtx("Password", "vpn password")
                 leadingIcon: "key"
-                text: FortiVpn.cfgPassword
+                text: root.service.cfgPassword
                 echoMode: root.showPassword ? T.TextField.Normal : T.TextField.Password
                 onAccepted: root.save()
             }
@@ -174,8 +178,8 @@ ColumnLayout {
     StyledText {
         Layout.fillWidth: true
         Layout.rightMargin: Tokens.padding.extraSmall
-        visible: !!FortiVpn.configError
-        text: FortiVpn.configError
+        visible: !!root.service.configError
+        text: root.service.configError
         color: Colours.palette.m3error
         font: Tokens.font.label.small
         wrapMode: Text.WordWrap

@@ -129,7 +129,7 @@ Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
 
 ## VPN FortiClient (openfortivpn)
 
-Requiere el complemento activo en Nexus → Complementos (default on).
+Es la extensión `vpn-forticlient` (`extensions/vpn-forticlient/`): se activa en Nexus → Complementos (`extensions.enabled`). Al desactivarla desde Nexus se para el túnel.
 
 Icono en la pastilla de status (debajo de Bluetooth):
 

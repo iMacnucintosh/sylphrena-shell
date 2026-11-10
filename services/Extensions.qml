@@ -43,6 +43,23 @@ Singleton {
         return out;
     }
 
+    // Status icons declared by every discovered extension (labels for settings pages): [{ id, title }]
+    readonly property var statusIconDecls: {
+        const out = [];
+        for (const d of discovered)
+            for (const i of (d.manifest.contributes?.statusIcons ?? []))
+                out.push({ id: i.id, title: i.title ?? d.manifest.name ?? i.id });
+        return out;
+    }
+
+    // Bar status icons of the loaded extensions: [{ id, ext, component }]. The bar lists icons from
+    // its own config (`bar.statusIcons`); an entry whose id is not a built-in one is drawn from here.
+    readonly property var statusIcons: contributions("statusIcons")
+
+    // Bar popouts of the loaded extensions: [{ name, ext, component, dialog, parentIcon }].
+    // A `dialog` popout takes the keyboard, and stays open while hovering its `parentIcon`.
+    readonly property var popouts: contributions("popouts")
+
     // Widgets of the loaded extensions, ready to place: [{ id, ext, component }]
     readonly property var widgets: {
         const out = [];
@@ -64,11 +81,27 @@ Singleton {
         return null;
     }
 
+    // Compiled components of one kind of contribution (`key` of manifest `contributes`): each item
+    // `{ ..., component: "File.qml" }` becomes `{ ...item, ext, component: Component }`.
+    function contributions(key: string): var {
+        const out = [];
+        for (const e of loaded)
+            for (const item of (e.manifest.contributes?.[key] ?? [])) {
+                const c = root.component(e, item.component);
+                if (c)
+                    out.push(Object.assign({}, item, { ext: e, component: c }));
+            }
+        return out;
+    }
+
     function isEnabled(id: string): bool {
         return enabledIds.includes(id);
     }
 
     function setEnabled(id: string, on: bool): void {
+        // Let the service clean up (stop a tunnel, …) before it is destroyed
+        if (!on)
+            loaded.find(e => e.id === id)?.service?.aboutToDisable?.();
         const ids = enabledIds.filter(i => i !== id);
         if (on)
             ids.push(id);
