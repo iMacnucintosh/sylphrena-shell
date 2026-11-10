@@ -88,7 +88,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 2. **Pantalla** — modo/escala/VRR por monitor con política Nunca/Automático/Siempre.
 3. **Juegos (Steam)** — complemento opt-in: stats en shapes M3, hero con portada, carrusel por `lastPlayed`, logros (rareza + bloqueados, descripción siempre visible), heatmap mensual navegable, juegos no Steam + Millennium + sesiones reales Steam.
 4. **Updates** — página Nexus + icono/badge en la barra (solo si hay paquetes) + popout; password popup → update en bg con logs en vivo en Nexus.
-5. **Clipboard** — popout estilo Sylphrena (`m3surface` + blur), favoritos, búsqueda, previews de imágenes/rutas, pegar en la ventana enfocada.
+5. **Clipboard** (base; ajustes en Nexus → Panels → Utilities) — popout estilo Sylphrena (`m3surface` + blur), favoritos, búsqueda, previews de imágenes/rutas, pegar en la ventana enfocada.
 6. **VPN FortiClient** (ex Madison VPN) — icono en status, dropdown al hover, OTP integrado, settings (host/puerto/user/pass), heal tras sleep.
 7. **Complementos** — VPN, Timers, Juegos y **Batería del ratón Razer** (`addons.razerMouse`, ocupa el hueco del anillo de almacenamiento del dashboard) con icono por fila y limpieza al desactivar. Hidratación ya no está aquí: es un widget del carrusel (punto 9).
 9. **Carrusel de widgets del dashboard** — el centro del Panel muestra un widget a la vez (calendario, hidratación, tareas), con puntos, rueda y arrastre; nada activo por defecto (botón «Activa widgets» → Nexus). Orden y interruptores en Nexus → Panels → Dashboard. Tareas: checklist persistente (`tasks.json`) con completadas plegables.
