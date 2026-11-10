@@ -26,12 +26,12 @@ ColumnLayout {
     }
 
     function save(): void {
-        MadisonVpn.cfgHost = hostField.text;
-        MadisonVpn.cfgPort = portField.text;
-        MadisonVpn.cfgUsername = userField.text;
-        MadisonVpn.cfgPassword = passField.text;
-        MadisonVpn.cfgRealm = realmField.text;
-        if (MadisonVpn.saveConfig())
+        FortiVpn.cfgHost = hostField.text;
+        FortiVpn.cfgPort = portField.text;
+        FortiVpn.cfgUsername = userField.text;
+        FortiVpn.cfgPassword = passField.text;
+        FortiVpn.cfgRealm = realmField.text;
+        if (FortiVpn.saveConfig())
             root.closeDialog();
     }
 
@@ -42,13 +42,13 @@ ColumnLayout {
 
     onShouldBeVisibleChanged: {
         if (shouldBeVisible) {
-            MadisonVpn.reloadConfig();
+            FortiVpn.reloadConfig();
             Qt.callLater(() => {
-                hostField.text = MadisonVpn.cfgHost;
-                portField.text = MadisonVpn.cfgPort;
-                userField.text = MadisonVpn.cfgUsername;
-                passField.text = MadisonVpn.cfgPassword;
-                realmField.text = MadisonVpn.cfgRealm;
+                hostField.text = FortiVpn.cfgHost;
+                portField.text = FortiVpn.cfgPort;
+                userField.text = FortiVpn.cfgUsername;
+                passField.text = FortiVpn.cfgPassword;
+                realmField.text = FortiVpn.cfgRealm;
                 root.showPassword = false;
                 hostField.forceActiveFocus();
             });
@@ -101,7 +101,7 @@ ColumnLayout {
             verticalPadding: Tokens.padding.small
             placeholderText: Tr.trCtx("Host", "vpn server hostname")
             leadingIcon: "dns"
-            text: MadisonVpn.cfgHost
+            text: FortiVpn.cfgHost
             onAccepted: portField.forceActiveFocus()
         }
 
@@ -117,7 +117,7 @@ ColumnLayout {
                 verticalPadding: Tokens.padding.small
                 placeholderText: Tr.trCtx("Port", "vpn server port")
                 leadingIcon: "tag"
-                text: MadisonVpn.cfgPort
+                text: FortiVpn.cfgPort
                 inputMethodHints: Qt.ImhDigitsOnly
                 onAccepted: realmField.forceActiveFocus()
             }
@@ -129,7 +129,7 @@ ColumnLayout {
                 verticalPadding: Tokens.padding.small
                 placeholderText: Tr.trCtx("Realm", "vpn authentication realm")
                 leadingIcon: "domain"
-                text: MadisonVpn.cfgRealm
+                text: FortiVpn.cfgRealm
                 onAccepted: userField.forceActiveFocus()
             }
         }
@@ -141,7 +141,7 @@ ColumnLayout {
             verticalPadding: Tokens.padding.small
             placeholderText: Tr.trCtx("Username", "vpn username")
             leadingIcon: "person"
-            text: MadisonVpn.cfgUsername
+            text: FortiVpn.cfgUsername
             onAccepted: passField.forceActiveFocus()
         }
 
@@ -156,7 +156,7 @@ ColumnLayout {
                 verticalPadding: Tokens.padding.small
                 placeholderText: Tr.trCtx("Password", "vpn password")
                 leadingIcon: "key"
-                text: MadisonVpn.cfgPassword
+                text: FortiVpn.cfgPassword
                 echoMode: root.showPassword ? T.TextField.Normal : T.TextField.Password
                 onAccepted: root.save()
             }
@@ -174,8 +174,8 @@ ColumnLayout {
     StyledText {
         Layout.fillWidth: true
         Layout.rightMargin: Tokens.padding.extraSmall
-        visible: !!MadisonVpn.configError
-        text: MadisonVpn.configError
+        visible: !!FortiVpn.configError
+        text: FortiVpn.configError
         color: Colours.palette.m3error
         font: Tokens.font.label.small
         wrapMode: Text.WordWrap

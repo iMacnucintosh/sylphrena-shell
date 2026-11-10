@@ -36,7 +36,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 - Indicador **REC** / **PAUSE** bajo el reloj; grabación desacoplada del panel.
 - **Clipboard** (cliphist): `Super+Shift+V`, favoritos, previews, pegar en la ventana enfocada.
 - **Updates** (Arch / AUR / Flatpak): badge solo si hay paquetes, popout y página Nexus; update en segundo plano con password en RAM.
-- **Madison VPN** (opt-in): OTP en popout, settings, heal tras suspender.
+- **VPN FortiClient** (opt-in): OTP en popout, settings, heal tras suspender.
 - Popouts, toasts en borde (posición superior/inferior) y now playing con portada animada.
 
 ### Nexus
@@ -100,7 +100,7 @@ Runtime / sistema (Arch):
 
 Build: `cmake`, `ninja`, `qt6-shadertools`.
 
-Opcionales según complementos: `yay` (updates AUR), Flatpak, `openfortivpn` (Madison VPN), Steam, Blender (+ `.thumbnailer` local; Arch no lo registra en el paquete).
+Opcionales según complementos: `yay` (updates AUR), Flatpak, `openfortivpn` (VPN FortiClient), Steam, Blender (+ `.thumbnailer` local; Arch no lo registra en el paquete).
 
 ### Clone
 

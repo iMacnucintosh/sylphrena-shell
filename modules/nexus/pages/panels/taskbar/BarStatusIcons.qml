@@ -18,7 +18,7 @@ PageBase {
             microphone: Tr.tr("Microphone"),
             network: Tr.tr("Network"),
             bluetooth: Tr.tr("Bluetooth"),
-            vpn: Tr.tr("Madison VPN"),
+            vpn: Tr.tr("VPN FortiClient"),
             updates: Tr.tr("Updates"),
             battery: Tr.tr("Battery")
         })
@@ -118,8 +118,8 @@ PageBase {
         NavRow {
             last: true
             icon: "shield_lock"
-            text: Tr.tr("Madison VPN")
-            subtext: MadisonVpn.enabled
+            text: Tr.tr("VPN FortiClient")
+            subtext: FortiVpn.enabled
                 ? Tr.tr("Visible while the complement is enabled — configure in Complements")
                 : Tr.tr("Hidden — enable it in Complements")
             onClicked: root.nState.currentPageIdx = PageRegistry.idxOf("complements")

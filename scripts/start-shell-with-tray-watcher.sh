@@ -5,7 +5,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WATCHER="${ROOT}/scripts/status-notifier-watcher.py"
-SYLPH="${SYLPH:-/home/manu/.local/bin/sylph}"
+# The compositor PATH may lack ~/.local/bin (user-local install): fall back to it explicitly
+SYLPH="${SYLPH:-$(command -v sylph || echo "$HOME/.local/bin/sylph")}"
 
 python3 "$WATCHER"
 

@@ -7,8 +7,8 @@ namespace sylphrena::shell::config {
 
 using Qt::StringLiterals::operator""_s;
 
-class AddonsMadisonVpn : public settings::ObjectNode {
-    CONFIG_NODE(AddonsMadisonVpn, settings::ObjectNode)
+class AddonsFortiVpn : public settings::ObjectNode {
+    CONFIG_NODE(AddonsFortiVpn, settings::ObjectNode)
 
     CONFIG_PROPERTY(bool, enabled, true)
 };
@@ -57,7 +57,7 @@ class AddonsRazerMouse : public settings::ObjectNode {
 class AddonsConfig : public settings::ObjectNode {
     CONFIG_NODE(AddonsConfig, settings::ObjectNode)
 
-    CONFIG_GLOBAL_SUBOBJECT(AddonsMadisonVpn, madisonVpn)
+    CONFIG_GLOBAL_SUBOBJECT(AddonsFortiVpn, fortiVpn)
     CONFIG_GLOBAL_SUBOBJECT(AddonsTimers, timers)
     CONFIG_GLOBAL_SUBOBJECT(AddonsHydration, hydration)
     CONFIG_GLOBAL_SUBOBJECT(AddonsSteam, steam)

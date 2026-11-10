@@ -17,7 +17,7 @@ ColumnLayout {
     spacing: Tokens.spacing.small
 
     function startConnect(): void {
-        MadisonVpn.requestOtp();
+        FortiVpn.requestOtp();
         root.popouts.currentName = "vpnOtp";
     }
 
@@ -29,7 +29,7 @@ ColumnLayout {
 
         StyledText {
             Layout.fillWidth: true
-            text: Tr.tr("Madison VPN")
+            text: Tr.tr("VPN FortiClient")
             font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
         }
 
@@ -38,7 +38,7 @@ ColumnLayout {
             type: IconButton.Text
             isRound: true
             onClicked: {
-                MadisonVpn.reloadConfig();
+                FortiVpn.reloadConfig();
                 root.popouts.currentName = "vpnSettings";
             }
         }
@@ -50,9 +50,9 @@ ColumnLayout {
         spacing: Tokens.spacing.small
 
         MaterialIcon {
-            text: MadisonVpn.connected ? "verified_user" : "remove_moderator"
-            fill: MadisonVpn.connected ? 1 : 0
-            color: MadisonVpn.connected ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+            text: FortiVpn.connected ? "verified_user" : "remove_moderator"
+            fill: FortiVpn.connected ? 1 : 0
+            color: FortiVpn.connected ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
         }
 
         ColumnLayout {
@@ -60,14 +60,14 @@ ColumnLayout {
             spacing: 0
 
             StyledText {
-                text: MadisonVpn.statusText
+                text: FortiVpn.statusText
                 color: Colours.palette.m3onSurface
                 font: Tokens.font.body.medium
             }
 
             StyledText {
-                visible: MadisonVpn.connected && MadisonVpn.vpnIp.length > 0
-                text: MadisonVpn.vpnIp
+                visible: FortiVpn.connected && FortiVpn.vpnIp.length > 0
+                text: FortiVpn.vpnIp
                 color: Colours.palette.m3onSurfaceVariant
                 font: Tokens.font.mono.small
             }
@@ -79,14 +79,14 @@ ColumnLayout {
         Layout.topMargin: Tokens.spacing.small
         Layout.rightMargin: Tokens.padding.extraSmall
         Layout.minimumHeight: Tokens.font.body.medium.pointSize + Tokens.padding.medium * 2
-        inactiveColour: MadisonVpn.connected ? Colours.palette.m3errorContainer : Colours.palette.m3primary
-        inactiveOnColour: MadisonVpn.connected ? Colours.palette.m3onErrorContainer : Colours.palette.m3onPrimary
-        text: MadisonVpn.busy ? MadisonVpn.statusText : (MadisonVpn.connected ? Tr.tr("Disconnect") : Tr.tr("Connect"))
-        enabled: !MadisonVpn.busy
+        inactiveColour: FortiVpn.connected ? Colours.palette.m3errorContainer : Colours.palette.m3primary
+        inactiveOnColour: FortiVpn.connected ? Colours.palette.m3onErrorContainer : Colours.palette.m3onPrimary
+        text: FortiVpn.busy ? FortiVpn.statusText : (FortiVpn.connected ? Tr.tr("Disconnect") : Tr.tr("Connect"))
+        enabled: !FortiVpn.busy
 
         onClicked: {
-            if (MadisonVpn.connected)
-                MadisonVpn.disconnect();
+            if (FortiVpn.connected)
+                FortiVpn.disconnect();
             else
                 root.startConnect();
         }

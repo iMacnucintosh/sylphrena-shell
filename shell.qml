@@ -6,9 +6,9 @@
 // Use qt6ct platform theme so QIcon reads qt6ct.conf [Appearance] icon_theme (Papirus) and the
 // Material palette is applied to Qt widgets; kept in sync by sylphrena-quiet (see _sync_qt6ct)
 //@ pragma Env QT_QPA_PLATFORMTHEME=qt6ct
-// Load the locally built plugin (in ~/.local) instead of the system package's:
-// it carries fork-side C++ changes (Requests transfer timeout, config nodes).
-//@ pragma Env QT_ADDITIONAL_PACKAGES_PREFIX_PATH=/home/manu/.local/lib/qt6/qml
+// A locally built plugin (~/.local/lib/qt6/qml) is picked up by `sylph shell`, which exports
+// QT_ADDITIONAL_PACKAGES_PREFIX_PATH when it exists. It cannot be set here: pragma Env does not
+// expand $HOME, and the repo must not carry a user's path. Packaged installs need nothing.
 
 import QtQuick
 import Quickshell
@@ -36,7 +36,8 @@ ShellRoot {
         Activities;
         Clipboard;
         Updates;
-        MadisonVpn;
+        ConfigMigration;
+        FortiVpn;
         Hydration;
         // Steam: activity poll only; library/API loads when Games tab opens
         Steam;
