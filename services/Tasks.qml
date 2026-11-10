@@ -19,6 +19,8 @@ Singleton {
     property int nextId: 1
     property bool doneCollapsed: false
     property bool loaded: false
+    // Id of the task just (un)checked: its new row plays an intro animation (cleared after a moment)
+    property int lastToggledId: -1
 
     readonly property var pending: items.filter(t => !t.done)
     // Most recently completed first
@@ -39,6 +41,8 @@ Singleton {
     }
 
     function toggle(id: int): void {
+        lastToggledId = id;
+        toggledReset.restart();
         items = items.map(t => t.id === id ? {
                 id: t.id,
                 text: t.text,
@@ -67,6 +71,11 @@ Singleton {
     function persist(): void {
         if (loaded)
             saveTimer.restart();
+    }
+
+    readonly property Timer toggledReset: Timer {
+        interval: 1200
+        onTriggered: root.lastToggledId = -1
     }
 
     readonly property Timer saveTimer: Timer {

@@ -253,6 +253,40 @@ Item {
         Layout.fillWidth: true
         implicitHeight: Math.max(rowText.implicitHeight, 24) + Tokens.padding.small * 2
 
+        // A task that was just (un)checked lands here as a new row: fade it in and pop its box
+        Component.onCompleted: {
+            if (Tasks.lastToggledId === modelData.id)
+                intro.start();
+        }
+
+        ParallelAnimation {
+            id: intro
+
+            Anim {
+                target: row
+                property: "opacity"
+                from: 0
+                to: 1
+                type: Anim.DefaultEffects
+            }
+
+            Anim {
+                target: check
+                property: "scale"
+                from: 0.4
+                to: 1
+                type: Anim.FastSpatial
+            }
+
+            Anim {
+                target: checkIcon
+                property: "scale"
+                from: 0
+                to: 1
+                type: Anim.DefaultSpatial
+            }
+        }
+
         HoverHandler {
             id: rowHover
         }
@@ -276,6 +310,8 @@ Item {
             }
 
             MaterialIcon {
+                id: checkIcon
+
                 anchors.centerIn: parent
                 visible: row.modelData.done
                 text: "check"
