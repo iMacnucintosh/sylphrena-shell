@@ -166,14 +166,32 @@ Item {
                 width: list.width
                 spacing: 2
 
-                // Empty state
-                StyledText {
+                // Nothing left to do: a faint "all done" watermark, centred in the list area
+                Item {
                     Layout.fillWidth: true
-                    Layout.topMargin: Tokens.padding.large
-                    visible: Tasks.items.length === 0
-                    horizontalAlignment: Text.AlignHCenter
-                    text: Tr.tr("Nothing to do")
-                    color: Colours.palette.m3outline
+                    Layout.preferredHeight: Tasks.items.length === 0 ? list.height : 96
+                    visible: Tasks.pending.length === 0
+
+                    Column {
+                        anchors.centerIn: parent
+                        spacing: Tokens.spacing.small
+                        opacity: 0.5
+
+                        MaterialIcon {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: "task_alt"
+                            fill: 1
+                            color: Colours.palette.m3primary
+                            fontStyle: Tokens.font.icon.builders.medium.scale(2.4).build()
+                        }
+
+                        StyledText {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: Tasks.items.length === 0 ? Tr.tr("Nothing to do") : Tr.tr("All done")
+                            color: Colours.palette.m3onSurfaceVariant
+                            font: Tokens.font.label.large
+                        }
+                    }
                 }
 
                 Repeater {

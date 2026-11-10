@@ -1760,6 +1760,10 @@ msgid "Nothing to do"
 msgstr "Nada pendiente"
 
 #: modules/dashboard/dash/TasksWidget.qml
+msgid "All done"
+msgstr "Todo listo"
+
+#: modules/dashboard/dash/TasksWidget.qml
 #, qt-format
 msgid "Completed (%1)"
 msgstr "Completadas (%1)"
