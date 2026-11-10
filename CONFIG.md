@@ -480,6 +480,7 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
         "showPerformance": true,
         "showWeather": true,
         "widgetOrder": ["calendar", "hydration"],
+        "calendarEnabled": false,
         "mediaUpdateInterval": 500,
         "resourceUpdateInterval": 1000,
         "dragThreshold": 50,

@@ -405,12 +405,12 @@ fuerza CVSD (voz más «telefónica», sin tocar la música). Fichero fuera del 
 ## Carrusel de widgets del dashboard
 
 El hueco central del dashboard (antes calendario/hidratación según un interruptor) es un **carrusel**: un
-widget a la vez. Se cambia con las flechas laterales (al pasar el cursor), los puntos de abajo o arrastrando en
-horizontal; sin rotación automática. Con un solo widget activo no hay controles.
+widget a la vez. Se cambia con las flechas laterales (al pasar el cursor), los puntos de abajo, la rueda del ratón o arrastrando en
+horizontal (en el carrusel el calendario no consume la rueda: `Calendar.scrollable`; el popout del reloj sí); sin rotación automática. Con un solo widget activo no hay controles.
 
 - **Ajustes**: `Nexus → Panels → Dashboard → Carrusel de widgets`. Cada widget es una fila con flechas ↑/↓ para
   **ordenarlo**; Hidratación lleva además su interruptor y sus ajustes desplegables (meta, intervalo, presets).
-- **Calendario** está siempre disponible (no se puede desactivar), así que el carrusel nunca queda vacío.
+- **Nada viene activado por defecto**: cada widget (calendario incluido, `dashboard.calendarEnabled`) tiene su interruptor. Sin ninguno activo el carrusel muestra el botón **«Activa widgets»**, que abre Nexus directamente en `Panels → Dashboard`.
 - **Hidratación** on/off sigue siendo `addons.hydration.enabled` (apagarlo detiene también recordatorios y seguimiento).
 - Config: `dashboard.widgetOrder` (lista de ids, por defecto `["calendar","hydration"]`). Ids desconocidos se ignoran y
   los que falten se añaden al final, así los widgets nuevos no rompen configs antiguas.

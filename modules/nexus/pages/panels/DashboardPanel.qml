@@ -149,7 +149,7 @@ PageBase {
             Layout.leftMargin: Tokens.padding.small
             Layout.rightMargin: Tokens.padding.small
             Layout.bottomMargin: Tokens.spacing.small
-            text: Tr.tr("The centre of the Dashboard shows one widget at a time; switch with the arrows, the dots or by dragging. Reorder them here.")
+            text: Tr.tr("The centre of the Dashboard shows one widget at a time; switch with the arrows, the dots, the wheel or by dragging. Enable and reorder them here.")
             color: Colours.palette.m3outline
             font: Tokens.font.label.small
             wrapMode: Text.Wrap
@@ -209,7 +209,7 @@ PageBase {
                                     ? Tr.tr("%1 ml · reminder every %2 min").arg(GlobalConfig.addons.hydration.dailyGoalMl).arg(GlobalConfig.addons.hydration.reminderMinutes)
                                     : card.isHydration && !Hydration.enabled
                                         ? Tr.tr("Off — also stops the reminders and the tracking")
-                                        : card.modelData.always ? Tr.tr("Always available") : card.modelData.subtext
+                                        : card.modelData.subtext
                                 color: Colours.palette.m3outline
                                 font: Tokens.font.label.small
                                 elide: Text.ElideRight
@@ -253,12 +253,12 @@ PageBase {
                         }
 
                         StyledSwitch {
-                            visible: card.isHydration
                             Layout.alignment: Qt.AlignVCenter
-                            checked: Hydration.enabled
+                            checked: DashWidgets.isEnabled(card.modelData.id)
                             onToggled: {
-                                Hydration.setEnabled(checked);
-                                root.hydrationSettingsOpen = checked;
+                                DashWidgets.setEnabled(card.modelData.id, checked);
+                                if (card.isHydration)
+                                    root.hydrationSettingsOpen = checked;
                             }
                         }
                     }

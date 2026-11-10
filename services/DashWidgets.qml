@@ -20,15 +20,13 @@ Singleton {
             id: "calendar",
             title: Tr.tr("Calendar"),
             subtext: Tr.tr("Month view of the dashboard"),
-            icon: "calendar_month",
-            always: true
+            icon: "calendar_month"
         },
         {
             id: "hydration",
             title: Tr.tr("Hydration"),
             subtext: Tr.tr("Water intake tracker with reminders"),
-            icon: "water_drop",
-            always: false
+            icon: "water_drop"
         }
     ]
 
@@ -53,7 +51,16 @@ Singleton {
     function isEnabled(id: string): bool {
         if (id === "hydration")
             return Hydration.enabled;
-        return true;
+        if (id === "calendar")
+            return GlobalConfig.dashboard.calendarEnabled;
+        return false;
+    }
+
+    function setEnabled(id: string, on: bool): void {
+        if (id === "hydration")
+            Hydration.setEnabled(on);
+        else if (id === "calendar")
+            GlobalConfig.dashboard.calendarEnabled = on;
     }
 
     // Move a widget one place up (-1) or down (+1) in the order

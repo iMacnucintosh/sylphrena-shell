@@ -24,6 +24,9 @@ Item {
         if (Updates.pendingNexusPageId) {
             nState.currentPageIdx = PageRegistry.idxOf(Updates.pendingNexusPageId);
             Updates.pendingNexusPageId = "";
+            if (Updates.pendingNexusSubPageIdx >= 0)
+                nState.openSubPage(Updates.pendingNexusSubPageIdx);
+            Updates.pendingNexusSubPageIdx = -1;
         }
     }
 

@@ -2,9 +2,11 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Sylphrena.Config
+import Sylphrena.I18n
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.modules.nexus
 
 // Centre of the dashboard: one widget at a time (calendar, hydration, …), switched by hand with
 // the arrows, the dots or a horizontal drag. Which widgets exist and their order come from
@@ -189,6 +191,50 @@ Item {
                     anchors.margins: -4
                     cursorShape: Qt.PointingHandCursor
                     onClicked: root.go(dot.index)
+                }
+            }
+        }
+    }
+
+    // Nothing enabled: a short prompt that jumps to the carousel settings
+    Item {
+        id: empty
+
+        visible: root.count === 0
+        anchors.fill: parent
+
+        StyledRect {
+            id: emptyBtn
+
+            anchors.centerIn: parent
+            implicitWidth: emptyRow.implicitWidth + Tokens.padding.large * 2
+            implicitHeight: emptyRow.implicitHeight + Tokens.padding.medium * 2
+            radius: Tokens.rounding.full
+            color: Colours.palette.m3secondaryContainer
+
+            StateLayer {
+                radius: Tokens.rounding.full
+                color: Colours.palette.m3onSecondaryContainer
+                onClicked: WindowFactory.openSubPage("panels", 1)
+            }
+
+            Row {
+                id: emptyRow
+
+                anchors.centerIn: parent
+                spacing: Tokens.spacing.small
+
+                MaterialIcon {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "widgets"
+                    color: Colours.palette.m3onSecondaryContainer
+                }
+
+                StyledText {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: Tr.tr("Enable widgets")
+                    color: Colours.palette.m3onSecondaryContainer
+                    font: Tokens.font.label.large
                 }
             }
         }
