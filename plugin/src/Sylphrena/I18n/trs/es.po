@@ -1725,8 +1725,8 @@ msgid "Widget carousel"
 msgstr "Carrusel de widgets"
 
 #: modules/nexus/pages/panels/DashboardPanel.qml
-msgid "The centre of the Dashboard shows one widget at a time; switch with the arrows, the dots, the wheel or by dragging. Enable and reorder them here."
-msgstr "El centro del panel muestra un widget a la vez; cambia con las flechas, los puntos, la rueda o arrastrando. Aquí los activas y los ordenas."
+msgid "The centre of the Dashboard shows one widget at a time; switch with the dots, the wheel or by dragging. Enable and reorder them here."
+msgstr "El centro del panel muestra un widget a la vez; cambia con los puntos, la rueda o arrastrando. Aquí los activas y los ordenas."
 
 #: modules/nexus/pages/panels/DashboardPanel.qml
 msgid "Off — also stops the reminders and the tracking"

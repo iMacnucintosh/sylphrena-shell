@@ -405,7 +405,7 @@ fuerza CVSD (voz más «telefónica», sin tocar la música). Fichero fuera del 
 ## Carrusel de widgets del dashboard
 
 El hueco central del dashboard (antes calendario/hidratación según un interruptor) es un **carrusel**: un
-widget a la vez. Se cambia con las flechas laterales (al pasar el cursor), los puntos de abajo, la rueda del ratón o arrastrando en
+widget a la vez. Se cambia con los puntos (superpuestos abajo), la rueda del ratón o arrastrando en
 horizontal (en el carrusel el calendario no consume la rueda: `Calendar.scrollable`; el popout del reloj sí); sin rotación automática. Con un solo widget activo no hay controles.
 
 - **Ajustes**: `Nexus → Panels → Dashboard → Carrusel de widgets`. Cada widget es una fila con flechas ↑/↓ para

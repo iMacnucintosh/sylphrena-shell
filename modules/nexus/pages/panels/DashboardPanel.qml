@@ -152,7 +152,7 @@ PageBase {
             Layout.leftMargin: Tokens.padding.small
             Layout.rightMargin: Tokens.padding.small
             Layout.bottomMargin: Tokens.spacing.small
-            text: Tr.tr("The centre of the Dashboard shows one widget at a time; switch with the arrows, the dots, the wheel or by dragging. Enable and reorder them here.")
+            text: Tr.tr("The centre of the Dashboard shows one widget at a time; switch with the dots, the wheel or by dragging. Enable and reorder them here.")
             color: Colours.palette.m3outline
             font: Tokens.font.label.small
             wrapMode: Text.Wrap

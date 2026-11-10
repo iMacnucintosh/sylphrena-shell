@@ -9,7 +9,7 @@ import qs.services
 import qs.modules.nexus
 
 // Centre of the dashboard: one widget at a time (calendar, hydration, …), switched by hand with
-// the arrows, the dots or a horizontal drag. Which widgets exist and their order come from
+// the dots, the wheel or a horizontal drag. Which widgets exist and their order come from
 // services/DashWidgets.qml. With a single widget there are no controls and it looks fixed.
 Item {
     id: root
@@ -148,24 +148,6 @@ Item {
             }
         }
 
-        // Arrows appear on hover, on the sides (the hydration quick-add button lives bottom-right)
-        HoverHandler {
-            id: hover
-
-            enabled: root.multi
-        }
-
-        Arrow {
-            side: "left"
-            shown: hover.hovered && root.current > 0
-            onClicked: root.go(root.current - 1)
-        }
-
-        Arrow {
-            side: "right"
-            shown: hover.hovered && root.current < root.count - 1
-            onClicked: root.go(root.current + 1)
-        }
     }
 
     // Dots: overlaid on the widget, bottom centre, on a small translucent pill so they read on any page
@@ -286,47 +268,5 @@ Item {
         id: hydrationComp
 
         HydrationWidget {}
-    }
-
-    component Arrow: Item {
-        id: arrow
-
-        required property string side
-        property bool shown
-        signal clicked
-
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: side === "left" ? parent.left : undefined
-        anchors.right: side === "right" ? parent.right : undefined
-        anchors.margins: Tokens.padding.small
-        width: 32
-        height: 32
-        opacity: shown ? 1 : 0
-        visible: opacity > 0
-
-        Behavior on opacity {
-            Anim {
-                type: Anim.StandardSmall
-            }
-        }
-
-        StyledRect {
-            anchors.fill: parent
-            radius: Tokens.rounding.small
-            color: Colours.palette.m3surfaceContainerHighest
-            opacity: 0.9
-
-            StateLayer {
-                radius: Tokens.rounding.small
-                onClicked: arrow.clicked()
-            }
-        }
-
-        MaterialIcon {
-            anchors.centerIn: parent
-            text: arrow.side === "left" ? "chevron_left" : "chevron_right"
-            color: Colours.palette.m3onSurface
-            fontStyle: Tokens.font.icon.small
-        }
     }
 }

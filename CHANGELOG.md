@@ -6,7 +6,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ### Dashboard
 
-- **Carrusel de widgets** en el centro del Panel: calendario e hidratación (más los que vengan), con flechas, puntos y arrastre, orden configurable y sin rotación automática. Ajustes en `Panels → Dashboard → Carrusel de widgets`; **Hidratación** se movió allí desde Complementos con los mismos ajustes. Nuevas opciones `dashboard.widgetOrder` y `dashboard.calendarEnabled` (requiere reinstalar el plugin); nada activado por defecto: sin widgets aparece «Activa widgets», que abre Nexus en Panels → Dashboard. La rueda cambia de widget (`Calendar.scrollable`).
+- **Carrusel de widgets** en el centro del Panel: calendario e hidratación (más los que vengan), con puntos, rueda y arrastre, orden configurable y sin rotación automática. Ajustes en `Panels → Dashboard → Carrusel de widgets`; **Hidratación** se movió allí desde Complementos con los mismos ajustes. Nuevas opciones `dashboard.widgetOrder` y `dashboard.calendarEnabled` (requiere reinstalar el plugin); nada activado por defecto: sin widgets aparece «Activa widgets», que abre Nexus en Panels → Dashboard. La rueda cambia de widget (`Calendar.scrollable`).
 - **Widget de Tareas** (`dashboard.tasksEnabled`): checklist con scroll vertical; crear, completar y eliminar; las completadas pasan a una sección plegable. El panel toma el teclado mientras se escribe (`ScreenState.dashboardTyping`).
 
 ### Apps claras
