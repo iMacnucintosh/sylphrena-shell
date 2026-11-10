@@ -1697,8 +1697,8 @@ msgid "Complements"
 msgstr "Complementos"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Optional fork features (VPN, clipboard, Steam, …)"
-msgstr "Complementos opcionales del fork (VPN, portapapeles, Steam, …)"
+msgid "Optional fork features (VPN, Steam, mouse battery, …)"
+msgstr "Complementos opcionales del fork (VPN, Steam, batería del ratón, …)"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
 msgid "Keyboard & mouse"

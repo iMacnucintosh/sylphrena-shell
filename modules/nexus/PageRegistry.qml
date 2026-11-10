@@ -52,7 +52,7 @@ QtObject {
             id: "complements",
             label: Tr.tr("Complements"),
             icon: "extension",
-            description: Tr.tr("Optional fork features (VPN, clipboard, Steam, …)"),
+            description: Tr.tr("Optional fork features (VPN, Steam, mouse battery, …)"),
             category: "appearance"
         },
 

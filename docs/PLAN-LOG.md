@@ -32,3 +32,16 @@ Hecho. Rama `feature/phase-1-personal`, fusionada en `dev/0.2`.
   El contrato de los scripts está documentado en `FEATURES.md`.
 - `git grep -i "madison\|/home/manu"` solo devuelve la tabla de migración, el historial del
   CHANGELOG, `AGENTS.md`/`FEATURES.md` (notas de migración) y este plan.
+
+## Fase 2 — Portapapeles y Temporizadores a la base (2026-11-10)
+Hecho. Rama `feature/phase-2-base`, fusionada en `dev/0.2`.
+
+- **Temporizadores**: se quitó su fila de Complementos. Su interruptor on/off y los presets ya
+  estaban en `Panels → Taskbar → Clock` (mismo `addons.timers.enabled`), así que no hizo falta mover nada más.
+- **Portapapeles**: se quitó su tarjeta de Complementos y sus ajustes (interruptor + tamaño del
+  historial) pasan a una sección **Portapapeles** al final de `Panels → Utilities`. **Decisión
+  mía** (el plan pedía proponer sitio al usuario): `utilities.clipboard` ya es esa rama de config.
+  Se conserva el `Clipboard.ensureWatchers()` al activar.
+- Verificado con la shell real (capturas): Complementos lista VPN FortiClient, Batería del ratón
+  Razer y Juegos; Utilidades muestra Portapapeles con interruptor y tamaño de historial.
+- Textos/traducciones actualizados (descripción de la página Complementos).
