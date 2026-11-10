@@ -28,6 +28,7 @@ Documentación por rol: [README.md](./README.md) = cara pública (features + ins
 - Qt platform theme: **qt6ct** (`~/.config/qt6ct`, paleta + Papirus los empuja `sylphrena-quiet` en cada esquema). Plasma desinstalado (fase 2, 2026-10-30).
 - VPN del trabajo: openfortivpn (credenciales **solo** en `~/.config/openfortivpn/config`, jamás en el repo).
 - Steam: API key **solo en config local** (nunca commitearla; grep del diff antes de push). Perfil/logros públicos.
+- **synapsex** (`~/Desarrollo/Projects/synapsex`): proyecto propio del usuario (Rust) para configurar el Razer Basilisk V4 Pro; su `synapsex-cli battery` es lo que lee `RazerMouse`. El teclado Keychron K2 HE por el receptor Link **no** expone batería con el firmware oficial (hace falta firmware modificado): descartado.
 - OpenCode TUI: plugin sidebar file-tree es un **fork local** en `~/.config/opencode/plugins/opencode-file-tree` (colores git en el árbol; rebuild con `bun run build`, no npm; verificación en su `test.md`). El tema del TUI (`sylphrena` + gemela `sylphrena-alt` para el hot-reload por flip de nombre) lo genera `scripts/generate-opencode-theme.py` y lo engancha `sylphrena-quiet.py`.
 
 ## 3. Convenciones de trabajo
@@ -88,7 +89,8 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 4. **Updates** — página Nexus + icono/badge en la barra (solo si hay paquetes) + popout; password popup → update en bg con logs en vivo en Nexus.
 5. **Clipboard** — popout estilo Sylphrena (`m3surface` + blur), favoritos, búsqueda, previews de imágenes/rutas, pegar en la ventana enfocada.
 6. **Madison VPN** — icono en status, dropdown al hover, OTP integrado, settings (host/puerto/user/pass), heal tras sleep.
-7. **Complementos** — VPN, Timers, Hidratación (+ Juegos) con icono por fila y limpieza al desactivar. Hidratación: depósito con waves como página del **carrusel de widgets** del dashboard (el calendario del popout del reloj sigue), meta 3000 ml, presets +20/+83/+250/+500, recordatorio con acciones.
+7. **Complementos** — VPN, Timers, Juegos y **Batería del ratón Razer** (`addons.razerMouse`, ocupa el hueco del anillo de almacenamiento del dashboard) con icono por fila y limpieza al desactivar. Hidratación ya no está aquí: es un widget del carrusel (punto 9).
+9. **Carrusel de widgets del dashboard** — el centro del Panel muestra un widget a la vez (calendario, hidratación, tareas), con puntos, rueda y arrastre; nada activo por defecto (botón «Activa widgets» → Nexus). Orden y interruptores en Nexus → Panels → Dashboard. Tareas: checklist persistente (`tasks.json`) con completadas plegables.
 8. **Varios** — timers del reloj persistentes, grabación estable + chip REC, capturas sin notificación, clic en notificación → enfoca/abre la app en su workspace, launcher con edición de `.desktop` (hover inferior para abrirlo, se cierra al salir el puntero), tray/status con pastilla al hover unificada, recoloreado forzado a claro de tray sin contraste (Steam/Cursor), Keep-awake (café) activado por defecto, **layout compacto** (ex game mode: solo barra izquierda, gaps/rounding/border 0, sin tocar animaciones/blur/wobble), lock con Sylphrena (65 % inferior) + notifs con scroll (35 %), i18n ES completo, docs README/FEATURES/CHANGELOG.
 
 ## 6. Trampas / aprendizajes
@@ -127,4 +129,4 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 
 ---
 
-*Última actualización: 2026-11-03 (README cara pública Sylphrena + CONFIG.md; FEATURES como guía de uso). Repo GitHub `iMacnucintosh/sylphrena-shell`; versión propia `v0.1.0`, solo tags `v0.*`; greeter en `/etc/greetd/sylphrena` vía `scripts/install-system.sh`; flake de Nix y workflows de GitHub fuera del árbol; empaquetado AUR pendiente. Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*
+*Última actualización: 2026-11-10 (carrusel de widgets, batería del ratón, rendimiento del dashboard, apps claras Qt/GTK). Anterior: 2026-11-03 (README cara pública Sylphrena + CONFIG.md; FEATURES como guía de uso). Repo GitHub `iMacnucintosh/sylphrena-shell`; versión propia `v0.1.0`, solo tags `v0.*`; greeter en `/etc/greetd/sylphrena` vía `scripts/install-system.sh`; flake de Nix y workflows de GitHub fuera del árbol; empaquetado AUR pendiente. Mantener este fichero al día con cada feature grande o aprendizaje nuevo.*
