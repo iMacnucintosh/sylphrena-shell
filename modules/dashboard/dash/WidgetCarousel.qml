@@ -133,15 +133,21 @@ Item {
             }
         }
 
+        // Cursor position for the wheel zones (WheelEvent has none)
+        HoverHandler {
+            id: wheelHover
+        }
+
         // Wheel switches page (the calendar does not consume it here); one notch per step
         WheelHandler {
             enabled: root.multi
             acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
             onWheel: event => {
                 // A page can say where the wheel must NOT switch widget (e.g. over a scrolling list)
-                const page = repeater.itemAt(root.current);
-                const w = page?.loaderItem;
-                if (w && w.wheelSwitchAllowed && !w.wheelSwitchAllowed(event.point.position.y))
+                const y = wheelHover.point.position.y;
+                const inDots = root.multi && y > pages.height - 36;
+                const w = repeater.itemAt(root.current)?.loaderItem;
+                if (!inDots && w && w.wheelSwitchAllowed && !w.wheelSwitchAllowed(y))
                     return;
                 const d = Math.abs(event.angleDelta.y) >= Math.abs(event.angleDelta.x) ? event.angleDelta.y : event.angleDelta.x;
                 if (Math.sign(d) !== Math.sign(root.wheelAcc))
