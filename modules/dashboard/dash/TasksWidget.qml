@@ -94,6 +94,9 @@ Item {
                 icon: "add"
                 type: IconButton.Tonal
                 isRound: false
+                // Same height as the input, and square
+                Layout.preferredHeight: input.height
+                Layout.preferredWidth: input.height
                 enabled: input.text.trim().length > 0
                 opacity: enabled ? 1 : 0.5
                 onClicked: root.submit()
