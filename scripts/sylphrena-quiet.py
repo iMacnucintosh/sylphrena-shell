@@ -124,7 +124,8 @@ def _sync_qt6ct(colours: dict[str, str], mode: str) -> None:
     scheme_path = colors_dir / "sylphrena.conf"
     _atomic_write(scheme_path, _qt6ct_scheme_body(colours, mode))
 
-    icon_theme = f"Papirus-{mode.capitalize()}" if mode in ("dark", "light") else "Papirus-Dark"
+    icon_mode = "light" if light_apps else mode
+    icon_theme = f"Papirus-{icon_mode.capitalize()}" if icon_mode in ("dark", "light") else "Papirus-Dark"
     conf = Path.home() / ".config/qt6ct/qt6ct.conf"
     parser = configparser.ConfigParser(interpolation=None, strict=False)
     try:
@@ -271,9 +272,15 @@ def _sync_greeter(colours: dict[str, str] | None = None) -> None:
     _sync_greeter_ui()
 
 
-def _sync_gtk_settings(mode: str) -> None:
-    """Point GTK at the correct adw-gtk3 variant and enable live CSS reload."""
-    dark = mode == "dark"
+def _sync_gtk_settings(mode: str, light_apps: bool = False) -> None:
+    """Point GTK at the correct adw-gtk3 variant and enable live CSS reload.
+
+    With light apps the GTK theme must be the LIGHT variant even if the shell scheme is dark:
+    Chromium/Electron (Teams, Cursor…) take their dark mode from the GTK theme name, which beats
+    the portal's color-scheme=prefer-light. A dark theme name kept them dark at login and again
+    whenever the theme name changed.
+    """
+    dark = mode == "dark" and not light_apps
     gtk_theme = "adw-gtk3-dark" if dark else "adw-gtk3"
     icon_theme = f"Papirus-{mode.capitalize()}" if mode in ("dark", "light") else "Papirus-Dark"
     prefer = "true" if dark else "false"
@@ -296,13 +303,22 @@ def _sync_gtk_settings(mode: str) -> None:
         except OSError:
             pass
 
+    key = "/org/gnome/desktop/interface/gtk-theme"
     try:
-        subprocess.run(
-            ["dconf", "write", "/org/gnome/desktop/interface/gtk-theme", f"'{gtk_theme}'"],
+        cur = subprocess.run(
+            ["dconf", "read", key],
             check=False,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
+            capture_output=True,
+            text=True,
+            stdin=subprocess.DEVNULL,
+        ).stdout.strip()
+        if cur != f"'{gtk_theme}'":  # a write is a change event for every running app
+            subprocess.run(
+                ["dconf", "write", key, f"'{gtk_theme}'"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
     except OSError:
         pass
 
@@ -344,6 +360,7 @@ def _patch_theme() -> None:
     orig_apply_gtk = theme.apply_gtk
 
     scheme_key = "/org/gnome/desktop/interface/color-scheme"
+    gtk_theme_key = "/org/gnome/desktop/interface/gtk-theme"
 
     def apply_gtk_fixed(colours: dict[str, str], mode: str, icon_theme: str | None = None) -> None:
         flag = _STATE / "force-apps-light"
@@ -356,6 +373,10 @@ def _patch_theme() -> None:
             # the portal live (Zen, Electron) flash dark→light on every apply.
             if isinstance(cmd, (list, tuple)) and scheme_key in cmd:
                 return subprocess.CompletedProcess(cmd, 0)
+            # Upstream also writes gtk-theme='adw-gtk3-dark' on every apply; with light apps that
+            # would turn Chromium/Electron dark (see _sync_gtk_settings). We write the right one.
+            if isinstance(cmd, (list, tuple)) and gtk_theme_key in cmd:
+                return subprocess.CompletedProcess(cmd, 0)
             return real_run(cmd, *args, **kwargs)
 
         # Upstream always writes adw-gtk3-dark; use the light variant for light mode.
@@ -365,7 +386,7 @@ def _patch_theme() -> None:
             orig_apply_gtk(colours, mode, icon_theme)
         finally:
             subprocess.run = real_run
-        _sync_gtk_settings(mode)
+        _sync_gtk_settings(mode, light_apps)
         _trigger_gtk_color_reload()
         # Light apps: keep prefer-light so Adwaita/Qt apps stay light while Thunar
         # keeps scheme CSS. Only write it when it is not already set.

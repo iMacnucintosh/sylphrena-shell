@@ -134,7 +134,12 @@ Singleton {
         // the portal scheme — Electron apps (Cursor, etc.) inherit it and their
         // integrated terminals go white while the editor theme stays dark.
         const prefer = root.lightApps ? "prefer-light" : "prefer-dark";
-        Quickshell.execDetached(["dconf", "write", "/org/gnome/desktop/interface/color-scheme", `'${prefer}'`]);
+        // Chromium/Electron (Teams, Cursor…) also take their dark mode from the GTK theme NAME, and
+        // that beats the portal's color-scheme: a dark name left them dark at login and whenever it
+        // changed, even with prefer-light. Keep both coherent, writing a key only if it differs
+        // (a write is a change event for every running app). The values travel as argv ($1/$2).
+        const gtk = (root.lightApps || root.currentLight) ? "adw-gtk3" : "adw-gtk3-dark";
+        Quickshell.execDetached(["sh", "-c", 'for kv in "gtk-theme:$1" "color-scheme:$2"; do k=${kv%%:*}; v=${kv#*:}; p=/org/gnome/desktop/interface/$k; [ "$(dconf read "$p")" = "\'$v\'" ] || dconf write "$p" "\'$v\'"; done', "sh", gtk, prefer]);
     }
 
     function scheduleAppThemeApply(): void {

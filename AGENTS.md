@@ -91,6 +91,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 ## 6. Trampas / aprendizajes
 
 - `cmake --install` **sobrescribe `shell.qml`**: revisar `git status` tras cada install y restaurar. (Con `ENABLE_MODULES=plugin` no pasa; la trampa solo aplica al módulo `shell`.)
+- **Apps claras vs Chromium/Electron**: su modo oscuro sale también del **nombre del tema GTK** (`gtk-theme` en dconf), y ese gana al `color-scheme=prefer-light` del portal en cuanto cambia (o al arrancar, porque persiste). Con apps claras el `gtk-theme` publicado debe ser `adw-gtk3` (claro) aunque el esquema de la shell sea oscuro. Lo hacen `_sync_gtk_settings(mode, light_apps)` y `Colours.applyAppTheme()`; la CLI upstream escribe siempre `adw-gtk3-dark` y `apply_gtk_fixed` lo filtra. Escribir dconf solo si el valor difiere (cada write es un evento para todas las apps). Diagnóstico: medir el brillo de la ventana (`grim -t ppm`) tras escribir `gtk-theme` / `color-scheme`.
 - Regex de reglas Hyprland = **RE2** (`(?i)`, `\.`, patrones Lua `%%` no).
 - Tras cambiar monitor/VRR: siempre `hyprctl reload`.
 - El CLI volcaba secuencias OSC a todos los `/dev/pts`; el fork lo parchea vía `scripts/sylphrena-quiet.py` — no quitar el wrapper.
