@@ -9,6 +9,10 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - **Carrusel de widgets** en el centro del Panel: calendario e hidratación (más los que vengan), con puntos, rueda y arrastre, orden configurable y sin rotación automática. Ajustes en `Panels → Dashboard → Carrusel de widgets`; **Hidratación** se movió allí desde Complementos con los mismos ajustes. Nuevas opciones `dashboard.widgetOrder` y `dashboard.calendarEnabled` (requiere reinstalar el plugin); nada activado por defecto: sin widgets aparece «Activa widgets», que abre Nexus en Panels → Dashboard. La rueda cambia de widget (`Calendar.scrollable`).
 - **Widget de Tareas** (`dashboard.tasksEnabled`): checklist con scroll vertical; crear, completar y eliminar; las completadas pasan a una sección plegable. El panel toma el teclado mientras se escribe (`ScreenState.dashboardTyping`).
 
+### Complementos
+
+- **Batería del ratón Razer** (`addons.razerMouse`): lee la batería del Basilisk V4 Pro con `synapsex-cli` y la muestra en el dashboard en el hueco de almacenamiento; aviso al 20 % y 10 %.
+
 ### Apps claras
 
 - Las apps **Qt** (Transmission…) siguen el modo claro (paleta qt6ct clara + Papirus-Light) y las GTK usan Papirus-Light (los iconos oscuros no se veían). Corregido un `NameError` en `_sync_qt6ct` que cortaba el apply.

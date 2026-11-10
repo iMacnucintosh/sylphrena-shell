@@ -87,7 +87,9 @@ Singleton {
             if (!game?.appId || root.isHiddenApp(game.appId))
                 return;
             const prev = map[game.appId] || {};
-            const lastPlayed = Math.max(prev.lastPlayed || 0, game.lastPlayed || 0, fallbackLast || 0);
+            // Real timestamps win; the fallback only orders games that have none (it used to be a
+            // fake "just now" that always beat real, more recent plays)
+            const lastPlayed = Math.max(prev.lastPlayed || 0, game.lastPlayed || 0) || fallbackLast || 0;
             map[game.appId] = Object.assign({}, prev, game, {
                 lastPlayed: lastPlayed,
                 headerUrl: game.headerUrl || prev.headerUrl || "",
@@ -104,6 +106,18 @@ Singleton {
             put(root.recentGames[i], bump - 1 - i);
         for (const g of root.nonSteamGames)
             put(g, 0);
+
+        // Real sessions (reaper) are the best evidence of when a game was last played
+        const sess = root.activity?.sessions ?? {};
+        for (const id of Object.keys(sess)) {
+            if (!map[id])
+                continue;
+            const end = Math.max(0, ...(sess[id] ?? []).map(x => x.end || 0));
+            if (end > (map[id].lastPlayed || 0))
+                map[id] = Object.assign({}, map[id], {
+                    lastPlayed: end
+                });
+        }
 
         if (root.profile?.gameId && map[root.profile.gameId])
             map[root.profile.gameId] = Object.assign({}, map[root.profile.gameId], {
@@ -177,6 +191,10 @@ Singleton {
 
     function headerUrl(appId: string): string {
         return formatMod.headerUrl(appId);
+    }
+
+    function artCandidates(appId: string, preferred: string): var {
+        return formatMod.artCandidates(appId, preferred);
     }
 
     function loadNonSteam(): void {

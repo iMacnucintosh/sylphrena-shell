@@ -67,9 +67,9 @@ RowLayout {
                 }
                 color: Colours.palette.m3surfaceContainerHighest
 
-                FadeImage {
+                SteamArt {
                     anchors.fill: parent
-                    source: Steam.headerUrl(card.modelData.appId)
+                    candidates: Steam.artCandidates(card.modelData.appId, "")
                 }
             }
 
