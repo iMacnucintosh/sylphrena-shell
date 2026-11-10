@@ -21,6 +21,7 @@ ColumnLayout {
     function closeDialog(): void {
         Updates.cancelPassword();
         passwordField.text = "";
+        passwordField.reveal = false;
         if (root.popouts.currentName === "updatesPassword")
             root.popouts.currentName = "updates";
     }
@@ -155,14 +156,33 @@ ColumnLayout {
     StyledTextField {
         id: passwordField
 
+        // Eye button inside the field: shows what was typed (handy when the password is rejected)
+        property bool reveal: false
+
         Layout.fillWidth: true
         placeholderText: Tr.tr("Password")
-        echoMode: TextInput.Password
+        echoMode: reveal ? TextInput.Normal : TextInput.Password
         enabled: !Updates.installing
         focus: root.shouldBeVisible
+        rightPadding: horizontalPadding + revealBtn.width + Tokens.spacing.small
 
         Keys.onReturnPressed: root.submit()
         Keys.onEnterPressed: root.submit()
+
+        IconButton {
+            id: revealBtn
+
+            anchors.right: parent.right
+            anchors.rightMargin: Tokens.padding.small
+            anchors.verticalCenter: parent.verticalCenter
+            icon: passwordField.reveal ? "visibility_off" : "visibility"
+            type: IconButton.Text
+            isRound: true
+            onClicked: {
+                passwordField.reveal = !passwordField.reveal;
+                passwordField.forceActiveFocus();
+            }
+        }
     }
 
     StyledText {

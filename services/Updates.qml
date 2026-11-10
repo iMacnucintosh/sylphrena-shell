@@ -218,10 +218,18 @@ Singleton {
             root._authPw = "";
             root.installing = false;
             root.installMode = "";
-            const locked = `${authErrCollector.text}`.toLowerCase().includes("locked");
+            // What sudo actually said (never contains the password): kept in the update log so a
+            // rejection that is not a wrong password can be told apart
+            const said = `${authErrCollector.text}`.split("\n").map(l => l.trim()).filter(l => l && !/^\[sudo\]/.test(l));
+            for (const l of said)
+                root.appendLog(`sudo: ${l}`);
+            const low = said.join(" ").toLowerCase();
+            const locked = low.includes("locked") || low.includes("bloquead");
+            const wrong = /incorrect|try again|lo siento|pruebe|incorrecto|intento/.test(low);
             root.authError = locked
                 ? Tr.tr("Too many failed attempts. Wait a minute and try again.")
-                : Tr.tr("Incorrect password");
+                : (wrong || said.length === 0) ? Tr.tr("Incorrect password")
+                : Tr.tr("Authentication failed: %1").arg(said[said.length - 1]);
             root.statusMessage = root.hasUpdates ? root.summaryText() : "";
             root.statusIcon = root.hasUpdates ? root.glyph : "check_circle";
             Toaster.toast(Tr.tr("Authentication failed"), root.authError, "gpp_bad", Toast.Error);

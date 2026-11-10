@@ -1803,6 +1803,11 @@ msgstr "Razer Basilisk V4 Pro: queda un %1 %"
 msgid "Mouse"
 msgstr "Ratón"
 
+#: services/Updates.qml
+#, qt-format
+msgid "Authentication failed: %1"
+msgstr "No se pudo autenticar: %1"
+
 #~ msgid "Shell shortcuts, remapping and mouse focus"
 #~ msgstr "Atajos del shell, reasignación y foco del ratón"
 
