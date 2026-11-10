@@ -109,7 +109,42 @@ def _qt6ct_scheme_body(colours: dict[str, str], mode: str) -> str:
     return "[ColorScheme]\n" + "\n".join(rows) + "\n"
 
 
-def _sync_qt6ct(colours: dict[str, str], mode: str) -> None:
+def _light_qt_colours(colours: dict[str, str]) -> dict[str, str]:
+    """Light palette for Qt apps under "light apps", derived from the scheme's inverse tokens
+    (inverseSurface/inverseOnSurface/inversePrimary are the light-mode counterparts of a dark scheme)."""
+
+    def rgb(h: str) -> tuple[int, int, int]:
+        return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+    def mix(a: str, b: str, t: float) -> str:
+        ra, rb = rgb(a), rgb(b)
+        return "".join(f"{round(x + (y - x) * t):02x}" for x, y in zip(ra, rb))
+
+    surf = colours.get("inverseSurface") or "e9e1dc"
+    text = colours.get("inverseOnSurface") or "33302d"
+    acc = colours.get("inversePrimary") or colours.get("primary") or "75593b"
+    out = dict(colours)
+    out.update(
+        surface=surf,
+        surfaceContainerLowest=mix(surf, "ffffff", 0.7),
+        surfaceContainerLow=mix(surf, "ffffff", 0.35),
+        surfaceContainer=mix(surf, text, 0.05),
+        surfaceContainerHigh=mix(surf, text, 0.09),
+        surfaceContainerHighest=mix(surf, text, 0.13),
+        surfaceBright=mix(surf, "ffffff", 0.6),
+        onSurface=text,
+        onSurfaceVariant=mix(text, surf, 0.25),
+        outline=mix(text, surf, 0.5),
+        outlineVariant=mix(text, surf, 0.7),
+        primary=acc,
+        onPrimary="ffffff",
+        tertiary=acc,
+        shadow="000000",
+    )
+    return out
+
+
+def _sync_qt6ct(colours: dict[str, str], mode: str, light_apps: bool = False) -> None:
     """Write the qt6ct scheme + config from the scheme's Material tokens.
 
     qt6ct is our Qt platform theme since leaving QT_QPA_PLATFORMTHEME=kde:
@@ -122,7 +157,7 @@ def _sync_qt6ct(colours: dict[str, str], mode: str) -> None:
 
     colors_dir = Path.home() / ".config/qt6ct/colors"
     scheme_path = colors_dir / "sylphrena.conf"
-    _atomic_write(scheme_path, _qt6ct_scheme_body(colours, mode))
+    _atomic_write(scheme_path, _qt6ct_scheme_body(_light_qt_colours(colours) if light_apps else colours, mode))
 
     icon_mode = "light" if light_apps else mode
     icon_theme = f"Papirus-{icon_mode.capitalize()}" if icon_mode in ("dark", "light") else "Papirus-Dark"
@@ -461,7 +496,7 @@ def _patch_theme() -> None:
             theme.apply_gtk(colours, mode)
         except Exception:
             pass
-        _sync_qt6ct(colours, mode)
+        _sync_qt6ct(colours, mode, (_STATE / "force-apps-light").is_file())
         _sync_seeker(colours, mode)
         _sync_things(colours, mode)
         _sync_greeter(colours)
