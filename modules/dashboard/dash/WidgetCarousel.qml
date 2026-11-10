@@ -32,7 +32,19 @@ Item {
 
     implicitHeight: pages.maxHeight + stripHeight
 
+    // Slide only when the user switches page; opening the panel / reordering must not animate
+    property bool userSwitch: false
+
+    Timer {
+        id: switchTimer
+
+        interval: 800
+        onTriggered: root.userSwitch = false
+    }
+
     function go(i: int): void {
+        userSwitch = true;
+        switchTimer.restart();
         const w = widgets[Math.max(0, Math.min(count - 1, i))];
         if (w)
             screenState.dashboardWidget = w.id;
@@ -86,7 +98,7 @@ Item {
                 visible: Math.abs(x) < width
 
                 Behavior on x {
-                    enabled: root.dragOffset === 0
+                    enabled: root.dragOffset === 0 && root.userSwitch
 
                     Anim {
                         type: Anim.DefaultSpatial
