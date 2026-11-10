@@ -43,72 +43,32 @@ ClipRect {
         }
     }
 
-    // ~30fps while Dash is visible: the waves are slow and the Canvas is painted on the CPU, so 60fps
-    // cost about twice as much for no visible gain (same speed: the step scales with the interval)
+    // ~30fps while Dash is visible: every step redraws the whole dashboard window, and the waves
+    // are slow enough that 60fps adds nothing visible (same speed: the step scales with the interval)
     Timer {
         interval: 33
         running: root.visible
         repeat: true
         onTriggered: {
             root.wavePhase = (root.wavePhase + 0.033 * 1.6) % (Math.PI * 2);
-            tankCanvas.requestPaint();
         }
     }
 
-    Canvas {
-        id: tankCanvas
+    // Water tank drawn on the GPU (plugin shader water.frag): same waves, gradient and crest the
+    // Canvas used to paint on the CPU every frame
+    ShaderEffect {
+        id: tank
+
+        readonly property vector2d size: Qt.vector2d(width, height)
+        readonly property real fill: root.animFill
+        readonly property real phase: root.wavePhase
+        readonly property real amp: Math.min(14, height * 0.05)
+        readonly property color topColour: Qt.alpha(Colours.palette.m3primary, root.animFill < 0.01 ? 0.35 : 0.88)
+        readonly property color bottomColour: Qt.alpha(Colours.palette.m3primaryContainer, root.animFill < 0.01 ? 0.55 : 0.98)
 
         anchors.fill: parent
         z: 0
-
-        onPaint: {
-            const ctx = getContext("2d");
-            const w = width;
-            const h = height;
-            if (w < 2 || h < 2)
-                return;
-            ctx.reset();
-
-            const fill = Math.max(0.06, Math.min(1, root.animFill));
-            const waterTop = h * (1 - fill);
-            const primary = Colours.palette.m3primary;
-            const container = Colours.palette.m3primaryContainer;
-            const toCss = (c, a) => `rgba(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)},${a})`;
-
-            ctx.beginPath();
-            ctx.moveTo(0, h);
-            ctx.lineTo(0, waterTop);
-            const amp = Math.min(14, h * 0.05);
-            const phase = root.wavePhase;
-            for (let x = 0; x <= w; x += 2) {
-                const y = waterTop + Math.sin(x / w * Math.PI * 2 + phase) * amp + Math.sin(x / w * Math.PI * 4 - phase * 1.3) * amp * 0.35;
-                ctx.lineTo(x, y);
-            }
-            ctx.lineTo(w, h);
-            ctx.closePath();
-
-            const grad = ctx.createLinearGradient(0, waterTop, 0, h);
-            grad.addColorStop(0, toCss(primary, root.animFill < 0.01 ? 0.35 : 0.88));
-            grad.addColorStop(1, toCss(container, root.animFill < 0.01 ? 0.55 : 0.98));
-            ctx.fillStyle = grad;
-            ctx.fill();
-
-            ctx.beginPath();
-            const crest = waterTop + amp * 0.2;
-            ctx.moveTo(0, h);
-            ctx.lineTo(0, crest);
-            for (let x2 = 0; x2 <= w; x2 += 2) {
-                const y2 = crest + Math.sin(x2 / w * Math.PI * 2 - phase * 0.8) * amp * 0.55;
-                ctx.lineTo(x2, y2);
-            }
-            ctx.lineTo(w, h);
-            ctx.closePath();
-            ctx.fillStyle = "rgba(255,255,255,0.14)";
-            ctx.fill();
-        }
-
-        onWidthChanged: requestPaint()
-        onHeightChanged: requestPaint()
+        fragmentShader: "qrc:/shaders/water.frag.qsb"
     }
 
     Item {
