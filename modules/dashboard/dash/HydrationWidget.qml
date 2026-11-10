@@ -43,13 +43,14 @@ ClipRect {
         }
     }
 
-    // ~60fps while Dash is visible
+    // ~30fps while Dash is visible: the waves are slow and the Canvas is painted on the CPU, so 60fps
+    // cost about twice as much for no visible gain (same speed: the step scales with the interval)
     Timer {
-        interval: 16
+        interval: 33
         running: root.visible
         repeat: true
         onTriggered: {
-            root.wavePhase = (root.wavePhase + 0.016 * 1.6) % (Math.PI * 2);
+            root.wavePhase = (root.wavePhase + 0.033 * 1.6) % (Math.PI * 2);
             tankCanvas.requestPaint();
         }
     }
