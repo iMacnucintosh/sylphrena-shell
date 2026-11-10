@@ -327,7 +327,8 @@ def _sync_gtk_settings(mode: str, light_apps: bool = False) -> None:
     """
     dark = mode == "dark" and not light_apps
     gtk_theme = "adw-gtk3-dark" if dark else "adw-gtk3"
-    icon_theme = f"Papirus-{mode.capitalize()}" if mode in ("dark", "light") else "Papirus-Dark"
+    icon_mode = "dark" if dark else "light"  # dark icons on light apps (Papirus-Dark vanishes on white)
+    icon_theme = f"Papirus-{icon_mode.capitalize()}"
     prefer = "true" if dark else "false"
     body = (
         "[Settings]\n"
@@ -441,7 +442,7 @@ def _patch_theme() -> None:
             if orig_atomic_write is not None:
                 theme.atomic_write = atomic_write_light
         try:
-            orig_apply_gtk(colours, mode, icon_theme)
+            orig_apply_gtk(colours, mode, "Papirus-Light" if light_apps else icon_theme)
         finally:
             subprocess.run = real_run
             if orig_atomic_write is not None:
