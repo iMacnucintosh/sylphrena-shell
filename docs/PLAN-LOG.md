@@ -114,3 +114,26 @@ Hecho. Rama `feature/phase-4-razer`, fusionada en `dev/0.2`.
   Anillo verificado en el dashboard (33 %).
 - Lección: `ExtensionCard` no importaba `Sylphrena.Config` (`Tokens` sin definir → altura 0 y filas
   solapadas). Los `ReferenceError` de QML solo salen en el log: mirarlo siempre.
+
+## Fase 4 — VPN FortiClient (2026-11-10)
+Hecho. Rama `feature/phase-4-vpn`, fusionada en `dev/0.2`.
+
+- `extensions/vpn-forticlient/` (tipo `addon`): servicio, icono de estado, tres popouts (conexión,
+  OTP, ajustes) y un `Settings.qml` informativo. `services/FortiVpn.qml`, `VpnStatus.qml`,
+  `Vpn*.qml` y `AddonsFortiVpn` (C++) ya no existen. Config migrada a `extensions.enabled`.
+- **Enganches nuevos**: `statusIcons` (la barra dibuja con la extensión las entradas de
+  `bar.statusIcons` que no son de la base; las etiquetas de Nexus también salen de ahí) y
+  `popouts` (la base crea los popouts de las extensiones; los marcados `dialog` toman el teclado,
+  reenvían Esc a `closeDialog()` y se mantienen abiertos al pasar sobre su `parentIcon`). Se
+  eliminaron de `Bar.qml`/`Wrapper.qml`/`Content.qml` todas las referencias a `vpn*`.
+- **Desactivar desde Nexus** llama a `service.aboutToDisable()` antes de destruirlo: lanza
+  `disconnect_vpn.sh` + `heal_vpn.sh` *detached* (el servicio muere justo después). Reiniciar la
+  shell NO para el túnel (solo la desactivación explícita).
+- `ExtensionSlot` ahora admite `entry: null` y se reconstruye al cambiar `entry` (hacía falta para
+  los iconos, cuya extensión se carga después de la barra).
+- **Verificado**: arranque limpio, icono de la VPN en la barra, popout «VPN FortiClient /
+  Desconectado / Conectar» al pasar el cursor (con `hyprctl dispatch cursor.move`), fila en
+  Complementos con estado.
+- ⚠️ **NO verificado** (necesita tu intervención): conectar de verdad (OTP + ayudante con
+  privilegios), el diálogo OTP y el de ajustes (teclado, Esc, que no se cierren al mover el
+  cursor), y el heal tras suspender. Pruébalos antes de fiarte de esta fase.

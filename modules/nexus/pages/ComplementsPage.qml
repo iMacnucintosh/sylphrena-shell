@@ -68,25 +68,16 @@ PageBase {
             text: Tr.tr("Available")
         }
 
-        ToggleRow {
-            first: true
-            leadingIcon: "verified_user"
-            text: Tr.tr("VPN FortiClient")
-            subtext: FortiVpn.enabled
-                ? (FortiVpn.connected ? FortiVpn.statusText : Tr.tr("FortiClient / openfortivpn status icon and connect flow"))
-                : Tr.tr("Disabled — tunnel and related processes are stopped")
-            checked: GlobalConfig.addons.fortiVpn.enabled
-            onToggled: FortiVpn.setEnabled(checked)
-        }
-
         // Optional extensions of type "addon" (see services/Extensions.qml)
         Repeater {
             model: Extensions.discovered.filter(d => d.manifest.type === "addon")
 
             delegate: ExtensionCard {
                 required property var modelData
+                required property int index
 
                 item: modelData
+                first: index === 0
             }
         }
 
@@ -286,13 +277,5 @@ PageBase {
             }
         }
 
-        StyledText {
-            Layout.fillWidth: true
-            Layout.topMargin: Tokens.spacing.medium
-            text: Tr.tr("FortiClient VPN config: ~/.config/openfortivpn/config (popout gear). Scripts: ~/.local/share/sylphrena/vpn-forticlient/")
-            color: Colours.palette.m3outline
-            font: Tokens.font.label.small
-            wrapMode: Text.WordWrap
-        }
     }
 }

@@ -11,7 +11,11 @@ import qs.services
 ColumnLayout {
     id: root
 
-    required property PopoutState popouts
+    // Injected by the base: the extension and its service (see services/Extensions.qml)
+    required property var ext
+    required property var service
+
+    required property var popouts
 
     readonly property bool shouldBeVisible: root.popouts.currentName === "vpnOtp"
 
@@ -19,7 +23,7 @@ ColumnLayout {
     spacing: Tokens.spacing.medium
 
     function closeDialog(): void {
-        FortiVpn.cancelOtp();
+        root.service.cancelOtp();
         otpField.text = "";
         // Return to the VPN status popout (same pattern as Wi‑Fi password → network)
         if (root.popouts.currentName === "vpnOtp")
@@ -30,7 +34,7 @@ ColumnLayout {
         const token = otpField.text.trim();
         if (token.length === 0)
             return;
-        FortiVpn.connectWithOtp(token);
+        root.service.connectWithOtp(token);
         otpField.text = "";
         if (root.popouts.currentName === "vpnOtp")
             root.popouts.currentName = "vpn";
@@ -92,10 +96,10 @@ ColumnLayout {
     }
 
     StyledText {
-        visible: FortiVpn.lastError.length > 0
+        visible: root.service.lastError.length > 0
         Layout.fillWidth: true
         wrapMode: Text.Wrap
-        text: FortiVpn.lastError
+        text: root.service.lastError
         color: Colours.palette.m3error
         font: Tokens.font.body.small
     }
@@ -119,7 +123,7 @@ ColumnLayout {
             inactiveColour: Colours.palette.m3primary
             inactiveOnColour: Colours.palette.m3onPrimary
             text: Tr.tr("Connect")
-            enabled: otpField.text.trim().length > 0 && !FortiVpn.busy
+            enabled: otpField.text.trim().length > 0 && !root.service.busy
             onClicked: root.submit()
         }
     }

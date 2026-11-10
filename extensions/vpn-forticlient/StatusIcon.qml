@@ -8,6 +8,10 @@ import qs.services
 Item {
     id: root
 
+    // Injected by the base: the extension and its service (see services/Extensions.qml)
+    required property var ext
+    required property var service
+
     required property color colour
 
     implicitWidth: icon.implicitWidth
@@ -19,14 +23,14 @@ Item {
         anchors.centerIn: parent
         animate: true
         // Shield-style glyphs (like KDE network-vpn)
-        text: FortiVpn.connected ? "verified_user" : "remove_moderator"
-        fill: FortiVpn.connected ? 1 : 0
+        text: root.service.connected ? "verified_user" : "remove_moderator"
+        fill: root.service.connected ? 1 : 0
         // Always follow EntryWrapper colour so hover (m3onPrimary on m3primary pill) stays readable
         color: root.colour
-        opacity: FortiVpn.busy ? 0.55 : 1
+        opacity: root.service.busy ? 0.55 : 1
 
         SequentialAnimation on opacity {
-            running: FortiVpn.busy
+            running: root.service.busy
             loops: Animation.Infinite
             alwaysRunToEnd: true
             Anim {

@@ -10,8 +10,6 @@ import qs.services
 import qs.utils
 import qs.modules.bar.components.status
 
-// FortiVpn used by vpn entry click handling
-
 StyledRect {
     id: root
 
@@ -47,11 +45,14 @@ StyledRect {
         // Hide updates badge when there is nothing to install (keep visible while installing)
         if (entry.id === "updates")
             return root.Config.bar.status.onlyShowUpdatesWithUpdates && !Updates.hasUpdates && !Updates.busy && !Updates.installing;
-        // Complements: VPN FortiClient can be turned off entirely
-        if (entry.id === "vpn")
-            return !FortiVpn.enabled;
+        // Not a built-in icon: it comes from an extension, and is absent while that is disabled
+        if (!builtinIds.includes(entry.id))
+            return !Extensions.statusIcons.some(i => i.id === entry.id);
         return false;
     }
+
+    // Entries drawn by the DelegateChoices below; anything else is looked up in the extensions
+    readonly property list<string> builtinIds: ["lockStatus", "kbLayout", "audio", "microphone", "network", "bluetooth", "updates", "battery"]
 
     color: Colours.tPalette.m3surfaceContainer
     radius: Tokens.rounding.full
@@ -148,14 +149,6 @@ StyledRect {
                     }
                 }
                 DelegateChoice {
-                    roleValue: "vpn"
-                    delegate: EntryWrapper {
-                        VpnStatus {
-                            colour: parent.iconColour
-                        }
-                    }
-                }
-                DelegateChoice {
                     roleValue: "updates"
                     delegate: EntryWrapper {
                         UpdatesStatus {
@@ -168,6 +161,19 @@ StyledRect {
                     delegate: EntryWrapper {
                         BatteryStatus {
                             colour: parent.iconColour
+                        }
+                    }
+                }
+                // Default: an icon contributed by an extension (matched by entry id)
+                DelegateChoice {
+                    delegate: EntryWrapper {
+                        id: extWrap
+
+                        ExtensionSlot {
+                            entry: Extensions.statusIcons.find(i => i.id === extWrap.modelData.id) ?? null
+                            props: ({
+                                    colour: extWrap.iconColour
+                                })
                         }
                     }
                 }

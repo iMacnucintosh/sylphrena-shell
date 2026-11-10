@@ -111,24 +111,22 @@ Item {
             }
         }
 
-        Popout {
-            name: "vpn"
-            sourceComponent: Vpn {
-                popouts: root.popouts
-            }
-        }
+        // Popouts contributed by extensions (e.g. the VPN's): they get `popouts` to open siblings
+        Repeater {
+            model: Extensions.popouts
 
-        Popout {
-            name: "vpnOtp"
-            sourceComponent: VpnOtp {
-                popouts: root.popouts
-            }
-        }
+            Popout {
+                id: extPopout
 
-        Popout {
-            name: "vpnSettings"
-            sourceComponent: VpnSettings {
-                popouts: root.popouts
+                required property var modelData
+
+                name: modelData.name
+                sourceComponent: ExtensionSlot {
+                    entry: extPopout.modelData
+                    props: ({
+                            popouts: root.popouts
+                        })
+                }
             }
         }
 

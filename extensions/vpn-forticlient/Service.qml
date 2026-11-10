@@ -1,4 +1,3 @@
-pragma Singleton
 
 import QtQuick
 import Quickshell
@@ -9,13 +8,17 @@ import Sylphrena.I18n
 import Sylphrena.Services
 import qs.utils
 
-Singleton {
+Scope {
     id: root
+
+    // Injected by the base (services/Extensions.qml)
+    required property var ext
 
     readonly property string scriptsDir: `${Paths.data}/vpn-forticlient`
     readonly property string configPath: `${Quickshell.env("HOME")}/.config/openfortivpn/config`
 
-    readonly property bool enabled: GlobalConfig.addons.fortiVpn.enabled
+    // The service exists only while the extension is enabled (kept so the code below reads as before)
+    readonly property bool enabled: true
 
     property bool connected: false
     property string vpnIp: ""
@@ -38,10 +41,12 @@ Singleton {
     readonly property bool connecting: busy && !connected
     readonly property bool disconnecting: busy && connected
 
-    function setEnabled(on: bool): void {
-        if (GlobalConfig.addons.fortiVpn.enabled === on)
-            return;
-        GlobalConfig.addons.fortiVpn.enabled = on;
+    // Called by the base just before the extension is disabled from Nexus: stop the tunnel and clear
+    // DNS/hosts. Detached, because this service is destroyed right after.
+    function aboutToDisable(): void {
+        Quickshell.execDetached(["sh", "-c", '"$1"; "$2"', "sh", `${root.scriptsDir}/disconnect_vpn.sh`, `${root.scriptsDir}/heal_vpn.sh`]);
+        if (GlobalConfig.utilities.toasts.vpnChanged)
+            Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("Complement disabled"), "shield");
     }
 
     function refreshStatus(): void {
@@ -380,19 +385,6 @@ Singleton {
 
         function onResumed(): void {
             root.onResumed();
-        }
-    }
-
-    Connections {
-        target: GlobalConfig.addons.fortiVpn
-
-        function onEnabledChanged(): void {
-            if (root.enabled) {
-                root.tearingDown = false;
-                root.refreshStatus();
-            } else {
-                root.teardown();
-            }
         }
     }
 
