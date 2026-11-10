@@ -39,7 +39,6 @@ ShellRoot {
         ConfigMigration;
         FortiVpn;
         Extensions;
-        Hydration;
         // Steam: activity poll only; library/API loads when Games tab opens
         Steam;
         // Weather: first Dash/Weather UI calls Weather.reload() — skip boot network hit

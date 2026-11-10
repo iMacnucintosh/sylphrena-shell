@@ -13,6 +13,18 @@ from pathlib import Path
 # Old boolean switch -> id added to a list when it was on. The old key is always removed.
 ENABLES = {
     "dashboard.tasksEnabled": ("extensions.enabled", "tasks"),  # Tasks became an extension (v0.2)
+    "addons.hydration.enabled": ("extensions.enabled", "hydration"),  # Hydration too (v0.2)
+}
+
+# Old shell.json setting -> (extension id, key in ~/.config/sylphrena/extensions/<id>.json).
+# The value is written to the extension's own config unless that key is already there.
+TO_EXTENSION_CONFIG = {
+    "addons.hydration.dailyGoalMl": ("hydration", "dailyGoalMl"),
+    "addons.hydration.reminderMinutes": ("hydration", "reminderMinutes"),
+    "addons.hydration.presetMl0": ("hydration", "presetMl0"),
+    "addons.hydration.presetMl1": ("hydration", "presetMl1"),
+    "addons.hydration.presetMl2": ("hydration", "presetMl2"),
+    "addons.hydration.presetMl3": ("hydration", "presetMl3"),
 }
 
 RENAMES = {
@@ -47,6 +59,25 @@ def main() -> int:
     except (OSError, ValueError):
         return 0
     changed = False
+    # Extension settings first: if shell.json is rewritten, the extensions must already find them
+    for old, (ext_id, key) in TO_EXTENSION_CONFIG.items():
+        value, found = take(data, old)
+        if not found:
+            continue
+        changed = True
+        ext_path = base / "sylphrena" / "extensions" / f"{ext_id}.json"
+        try:
+            ext_cfg = json.loads(ext_path.read_text())
+            if not isinstance(ext_cfg, dict):
+                ext_cfg = {}
+        except (OSError, ValueError):
+            ext_cfg = {}
+        if key not in ext_cfg:
+            ext_cfg[key] = value
+            ext_path.parent.mkdir(parents=True, exist_ok=True)
+            tmp = ext_path.with_suffix(".json.tmp")
+            tmp.write_text(json.dumps(ext_cfg, indent=2, ensure_ascii=False) + "\n")
+            tmp.replace(ext_path)
     for old, new in RENAMES.items():
         value, found = take(data, old)
         if found:
@@ -66,6 +97,11 @@ def main() -> int:
             if item not in items:
                 items.append(item)
     if changed:
+        # Drop sections the migration left empty (e.g. addons.hydration)
+        addons = data.get("addons")
+        if isinstance(addons, dict):
+            for k in [k for k, v in addons.items() if v == {}]:
+                del addons[k]
         tmp = path.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(data, indent=4, ensure_ascii=False) + "\n")
         tmp.replace(path)

@@ -1,4 +1,3 @@
-pragma Singleton
 pragma ComponentBehavior: Bound
 
 import QtQuick
@@ -10,18 +9,25 @@ import Sylphrena.I18n
 import qs.services
 import qs.utils
 
-Singleton {
+// Service of the Hydration extension: the day's water intake, reminders (a notification with quick
+// add buttons) and persistence (~/.local/state/sylphrena/hydration.json). Settings live in the
+// extension's own config (ext.config); the service exists only while the extension is enabled.
+Scope {
     id: root
 
-    readonly property bool enabled: GlobalConfig.addons.hydration.enabled
-    readonly property int dailyGoalMl: Math.max(1, GlobalConfig.addons.hydration.dailyGoalMl)
-    readonly property int reminderMinutes: Math.max(1, GlobalConfig.addons.hydration.reminderMinutes)
+    // Injected by the base (services/Extensions.qml)
+    required property var ext
+
+    readonly property int dailyGoalMl: Math.max(1, root.ext.config.get("dailyGoalMl", 3000))
+    readonly property int reminderMinutes: Math.max(1, root.ext.config.get("reminderMinutes", 15))
     readonly property list<int> presets: [
-        Math.max(1, GlobalConfig.addons.hydration.presetMl0),
-        Math.max(1, GlobalConfig.addons.hydration.presetMl1),
-        Math.max(1, GlobalConfig.addons.hydration.presetMl2),
-        Math.max(1, GlobalConfig.addons.hydration.presetMl3)
+        Math.max(1, root.ext.config.get("presetMl0", 20)),
+        Math.max(1, root.ext.config.get("presetMl1", 83)),
+        Math.max(1, root.ext.config.get("presetMl2", 250)),
+        Math.max(1, root.ext.config.get("presetMl3", 500))
     ]
+    // One line for the Nexus card when its settings are open
+    readonly property string summary: Tr.tr("%1 ml · reminder every %2 min").arg(dailyGoalMl).arg(reminderMinutes)
 
     property string dateKey: ""
     property int drunkMl: 0
@@ -43,7 +49,7 @@ Singleton {
     readonly property Timer dayTimer: Timer {
         // Midnight rollover; no need to wake every 30s
         interval: 5 * 60 * 1000
-        running: root.enabled
+        running: true
         repeat: true
         onTriggered: root.ensureToday()
     }
@@ -51,35 +57,22 @@ Singleton {
     readonly property Timer reminderTimer: Timer {
         // Reminder cadence is minutes; checking once a minute is enough
         interval: 60 * 1000
-        running: root.enabled && root.loaded && !root.goalReached
+        running: root.loaded && !root.goalReached
         repeat: true
         onTriggered: root.maybeRemind()
     }
 
-    function setEnabled(on: bool): void {
-        if (GlobalConfig.addons.hydration.enabled === on)
-            return;
-        GlobalConfig.addons.hydration.enabled = on;
-    }
-
     function setDailyGoal(ml: int): void {
-        GlobalConfig.addons.hydration.dailyGoalMl = Math.max(1, Math.round(ml));
+        root.ext.config.set("dailyGoalMl", Math.max(1, Math.round(ml)));
     }
 
     function setReminderMinutes(mins: int): void {
-        GlobalConfig.addons.hydration.reminderMinutes = Math.max(1, Math.round(mins));
+        root.ext.config.set("reminderMinutes", Math.max(1, Math.round(mins)));
     }
 
     function setPreset(index: int, ml: int): void {
-        const v = Math.max(1, Math.round(ml));
-        if (index === 0)
-            GlobalConfig.addons.hydration.presetMl0 = v;
-        else if (index === 1)
-            GlobalConfig.addons.hydration.presetMl1 = v;
-        else if (index === 2)
-            GlobalConfig.addons.hydration.presetMl2 = v;
-        else if (index === 3)
-            GlobalConfig.addons.hydration.presetMl3 = v;
+        if (index >= 0 && index <= 3)
+            root.ext.config.set(`presetMl${index}`, Math.max(1, Math.round(ml)));
     }
 
     function todayKey(): string {
@@ -120,8 +113,6 @@ Singleton {
     }
 
     function addMl(amount: int): void {
-        if (!root.enabled)
-            return;
         root.ensureToday();
         const ml = Math.max(0, Math.round(amount));
         if (ml <= 0)
@@ -134,8 +125,6 @@ Singleton {
     }
 
     function removeMl(amount: int): void {
-        if (!root.enabled)
-            return;
         root.ensureToday();
         const ml = Math.max(0, Math.round(amount));
         if (ml <= 0 || root.drunkMl <= 0)
@@ -149,7 +138,7 @@ Singleton {
     }
 
     function undoLast(): void {
-        if (!root.enabled || root.lastAddedMl <= 0)
+        if (root.lastAddedMl <= 0)
             return;
         root.ensureToday();
         root.drunkMl = Math.max(0, root.drunkMl - root.lastAddedMl);
@@ -184,7 +173,7 @@ Singleton {
     }
 
     function maybeRemind(): void {
-        if (!root.enabled || root.goalReached)
+        if (root.goalReached)
             return;
         root.ensureToday();
         if (root.reminderStillOpen())
@@ -258,19 +247,8 @@ Singleton {
         root.schedulePersist();
     }
 
-    Connections {
-        target: GlobalConfig.addons.hydration
-
-        function onEnabledChanged(): void {
-            if (!root.enabled)
-                root.dismissReminder();
-            else {
-                root.ensureToday();
-                if (!root.lastAddAt)
-                    root.lastAddAt = Date.now();
-            }
-        }
-    }
+    // Disabling the extension destroys this service: close a pending reminder with it
+    Component.onDestruction: dismissReminder()
 
     FileView {
         id: storage

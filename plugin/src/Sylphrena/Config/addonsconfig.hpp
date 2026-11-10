@@ -24,18 +24,6 @@ class AddonsTimers : public settings::ObjectNode {
     CONFIG_PROPERTY(int, presetMins3, 30)
 };
 
-class AddonsHydration : public settings::ObjectNode {
-    CONFIG_NODE(AddonsHydration, settings::ObjectNode)
-
-    CONFIG_PROPERTY(bool, enabled, false)
-    CONFIG_PROPERTY(int, dailyGoalMl, 3000)
-    CONFIG_PROPERTY(int, reminderMinutes, 15)
-    CONFIG_PROPERTY(int, presetMl0, 20)
-    CONFIG_PROPERTY(int, presetMl1, 83)
-    CONFIG_PROPERTY(int, presetMl2, 250)
-    CONFIG_PROPERTY(int, presetMl3, 500)
-};
-
 class AddonsSteam : public settings::ObjectNode {
     CONFIG_NODE(AddonsSteam, settings::ObjectNode)
 
@@ -59,7 +47,6 @@ class AddonsConfig : public settings::ObjectNode {
 
     CONFIG_GLOBAL_SUBOBJECT(AddonsFortiVpn, fortiVpn)
     CONFIG_GLOBAL_SUBOBJECT(AddonsTimers, timers)
-    CONFIG_GLOBAL_SUBOBJECT(AddonsHydration, hydration)
     CONFIG_GLOBAL_SUBOBJECT(AddonsSteam, steam)
     CONFIG_GLOBAL_SUBOBJECT(AddonsRazerMouse, razerMouse)
 };

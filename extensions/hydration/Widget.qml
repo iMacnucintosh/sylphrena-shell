@@ -13,7 +13,12 @@ import qs.services
 ClipRect {
     id: root
 
-    readonly property real fillLevel: Hydration.progress
+    // Injected by the base: the extension, its service, and (for dashboard slots) the screen state
+    required property var ext
+    required property var service
+    property var screenState
+
+    readonly property real fillLevel: root.service.progress
     property real animFill: 0
     property real wavePhase: 0
     readonly property bool presetsOpen: fabHover.hovered || panelHover.hovered || closeGrace.running
@@ -24,8 +29,8 @@ ClipRect {
     // Largest closest to the glass FAB
     readonly property var presetOrder: {
         const out = [];
-        for (let i = Hydration.presets.length - 1; i >= 0; --i)
-            out.push(Hydration.presets[i]);
+        for (let i = root.service.presets.length - 1; i >= 0; --i)
+            out.push(root.service.presets[i]);
         return out;
     }
 
@@ -54,7 +59,7 @@ ClipRect {
         }
     }
 
-    // Water tank drawn on the GPU (plugin shader water.frag): same waves, gradient and crest the
+    // Water tank drawn on the GPU (water.frag, compiled to water.frag.qsb with qsb): the waves, gradient and crest the
     // Canvas used to paint on the CPU every frame
     ShaderEffect {
         id: tank
@@ -68,7 +73,7 @@ ClipRect {
 
         anchors.fill: parent
         z: 0
-        fragmentShader: "qrc:/shaders/water.frag.qsb"
+        fragmentShader: Qt.resolvedUrl("water.frag.qsb")
     }
 
     Item {
@@ -100,7 +105,7 @@ ClipRect {
 
             MaterialIcon {
                 Layout.alignment: Qt.AlignHCenter
-                text: Hydration.goalReached ? "water_full" : "water_drop"
+                text: root.service.goalReached ? "water_full" : "water_drop"
                 color: stats.accent
                 fontStyle: Tokens.font.icon.large
             }
@@ -108,14 +113,14 @@ ClipRect {
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
                 horizontalAlignment: Text.AlignHCenter
-                text: Tr.tr("%1 / %2 ml").arg(Hydration.drunkMl).arg(Hydration.dailyGoalMl)
+                text: Tr.tr("%1 / %2 ml").arg(root.service.drunkMl).arg(root.service.dailyGoalMl)
                 color: stats.ink
                 font: Tokens.font.headline.small
             }
 
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
-                text: `${Math.round(Hydration.progress * 100)}%`
+                text: `${Math.round(root.service.progress * 100)}%`
                 color: stats.accent
                 font: Tokens.font.title.small
             }
@@ -315,9 +320,9 @@ ClipRect {
             radius: parent.radius
             onClicked: {
                 if (chip.subtract)
-                    Hydration.removeMl(chip.amount);
+                    root.service.removeMl(chip.amount);
                 else
-                    Hydration.addMl(chip.amount);
+                    root.service.addMl(chip.amount);
             }
         }
 

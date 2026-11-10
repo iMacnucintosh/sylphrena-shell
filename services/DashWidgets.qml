@@ -9,8 +9,7 @@ import qs.services
 // Registry of the widgets that can live in the dashboard carousel (centre of the Dashboard tab).
 //
 // Two sources, one list:
-//   - `builtin`: widgets the shell ships itself (the calendar; Hydration until it becomes an
-//     extension in phase 4 of docs/PLAN-MODULAR.md);
+//   - `builtin`: widgets the shell ships itself (only the calendar);
 //   - widgets declared by extensions (services/Extensions.qml), found through their manifests.
 //     Extensions are never named here: adding one needs no change to this file.
 // The order lives in config (`dashboard.widgetOrder`); unknown ids are ignored and missing ones are
@@ -24,12 +23,6 @@ Singleton {
             title: Tr.tr("Calendar"),
             subtext: Tr.tr("Month view of the dashboard"),
             icon: "calendar_month"
-        },
-        {
-            id: "hydration",
-            title: Tr.tr("Hydration"),
-            subtext: Tr.tr("Water intake tracker with reminders"),
-            icon: "water_drop"
         }
     ]
 
@@ -40,6 +33,8 @@ Singleton {
                 ext: w.extId,
                 title: Tr.tr(w.title),
                 subtext: w.subtext ? Tr.tr(w.subtext) : "",
+                offNote: w.offNote ? Tr.tr(w.offNote) : "",
+                hasSettings: w.hasSettings,
                 icon: w.icon
             })))
 
@@ -80,8 +75,6 @@ Singleton {
         const w = all.find(x => x.id === id);
         if (w?.ext)
             return Extensions.isEnabled(w.ext);
-        if (id === "hydration")
-            return Hydration.enabled;
         if (id === "calendar")
             return GlobalConfig.dashboard.calendarEnabled;
         return false;
@@ -91,8 +84,6 @@ Singleton {
         const w = all.find(x => x.id === id);
         if (w?.ext)
             Extensions.setEnabled(w.ext, on);
-        else if (id === "hydration")
-            Hydration.setEnabled(on);
         else if (id === "calendar")
             GlobalConfig.dashboard.calendarEnabled = on;
     }

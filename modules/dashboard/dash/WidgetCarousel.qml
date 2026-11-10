@@ -8,7 +8,7 @@ import qs.components.controls
 import qs.services
 import qs.modules.nexus
 
-// Centre of the dashboard: one widget at a time (calendar, hydration, …), switched by hand with
+// Centre of the dashboard: one widget at a time (calendar, plus those of the extensions), switched by hand with
 // the dots, the wheel or a horizontal drag. Which widgets exist and their order come from
 // services/DashWidgets.qml. With a single widget there are no controls and it looks fixed.
 Item {
@@ -93,7 +93,7 @@ Item {
                 x: (index - root.current) * width + root.dragOffset
                 width: pages.width
                 height: pages.height
-                // Only what is on screen (or sliding in) is alive: hydration animates at ~60 fps
+                // Only what is on screen (or sliding in) is alive: an animated widget must not run off-screen
                 visible: Math.abs(x) < width
 
                 Behavior on x {
@@ -108,7 +108,7 @@ Item {
                     id: loader
 
                     anchors.fill: parent
-                    sourceComponent: page.modelData.entry ? extComp : page.modelData.id === "hydration" ? hydrationComp : calendarComp
+                    sourceComponent: page.modelData.entry ? extComp : calendarComp
                 }
 
                 // A widget contributed by an extension: placed with its service, plus the screen state
@@ -278,11 +278,5 @@ Item {
             // The wheel switches carousel pages here, not months
             scrollable: false
         }
-    }
-
-    Component {
-        id: hydrationComp
-
-        HydrationWidget {}
     }
 }
