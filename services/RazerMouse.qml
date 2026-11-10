@@ -4,6 +4,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.utils
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.services
@@ -17,8 +18,11 @@ Singleton {
     readonly property bool enabled: GlobalConfig.addons.razerMouse.enabled
     readonly property int refreshMinutes: Math.max(1, GlobalConfig.addons.razerMouse.refreshMinutes)
 
-    // The last reading worked (mouse found and answered)
+    // There is a value to show: a fresh reading, or the last one saved (the CLI takes a few seconds,
+    // and the mouse may be asleep or away)
     property bool available: false
+    // The value is the saved one; no reading has succeeded yet in this session
+    property bool stale: false
     property int percent: 0
     property bool charging: false
     property string error: ""
@@ -44,14 +48,14 @@ Singleton {
 
     function apply(text: string): void {
         const m = text.match(/Battery\s+(\d+)\s*%(\s*\(charging\))?/i);
-        if (!m) {
-            available = false;
-            return;
-        }
+        if (!m)
+            return; // keep the last known value
         percent = Math.max(0, Math.min(100, parseInt(m[1])));
         charging = !!m[2];
         available = true;
+        stale = false;
         error = "";
+        saveTimer.restart();
         checkLow();
     }
 
@@ -79,10 +83,8 @@ Singleton {
     onEnabledChanged: {
         if (enabled)
             refresh();
-        else {
-            available = false;
+        else
             lastWarnLevel = 0;
-        }
     }
 
     Component.onCompleted: refresh()
@@ -107,9 +109,37 @@ Singleton {
         stderr: StdioCollector {
             onStreamFinished: root.error = text.trim()
         }
-        onExited: code => {
-            if (code !== 0)
-                root.available = false;
+    }
+
+    // Last value read, kept across restarts so the ring is there from the start
+    Timer {
+        id: saveTimer
+
+        interval: 500
+        onTriggered: storage.setText(JSON.stringify({
+                percent: root.percent,
+                charging: root.charging,
+                at: Date.now()
+            }))
+    }
+
+    FileView {
+        id: storage
+
+        printErrors: false
+        path: `${Paths.state}/razer-mouse.json`
+        onLoaded: {
+            try {
+                const d = JSON.parse(text());
+                if (!root.available && typeof d.percent === "number") {
+                    root.percent = Math.max(0, Math.min(100, Math.round(d.percent)));
+                    root.charging = !!d.charging;
+                    root.available = true;
+                    root.stale = true;
+                }
+            } catch (e) {
+                console.warn(`Unable to parse razer-mouse.json: ${e}`);
+            }
         }
     }
 }

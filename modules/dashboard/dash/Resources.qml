@@ -47,25 +47,18 @@ Item {
         }
 
         // Storage, unless the Razer mouse complement is on and the mouse answers: then its battery
-        // takes this slot
+        // takes this slot. One item that switches content (toggling two items' visibility left the
+        // ring collapsed: its size follows its height, which the layout only gives once visible).
         Resource {
-            visible: !RazerMouse.shown
-            icon: "hard_disk"
-            value: Storage.percentage
-            fgColour: Colours.palette.m3secondary
-        }
-
-        Resource {
-            visible: RazerMouse.shown
-            icon: "mouse"
-            value: RazerMouse.percent / 100
-            fgColour: RazerMouse.low ? Colours.palette.m3error : Colours.palette.m3secondary
+            icon: RazerMouse.shown ? "mouse" : "hard_disk"
+            value: RazerMouse.shown ? RazerMouse.percent / 100 : Storage.percentage
+            fgColour: RazerMouse.shown && RazerMouse.low ? Colours.palette.m3error : Colours.palette.m3secondary
 
             MaterialIcon {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: Tokens.padding.small
-                visible: RazerMouse.charging
+                visible: RazerMouse.shown && RazerMouse.charging
                 text: "bolt"
                 fill: 1
                 fontStyle: Tokens.font.icon.small
