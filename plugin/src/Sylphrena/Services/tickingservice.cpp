@@ -31,6 +31,14 @@ void TickingService::start() {
         m_timer->start(m_interval);
     }
     tick();
+    // Rates (CPU %, network) are differences between two readings: the first tick after a start
+    // only measures the whole time the panel was closed. A second, quick reading makes the panel
+    // show current values right away instead of after a full interval.
+    QTimer::singleShot(250, this, [this] {
+        if (m_running) {
+            tick();
+        }
+    });
 }
 
 void TickingService::stop() {
