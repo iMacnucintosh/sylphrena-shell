@@ -30,7 +30,7 @@ class DashboardConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, showClockSeconds, false)
     // Widget carousel (centre of the dashboard): order of the widgets, by id. Unknown ids are
     // ignored and missing ones appended by the shell, so adding a widget never breaks old configs.
-    CONFIG_PROPERTY(QStringList, widgetOrder, QStringList({ u"calendar"_s, u"hydration"_s }))
+    CONFIG_PROPERTY(QStringList, widgetOrder, QStringList({ u"calendar"_s }))
     // Nothing is on by default: with no widget enabled the carousel shows a prompt to enable some.
     CONFIG_PROPERTY(bool, calendarEnabled, false)
     CONFIG_GLOBAL_PROPERTY(int, mediaUpdateInterval, 500)

@@ -36,6 +36,8 @@ Singleton {
                     extId: d.manifest.id,
                     title: w.title ?? d.manifest.name ?? w.id,
                     subtext: w.subtext ?? d.manifest.description ?? "",
+                    offNote: d.manifest.offNote ?? "",
+                    hasSettings: !!d.manifest.contributes?.settings,
                     icon: w.icon ?? d.manifest.icon ?? "extension"
                 });
         return out;
@@ -62,6 +64,14 @@ Singleton {
         if (on)
             ids.push(id);
         GlobalConfig.extensions.enabled = ids;
+    }
+
+    // The settings component of an enabled extension, as an entry for ExtensionSlot (or null)
+    function settingsEntry(extId: string): var {
+        const e = loaded.find(x => x.id === extId);
+        const file = e?.manifest.contributes?.settings;
+        const c = file ? root.component(e, file) : null;
+        return c ? { id: `${extId}/settings`, ext: e, component: c } : null;
     }
 
     function service(id: string): var {

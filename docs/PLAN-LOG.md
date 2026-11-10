@@ -75,3 +75,27 @@ Hecho. Rama `feature/phase-3-extensions`, fusionada en `dev/0.2`.
   ~3 min hasta corregirlo. Anotado en AGENTS.md.
 - No probado: instalar una extensión desde `~/.local/share/sylphrena/extensions/` con la shell
   ya en marcha (hoy solo se descubre al arrancar; basta con reiniciar).
+
+## Fase 4 — Hidratación (2026-11-10)
+Hecho. Rama `feature/phase-4-hydration`, fusionada en `dev/0.2`.
+
+- **Hidratación migrada** a `extensions/hydration/` (manifest, `Service.qml`, `Widget.qml`,
+  `Settings.qml`, `water.frag` + `water.frag.qsb`). `services/Hydration.qml`, `HydrationWidget.qml`
+  y el shader del plugin ya no existen; `AddonsHydration` salió del C++.
+- **Punto de enganche nuevo: ajustes de extensión en Nexus.** Una extensión puede aportar
+  `contributes.settings`; la tarjeta del carrusel en `DashboardPanel` ya no sabe nada de
+  Hidratación: carga ese componente con `ExtensionSlot`, muestra `service.summary` y el
+  `offNote` del manifiesto cuando está apagada. La fila de ajustes se extrajo a
+  `modules/nexus/common/SpinSettingRow.qml` (reutilizable por extensiones).
+- **Config**: los valores de `addons.hydration.*` pasan a `~/.config/sylphrena/extensions/hydration.json`
+  y `addons.hydration.enabled` a `extensions.enabled` (`scripts/migrate-config.py`, probado con el
+  `shell.json` real: meta 2600 conservada). El orden por defecto del carrusel ya no nombra extensiones.
+- **Shader**: distribuido compilado (`qsb --glsl "300es,330" -b -O`), cargado con `Qt.resolvedUrl`.
+  Comprobado que el agua se mueve.
+- **Verificado en la shell real**: widget con el estado previo (997/2600 ml), recordatorio
+  (notificación con botones 20/83 ml) disparado a mano, tarjeta de ajustes de Nexus con los
+  valores migrados.
+- Acoplamiento cosmético que queda: `utils/Icons.qml` mapea por texto las notificaciones de agua a
+  un icono. No es una dependencia de código; se puede mover a la extensión si se quiere.
+- ⚠️ Mi salida de un comando mostró en el terminal la clave de la API de Steam de tu `shell.json`
+  (no se ha guardado en ningún fichero ni commit). Si te preocupa, regénerala.
