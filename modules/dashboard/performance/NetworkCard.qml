@@ -77,6 +77,9 @@ StyledRect {
                     target: NetworkUsage.downloadBuffer
                 }
 
+                // Moving from the moment the panel opens, not from the next sample (~1 s later)
+                Component.onCompleted: slideAnim.start()
+
                 NumberAnimation {
                     id: slideAnim
 
