@@ -84,6 +84,12 @@ Item {
                 onAccepted: root.submit()
                 Keys.onEscapePressed: root.endTyping()
 
+                // The field itself takes the press, so the background's state layer never sees it:
+                // this is what asks the shell for the keyboard
+                TapHandler {
+                    onTapped: root.beginTyping()
+                }
+
                 background: StyledRect {
                     radius: Tokens.rounding.small
                     color: Colours.palette.m3surfaceContainerHigh
