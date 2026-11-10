@@ -350,7 +350,7 @@ StyledRect {
                     spacing: 3
 
                     StyledText {
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.verticalCenter: parent?.verticalCenter
                         rightPadding: 2
                         text: Tr.tr("Less")
                         font: Tokens.font.label.small
@@ -363,7 +363,7 @@ StyledRect {
                         StyledRect {
                             required property int index
 
-                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenter: parent?.verticalCenter
                             implicitWidth: 10
                             implicitHeight: 10
                             radius: 3
@@ -372,7 +372,7 @@ StyledRect {
                     }
 
                     StyledText {
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.verticalCenter: parent?.verticalCenter
                         leftPadding: 2
                         text: Tr.tr("More")
                         font: Tokens.font.label.small

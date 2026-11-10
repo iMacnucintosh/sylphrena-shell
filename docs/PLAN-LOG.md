@@ -159,3 +159,26 @@ Hecho (con una salvedad abajo). Rama `feature/phase-4-games`, fusionada en `dev/
   (un `anchors.verticalCenter: parent.verticalCenter` en un delegado de `Repeater`); ya estaba así.
 - ⚠️ **NO verificado**: la sección de ajustes de Juegos en Nexus → Complementos (editar clave
   API / Steam ID) ni «Refrescar ahora». Pruébalo.
+
+## Fase 5 — Limpieza y cierre (2026-11-10)
+Hecho. Rama `feature/phase-5-cleanup`, fusionada en `dev/0.2`.
+
+- **Prueba clave**: con la carpeta `extensions/` apartada la base arranca sin ningún error ni aviso
+  nuevo; el carrusel muestra «Activa widgets», no hay pestaña Juegos, el anillo vuelve a ser el de
+  almacenamiento y la entrada `vpn` de la barra queda colapsada.
+- **Mediciones** (mismo procedimiento que en la fase 0, tras abrir el dashboard una vez):
+  RSS 415 MB sin extensiones / 444 MB con todas (anónima 206 / 229 MB), CPU en reposo 1 tick/10 s.
+  Sin regresión frente a antes del refactor (~537 MB medidos en la misma situación, con Juegos
+  incluido). Cada extensión cuesta del orden de 30 MB en total.
+- `addons.*` en C++ queda reducido a `timers` (base). Restos nombrando extensiones en la base:
+  solo comentarios y la lista de `TrayItem` (ids de apps de bandeja, no de extensiones).
+- Docs: `AGENTS.md` (sección «Extensiones»), `FEATURES.md`, `CHANGELOG.md` (0.2.0), plan marcado
+  como ejecutado. Corregido de paso un `parent.verticalCenter` nulo en `ActivityCard`.
+
+### Pendiente — decisiones del usuario (NO hechas a propósito)
+1. **Probar** lo marcado «NO verificado» arriba, sobre todo la VPN (OTP y ajustes) y los ajustes de Juegos.
+2. **Borrar la copia de seguridad** `~/Backups/sylphrena-pre-0.2-2026-11-10/` solo cuando la 0.2.0
+   esté fusionada, con tag, y la hayas usado con normalidad (el plan lo exige: pregúntate/confirma).
+3. **PR `dev/0.2` → `main` y tag `v0.2.0`**: no se han creado; el plan los reserva para ti.
+4. **Cambiar la contraseña de sudo** (quedó escrita en la conversación; no se usó ni se guardó).
+5. El commit `588ce79` de `sylphrena-cli` (lanzador que exporta el plugin local) está solo en local.

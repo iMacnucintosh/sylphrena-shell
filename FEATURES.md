@@ -116,6 +116,10 @@ Inspirado en [arch-update-checker](https://github.com/iMacnucintosh/arch-update-
 
 ---
 
+## Extensiones (v0.2)
+
+Las funciones opcionales viven en `extensions/` y se activan en Nexus: **widgets** del carrusel (Tareas, Hidratación) en `Panels → Dashboard → Carrusel de widgets` y **complementos** (VPN FortiClient, batería del ratón Razer, Juegos) en `Complementos`. Nada está activado por defecto y desactivar una extensión no borra sus datos. Para escribir una, ver `AGENTS.md` (sección «Extensiones») y el ejemplo `docs/examples/extension-spike/`; las de usuario van en `~/.local/share/sylphrena/extensions/<id>/` (se descubren al arrancar la shell).
+
 ## Complementos
 
 Página **Nexus → Complementos** (sustituye el placeholder de Plugins):

@@ -2,6 +2,15 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 0.2.0 (rama `dev/0.2`, sin publicar)
+
+### Extensiones
+
+- La shell se separa en **base** y **extensiones**. Una extensión es una carpeta (`extensions/<id>/`, o en `~/.local/share/sylphrena/extensions/`) con `manifest.json`, un servicio y sus componentes; se activan en Nexus (`extensions.enabled`, nada por defecto) y se cargan/descargan en caliente. Enganches: `service`, `widgets`, `settings`, `resourceRing`, `statusIcons`, `popouts`, `dashboardTabs`. Guía: `AGENTS.md` («Extensiones») y `docs/examples/extension-spike/`.
+- **Migradas**: Tareas, Hidratación (widgets), batería del ratón Razer, VPN FortiClient (antes «Madison VPN») y Juegos (Steam) (complementos). Su configuración se migra sola (`scripts/migrate-config.py`).
+- **Base**: Portapapeles (ajustes en Panels → Utilities) y Temporizadores dejan de ser complementos. Calendario como único widget de serie.
+- Sin rutas ni datos personales en el repo (`shell.qml` ya no lleva `/home/<usuario>`).
+
 ## 2026-11-10
 
 ### Dashboard
