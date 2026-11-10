@@ -99,3 +99,18 @@ Hecho. Rama `feature/phase-4-hydration`, fusionada en `dev/0.2`.
   un icono. No es una dependencia de código; se puede mover a la extensión si se quiere.
 - ⚠️ Mi salida de un comando mostró en el terminal la clave de la API de Steam de tu `shell.json`
   (no se ha guardado en ningún fichero ni commit). Si te preocupa, regénerala.
+
+## Fase 4 — Ratón Razer (2026-11-10)
+Hecho. Rama `feature/phase-4-razer`, fusionada en `dev/0.2`.
+
+- `extensions/razer-mouse/` (tipo `addon`). `services/RazerMouse.qml` y `AddonsRazerMouse` (C++) ya no existen.
+- **Enganche nuevo `resourceRing`**: el servicio expone `ring { shown, value, icon, warn, badge }` y
+  `dash/Resources.qml` ya no nombra el ratón: usa `Extensions.resourceRing` para sustituir el
+  anillo de almacenamiento.
+- **Página Complementos genérica**: `modules/nexus/common/ExtensionCard.qml` lista las extensiones
+  de tipo `addon` (icono, `statusText`, interruptor, `Settings.qml` desplegable). Verificado: la
+  fila del ratón («Basilisk V4 Pro · 33 %») sale del manifiesto y del servicio.
+- Config migrada (`addons.razerMouse.*` → `extensions.enabled` + `extensions/razer-mouse.json`).
+  Anillo verificado en el dashboard (33 %).
+- Lección: `ExtensionCard` no importaba `Sylphrena.Config` (`Tokens` sin definir → altura 0 y filas
+  solapadas). Los `ReferenceError` de QML solo salen en el log: mirarlo siempre.

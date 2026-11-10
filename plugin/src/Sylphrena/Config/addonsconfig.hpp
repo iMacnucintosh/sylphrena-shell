@@ -33,22 +33,12 @@ class AddonsSteam : public settings::ObjectNode {
     CONFIG_PROPERTY(int, refreshMinutes, 10)
 };
 
-class AddonsRazerMouse : public settings::ObjectNode {
-    CONFIG_NODE(AddonsRazerMouse, settings::ObjectNode)
-
-    CONFIG_PROPERTY(bool, enabled, false)
-    // synapsex-cli to read the battery with; empty = look it up in PATH, then in ~/Desarrollo/Projects/synapsex
-    CONFIG_PROPERTY(QString, cliPath, {})
-    CONFIG_PROPERTY(int, refreshMinutes, 5)
-};
-
 class AddonsConfig : public settings::ObjectNode {
     CONFIG_NODE(AddonsConfig, settings::ObjectNode)
 
     CONFIG_GLOBAL_SUBOBJECT(AddonsFortiVpn, fortiVpn)
     CONFIG_GLOBAL_SUBOBJECT(AddonsTimers, timers)
     CONFIG_GLOBAL_SUBOBJECT(AddonsSteam, steam)
-    CONFIG_GLOBAL_SUBOBJECT(AddonsRazerMouse, razerMouse)
 };
 
 } // namespace sylphrena::shell::config

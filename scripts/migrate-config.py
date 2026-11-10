@@ -14,6 +14,7 @@ from pathlib import Path
 ENABLES = {
     "dashboard.tasksEnabled": ("extensions.enabled", "tasks"),  # Tasks became an extension (v0.2)
     "addons.hydration.enabled": ("extensions.enabled", "hydration"),  # Hydration too (v0.2)
+    "addons.razerMouse.enabled": ("extensions.enabled", "razer-mouse"),
 }
 
 # Old shell.json setting -> (extension id, key in ~/.config/sylphrena/extensions/<id>.json).
@@ -25,6 +26,8 @@ TO_EXTENSION_CONFIG = {
     "addons.hydration.presetMl1": ("hydration", "presetMl1"),
     "addons.hydration.presetMl2": ("hydration", "presetMl2"),
     "addons.hydration.presetMl3": ("hydration", "presetMl3"),
+    "addons.razerMouse.cliPath": ("razer-mouse", "cliPath"),
+    "addons.razerMouse.refreshMinutes": ("razer-mouse", "refreshMinutes"),
 }
 
 RENAMES = {

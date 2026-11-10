@@ -55,6 +55,15 @@ Singleton {
         return out;
     }
 
+    // The first loaded extension that contributes a resource ring and has something to show:
+    // { ext, ring } (the dashboard draws it in place of the storage ring), or null.
+    readonly property var resourceRing: {
+        for (const e of loaded)
+            if (e.manifest.contributes?.resourceRing && e.service?.ring?.shown)
+                return { ext: e, ring: e.service.ring };
+        return null;
+    }
+
     function isEnabled(id: string): bool {
         return enabledIds.includes(id);
     }

@@ -1,22 +1,24 @@
-pragma Singleton
 pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.utils
-import Sylphrena.Config
 import Sylphrena.I18n
 import qs.services
 
-// Battery of the Razer Basilisk V4 Pro (2.4 GHz), read with `synapsex-cli battery`
-// (~/Desarrollo/Projects/synapsex). Off = nothing is polled. Shown in the dashboard resources column
-// in the slot of the storage ring.
-Singleton {
+// Service of the Razer mouse extension: battery of the Razer Basilisk V4 Pro (2.4 GHz), read with
+// `synapsex-cli battery` (~/Desarrollo/Projects/synapsex). It exists only while the extension is
+// enabled. The dashboard shows it through the `ring` property, in the slot of the storage ring.
+Scope {
     id: root
 
-    readonly property bool enabled: GlobalConfig.addons.razerMouse.enabled
-    readonly property int refreshMinutes: Math.max(1, GlobalConfig.addons.razerMouse.refreshMinutes)
+    // Injected by the base (services/Extensions.qml)
+    required property var ext
+
+    // Settings (ext.config): `cliPath` ("" = look it up) and `refreshMinutes`
+    readonly property string cliPath: root.ext.config.get("cliPath", "")
+    readonly property int refreshMinutes: Math.max(1, root.ext.config.get("refreshMinutes", 5))
 
     // There is a value to show: a fresh reading, or the last one saved (the CLI takes a few seconds,
     // and the mouse may be asleep or away)
@@ -27,21 +29,25 @@ Singleton {
     property bool charging: false
     property string error: ""
 
-    // What the dashboard ring shows
-    readonly property bool shown: enabled && available
     readonly property bool low: available && !charging && percent <= 20
+
+    // Resource ring contract (manifest `contributes.resourceRing`): the base draws a ring with this
+    // when `shown`. `value` is 0..1, `warn` paints it as an error, `badge` is an icon in the corner.
+    readonly property var ring: ({
+            shown: available,
+            value: percent / 100,
+            icon: "mouse",
+            warn: low,
+            badge: charging ? "bolt" : ""
+        })
+    // One line for the Nexus list
+    readonly property string statusText: available ? (charging ? Tr.tr("Basilisk V4 Pro · %1 % · charging") : Tr.tr("Basilisk V4 Pro · %1 %")).arg(percent) : Tr.tr("Mouse not found — needs synapsex-cli")
 
     // Level of the last low-battery notice (0 = none), so each threshold warns once per discharge
     property int lastWarnLevel: 0
 
-    function setEnabled(on: bool): void {
-        if (GlobalConfig.addons.razerMouse.enabled === on)
-            return;
-        GlobalConfig.addons.razerMouse.enabled = on;
-    }
-
     function refresh(): void {
-        if (!enabled || proc.running)
+        if (proc.running)
             return;
         proc.running = true;
     }
@@ -80,18 +86,11 @@ Singleton {
         });
     }
 
-    onEnabledChanged: {
-        if (enabled)
-            refresh();
-        else
-            lastWarnLevel = 0;
-    }
-
     Component.onCompleted: refresh()
 
     Timer {
         interval: root.refreshMinutes * 60 * 1000
-        running: root.enabled
+        running: true
         repeat: true
         onTriggered: root.refresh()
     }
@@ -100,7 +99,7 @@ Singleton {
     Process {
         id: proc
 
-        command: ["sh", "-c", 'c="$1"; [ -z "$c" ] && c=$(command -v synapsex-cli); [ -z "$c" ] && c="$HOME/Desarrollo/Projects/synapsex/target/release/synapsex-cli"; exec timeout 25 "$c" battery </dev/null', "sh", GlobalConfig.addons.razerMouse.cliPath]
+        command: ["sh", "-c", 'c="$1"; [ -z "$c" ] && c=$(command -v synapsex-cli); [ -z "$c" ] && c="$HOME/Desarrollo/Projects/synapsex/target/release/synapsex-cli"; exec timeout 25 "$c" battery </dev/null', "sh", root.cliPath]
         running: false
 
         stdout: StdioCollector {
