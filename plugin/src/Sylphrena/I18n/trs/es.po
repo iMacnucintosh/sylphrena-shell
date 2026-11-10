@@ -1768,6 +1768,41 @@ msgstr "Todo listo"
 msgid "Completed (%1)"
 msgstr "Completadas (%1)"
 
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Razer mouse battery"
+msgstr "Batería del ratón Razer"
+
+#: modules/nexus/pages/ComplementsPage.qml
+#, qt-format
+msgid "Basilisk V4 Pro · %1 % · charging"
+msgstr "Basilisk V4 Pro · %1 % · cargando"
+
+#: modules/nexus/pages/ComplementsPage.qml
+#, qt-format
+msgid "Basilisk V4 Pro · %1 %"
+msgstr "Basilisk V4 Pro · %1 %"
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Mouse not found — needs synapsex-cli"
+msgstr "Ratón no encontrado: necesita synapsex-cli"
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Shows the mouse battery in the dashboard, in place of storage"
+msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
+
+#: services/RazerMouse.qml
+msgid "Mouse battery low"
+msgstr "Batería del ratón baja"
+
+#: services/RazerMouse.qml
+#, qt-format
+msgid "Razer Basilisk V4 Pro: %1 % left"
+msgstr "Razer Basilisk V4 Pro: queda un %1 %"
+
+#: services/RazerMouse.qml
+msgid "Mouse"
+msgstr "Ratón"
+
 #~ msgid "Shell shortcuts, remapping and mouse focus"
 #~ msgstr "Atajos del shell, reasignación y foco del ratón"
 

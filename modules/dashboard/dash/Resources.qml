@@ -46,10 +46,31 @@ Item {
             fgColour: Colours.palette.m3tertiary
         }
 
+        // Storage, unless the Razer mouse complement is on and the mouse answers: then its battery
+        // takes this slot
         Resource {
+            visible: !RazerMouse.shown
             icon: "hard_disk"
             value: Storage.percentage
             fgColour: Colours.palette.m3secondary
+        }
+
+        Resource {
+            visible: RazerMouse.shown
+            icon: "mouse"
+            value: RazerMouse.percent / 100
+            fgColour: RazerMouse.low ? Colours.palette.m3error : Colours.palette.m3secondary
+
+            MaterialIcon {
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: Tokens.padding.small
+                visible: RazerMouse.charging
+                text: "bolt"
+                fill: 1
+                fontStyle: Tokens.font.icon.small
+                color: Colours.palette.m3tertiary
+            }
         }
     }
     component Resource: CircularProgress {
