@@ -272,6 +272,16 @@ def _sync_greeter(colours: dict[str, str] | None = None) -> None:
     _sync_greeter_ui()
 
 
+def _light_gtk_css(filename: str, text: str) -> str:
+    """Light-apps version of a GTK CSS the CLI generated (see gtk-light-css.py)."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("gtk_light_css", Path(__file__).with_name("gtk-light-css.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.light_css(filename, text)
+
+
 def _sync_gtk_settings(mode: str, light_apps: bool = False) -> None:
     """Point GTK at the correct adw-gtk3 variant and enable live CSS reload.
 
@@ -379,13 +389,28 @@ def _patch_theme() -> None:
                 return subprocess.CompletedProcess(cmd, 0)
             return real_run(cmd, *args, **kwargs)
 
+        # With light apps the scheme's dark GTK colours must never reach GTK apps (black headers and
+        # inputs over the light theme): filter the CSS while the CLI writes it, so there is no dark
+        # flash either.
+        orig_atomic_write = getattr(theme, "atomic_write", None)
+
+        def atomic_write_light(path, content, *args, **kwargs):
+            p = Path(path)
+            if p.name in ("gtk.css", "thunar.css") and p.parent.name in ("gtk-3.0", "gtk-4.0") and isinstance(content, str):
+                content = _light_gtk_css(p.name, content)
+            return orig_atomic_write(path, content, *args, **kwargs)
+
         # Upstream always writes adw-gtk3-dark; use the light variant for light mode.
         if light_apps:
             subprocess.run = run_keep_scheme
+            if orig_atomic_write is not None:
+                theme.atomic_write = atomic_write_light
         try:
             orig_apply_gtk(colours, mode, icon_theme)
         finally:
             subprocess.run = real_run
+            if orig_atomic_write is not None:
+                theme.atomic_write = orig_atomic_write
         _sync_gtk_settings(mode, light_apps)
         _trigger_gtk_color_reload()
         # Light apps: keep prefer-light so Adwaita/Qt apps stay light while Thunar

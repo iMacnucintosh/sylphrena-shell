@@ -32,13 +32,22 @@ def main() -> None:
 
     theme = cfg.setdefault("theme", {})
     theme["postHook"] = POST_HOOK
-    # Thunar/Material GTK CSS always tracks the activity scheme.
+    # The CLI keeps running for GTK (dconf icon theme, Papirus colours); with light apps the CSS it
+    # writes is filtered down to the accent colours (sylphrena-quiet.py / gtk-light-css.py).
     theme["enableGtk"] = True
     # Skip Qt colour engine while apps should stay light.
     theme["enableQt"] = not args.light_apps
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(cfg, indent=4) + "\n")
+
+    if args.light_apps:
+        # Turning light apps ON: clean the dark GTK CSS that is already on disk right now instead of
+        # waiting for the next scheme apply.
+        import subprocess
+        import sys
+
+        subprocess.run([sys.executable, str(Path(__file__).with_name("gtk-light-css.py"))], check=False)
 
 
 if __name__ == "__main__":
