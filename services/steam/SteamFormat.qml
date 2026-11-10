@@ -49,6 +49,23 @@ QtObject {
         return `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/header.jpg`;
     }
 
+    // Header image first, then other artwork of the same app: some apps have no header.jpg (404)
+    // but do have a library hero or a capsule. Non-Steam games only have their local grid image.
+    function artCandidates(appId: string, preferred: string): var {
+        const out = [];
+        if (preferred)
+            out.push(preferred);
+        else if (appId)
+            out.push(root.headerUrl(appId));
+        const local = appId ? root.host.nonSteamGames.find(g => g.appId === appId) : null;
+        if (appId && !local) {
+            const base = `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/`;
+            for (const f of ["library_hero.jpg", "capsule_616x353.jpg", "capsule_231x87.jpg", "library_600x900.jpg"])
+                out.push(base + f);
+        }
+        return out;
+    }
+
     function formatPlaytime(minutes: int): string {
         if (!minutes || minutes <= 0)
             return Tr.tr("No playtime");

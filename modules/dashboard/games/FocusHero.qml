@@ -28,14 +28,14 @@ StyledRect {
         anchors.fill: parent
         radius: root.radius
 
-        FadeImage {
+        SteamArt {
             id: art
 
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: height * 460 / 215
-            source: root.game?.headerUrl || Steam.headerUrl(Steam.focusAppId)
+            candidates: Steam.artCandidates(Steam.focusAppId, root.game?.headerUrl ?? "")
 
             layer.enabled: true
             layer.effect: Mask {
