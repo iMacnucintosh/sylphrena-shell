@@ -109,7 +109,7 @@ Inspirado en [arch-update-checker](https://github.com/iMacnucintosh/arch-update-
 
 - **Nexus → Updates**: refrescar, contador, actualizar sistema, lista expandable (info / update / uninstall / URL).
 - Engranaje → fuentes (Arch / AUR / Flatpak, todas on por defecto), wrapper AUR (**yay**), intervalo, notificaciones, single-package.
-- Icono en status (junto a Madison VPN) **solo si hay paquetes**; badge con el número; popout rápido.
+- Icono en status (junto a la VPN FortiClient) **solo si hay paquetes**; badge con el número; popout rápido.
 - Poll cada **30 min**; toast al detectar paquetes nuevos (default on).
 - **Actualizar sistema**: popup de contraseña → en **panel** corre en segundo plano; en **Nexus** muestra log en vivo. Notificación al terminar + rechequeo. Paquete suelto / orphans siguen en terminal.
 - **Seguridad del install**: la contraseña vive **solo en memoria** (helper Python + socket unix en `$XDG_RUNTIME_DIR`; no hay fichero `.pw`). yay/pacman usan **`sudo -A`** contra ese askpass — el timestamp de sudo es por TTY y no sobrevive a un Process sin TTY. El timeout de instalación (45 min) tiene *heartbeat*: solo corta si el instalador lleva 45 min **sin imprimir nada** — nunca mata un `pacman` en mitad de una transacción.
@@ -121,13 +121,13 @@ Inspirado en [arch-update-checker](https://github.com/iMacnucintosh/arch-update-
 Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
 
 - Lista de features opcionales del fork, con icono identificativo por fila.
-- **Madison VPN**: interruptor on/off. Al desactivar se oculta el icono, se para el poll y se ejecuta teardown (`disconnect` + `heal`) para matar `openfortivpn`/helper.
+- **VPN FortiClient**: interruptor on/off. Al desactivar se oculta el icono, se para el poll y se ejecuta teardown (`disconnect` + `heal`) para matar `openfortivpn`/helper.
 - **Timers**: interruptor on/off. Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue). Exposición doble: hub en **Complementos** y tarjeta desplegable en **Nexus → Panels → Taskbar → Clock** (mismo `addons.timers.enabled`), con 4 presets editables (`presetMins0..3`, default 5/10/20/30) que alimentan los botones del popout.
 - **Batería del ratón Razer** (`addons.razerMouse`): complemento opt-in. Lee la batería del Basilisk V4 Pro (2,4 GHz) con `synapsex-cli battery` (proyecto `~/Desarrollo/Projects/synapsex`; se busca en `PATH` y, si no, en `target/release/`, o se fija con `addons.razerMouse.cliPath`) cada `refreshMinutes` (5) y la muestra en la columna de recursos del dashboard, **en el hueco del anillo de almacenamiento** (con rayo si carga y en rojo ≤ 20 %). Se guarda el último valor leído (`~/.local/state/sylphrena/razer-mouse.json`), así el anillo aparece al instante al arrancar aunque el CLI tarde, y si el ratón no contesta se mantiene el último valor. Avisa una vez al bajar del 20 % y del 10 %. Apagado no consulta nada y vuelve el anillo de almacenamiento.
 - **Hidratación**: ya no vive en Complementos sino en `Panels → Dashboard → Carrusel de widgets` (ver abajo). Interruptor on/off (opt-in) que activa o desactiva **todo** el sistema (depósito, recordatorios, estado). Depósito con waves, meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Estado en `~/.local/state/sylphrena/hydration.json`.
 - **Juegos (Steam)**: interruptor on/off (opt-in). Al activar añade la pestaña **Juegos** en el dashboard (a la derecha de Tiempo). Configura API key (oculta por defecto) + Steam ID / vanity / URL de perfil, y el intervalo de refresco (default 10 min). Muestra perfil y nivel, estadísticas globales en shapes Material You (juegos visibles — sin la colección Hidden —, horas, compleción media de logros y juegos al 100 %, amigos en línea), tarjeta del juego destacado con portada y progreso, y un selector de portadas ordenado por última partida. Logros en una lista con scroll: desbloqueados por rareza y bloqueados de más común a más raro, con insignia y descripción. Mapa de calor mensual (puntos = días con logros; el tiempo por día se registra con el shell en marcha). Juegos no Steam desde `shortcuts.vdf`, con horas de Millennium si está instalado. Los logros del perfil deben ser públicos. El muestreo de logros para la compleción media está **capado a 60 juegos** (los más jugados, por orden de playtime) y el refresco periódico **solo corre mientras el dashboard muestra la pestaña Juegos** (no quema API en segundo plano). Caché de logros/schema/% global en disco (`~/.local/state/sylphrena/steam-achievements-cache.json`, TTL ~1 día) para arranques en frío más rápidos; el servicio QML es un façade (`Steam`) con capas en `services/steam/*`.
 
-## Madison VPN (FortiClient / openfortivpn)
+## VPN FortiClient (openfortivpn)
 
 Requiere el complemento activo en Nexus → Complementos (default on).
 
@@ -135,14 +135,19 @@ Icono en la pastilla de status (debajo de Bluetooth):
 
 - Clic desconectado → diálogo OTP integrado → conecta
 - Clic conectado → desconecta
-- Estado con poll (`~/.local/share/madison-vpn/status_vpn.sh`); exige que la intranet responda (no basta con `ppp0` vivo)
+- Estado con poll (`status_vpn.sh`); exige que la intranet responda (no basta con `ppp0` vivo)
 - Tras **suspender el PC**: al reanudar se ejecuta `heal` (limpia túnel zombie + DNS/`hosts`) y el icono refleja la realidad
 
-Scripts e install: repo privado [madison_vpn_widget](https://github.com/iMacnucintosh/madison_vpn_widget) → carpeta `hyprland/`:
+**Scripts**: la shell los busca en `~/.local/share/sylphrena/vpn-forticlient/` y **no los incluye** (dependen de cada red y de un ayudante con privilegios fuera del repo). Contrato:
 
-```bash
-cd madison_vpn_widget/hyprland && ./install.sh
-```
+| Script | Argumento | Salida |
+|---|---|---|
+| `connect_vpn.sh` | OTP como `$1` | código de salida 0 si conecta |
+| `disconnect_vpn.sh` | — | — |
+| `heal_vpn.sh` | — | `connected\|IP` o `disconnected\|` |
+| `status_vpn.sh` | — | `connected\|IP` o `disconnected\|` |
+
+Un paquete genérico con estos scripts queda como trabajo futuro (ver `docs/PLAN-MODULAR.md`). Si antes tenías los scripts en `~/.local/share/madison-vpn/`, enlázalos: `ln -s ~/.local/share/madison-vpn ~/.local/share/sylphrena/vpn-forticlient`. La clave de configuración `addons.madisonVpn` se migra sola a `addons.fortiVpn` (`scripts/migrate-config.py`).
 
 Credenciales en `~/.config/openfortivpn/config` (las mismas que Plasma; **no** van en este repo). Engranaje en el popout VPN para editar host/puerto/usuario/`set-dns`/`trusted-cert` (password/OTP no se muestran). En Nexus → Panels → Status icons puedes mostrar/ocultar «Madison VPN» cuando el complemento está activo.
 
@@ -272,7 +277,7 @@ Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 - **Foco del ratón** en Nexus → Keyboard & mouse: al pasar por encima (Hyprland `follow_mouse = 1`) o al hacer clic (`= 2`). Genera `sylphrena-input.lua`.
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
 - Apariencia **unificada en Activities**: una sola página para el comportamiento (iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
-- **Complementos como hub único** — cada feature opt-in (Madison VPN, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí; **Tuning** / `id: services` queda para notificaciones, polling y media).
+- **Complementos como hub único** — cada feature opt-in (VPN FortiClient, Timers, Hidratación, Juegos/Steam, **Clipboard**) con toggle y, al expandir, su propia config inline (tamaño de historial del portapapeles vive aquí; **Tuning** / `id: services` queda para notificaciones, polling y media).
 - **Status icons honestos**: el badge de updates y la fila de VPN rigen el auto-ocultado con config explícita (`bar.status.onlyShowUpdatesWithUpdates`; VPN atado al complemento) y es visible en `Panels → Taskbar → Status icons → Auto-hide`. La batería quedó **vanilla**: se muestra/oculta con el toggle de la lista "Visible icons" y su popout es el de siempre («No se ha detectado ninguna batería» o «Power profile: %1» en desktops, con el selector de perfiles intacto).
 - **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-links navegables entre ambas.
 - **IA del sidebar (fase 1)**: títulos de categoría visibles; orden **Escritorio y apariencia** (Activities, Panels, Complements) → Entrada → **Dispositivos** (Network, Connected devices [Bluetooth + Display inline], Audio) → Apps → Sistema → Acerca de. `smartScheme` en Activities; incrementos volumen/brillo en Audio. Display ya no es página top-level del nav.

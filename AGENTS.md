@@ -14,6 +14,7 @@ Documentación por rol: [README.md](./README.md) = cara pública (features + ins
 - Fork rebranded como **Sylphrena** (shell Quickshell/QML para **Hyprland**, config en **Lua**). CLI: `sylph` (paquete user-local `sylphrena-cli`); instancia Quickshell `qs -c sylphrena`. El directorio es `~/.config/quickshell/sylphrena`.
 - Repo GitHub: **iMacnucintosh/sylphrena-shell**. Remote `origin` = tu fork; `upstream` = el proyecto original (crédito en el README). Las actualizaciones de base se hacen mergeando upstream y pasando PR a `main`.
 - Versión propia: tags `v0.*` (`v0.1.0` es la primera). CMake usa `git describe --match v0.*`. Los tags `v1.*` y `v2.*` son del proyecto original y no cuentan; al salir de 0.x hay que ampliar el `--match`, porque `v1.0.0` ya existe en el historial.
+- **Arranque y plugin local**: `shell.qml` ya no lleva rutas de usuario. `sylph shell` (CLI, `_shell_env` en `sylphrena-cli/src/sylphrena/subcommands/shell.py`) exporta `QT_ADDITIONAL_PACKAGES_PREFIX_PATH=~/.local/lib/qt6/qml` si existe un plugin local; sin eso la shell cargaría el del sistema y faltarían los nodos de config del fork. Las claves de config renombradas se migran solas al arrancar (`scripts/migrate-config.py`, tabla `RENAMES`, lanzado por `services/ConfigMigration.qml`).
 - El código que **corre** es este checkout: `~/.config/quickshell/sylphrena` (no el paquete AUR de `/etc/xdg`). El plugin C++ de config se compila **desde la raíz del repo** e instala en `~/.local` (sin sudo); `shell.qml` lo carga vía pragma `QT_ADDITIONAL_PACKAGES_PREFIX_PATH` — ver "Plugin C++ (build user-local)" en FEATURES.md.
 - Runtime de la shell: `~/.config/sylphrena/` (`shell.json`, `keybinds.json`, `cli.json`, `templates/`). El plugin escribe `/sylphrena` (config, state, cache, runtime).
 - Estado persistente: `~/.local/state/sylphrena/` (`timers.json`, `hydration.json`, `light-apps.json`, `nonsteam-sessions.json`, `steam-activity.json`, `steam-achievements-cache.json`, `sequences.txt`, `theme/kitty.conf`).
@@ -53,7 +54,7 @@ Documentación por rol: [README.md](./README.md) = cara pública (features + ins
 | `Steam` | Façade singleton (~370 líneas) + `services/steam/*` (Format, Api, Library, Achievements, Local, Activity). Web API + logros (caché disco TTL ~1d) + no-Steam (VDF/Millennium) + sesiones (`reaper`). Al refrescar **conserva el juego seleccionado**; `gen` compartido |
 | `Updates` | Poll 30 min (Arch/AUR/Flatpak); update: password popup → `sudo -S -v` de comprobación → script en bg con askpass **en RAM** (helper + socket, sin fichero). Nunca `yay --sudoloop` (bloquea con faillock). yay/pacman con `--sudoflags=-A` / `sudo -A`; no usar `-n` (el timestamp de sudo es por TTY y el Process no tiene TTY) |
 | `Clipboard` | cliphist + `wl-clipboard`; paste con foco restaurado (~220 ms) + `send_shortcut` / `wtype` |
-| `MadisonVpn` | Status exige ping a intranet (no basta `ppp0`); teardown/heal tras suspender; popout OTP + settings |
+| `FortiVpn` | Status exige ping a intranet (no basta `ppp0`); teardown/heal tras suspender; popout OTP + settings |
 | `BluetoothAudio` | Perfil de audio de auriculares BT (Música/Llamadas/Auto) desde el popout de Bluetooth: `pactl` + ajuste global `bluetooth.autoswitch-to-headset-profile` de WirePlumber (`wpctl settings --save`); batería de AirPods vía `scripts/airpods-battery.py` (L2CAP 0x1001, BlueZ no la publica) |
 | `Displays` | `hyprctl monitors -j`; VRR **por conector** (Nunca/Automático/Siempre) → `sylphrena-monitors.lua` + `hyprctl reload` (sin reload VRR off no llega al CRTC) |
 | `Hydration` / `Timers` | on/off; al off limpian estado/procesos y ocultan su UI. Hidratación se configura en Nexus → Panels → Dashboard → Carrusel de widgets (no en Complementos) |
@@ -88,7 +89,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 3. **Juegos (Steam)** — complemento opt-in: stats en shapes M3, hero con portada, carrusel por `lastPlayed`, logros (rareza + bloqueados, descripción siempre visible), heatmap mensual navegable, juegos no Steam + Millennium + sesiones reales Steam.
 4. **Updates** — página Nexus + icono/badge en la barra (solo si hay paquetes) + popout; password popup → update en bg con logs en vivo en Nexus.
 5. **Clipboard** — popout estilo Sylphrena (`m3surface` + blur), favoritos, búsqueda, previews de imágenes/rutas, pegar en la ventana enfocada.
-6. **Madison VPN** — icono en status, dropdown al hover, OTP integrado, settings (host/puerto/user/pass), heal tras sleep.
+6. **VPN FortiClient** (ex Madison VPN) — icono en status, dropdown al hover, OTP integrado, settings (host/puerto/user/pass), heal tras sleep.
 7. **Complementos** — VPN, Timers, Juegos y **Batería del ratón Razer** (`addons.razerMouse`, ocupa el hueco del anillo de almacenamiento del dashboard) con icono por fila y limpieza al desactivar. Hidratación ya no está aquí: es un widget del carrusel (punto 9).
 9. **Carrusel de widgets del dashboard** — el centro del Panel muestra un widget a la vez (calendario, hidratación, tareas), con puntos, rueda y arrastre; nada activo por defecto (botón «Activa widgets» → Nexus). Orden y interruptores en Nexus → Panels → Dashboard. Tareas: checklist persistente (`tasks.json`) con completadas plegables.
 8. **Varios** — timers del reloj persistentes, grabación estable + chip REC, capturas sin notificación, clic en notificación → enfoca/abre la app en su workspace, launcher con edición de `.desktop` (hover inferior para abrirlo, se cierra al salir el puntero), tray/status con pastilla al hover unificada, recoloreado forzado a claro de tray sin contraste (Steam/Cursor), Keep-awake (café) activado por defecto, **layout compacto** (ex game mode: solo barra izquierda, gaps/rounding/border 0, sin tocar animaciones/blur/wobble), lock con Sylphrena (65 % inferior) + notifs con scroll (35 %), i18n ES completo, docs README/FEATURES/CHANGELOG.
@@ -125,7 +126,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 - [ ] Tests pytest ligeros: parser VDF, merge de sesiones Millennium, residual delta/sesión.
 - [x] Keep-awake: ya no se fuerza a ON al arrancar; respeta `RuntimeState.inhibitIdle` persistido en `/run/user/.../sylphrena/state.json` (default ON; tras reboot de sesión el runtime se pierde y vuelve el default).
 - [ ] Heatmap de Steam vacío: pie explicativo ya existe; considerar rellenar cifras del mes con logros cuando no hay tiempo.
-- [ ] A futuro: si upstream monta plugins de verdad, mover Madison VPN y Timers como plugins. (API multi-singleton pública de Steam: **no**; se mantiene un solo façade.)
+- [ ] A futuro: si upstream monta plugins de verdad, mover la VPN FortiClient y Timers como plugins (ver `docs/PLAN-MODULAR.md`). (API multi-singleton pública de Steam: **no**; se mantiene un solo façade.)
 
 ---
 

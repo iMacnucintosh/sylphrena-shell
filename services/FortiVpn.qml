@@ -7,18 +7,19 @@ import Sylphrena
 import Sylphrena.Config
 import Sylphrena.I18n
 import Sylphrena.Services
+import qs.utils
 
 Singleton {
     id: root
 
-    readonly property string scriptsDir: `${Quickshell.env("HOME")}/.local/share/madison-vpn`
+    readonly property string scriptsDir: `${Paths.data}/vpn-forticlient`
     readonly property string configPath: `${Quickshell.env("HOME")}/.config/openfortivpn/config`
 
-    readonly property bool enabled: GlobalConfig.addons.madisonVpn.enabled
+    readonly property bool enabled: GlobalConfig.addons.fortiVpn.enabled
 
     property bool connected: false
     property string vpnIp: ""
-    property string statusText: Tr.trCtx("Disconnected", "madison vpn state")
+    property string statusText: Tr.trCtx("Disconnected", "vpn state")
     property bool busy: false
     property bool otpOpen: false
     property string lastError: ""
@@ -38,9 +39,9 @@ Singleton {
     readonly property bool disconnecting: busy && connected
 
     function setEnabled(on: bool): void {
-        if (GlobalConfig.addons.madisonVpn.enabled === on)
+        if (GlobalConfig.addons.fortiVpn.enabled === on)
             return;
-        GlobalConfig.addons.madisonVpn.enabled = on;
+        GlobalConfig.addons.fortiVpn.enabled = on;
     }
 
     function refreshStatus(): void {
@@ -97,7 +98,7 @@ Singleton {
         root.otpOpen = false;
         root.busy = true;
         root.lastError = "";
-        root.statusText = Tr.trCtx("Connecting…", "madison vpn state");
+        root.statusText = Tr.trCtx("Connecting…", "vpn state");
         connectProc.command = [`${root.scriptsDir}/connect_vpn.sh`, token];
         connectProc.running = true;
     }
@@ -106,7 +107,7 @@ Singleton {
         if (!root.enabled || root.busy || !root.connected)
             return;
         root.busy = true;
-        root.statusText = Tr.trCtx("Disconnecting…", "madison vpn state");
+        root.statusText = Tr.trCtx("Disconnecting…", "vpn state");
         disconnectProc.running = true;
     }
 
@@ -116,7 +117,7 @@ Singleton {
         root.tearingDown = true;
         root.busy = true;
         root.lastError = "";
-        root.statusText = Tr.trCtx("Disconnected", "madison vpn state");
+        root.statusText = Tr.trCtx("Disconnected", "vpn state");
         resumeBurst.stop();
         if (connectProc.running)
             connectProc.running = false;
@@ -136,7 +137,7 @@ Singleton {
         root.wasConnected = false;
         root.otpOpen = false;
         root.tearingDown = false;
-        root.statusText = Tr.trCtx("Disconnected", "madison vpn state");
+        root.statusText = Tr.trCtx("Disconnected", "vpn state");
     }
 
     function reloadConfig(): void {
@@ -248,12 +249,12 @@ Singleton {
 
         root.connected = nowConnected;
         root.vpnIp = ip;
-        root.statusText = root.connected ? Tr.tr("Connected · %1").arg(ip) : Tr.trCtx("Disconnected", "madison vpn state");
+        root.statusText = root.connected ? Tr.tr("Connected · %1").arg(ip) : Tr.trCtx("Disconnected", "vpn state");
         root.busy = false;
         root.wasConnected = nowConnected;
 
         if (dropped && GlobalConfig.utilities.toasts.vpnChanged)
-            Toaster.toast(Tr.tr("Madison VPN"), Tr.tr("VPN dropped (reconnect after sleep)"), "gpp_bad");
+            Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("VPN dropped (reconnect after sleep)"), "gpp_bad");
     }
 
     Process {
@@ -307,15 +308,15 @@ Singleton {
             }
             if (code === 0) {
                 if (GlobalConfig.utilities.toasts.vpnChanged)
-                    Toaster.toast(Tr.tr("Madison VPN"), Tr.tr("VPN connected"), "vpn_lock");
+                    Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("VPN connected"), "vpn_lock");
             } else if (code === 3) {
                 root.lastError = Tr.tr("Login failed (user / password / OTP / certificate).");
                 if (GlobalConfig.utilities.toasts.vpnChanged)
-                    Toaster.toast(Tr.tr("Madison VPN"), root.lastError, "gpp_bad");
+                    Toaster.toast(Tr.tr("VPN FortiClient"), root.lastError, "gpp_bad");
             } else if (code !== 0) {
                 const detail = root.lastError || Tr.tr("Could not start the VPN tunnel (code %1).").arg(code);
                 if (GlobalConfig.utilities.toasts.vpnChanged)
-                    Toaster.toast(Tr.tr("Madison VPN"), detail, "gpp_bad");
+                    Toaster.toast(Tr.tr("VPN FortiClient"), detail, "gpp_bad");
             }
             root.refreshStatus();
         }
@@ -336,11 +337,11 @@ Singleton {
                 else
                     root.clearRuntimeState();
                 if (GlobalConfig.utilities.toasts.vpnChanged)
-                    Toaster.toast(Tr.tr("Madison VPN"), Tr.tr("Complement disabled"), "shield");
+                    Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("Complement disabled"), "shield");
                 return;
             }
             if (GlobalConfig.utilities.toasts.vpnChanged)
-                Toaster.toast(Tr.tr("Madison VPN"), Tr.tr("VPN disconnected"), "shield");
+                Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("VPN disconnected"), "shield");
             root.refreshStatus();
         }
     }
@@ -383,7 +384,7 @@ Singleton {
     }
 
     Connections {
-        target: GlobalConfig.addons.madisonVpn
+        target: GlobalConfig.addons.fortiVpn
 
         function onEnabledChanged(): void {
             if (root.enabled) {

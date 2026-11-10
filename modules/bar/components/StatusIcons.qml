@@ -10,7 +10,7 @@ import qs.services
 import qs.utils
 import qs.modules.bar.components.status
 
-// MadisonVpn used by vpn entry click handling
+// FortiVpn used by vpn entry click handling
 
 StyledRect {
     id: root
@@ -47,9 +47,9 @@ StyledRect {
         // Hide updates badge when there is nothing to install (keep visible while installing)
         if (entry.id === "updates")
             return root.Config.bar.status.onlyShowUpdatesWithUpdates && !Updates.hasUpdates && !Updates.busy && !Updates.installing;
-        // Complements: Madison VPN can be turned off entirely
+        // Complements: VPN FortiClient can be turned off entirely
         if (entry.id === "vpn")
-            return !MadisonVpn.enabled;
+            return !FortiVpn.enabled;
         return false;
     }
 

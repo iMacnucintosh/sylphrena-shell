@@ -36,7 +36,8 @@ ShellRoot {
         Activities;
         Clipboard;
         Updates;
-        MadisonVpn;
+        ConfigMigration;
+        FortiVpn;
         Hydration;
         // Steam: activity poll only; library/API loads when Games tab opens
         Steam;

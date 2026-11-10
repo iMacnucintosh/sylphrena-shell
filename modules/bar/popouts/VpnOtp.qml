@@ -19,7 +19,7 @@ ColumnLayout {
     spacing: Tokens.spacing.medium
 
     function closeDialog(): void {
-        MadisonVpn.cancelOtp();
+        FortiVpn.cancelOtp();
         otpField.text = "";
         // Return to the VPN status popout (same pattern as Wi‑Fi password → network)
         if (root.popouts.currentName === "vpnOtp")
@@ -30,7 +30,7 @@ ColumnLayout {
         const token = otpField.text.trim();
         if (token.length === 0)
             return;
-        MadisonVpn.connectWithOtp(token);
+        FortiVpn.connectWithOtp(token);
         otpField.text = "";
         if (root.popouts.currentName === "vpnOtp")
             root.popouts.currentName = "vpn";
@@ -64,7 +64,7 @@ ColumnLayout {
             spacing: 0
 
             StyledText {
-                text: Tr.tr("Madison VPN")
+                text: Tr.tr("VPN FortiClient")
                 font: Tokens.font.title.small
                 color: Colours.palette.m3onSurface
             }
@@ -92,10 +92,10 @@ ColumnLayout {
     }
 
     StyledText {
-        visible: MadisonVpn.lastError.length > 0
+        visible: FortiVpn.lastError.length > 0
         Layout.fillWidth: true
         wrapMode: Text.Wrap
-        text: MadisonVpn.lastError
+        text: FortiVpn.lastError
         color: Colours.palette.m3error
         font: Tokens.font.body.small
     }
@@ -119,7 +119,7 @@ ColumnLayout {
             inactiveColour: Colours.palette.m3primary
             inactiveOnColour: Colours.palette.m3onPrimary
             text: Tr.tr("Connect")
-            enabled: otpField.text.trim().length > 0 && !MadisonVpn.busy
+            enabled: otpField.text.trim().length > 0 && !FortiVpn.busy
             onClicked: root.submit()
         }
     }

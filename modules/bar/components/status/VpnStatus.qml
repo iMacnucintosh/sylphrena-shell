@@ -19,14 +19,14 @@ Item {
         anchors.centerIn: parent
         animate: true
         // Shield-style glyphs (like KDE network-vpn)
-        text: MadisonVpn.connected ? "verified_user" : "remove_moderator"
-        fill: MadisonVpn.connected ? 1 : 0
+        text: FortiVpn.connected ? "verified_user" : "remove_moderator"
+        fill: FortiVpn.connected ? 1 : 0
         // Always follow EntryWrapper colour so hover (m3onPrimary on m3primary pill) stays readable
         color: root.colour
-        opacity: MadisonVpn.busy ? 0.55 : 1
+        opacity: FortiVpn.busy ? 0.55 : 1
 
         SequentialAnimation on opacity {
-            running: MadisonVpn.busy
+            running: FortiVpn.busy
             loops: Animation.Infinite
             alwaysRunToEnd: true
             Anim {
