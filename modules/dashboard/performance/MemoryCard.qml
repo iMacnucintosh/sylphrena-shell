@@ -46,7 +46,7 @@ StyledRect {
             }
         }
 
-        CircularProgress {
+        StatRing {
             Layout.topMargin: Tokens.spacing.large
             Layout.alignment: Qt.AlignHCenter
             implicitSize: usageColumn.implicitHeight + thickness + Tokens.padding.largeIncreased * 2
@@ -54,7 +54,7 @@ StyledRect {
             sweepAngle: 270
 
             fgColour: root.accent
-            value: Memory.percentage
+            reading: Memory.percentage
 
             Behavior on clampedVal {
                 Anim {}

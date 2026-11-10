@@ -66,21 +66,11 @@ Item {
             }
         }
     }
-    component Resource: CircularProgress {
+    // StatRing: only follows changes of 2 % or more (see components/controls/StatRing.qml)
+    component Resource: StatRing {
         id: res
 
         required property string icon
-        // Raw value from the service. The ring only follows changes of 2 % or more: the stats
-        // update every second and almost always move a little, so animating every tiny change
-        // kept the ring animating non-stop and the whole dashboard redrawing at the monitor's
-        // refresh rate (~10 % of a CPU core while open). 2 % is not visible on the ring anyway.
-        property real reading
-
-        onReadingChanged: {
-            if (Math.abs(reading - value) >= 0.02 || reading <= 0 || reading >= 1)
-                value = reading;
-        }
-        Component.onCompleted: value = reading
 
         Layout.fillHeight: true
         implicitSize: height
