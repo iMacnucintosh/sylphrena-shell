@@ -2,6 +2,16 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 2026-11-10
+
+### Dashboard
+
+- **Carrusel de widgets** en el centro del Panel: calendario e hidratación (más los que vengan), con flechas, puntos y arrastre, orden configurable y sin rotación automática. Ajustes en `Panels → Dashboard → Carrusel de widgets`; **Hidratación** se movió allí desde Complementos con los mismos ajustes. Nueva opción `dashboard.widgetOrder` (requiere reinstalar el plugin).
+
+### Apps claras
+
+- Las apps **Qt** (Transmission…) siguen el modo claro (paleta qt6ct clara + Papirus-Light) y las GTK usan Papirus-Light (los iconos oscuros no se veían). Corregido un `NameError` en `_sync_qt6ct` que cortaba el apply.
+
 ## 2026-11-09
 
 ### Bluetooth

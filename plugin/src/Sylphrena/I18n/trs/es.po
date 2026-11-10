@@ -1708,6 +1708,34 @@ msgstr "Teclado y ratón"
 msgid "Shortcuts, remappings"
 msgstr "Atajos, reasignaciones"
 
+#: services/DashWidgets.qml
+msgid "Calendar"
+msgstr "Calendario"
+
+#: services/DashWidgets.qml
+msgid "Month view of the dashboard"
+msgstr "Vista mensual del panel"
+
+#: services/DashWidgets.qml
+msgid "Water intake tracker with reminders"
+msgstr "Control de agua con recordatorios"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Widget carousel"
+msgstr "Carrusel de widgets"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "The centre of the Dashboard shows one widget at a time; switch with the arrows, the dots or by dragging. Reorder them here."
+msgstr "El centro del panel muestra un widget a la vez; cambia con las flechas, los puntos o arrastrando. Aquí puedes ordenarlos."
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Off — also stops the reminders and the tracking"
+msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Always available"
+msgstr "Siempre disponible"
+
 #~ msgid "Shell shortcuts, remapping and mouse focus"
 #~ msgstr "Atajos del shell, reasignación y foco del ratón"
 

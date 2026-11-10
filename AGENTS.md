@@ -55,7 +55,8 @@ Documentación por rol: [README.md](./README.md) = cara pública (features + ins
 | `MadisonVpn` | Status exige ping a intranet (no basta `ppp0`); teardown/heal tras suspender; popout OTP + settings |
 | `BluetoothAudio` | Perfil de audio de auriculares BT (Música/Llamadas/Auto) desde el popout de Bluetooth: `pactl` + ajuste global `bluetooth.autoswitch-to-headset-profile` de WirePlumber (`wpctl settings --save`); batería de AirPods vía `scripts/airpods-battery.py` (L2CAP 0x1001, BlueZ no la publica) |
 | `Displays` | `hyprctl monitors -j`; VRR **por conector** (Nunca/Automático/Siempre) → `sylphrena-monitors.lua` + `hyprctl reload` (sin reload VRR off no llega al CRTC) |
-| `Hydration` / `Timers` | Complementos on/off; al off limpian estado/procesos y ocultan su UI |
+| `Hydration` / `Timers` | on/off; al off limpian estado/procesos y ocultan su UI. Hidratación se configura en Nexus → Panels → Dashboard → Carrusel de widgets (no en Complementos) |
+| `DashWidgets` | Registro del carrusel del dashboard (`all`/`order`/`active`/`move`); orden en `dashboard.widgetOrder`. Calendario siempre disponible; añadir widget = entrada aquí + caso en `WidgetCarousel.qml` + tarjeta en `DashboardPanel.qml` |
 | `Keybinds` | Grabación de teclas con submap vacío de Hyprland (inhibe binds), soporte F13–F35, diálogo de conflicto → `sylphrena-binds.lua`; incluye `focusLast` (última ventana cross-desktop) |
 | `Hypr` | Bridge de eventos de Hyprland; conectar directos cuando el `rawEvent` no se re-emite; aplica `follow_mouse` (Nexus) a `sylphrena-input.lua` |
 
@@ -85,7 +86,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 4. **Updates** — página Nexus + icono/badge en la barra (solo si hay paquetes) + popout; password popup → update en bg con logs en vivo en Nexus.
 5. **Clipboard** — popout estilo Sylphrena (`m3surface` + blur), favoritos, búsqueda, previews de imágenes/rutas, pegar en la ventana enfocada.
 6. **Madison VPN** — icono en status, dropdown al hover, OTP integrado, settings (host/puerto/user/pass), heal tras sleep.
-7. **Complementos** — VPN, Timers, Hidratación (+ Juegos) con icono por fila y limpieza al desactivar. Hidratación: depósito con waves en el dashboard (el calendario del popout del reloj sigue), meta 3000 ml, presets +20/+83/+250/+500, recordatorio con acciones.
+7. **Complementos** — VPN, Timers, Hidratación (+ Juegos) con icono por fila y limpieza al desactivar. Hidratación: depósito con waves como página del **carrusel de widgets** del dashboard (el calendario del popout del reloj sigue), meta 3000 ml, presets +20/+83/+250/+500, recordatorio con acciones.
 8. **Varios** — timers del reloj persistentes, grabación estable + chip REC, capturas sin notificación, clic en notificación → enfoca/abre la app en su workspace, launcher con edición de `.desktop` (hover inferior para abrirlo, se cierra al salir el puntero), tray/status con pastilla al hover unificada, recoloreado forzado a claro de tray sin contraste (Steam/Cursor), Keep-awake (café) activado por defecto, **layout compacto** (ex game mode: solo barra izquierda, gaps/rounding/border 0, sin tocar animaciones/blur/wobble), lock con Sylphrena (65 % inferior) + notifs con scroll (35 %), i18n ES completo, docs README/FEATURES/CHANGELOG.
 
 ## 6. Trampas / aprendizajes

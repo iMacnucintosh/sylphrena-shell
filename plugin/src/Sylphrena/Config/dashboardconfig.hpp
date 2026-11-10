@@ -5,6 +5,8 @@
 
 namespace sylphrena::shell::config {
 
+using Qt::StringLiterals::operator""_s;
+
 class DashboardPerformance : public settings::ObjectNode {
     CONFIG_NODE(DashboardPerformance, settings::ObjectNode)
 
@@ -26,6 +28,9 @@ class DashboardConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, showPerformance, true)
     CONFIG_PROPERTY(bool, showWeather, true)
     CONFIG_PROPERTY(bool, showClockSeconds, false)
+    // Widget carousel (centre of the dashboard): order of the widgets, by id. Unknown ids are
+    // ignored and missing ones appended by the shell, so adding a widget never breaks old configs.
+    CONFIG_PROPERTY(QStringList, widgetOrder, QStringList({ u"calendar"_s, u"hydration"_s }))
     CONFIG_GLOBAL_PROPERTY(int, mediaUpdateInterval, 500)
     CONFIG_GLOBAL_PROPERTY(int, resourceUpdateInterval, 1000)
     CONFIG_PROPERTY(int, dragThreshold, 50)

@@ -6,6 +6,7 @@ import Quickshell
 import Sylphrena.Config
 import Sylphrena.I18n
 import Sylphrena.Services
+import qs.components
 import qs.components.controls
 import qs.services
 import qs.modules.nexus.common
@@ -45,8 +46,50 @@ PageBase {
         }
     ]
 
+    property bool hydrationSettingsOpen: false
+
     title: Tr.tr("Dashboard")
     isSubPage: true
+
+    component SettingRow: RowLayout {
+        property alias label: settingLabel.text
+        property alias subtext: settingSub.text
+        property alias value: spin.value
+        property alias from: spin.from
+        property alias to: spin.to
+        property alias stepSize: spin.stepSize
+        signal moved(value: real)
+
+        Layout.fillWidth: true
+        spacing: Tokens.spacing.medium
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: 0
+
+            StyledText {
+                id: settingLabel
+                Layout.fillWidth: true
+                font: Tokens.font.body.small
+                elide: Text.ElideRight
+            }
+
+            StyledText {
+                id: settingSub
+                Layout.fillWidth: true
+                visible: text.length > 0
+                color: Colours.palette.m3outline
+                font: Tokens.font.label.small
+                elide: Text.ElideRight
+            }
+        }
+
+        StyledSpinBox {
+            id: spin
+            cLayer: 2
+            onValueModified: parent.moved(value)
+        }
+    }
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -94,6 +137,194 @@ PageBase {
             subtext: Tr.tr("Display seconds for the clock in the main panel")
             checked: Config.dashboard.showClockSeconds
             onToggled: GlobalConfig.dashboard.showClockSeconds = checked
+        }
+
+        // Widget carousel — centre of the Dashboard tab; one widget at a time
+        SectionHeader {
+            text: Tr.tr("Widget carousel")
+        }
+
+        StyledText {
+            Layout.fillWidth: true
+            Layout.bottomMargin: Tokens.spacing.small
+            text: Tr.tr("The centre of the Dashboard shows one widget at a time; switch with the arrows, the dots or by dragging. Reorder them here.")
+            color: Colours.palette.m3outline
+            font: Tokens.font.label.small
+            wrapMode: Text.Wrap
+        }
+
+        Repeater {
+            model: DashWidgets.order
+
+            delegate: ConnectedRect {
+                id: card
+
+                required property var modelData
+                required property int index
+                readonly property bool isHydration: modelData.id === "hydration"
+
+                Layout.fillWidth: true
+                first: index === 0
+                last: index === DashWidgets.order.length - 1
+                implicitHeight: cardCol.implicitHeight + Tokens.padding.medium * 2
+
+                ColumnLayout {
+                    id: cardCol
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.margins: Tokens.padding.medium
+                    anchors.leftMargin: Tokens.padding.largeIncreased
+                    anchors.rightMargin: Tokens.padding.largeIncreased
+                    spacing: Tokens.spacing.medium
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: Tokens.spacing.medium
+
+                        MaterialIcon {
+                            text: card.modelData.icon
+                            color: Colours.palette.m3onSurfaceVariant
+                            fontStyle: Tokens.font.icon.medium
+                            Layout.alignment: Qt.AlignVCenter
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 0
+
+                            StyledText {
+                                Layout.fillWidth: true
+                                text: card.modelData.title
+                                font: Tokens.font.body.small
+                                elide: Text.ElideRight
+                            }
+
+                            StyledText {
+                                Layout.fillWidth: true
+                                text: card.isHydration && Hydration.enabled && root.hydrationSettingsOpen
+                                    ? Tr.tr("%1 ml · reminder every %2 min").arg(GlobalConfig.addons.hydration.dailyGoalMl).arg(GlobalConfig.addons.hydration.reminderMinutes)
+                                    : card.isHydration && !Hydration.enabled
+                                        ? Tr.tr("Off — also stops the reminders and the tracking")
+                                        : card.modelData.always ? Tr.tr("Always available") : card.modelData.subtext
+                                color: Colours.palette.m3outline
+                                font: Tokens.font.label.small
+                                elide: Text.ElideRight
+                                wrapMode: Text.NoWrap
+                            }
+                        }
+
+                        IconButton {
+                            isRound: true
+                            icon: "arrow_upward"
+                            type: IconButton.Text
+                            font: Tokens.font.icon.builders.small.weight(Font.Bold).build()
+                            padding: Tokens.padding.small
+                            enabled: card.index !== 0
+                            opacity: enabled ? 1 : 0.38
+                            Layout.alignment: Qt.AlignVCenter
+                            onClicked: DashWidgets.move(card.modelData.id, -1)
+                        }
+
+                        IconButton {
+                            isRound: true
+                            icon: "arrow_downward"
+                            type: IconButton.Text
+                            font: Tokens.font.icon.builders.small.weight(Font.Bold).build()
+                            padding: Tokens.padding.small
+                            enabled: card.index !== DashWidgets.order.length - 1
+                            opacity: enabled ? 1 : 0.38
+                            Layout.alignment: Qt.AlignVCenter
+                            onClicked: DashWidgets.move(card.modelData.id, 1)
+                        }
+
+                        IconButton {
+                            visible: card.isHydration && Hydration.enabled
+                            isRound: true
+                            icon: root.hydrationSettingsOpen ? "expand_less" : "expand_more"
+                            type: IconButton.Text
+                            font: Tokens.font.icon.builders.small.weight(Font.Bold).build()
+                            padding: Tokens.padding.small
+                            Layout.alignment: Qt.AlignVCenter
+                            onClicked: root.hydrationSettingsOpen = !root.hydrationSettingsOpen
+                        }
+
+                        StyledSwitch {
+                            visible: card.isHydration
+                            Layout.alignment: Qt.AlignVCenter
+                            checked: Hydration.enabled
+                            onToggled: {
+                                Hydration.setEnabled(checked);
+                                root.hydrationSettingsOpen = checked;
+                            }
+                        }
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        visible: card.isHydration && Hydration.enabled && root.hydrationSettingsOpen
+                        spacing: Tokens.spacing.small
+
+                        SettingRow {
+                            label: Tr.tr("Daily goal")
+                            subtext: Tr.tr("Target water intake per day (ml)")
+                            value: GlobalConfig.addons.hydration.dailyGoalMl
+                            from: 500
+                            to: 8000
+                            stepSize: 100
+                            onMoved: v => Hydration.setDailyGoal(v)
+                        }
+
+                        SettingRow {
+                            label: Tr.tr("Reminder interval")
+                            subtext: Tr.tr("Minutes without a sip before a reminder")
+                            value: GlobalConfig.addons.hydration.reminderMinutes
+                            from: 5
+                            to: 120
+                            stepSize: 5
+                            onMoved: v => Hydration.setReminderMinutes(v)
+                        }
+
+                        SettingRow {
+                            label: Tr.tr("Preset 1")
+                            subtext: Tr.tr("Quick-add button amount (ml)")
+                            value: GlobalConfig.addons.hydration.presetMl0
+                            from: 1
+                            to: 1000
+                            stepSize: 1
+                            onMoved: v => Hydration.setPreset(0, v)
+                        }
+
+                        SettingRow {
+                            label: Tr.tr("Preset 2")
+                            value: GlobalConfig.addons.hydration.presetMl1
+                            from: 1
+                            to: 1000
+                            stepSize: 1
+                            onMoved: v => Hydration.setPreset(1, v)
+                        }
+
+                        SettingRow {
+                            label: Tr.tr("Preset 3")
+                            value: GlobalConfig.addons.hydration.presetMl2
+                            from: 1
+                            to: 1000
+                            stepSize: 1
+                            onMoved: v => Hydration.setPreset(2, v)
+                        }
+
+                        SettingRow {
+                            label: Tr.tr("Preset 4")
+                            value: GlobalConfig.addons.hydration.presetMl3
+                            from: 1
+                            to: 1000
+                            stepSize: 1
+                            onMoved: v => Hydration.setPreset(3, v)
+                        }
+                    }
+                }
+            }
         }
 
         // Tabs

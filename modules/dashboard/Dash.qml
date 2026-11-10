@@ -60,23 +60,16 @@ GridLayout {
         Layout.column: 1
         Layout.columnSpan: 3
         Layout.fillWidth: true
-        Layout.fillHeight: Hydration.enabled
-        Layout.preferredHeight: Hydration.enabled ? Math.max(hydration.implicitHeight, 220) : calendar.implicitHeight
-        color: Hydration.enabled ? "transparent" : Colours.tPalette.m3surfaceContainer
+        Layout.fillHeight: true
+        Layout.preferredHeight: Math.max(carousel.implicitHeight, 220)
 
         radius: Tokens.rounding.extraLarge
 
-        Calendar {
-            id: calendar
+        WidgetCarousel {
+            id: carousel
 
-            visible: !Hydration.enabled
+            anchors.fill: parent
             screenState: root.screenState
-        }
-
-        HydrationWidget {
-            id: hydration
-
-            visible: Hydration.enabled
         }
     }
 

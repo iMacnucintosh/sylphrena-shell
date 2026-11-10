@@ -1,0 +1,235 @@
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import Sylphrena.Config
+import qs.components
+import qs.components.controls
+import qs.services
+
+// Centre of the dashboard: one widget at a time (calendar, hydration, …), switched by hand with
+// the arrows, the dots or a horizontal drag. Which widgets exist and their order come from
+// services/DashWidgets.qml. With a single widget there are no controls and it looks fixed.
+Item {
+    id: root
+
+    required property ScreenState screenState
+
+    readonly property var widgets: DashWidgets.active
+    readonly property int count: widgets.length
+    readonly property bool multi: count > 1
+    readonly property real stripHeight: multi ? 18 : 0
+    property int current: 0
+    // Live horizontal drag offset in px (0 when idle)
+    property real dragOffset: 0
+
+    implicitHeight: pages.maxHeight + stripHeight
+
+    function go(i: int): void {
+        current = Math.max(0, Math.min(count - 1, i));
+    }
+
+    // A widget being switched off or reordered must not leave the index out of range
+    onCountChanged: go(current)
+
+    Item {
+        id: pages
+
+        // Tallest widget, so the dashboard does not jump when switching pages
+        property real maxHeight: 0
+
+        function recalc(): void {
+            let h = 0;
+            for (let i = 0; i < repeater.count; ++i) {
+                const it = repeater.itemAt(i);
+                if (it)
+                    h = Math.max(h, it.contentHeight);
+            }
+            maxHeight = h;
+        }
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: root.stripHeight
+        clip: true
+
+        Repeater {
+            id: repeater
+
+            model: root.widgets
+
+            onItemAdded: pages.recalc()
+            onItemRemoved: pages.recalc()
+
+            delegate: Item {
+                id: page
+
+                required property var modelData
+                required property int index
+
+                readonly property real contentHeight: loader.item ? loader.item.implicitHeight : 0
+
+                onContentHeightChanged: pages.recalc()
+
+                x: (index - root.current) * width + root.dragOffset
+                width: pages.width
+                height: pages.height
+                // Only what is on screen (or sliding in) is alive: hydration animates at ~60 fps
+                visible: Math.abs(x) < width
+
+                Behavior on x {
+                    enabled: root.dragOffset === 0
+
+                    Anim {
+                        type: Anim.DefaultSpatial
+                    }
+                }
+
+                Loader {
+                    id: loader
+
+                    anchors.fill: parent
+                    sourceComponent: page.modelData.id === "hydration" ? hydrationComp : calendarComp
+                }
+            }
+        }
+
+        DragHandler {
+            id: drag
+
+            enabled: root.multi
+            target: null
+            xAxis.enabled: true
+            yAxis.enabled: false
+            onTranslationChanged: root.dragOffset = translation.x
+            onActiveChanged: {
+                if (active)
+                    return;
+                const t = pages.width / 5;
+                if (root.dragOffset < -t)
+                    root.go(root.current + 1);
+                else if (root.dragOffset > t)
+                    root.go(root.current - 1);
+                root.dragOffset = 0;
+            }
+        }
+
+        // Arrows appear on hover, on the sides (the hydration quick-add button lives bottom-right)
+        HoverHandler {
+            id: hover
+
+            enabled: root.multi
+        }
+
+        Arrow {
+            side: "left"
+            shown: hover.hovered && root.current > 0
+            onClicked: root.go(root.current - 1)
+        }
+
+        Arrow {
+            side: "right"
+            shown: hover.hovered && root.current < root.count - 1
+            onClicked: root.go(root.current + 1)
+        }
+    }
+
+    // Dots
+    Row {
+        visible: root.multi
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 5
+        spacing: 6
+
+        Repeater {
+            model: root.count
+
+            delegate: Item {
+                id: dot
+
+                required property int index
+                readonly property bool on: index === root.current
+
+                width: on ? 18 : 8
+                height: 8
+
+                Behavior on width {
+                    Anim {
+                        type: Anim.FastSpatial
+                    }
+                }
+
+                Rectangle {
+                    anchors.fill: parent
+                    radius: height / 2
+                    color: dot.on ? Colours.palette.m3primary : Colours.palette.m3outlineVariant
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    anchors.margins: -4
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.go(dot.index)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: calendarComp
+
+        Calendar {
+            screenState: root.screenState
+        }
+    }
+
+    Component {
+        id: hydrationComp
+
+        HydrationWidget {}
+    }
+
+    component Arrow: Item {
+        id: arrow
+
+        required property string side
+        property bool shown
+        signal clicked
+
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: side === "left" ? parent.left : undefined
+        anchors.right: side === "right" ? parent.right : undefined
+        anchors.margins: Tokens.padding.small
+        width: 32
+        height: 32
+        opacity: shown ? 1 : 0
+        visible: opacity > 0
+
+        Behavior on opacity {
+            Anim {
+                type: Anim.StandardSmall
+            }
+        }
+
+        StyledRect {
+            anchors.fill: parent
+            radius: width / 2
+            color: Colours.palette.m3surfaceContainerHighest
+            opacity: 0.9
+
+            StateLayer {
+                radius: Tokens.rounding.full
+                onClicked: arrow.clicked()
+            }
+        }
+
+        MaterialIcon {
+            anchors.centerIn: parent
+            text: arrow.side === "left" ? "chevron_left" : "chevron_right"
+            color: Colours.palette.m3onSurface
+            fontStyle: Tokens.font.icon.small
+        }
+    }
+}
