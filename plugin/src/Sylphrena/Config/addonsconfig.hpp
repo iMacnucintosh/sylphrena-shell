@@ -18,20 +18,10 @@ class AddonsTimers : public settings::ObjectNode {
     CONFIG_PROPERTY(int, presetMins3, 30)
 };
 
-class AddonsSteam : public settings::ObjectNode {
-    CONFIG_NODE(AddonsSteam, settings::ObjectNode)
-
-    CONFIG_PROPERTY(bool, enabled, false)
-    CONFIG_PROPERTY(QString, apiKey, {})
-    CONFIG_PROPERTY(QString, steamId, {})
-    CONFIG_PROPERTY(int, refreshMinutes, 10)
-};
-
 class AddonsConfig : public settings::ObjectNode {
     CONFIG_NODE(AddonsConfig, settings::ObjectNode)
 
     CONFIG_GLOBAL_SUBOBJECT(AddonsTimers, timers)
-    CONFIG_GLOBAL_SUBOBJECT(AddonsSteam, steam)
 };
 
 } // namespace sylphrena::shell::config

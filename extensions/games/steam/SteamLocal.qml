@@ -10,7 +10,7 @@ QtObject {
 
     required property var host
 
-    readonly property string nonSteamScript: Quickshell.shellPath("scripts/steam-nonsteam.py")
+    readonly property string nonSteamScript: `${root.host.ext.dir}/scripts/steam-nonsteam.py`
 
     function loadNonSteam(): void {
         if (!root.host.enabled)

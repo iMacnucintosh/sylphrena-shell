@@ -137,3 +137,25 @@ Hecho. Rama `feature/phase-4-vpn`, fusionada en `dev/0.2`.
 - ⚠️ **NO verificado** (necesita tu intervención): conectar de verdad (OTP + ayudante con
   privilegios), el diálogo OTP y el de ajustes (teclado, Esc, que no se cierren al mover el
   cursor), y el heal tras suspender. Pruébalos antes de fiarte de esta fase.
+
+## Fase 4 — Juegos / Steam (2026-11-10)
+Hecho (con una salvedad abajo). Rama `feature/phase-4-games`, fusionada en `dev/0.2`.
+
+- `extensions/games/` (tipo `addon`): `Service.qml` (la antigua `services/Steam.qml`), `steam/*`
+  (6 módulos), `Tab.qml` + `games/*` (la pestaña), `Settings.qml` (clave API, Steam ID, refresco;
+  salió de `ComplementsPage`) y `scripts/` (`steam-activity.py`, `steam-nonsteam.py`, que ahora se
+  localizan con `ext.dir`). `AddonsSteam` (C++) ya no existe: `addons` solo conserva `timers`.
+- **Enganche nuevo `dashboardTabs`**: `Content.qml` ya no nombra Juegos; añade al final las
+  pestañas de `Extensions.dashboardTabs` y las coloca con `ExtensionSlot` (recibe `screenState`).
+- Transformación mecánica de la UI: cada fichero de `games/*` recibe `required property var service`
+  y todos los `Steam.` pasaron a `root.service.`.
+- Config migrada (`addons.steam.*` → `extensions.enabled` + `extensions/games.json`).
+- **Verificado en la shell real**: la pestaña «Juegos» aparece y carga con el perfil, las
+  estadísticas, las portadas, los logros y la actividad del usuario (capturas).
+- Errores encontrados y corregidos por el camino: faltaba `import qs.services` en `Content.qml`
+  (`Extensions is not defined` → **el dashboard quedó sin pestañas unos minutos**) y en
+  `Settings.qml` de Juegos (`Colours`), y `SteamArt` perdió su import de `FadeImage` al moverse.
+- Aviso previo, no nuevo: `ActivityCard.qml` lanza `Cannot read property 'verticalCenter' of null`
+  (un `anchors.verticalCenter: parent.verticalCenter` en un delegado de `Repeater`); ya estaba así.
+- ⚠️ **NO verificado**: la sección de ajustes de Juegos en Nexus → Complementos (editar clave
+  API / Steam ID) ni «Refrescar ahora». Pruébalo.

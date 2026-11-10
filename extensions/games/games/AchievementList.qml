@@ -13,6 +13,9 @@ import qs.services
 StyledRect {
     id: root
 
+    // Injected by the games tab (the extension's service)
+    required property var service
+
     required property var model
     property string emptyText
     property real rareThreshold: 15
@@ -68,7 +71,7 @@ StyledRect {
             }
 
             StyledRect {
-                visible: !!Steam.focusProgress && Steam.focusProgress.total > 0
+                visible: !!root.service.focusProgress && root.service.focusProgress.total > 0
                 implicitWidth: countText.implicitWidth + Tokens.padding.small * 2
                 implicitHeight: 24
                 radius: Tokens.rounding.full
@@ -78,7 +81,7 @@ StyledRect {
                     id: countText
 
                     anchors.centerIn: parent
-                    text: Tr.tr("%1 / %2").arg(Steam.focusProgress?.unlocked ?? 0).arg(Steam.focusProgress?.total ?? 0)
+                    text: Tr.tr("%1 / %2").arg(root.service.focusProgress?.unlocked ?? 0).arg(root.service.focusProgress?.total ?? 0)
                     font: Tokens.font.label.builders.small.weight(Font.DemiBold).build()
                     color: Colours.palette.m3onSecondaryContainer
                 }
@@ -105,7 +108,7 @@ StyledRect {
 
                 MaterialIcon {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: Steam.focusLoading ? "hourglass_empty" : "trophy"
+                    text: root.service.focusLoading ? "hourglass_empty" : "trophy"
                     color: Colours.palette.m3outline
                     fontStyle: Tokens.font.icon.large
                 }
@@ -181,7 +184,7 @@ StyledRect {
                     }
 
                     StyledText {
-                        text: Tr.tr("Locked · %1").arg((Steam.focusProgress?.total ?? 0) - (Steam.focusProgress?.unlocked ?? 0))
+                        text: Tr.tr("Locked · %1").arg((root.service.focusProgress?.total ?? 0) - (root.service.focusProgress?.unlocked ?? 0))
                         font: Tokens.font.label.builders.medium.weight(Font.DemiBold).build()
                         color: Colours.palette.m3outline
                     }

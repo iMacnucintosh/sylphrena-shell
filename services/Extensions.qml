@@ -56,6 +56,9 @@ Singleton {
     // its own config (`bar.statusIcons`); an entry whose id is not a built-in one is drawn from here.
     readonly property var statusIcons: contributions("statusIcons")
 
+    // Dashboard tabs of the loaded extensions: [{ id, text, icon, ext, component }]
+    readonly property var dashboardTabs: contributions("dashboardTabs")
+
     // Bar popouts of the loaded extensions: [{ name, ext, component, dialog, parentIcon }].
     // A `dialog` popout takes the keyboard, and stays open while hovering its `parentIcon`.
     readonly property var popouts: contributions("popouts")

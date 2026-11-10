@@ -10,12 +10,15 @@ import qs.services
 RowLayout {
     id: root
 
-    property int maxGames: 5 + Math.min(3, Steam.nonSteamGames.length)
+    // Injected by the games tab (the extension's service)
+    required property var service
+
+    property int maxGames: 5 + Math.min(3, root.service.nonSteamGames.length)
 
     spacing: Tokens.spacing.small
 
     Repeater {
-        model: Steam.pickerGames.slice(0, root.maxGames)
+        model: root.service.pickerGames.slice(0, root.maxGames)
 
         Item {
             id: card
@@ -23,8 +26,8 @@ RowLayout {
             required property var modelData
             required property int index
 
-            readonly property bool selected: modelData.appId === Steam.focusAppId
-            readonly property bool playing: modelData.appId === (Steam.profile?.gameId ?? "")
+            readonly property bool selected: modelData.appId === root.service.focusAppId
+            readonly property bool playing: modelData.appId === (root.service.profile?.gameId ?? "")
 
             Layout.fillWidth: true
             Layout.preferredWidth: 1
@@ -69,7 +72,7 @@ RowLayout {
 
                 SteamArt {
                     anchors.fill: parent
-                    candidates: Steam.artCandidates(card.modelData.appId, "")
+                    candidates: root.service.artCandidates(card.modelData.appId, "")
                 }
             }
 
@@ -97,7 +100,7 @@ RowLayout {
 
                 radius: Tokens.rounding.large
                 color: "white"
-                onClicked: Steam.setFocusApp(card.modelData.appId, card.modelData.name)
+                onClicked: root.service.setFocusApp(card.modelData.appId, card.modelData.name)
             }
         }
     }

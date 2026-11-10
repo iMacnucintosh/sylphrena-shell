@@ -11,6 +11,9 @@ import qs.services
 StyledRect {
     id: root
 
+    // Injected by the games tab (the extension's service)
+    required property var service
+
     property string gameKey
     property var sessions: []
     property var dailyMinutes: ({}) // { "YYYY-MM-DD": minutes }
@@ -334,12 +337,12 @@ StyledRect {
 
                 Stat {
                     label: Tr.tr("Total")
-                    value: root.totalMinutes > 0 ? Steam.formatPlaytime(root.totalMinutes) : "–"
+                    value: root.totalMinutes > 0 ? root.service.formatPlaytime(root.totalMinutes) : "–"
                 }
 
                 Stat {
                     label: Tr.tr("Longest")
-                    value: root.longestMinutes > 0 ? Steam.formatPlaytime(root.longestMinutes) : "–"
+                    value: root.longestMinutes > 0 ? root.service.formatPlaytime(root.longestMinutes) : "–"
                 }
 
                 Row {

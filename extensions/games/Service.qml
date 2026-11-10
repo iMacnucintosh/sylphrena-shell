@@ -1,21 +1,24 @@
-pragma Singleton
 pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Sylphrena.Config
 import Sylphrena.I18n
 import "steam"
 
-// Public Steam façade for Complements + dashboard/games/*. Logic lives in
-// services/steam/* (Format, Api, Library, Achievements, Local, Activity).
-Singleton {
+// Service of the Games extension: the Steam façade used by the games tab and the settings. Logic
+// lives in steam/* (Format, Api, Library, Achievements, Local, Activity). It exists only while the
+// extension is enabled. Settings (ext.config): apiKey, steamId, refreshMinutes.
+Scope {
     id: root
 
-    readonly property bool enabled: GlobalConfig.addons.steam.enabled
-    readonly property string apiKey: GlobalConfig.addons.steam.apiKey
-    readonly property string steamIdInput: GlobalConfig.addons.steam.steamId
-    readonly property int refreshMinutes: Math.max(1, GlobalConfig.addons.steam.refreshMinutes || 10)
+    // Injected by the base (services/Extensions.qml)
+    required property var ext
+
+    // The service exists only while the extension is enabled (kept so the code below reads as before)
+    readonly property bool enabled: true
+    readonly property string apiKey: root.ext.config.get("apiKey", "")
+    readonly property string steamIdInput: root.ext.config.get("steamId", "")
+    readonly property int refreshMinutes: Math.max(1, root.ext.config.get("refreshMinutes", 10) || 10)
     readonly property bool configured: apiKey.length > 0 && steamIdInput.length > 0
     // Cap the achievements sampling GETs (1 per candidate game) — a big
     // library otherwise fires hundreds of requests on the first reload.
@@ -160,25 +163,16 @@ Singleton {
         return formatMod.personaStateLabel();
     }
 
-    function setEnabled(on: bool): void {
-        if (GlobalConfig.addons.steam.enabled === on)
-            return;
-        GlobalConfig.addons.steam.enabled = on;
-    }
-
     function setApiKey(key: string): void {
-        GlobalConfig.addons.steam.apiKey = (key || "").trim();
+        root.ext.config.set("apiKey", (key || "").trim());
     }
 
     function setSteamId(id: string): void {
-        GlobalConfig.addons.steam.steamId = (id || "").trim();
+        root.ext.config.set("steamId", (id || "").trim());
     }
 
     function setRefreshMinutes(mins: int): void {
-        const v = Math.max(1, Math.min(180, Math.round(mins || 10)));
-        if (GlobalConfig.addons.steam.refreshMinutes === v)
-            return;
-        GlobalConfig.addons.steam.refreshMinutes = v;
+        root.ext.config.set("refreshMinutes", Math.max(1, Math.min(180, Math.round(mins || 10))));
     }
 
     function steamLang(): string {
@@ -366,19 +360,14 @@ Singleton {
         activity: activityMod
     }
 
-    Connections {
-        target: GlobalConfig.addons.steam
-        function onEnabledChanged(): void {
-            root.maybeReloadOnConfig();
-        }
-        function onApiKeyChanged(): void {
-            achievementsMod.clearCaches(true);
-            root.maybeReloadOnConfig();
-        }
-        function onSteamIdChanged(): void {
-            achievementsMod.clearCaches(true);
-            root.maybeReloadOnConfig();
-        }
+    // React to the settings changing (the extension's own config, not the shell's)
+    onApiKeyChanged: {
+        achievementsMod.clearCaches(true);
+        root.maybeReloadOnConfig();
+    }
+    onSteamIdInputChanged: {
+        achievementsMod.clearCaches(true);
+        root.maybeReloadOnConfig();
     }
 
     Timer {
