@@ -142,6 +142,18 @@ Item {
                 flickable: list
             }
 
+            // The wheel over the list only scrolls the list: it is never handed to the carousel
+            // (which would switch widget when the list is at the top/bottom or has nothing to scroll)
+            WheelHandler {
+                blocking: true
+                onWheel: event => {
+                    const dy = event.pixelDelta.y !== 0 ? event.pixelDelta.y : event.angleDelta.y / 120 * 48;
+                    const max = Math.max(0, list.contentHeight - list.height);
+                    list.contentY = Math.max(0, Math.min(max, list.contentY - dy));
+                    event.accepted = true;
+                }
+            }
+
             ColumnLayout {
                 id: listCol
 
