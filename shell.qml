@@ -38,6 +38,7 @@ ShellRoot {
         Updates;
         ConfigMigration;
         FortiVpn;
+        Extensions;
         Hydration;
         // Steam: activity poll only; library/API loads when Games tab opens
         Steam;

@@ -1,18 +1,17 @@
-pragma Singleton
 pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Sylphrena.Config
 import qs.utils
 
-// Checklist for the dashboard "Tasks" widget. Persisted in ~/.local/state/sylphrena/tasks.json.
-// Turning the widget off only hides it: the tasks are kept.
-Singleton {
+// Service of the Tasks extension. Persisted in ~/.local/state/sylphrena/tasks.json. Disabling the
+// extension only unloads it: the tasks are kept.
+Scope {
     id: root
 
-    readonly property bool enabled: GlobalConfig.dashboard.tasksEnabled
+    // Injected by the base (services/Extensions.qml)
+    required property var ext
 
     // [{ id, text, done, createdAt, doneAt }] — newest pending first
     property var items: []

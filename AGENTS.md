@@ -59,7 +59,7 @@ Documentación por rol: [README.md](./README.md) = cara pública (features + ins
 | `Displays` | `hyprctl monitors -j`; VRR **por conector** (Nunca/Automático/Siempre) → `sylphrena-monitors.lua` + `hyprctl reload` (sin reload VRR off no llega al CRTC) |
 | `Hydration` / `Timers` | on/off; al off limpian estado/procesos y ocultan su UI. Hidratación se configura en Nexus → Panels → Dashboard → Carrusel de widgets (no en Complementos) |
 | `RazerMouse` | Batería del Basilisk V4 Pro vía `synapsex-cli battery` (proyecto propio del usuario; el CLI tarda varios segundos, timeout 25 s). Complemento: ocupa el hueco del anillo de almacenamiento en `dash/Resources.qml`. Las consultas HID manuales al ratón NO responden (protocolo distinto): usar siempre el CLI |
-| `Tasks` | Checklist del widget de Tareas del dashboard; persiste en `~/.local/state/sylphrena/tasks.json` (apagar el widget no borra datos). Escribir en el dashboard exige `ScreenState.dashboardTyping` (ContentWindow pone `keyboardFocus: Exclusive` + focus grab e Interactions no lo cierra al salir el cursor) |
+| `Extensions` | Cargador de extensiones (§Extensiones): descubre `extensions/` (+ `~/.local/share/sylphrena/extensions/`), crea el servicio de las activadas (`extensions.enabled`, nada por defecto) y expone `widgets`/`widgetDecls`. Tareas ya es una extensión (`extensions/tasks/`) |
 | `DashWidgets` | Registro del carrusel del dashboard (`all`/`order`/`active`/`move`); orden en `dashboard.widgetOrder`. Sin widgets por defecto (calendario = `dashboard.calendarEnabled`); vacío → botón «Activa widgets» → `WindowFactory.openSubPage("panels", 1)`; añadir widget = entrada aquí + caso en `WidgetCarousel.qml` + tarjeta en `DashboardPanel.qml` |
 | `Keybinds` | Grabación de teclas con submap vacío de Hyprland (inhibe binds), soporte F13–F35, diálogo de conflicto → `sylphrena-binds.lua`; incluye `focusLast` (última ventana cross-desktop) |
 | `Hypr` | Bridge de eventos de Hyprland; conectar directos cuando el `rawEvent` no se re-emite; aplica `follow_mouse` (Nexus) a `sylphrena-input.lua` |
@@ -93,6 +93,15 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 7. **Complementos** — VPN, Timers, Juegos y **Batería del ratón Razer** (`addons.razerMouse`, ocupa el hueco del anillo de almacenamiento del dashboard) con icono por fila y limpieza al desactivar. Hidratación ya no está aquí: es un widget del carrusel (punto 9).
 9. **Carrusel de widgets del dashboard** — el centro del Panel muestra un widget a la vez (calendario, hidratación, tareas), con puntos, rueda y arrastre; nada activo por defecto (botón «Activa widgets» → Nexus). Orden y interruptores en Nexus → Panels → Dashboard. Tareas: checklist persistente (`tasks.json`) con completadas plegables.
 8. **Varios** — timers del reloj persistentes, grabación estable + chip REC, capturas sin notificación, clic en notificación → enfoca/abre la app en su workspace, launcher con edición de `.desktop` (hover inferior para abrirlo, se cierra al salir el puntero), tray/status con pastilla al hover unificada, recoloreado forzado a claro de tray sin contraste (Steam/Cursor), Keep-awake (café) activado por defecto, **layout compacto** (ex game mode: solo barra izquierda, gaps/rounding/border 0, sin tocar animaciones/blur/wobble), lock con Sylphrena (65 % inferior) + notifs con scroll (35 %), i18n ES completo, docs README/FEATURES/CHANGELOG.
+
+### Extensiones (v0.2, en `dev/0.2`)
+
+Plan y registro: `docs/PLAN-MODULAR.md`, `docs/PLAN-LOG.md`. Una extensión es una carpeta con `manifest.json` (`id`, `type`, `name`, `icon`, `apiVersion`, `contributes`: `service`, `widgets`), un `Service.qml` (raíz `Scope`, `required property var ext`, **no** singleton) y sus componentes (`required property var ext`, `required property var service`; los widgets de dashboard reciben además `screenState`). Ejemplo completo: `docs/examples/extension-spike/`; real: `extensions/tasks/`.
+- La base **nunca nombra una extensión**: recorre `Extensions.widgets` / `DashWidgets.all`. Activar/desactivar es `Extensions.setEnabled(id, on)` (crea/destruye el servicio en caliente); el estado de datos no se borra.
+- Config por extensión: `ext.config.get(clave, defecto)` / `.set(clave, valor)` (`~/.config/sylphrena/extensions/<id>.json`, `components/ExtensionConfig.qml`).
+- Un error en una extensión deja un aviso en el log (`Extensions: <id>/<fichero>: …`) y no afecta a la base. Depurar: `qs -c sylphrena ipc call extensions status`.
+- Ficheros nuevos de C++ (`.hpp` con `Q_OBJECT`) **hay que añadirlos a `CMakeLists.txt` del módulo**; si no, el plugin compila pero la shell no arranca (`undefined symbol …vtable`). Tras tocar el plugin, comprueba siempre que la shell carga.
+- Las cadenas de las extensiones viven (de momento) en el `es.po` común; el cargador las traduce con `Tr.tr(manifest.name)`.
 
 ## 6. Trampas / aprendizajes
 

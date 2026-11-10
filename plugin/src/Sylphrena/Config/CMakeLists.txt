@@ -17,6 +17,7 @@ qml_module(sylphrena-config
         backgroundconfig.hpp
         barconfig.hpp
         dashboardconfig.hpp
+        extensionsconfig.hpp
         generalconfig.hpp
         launcherconfig.hpp
         lockconfig.hpp

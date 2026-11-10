@@ -10,6 +10,7 @@
 #include "borderconfig.hpp"
 #include "common.hpp"
 #include "dashboardconfig.hpp"
+#include "extensionsconfig.hpp"
 #include "font.hpp"
 #include "generalconfig.hpp"
 #include "launcherconfig.hpp"
@@ -39,6 +40,7 @@ class ConfigRoot : public settings::RootNode {
     CONFIG_SUBOBJECT(BarConfig, bar)
     CONFIG_SUBOBJECT(BorderConfig, border)
     CONFIG_SUBOBJECT(DashboardConfig, dashboard)
+    CONFIG_SUBOBJECT(ExtensionsConfig, extensions)
     CONFIG_SUBOBJECT(LauncherConfig, launcher)
     CONFIG_SUBOBJECT(LockConfig, lock)
     CONFIG_SUBOBJECT(NexusConfig, nexus)

@@ -45,3 +45,33 @@ Hecho. Rama `feature/phase-2-base`, fusionada en `dev/0.2`.
 - Verificado con la shell real (capturas): Complementos lista VPN FortiClient, Batería del ratón
   Razer y Juegos; Utilidades muestra Portapapeles con interruptor y tamaño de historial.
 - Textos/traducciones actualizados (descripción de la página Complementos).
+
+## Fase 3 — Armazón de extensiones + Tareas (2026-11-10)
+Hecho. Rama `feature/phase-3-extensions`, fusionada en `dev/0.2`.
+
+- **Conectado el cargador** (`services/Extensions.qml`, en `shell.qml`): descubre manifiestos,
+  crea el servicio de las extensiones activadas y lo destruye al desactivarlas, en caliente.
+  Lista de activadas en config `extensions.enabled` (nuevo nodo C++ `ExtensionsConfig`; nada
+  activado por defecto).
+- **Config por extensión** (`components/ExtensionConfig.qml`, `ext.config.get/set`):
+  `~/.config/sylphrena/extensions/<id>.json`. Probado: se guarda y sobrevive a un reinicio.
+- **Punto de enganche `widgets`**: `DashWidgets` ahora mezcla widgets propios de la base
+  (calendario; Hidratación hasta la fase 4) y los declarados por extensiones (por manifiesto, aunque
+  estén desactivadas, para poder listarlas en Nexus). El carrusel coloca los de extensiones con
+  `ExtensionSlot` y les pasa `screenState`.
+- **Tareas migrada** a `extensions/tasks/` (manifest + Service + Widget). `services/Tasks.qml` y
+  `TasksWidget.qml` ya no existen. Su estado (`tasks.json`) no se tocó: la tarea existente del
+  usuario se conserva.
+- **Migración de config**: `dashboard.tasksEnabled` → `extensions.enabled += ["tasks"]`
+  (`scripts/migrate-config.py`, probado con el `shell.json` real). El nodo C++ antiguo se
+  eliminó (un aviso `Unknown option` la primera vez, inofensivo).
+- **Verificado**: (1) con `extensions/` borrada la shell arranca limpia y el carrusel queda vacío
+  (para este usuario el calendario está desactivado) con el botón «Activa widgets»; (2) restaurada,
+  Tareas funciona y conserva sus datos; (3) activar/desactivar en caliente destruye y recrea el
+  servicio y deja `extensions.enabled` bien; (4) la sección «Carrusel de widgets» de Nexus lista
+  Tareas traducida (sale del manifiesto).
+- **Incidente**: tras añadir el nodo C++ olvidé añadir `extensionsconfig.hpp` al `CMakeLists.txt`
+  del módulo: el plugin compilaba pero la shell no arrancaba (`undefined symbol`). Estuvo caída
+  ~3 min hasta corregirlo. Anotado en AGENTS.md.
+- No probado: instalar una extensión desde `~/.local/share/sylphrena/extensions/` con la shell
+  ya en marcha (hoy solo se descubre al arrancar; basta con reiniciar).

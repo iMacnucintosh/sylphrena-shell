@@ -108,7 +108,19 @@ Item {
                     id: loader
 
                     anchors.fill: parent
-                    sourceComponent: page.modelData.id === "hydration" ? hydrationComp : page.modelData.id === "tasks" ? tasksComp : calendarComp
+                    sourceComponent: page.modelData.entry ? extComp : page.modelData.id === "hydration" ? hydrationComp : calendarComp
+                }
+
+                // A widget contributed by an extension: placed with its service, plus the screen state
+                Component {
+                    id: extComp
+
+                    ExtensionSlot {
+                        entry: page.modelData.entry
+                        props: ({
+                                screenState: root.screenState
+                            })
+                    }
                 }
             }
         }
@@ -265,14 +277,6 @@ Item {
             screenState: root.screenState
             // The wheel switches carousel pages here, not months
             scrollable: false
-        }
-    }
-
-    Component {
-        id: tasksComp
-
-        TasksWidget {
-            screenState: root.screenState
         }
     }
 
