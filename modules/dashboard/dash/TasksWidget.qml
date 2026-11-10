@@ -24,6 +24,12 @@ Item {
         Qt.callLater(() => input.forceActiveFocus());
     }
 
+    // Asked by the carousel: the wheel switches widget only over the header and the input, never
+    // over the list (y is relative to this widget)
+    function wheelSwitchAllowed(y: real): bool {
+        return y < list.mapToItem(root, 0, 0).y;
+    }
+
     function endTyping(): void {
         input.focus = false;
         root.screenState.dashboardTyping = false;

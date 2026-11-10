@@ -86,6 +86,7 @@ Item {
                 required property int index
 
                 readonly property real contentHeight: loader.item ? loader.item.implicitHeight : 0
+                readonly property Item loaderItem: loader.item
 
                 onContentHeightChanged: pages.recalc()
 
@@ -137,6 +138,11 @@ Item {
             enabled: root.multi
             acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
             onWheel: event => {
+                // A page can say where the wheel must NOT switch widget (e.g. over a scrolling list)
+                const page = repeater.itemAt(root.current);
+                const w = page?.loaderItem;
+                if (w && w.wheelSwitchAllowed && !w.wheelSwitchAllowed(event.point.position.y))
+                    return;
                 const d = Math.abs(event.angleDelta.y) >= Math.abs(event.angleDelta.x) ? event.angleDelta.y : event.angleDelta.x;
                 if (Math.sign(d) !== Math.sign(root.wheelAcc))
                     root.wheelAcc = 0;
