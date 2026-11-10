@@ -3121,7 +3121,7 @@ msgstr "Preajustes: %1 · %2 · %3 · %4 min"
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 #, qt-format
 msgid "Preset %1"
-msgstr "Preset %1"
+msgstr "Preajuste %1"
 
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Quick timer button duration (min)"

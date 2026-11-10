@@ -296,7 +296,7 @@ PageBase {
                         }
 
                         SettingRow {
-                            label: Tr.tr("Preset 1")
+                            label: Tr.tr("Preset %1").arg(1)
                             subtext: Tr.tr("Quick-add button amount (ml)")
                             value: GlobalConfig.addons.hydration.presetMl0
                             from: 1
@@ -306,7 +306,7 @@ PageBase {
                         }
 
                         SettingRow {
-                            label: Tr.tr("Preset 2")
+                            label: Tr.tr("Preset %1").arg(2)
                             value: GlobalConfig.addons.hydration.presetMl1
                             from: 1
                             to: 1000
@@ -315,7 +315,7 @@ PageBase {
                         }
 
                         SettingRow {
-                            label: Tr.tr("Preset 3")
+                            label: Tr.tr("Preset %1").arg(3)
                             value: GlobalConfig.addons.hydration.presetMl2
                             from: 1
                             to: 1000
@@ -324,7 +324,7 @@ PageBase {
                         }
 
                         SettingRow {
-                            label: Tr.tr("Preset 4")
+                            label: Tr.tr("Preset %1").arg(4)
                             value: GlobalConfig.addons.hydration.presetMl3
                             from: 1
                             to: 1000
