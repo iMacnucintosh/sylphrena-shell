@@ -82,10 +82,8 @@ TextField {
             }
         }
 
-        Behavior on opacity {
-            Anim {
-                type: Anim.StandardSmall
-            }
-        }
+        // No fade on the blink: each fade frame redraws the whole full-screen shell window (blur
+        // included), so a fading caret kept the launcher/clipboard redrawing ~100 times a second.
+        // A plain on/off blink costs two frames a second.
     }
 }
