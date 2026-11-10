@@ -49,6 +49,8 @@ ajustes), es un widget. Si aparece en la barra, en un popout, en una pestaña, e
 | Pieza | Destino | Notas |
 |---|---|---|
 | Actividades, Updates, Bluetooth, Displays, Keybinds, retoques de UI | Base | Sin cambios |
+| Bluetooth: selector de modo de audio (Música/Llamadas/Auto) | Base | Sirve para cualquier auricular |
+| Bluetooth: batería de AirPods (L/estuche/R) | **Base durante la 0.2** | Candidata a complemento después (ver §8) |
 | Portapapeles | **Base** | Hoy se configura en Complementos: mover sus ajustes fuera (fase 2) |
 | Temporizadores | **Base** | Sigue teniendo interruptor on/off; sale de Complementos (fase 2) |
 | Carrusel de widgets | Base | Es el hueco de widgets |
@@ -260,6 +262,13 @@ Orden: **Hidratación** (añade servicio con notificaciones y shader) → **Rat�
   código que corre con los permisos del usuario).
 - **Otras distribuciones** además de Arch.
 - **Traducciones por extensión.**
+- **Batería de AirPods como complemento.** Es específica de un dispositivo (canal propietario de
+  Apple, `scripts/airpods-battery.py`, `services/BluetoothAudio.qml`, `components/bluetooth/*`), así
+  que por coherencia debería ser un complemento, igual que el ratón Razer. Se queda en la base en
+  la 0.2 porque no molesta a quien no tiene AirPods (sin interruptor ni ajustes; solo se activa al
+  conectarlos) y sacarla exige un punto de enganche nuevo en el popout de Bluetooth: un
+  **«proveedor de batería por dispositivo»**. Ese enganche serviría también a otros dispositivos
+  (teclado, ratón), por lo que merece diseñarse aparte. **No lo toques en este plan.**
 - **Temas y efectos** (cambian el aspecto global): serían un tercer tipo de extensión, con reglas propias.
 - **Dónde se alojan las extensiones**: un único repo `sylphrena-extensions` con una carpeta por
   extensión y un índice (`index.json`) que Things lee; cada extensión se publica además como
