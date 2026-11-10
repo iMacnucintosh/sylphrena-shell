@@ -157,7 +157,11 @@ Singleton {
             Quickshell.shellPath("scripts/sync-seeker-transparency.py"),
             root.transparency.enabled ? "--enabled" : "--no-enabled",
             "--base",
-            String(root.transparency.base)
+            String(root.transparency.base),
+            "--layers",
+            String(root.transparency.layers),
+            "--wall-luminance",
+            String(root.wallLuminance)
         ]);
     }
 
@@ -254,6 +258,17 @@ Singleton {
         source: Wallpapers.current
     }
 
+    // Seeker tones its translucent layers from the wallpaper luminance: keep it in step (debounced,
+    // the analyser reports a few values while a new wallpaper loads).
+    onWallLuminanceChanged: seekerSyncTimer.restart()
+
+    Timer {
+        id: seekerSyncTimer
+
+        interval: 600
+        onTriggered: root.syncSeekerTransparency()
+    }
+
     Timer {
         id: cooldownTimer
 
@@ -278,6 +293,8 @@ Singleton {
         readonly property bool enabled: Tokens.transparency.enabled
         readonly property real base: Math.max(0, Math.min(1, Tokens.transparency.base - (root.light ? 0.1 : 0)))
         readonly property real layers: Math.max(0, Math.min(1, Tokens.transparency.layers))
+
+        onLayersChanged: root.syncSeekerTransparency()
 
         onEnabledChanged: {
             root.syncSeekerTransparency();

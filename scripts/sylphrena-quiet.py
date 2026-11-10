@@ -438,7 +438,7 @@ def _write_qt_app_theme(app: str, colours: dict[str, str], mode: str) -> None:
 
     if not colours:
         return
-    tr_enabled = False
+    tr_enabled: bool | None = None  # None = could not read the shell config
     tr_base = 0.85
     try:
         from sylphrena.utils.paths import user_config_path
@@ -451,12 +451,31 @@ def _write_qt_app_theme(app: str, colours: dict[str, str], mode: str) -> None:
                 tr_base = float(tr.get("base", 0.85))
     except Exception:
         pass
+    out = _XDG_CONFIG / app / "theme.json"
+    # The shell (Colours.syncSeekerTransparency) owns base/layers/wallLuminance: base is already
+    # adjusted for light mode there. Keep what it wrote instead of resetting it on every scheme apply.
+    tr_layers = 0.4
+    tr_wall = 0.5
+    try:
+        if out.is_file():
+            old_tr = (_json.loads(out.read_text() or "{}").get("transparency")) or {}
+            if isinstance(old_tr, dict):
+                if tr_enabled is None:
+                    # Shell config unreadable here: keep what the shell last synced instead of
+                    # silently switching Seeker's transparency off on every scheme apply.
+                    tr_enabled = bool(old_tr.get("enabled", False))
+                tr_base = float(old_tr.get("base", tr_base))
+                tr_layers = float(old_tr.get("layers", tr_layers))
+                tr_wall = float(old_tr.get("wallLuminance", tr_wall))
+    except Exception:
+        pass
+    if tr_enabled is None:
+        tr_enabled = False
     payload = {
         "mode": mode if mode in ("dark", "light") else "dark",
         "colours": {k: (v[1:] if isinstance(v, str) and v.startswith("#") else v) for k, v in colours.items()},
-        "transparency": {"enabled": tr_enabled, "base": tr_base},
+        "transparency": {"enabled": tr_enabled, "base": tr_base, "layers": tr_layers, "wallLuminance": tr_wall},
     }
-    out = _XDG_CONFIG / app / "theme.json"
     _atomic_write(out, _json.dumps(payload, indent=2) + "\n")
 
 
