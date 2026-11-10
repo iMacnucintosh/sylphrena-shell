@@ -21,6 +21,7 @@ Item {
     property int current: 0
     // Live horizontal drag offset in px (0 when idle)
     property real dragOffset: 0
+    property real wheelAcc: 0
 
     implicitHeight: pages.maxHeight + stripHeight
 
@@ -115,6 +116,22 @@ Item {
             }
         }
 
+        // Wheel switches page (the calendar does not consume it here); one notch per step
+        WheelHandler {
+            enabled: root.multi
+            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+            onWheel: event => {
+                const d = Math.abs(event.angleDelta.y) >= Math.abs(event.angleDelta.x) ? event.angleDelta.y : event.angleDelta.x;
+                if (Math.sign(d) !== Math.sign(root.wheelAcc))
+                    root.wheelAcc = 0;
+                root.wheelAcc += d;
+                if (Math.abs(root.wheelAcc) >= 120) {
+                    root.go(root.current + (root.wheelAcc < 0 ? 1 : -1));
+                    root.wheelAcc = 0;
+                }
+            }
+        }
+
         // Arrows appear on hover, on the sides (the hydration quick-add button lives bottom-right)
         HoverHandler {
             id: hover
@@ -182,6 +199,8 @@ Item {
 
         Calendar {
             screenState: root.screenState
+            // The wheel switches carousel pages here, not months
+            scrollable: false
         }
     }
 

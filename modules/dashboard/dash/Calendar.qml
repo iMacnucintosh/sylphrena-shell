@@ -15,6 +15,8 @@ CustomMouseArea {
     id: root
 
     required property ScreenState screenState
+    // Mouse wheel changes the month. Off where the wheel has another job (the dashboard carousel).
+    property bool scrollable: true
 
     property date currentDate: screenState.dashboardDate
     readonly property int currMonth: currentDate.getMonth()
@@ -37,6 +39,7 @@ CustomMouseArea {
     anchors.right: parent.right
     implicitHeight: inner.implicitHeight + inner.anchors.margins * 2
 
+    wheelEnabled: scrollable
     acceptedButtons: Qt.MiddleButton
     onClicked: root.screenState.dashboardDate = new Date()
 

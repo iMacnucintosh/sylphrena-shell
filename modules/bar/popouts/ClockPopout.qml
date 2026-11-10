@@ -46,6 +46,7 @@ ColumnLayout {
             anchors.left: parent.left
             anchors.right: parent.right
             screenState: root.screenState
+            scrollable: true
         }
     }
 
