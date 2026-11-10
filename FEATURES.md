@@ -123,7 +123,7 @@ Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
 - Lista de features opcionales del fork, con icono identificativo por fila.
 - **Madison VPN**: interruptor on/off. Al desactivar se oculta el icono, se para el poll y se ejecuta teardown (`disconnect` + `heal`) para matar `openfortivpn`/helper.
 - **Timers**: interruptor on/off. Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue). Exposición doble: hub en **Complementos** y tarjeta desplegable en **Nexus → Panels → Taskbar → Clock** (mismo `addons.timers.enabled`), con 4 presets editables (`presetMins0..3`, default 5/10/20/30) que alimentan los botones del popout.
-- **Hidratación**: interruptor on/off (opt-in). Al activar sustituye el calendario del dashboard Nexus (solo ahí; el popout del reloj sigue con calendario) por un depósito con waves, meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Estado en `~/.local/state/sylphrena/hydration.json`.
+- **Hidratación**: ya no vive en Complementos sino en `Panels → Dashboard → Carrusel de widgets` (ver abajo). Interruptor on/off (opt-in) que activa o desactiva **todo** el sistema (depósito, recordatorios, estado). Depósito con waves, meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Estado en `~/.local/state/sylphrena/hydration.json`.
 - **Juegos (Steam)**: interruptor on/off (opt-in). Al activar añade la pestaña **Juegos** en el dashboard (a la derecha de Tiempo). Configura API key (oculta por defecto) + Steam ID / vanity / URL de perfil, y el intervalo de refresco (default 10 min). Muestra perfil y nivel, estadísticas globales en shapes Material You (juegos visibles — sin la colección Hidden —, horas, compleción media de logros y juegos al 100 %, amigos en línea), tarjeta del juego destacado con portada y progreso, y un selector de portadas ordenado por última partida. Logros en una lista con scroll: desbloqueados por rareza y bloqueados de más común a más raro, con insignia y descripción. Mapa de calor mensual (puntos = días con logros; el tiempo por día se registra con el shell en marcha). Juegos no Steam desde `shortcuts.vdf`, con horas de Millennium si está instalado. Los logros del perfil deben ser públicos. El muestreo de logros para la compleción media está **capado a 60 juegos** (los más jugados, por orden de playtime) y el refresco periódico **solo corre mientras el dashboard muestra la pestaña Juegos** (no quema API en segundo plano). Caché de logros/schema/% global en disco (`~/.local/state/sylphrena/steam-achievements-cache.json`, TTL ~1 día) para arranques en frío más rápidos; el servicio QML es un façade (`Steam`) con capas en `services/steam/*`.
 
 ## Madison VPN (FortiClient / openfortivpn)
@@ -401,6 +401,22 @@ AirPods con el códec de manos libres mSBC (`SCO packet for unknown connection h
 mudo). `~/.config/wireplumber/wireplumber.conf.d/52-bluetooth-no-msbc.conf` pone `bluez5.enable-msbc = false` y
 fuerza CVSD (voz más «telefónica», sin tocar la música). Fichero fuera del repo: para revertir, borrarlo y
 `systemctl --user restart wireplumber`.
+
+## Carrusel de widgets del dashboard
+
+El hueco central del dashboard (antes calendario/hidratación según un interruptor) es un **carrusel**: un
+widget a la vez. Se cambia con los puntos (superpuestos abajo), la rueda del ratón o arrastrando en
+horizontal (en el carrusel el calendario no consume la rueda: `Calendar.scrollable`; el popout del reloj sí); sin rotación automática. Con un solo widget activo no hay controles.
+
+- **Ajustes**: `Nexus → Panels → Dashboard → Carrusel de widgets`. Cada widget es una fila con flechas ↑/↓ para
+  **ordenarlo**; Hidratación lleva además su interruptor y sus ajustes desplegables (meta, intervalo, presets).
+- **Nada viene activado por defecto**: cada widget (calendario incluido, `dashboard.calendarEnabled`) tiene su interruptor. Sin ninguno activo el carrusel muestra el botón **«Activa widgets»**, que abre Nexus directamente en `Panels → Dashboard`.
+- **Tareas** (`dashboard.tasksEnabled`): checklist con lista vertical desplazable. Se crean escribiendo y pulsando Enter (o `+`), se marcan con el círculo, se eliminan con la ✕ que aparece al pasar el cursor, y las completadas bajan a una sección **«Completadas (n)» plegable** (con botón para vaciarlas). Al pulsar el campo, el panel toma el teclado y se mantiene abierto hasta `Esc` o clic fuera. Datos en `~/.local/state/sylphrena/tasks.json`; desactivar el widget no borra las tareas.
+- **Hidratación** on/off sigue siendo `addons.hydration.enabled` (apagarlo detiene también recordatorios y seguimiento).
+- Config: `dashboard.widgetOrder` (lista de ids, por defecto `["calendar","hydration"]`). Ids desconocidos se ignoran y
+  los que falten se añaden al final, así los widgets nuevos no rompen configs antiguas.
+- Para añadir un widget: entrada en `services/DashWidgets.qml` (+ `isEnabled`), caso en
+  `modules/dashboard/dash/WidgetCarousel.qml` y, si tiene opciones, su tarjeta en `modules/nexus/pages/panels/DashboardPanel.qml`.
 
 ## Plugin C++ (build user-local)
 

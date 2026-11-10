@@ -33,6 +33,8 @@ Singleton {
     property real downloadSizeMb: 0
     property bool showSingleWarning: false
     property string pendingNexusPageId: ""
+    // Sub page to open inside pendingNexusPageId (-1 = none)
+    property int pendingNexusSubPageIdx: -1
     // "background" | "logged" while the password UI is open
     property string pendingMode: ""
     property string installMode: ""

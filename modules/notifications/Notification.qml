@@ -360,11 +360,15 @@ StyledRect {
             Item {
                 id: expandBtn
 
+                // Chevron removed for a cleaner look: expanding is by dragging the notification down
+                // (or Config.notifs.openExpanded). Kept as a zero-width anchor for the elide maths.
+                visible: false
+
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.topMargin: -Tokens.padding.extraSmall
 
-                implicitWidth: expandIcon.implicitHeight
+                implicitWidth: 0
                 implicitHeight: expandIcon.implicitHeight
 
                 StateLayer {

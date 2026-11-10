@@ -1708,6 +1708,66 @@ msgstr "Teclado y ratón"
 msgid "Shortcuts, remappings"
 msgstr "Atajos, reasignaciones"
 
+#: services/DashWidgets.qml
+msgid "Calendar"
+msgstr "Calendario"
+
+#: services/DashWidgets.qml
+msgid "Month view of the dashboard"
+msgstr "Vista mensual del panel"
+
+#: services/DashWidgets.qml
+msgid "Water intake tracker with reminders"
+msgstr "Control de agua con recordatorios"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Widget carousel"
+msgstr "Carrusel de widgets"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "The centre of the Dashboard shows one widget at a time; switch with the dots, the wheel or by dragging. Enable and reorder them here."
+msgstr "El centro del panel muestra un widget a la vez; cambia con los puntos, la rueda o arrastrando. Aquí los activas y los ordenas."
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Off — also stops the reminders and the tracking"
+msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
+
+#: modules/dashboard/dash/WidgetCarousel.qml
+msgid "Enable widgets"
+msgstr "Activa widgets"
+
+#: services/DashWidgets.qml modules/dashboard/dash/TasksWidget.qml
+msgid "Tasks"
+msgstr "Tareas"
+
+#: services/DashWidgets.qml
+msgid "Checklist: create, complete and delete tasks"
+msgstr "Lista de tareas: crea, completa y elimina"
+
+#: modules/dashboard/dash/TasksWidget.qml
+#, qt-plural-format
+msgid "%n pending"
+msgid_plural "%n pending"
+msgstr[0] "%n pendiente"
+msgstr[1] "%n pendientes"
+
+#: modules/dashboard/dash/TasksWidget.qml
+msgid "New task"
+msgstr "Nueva tarea"
+
+#: modules/dashboard/dash/TasksWidget.qml
+msgid "Nothing to do"
+msgstr "Nada pendiente"
+
+#: modules/dashboard/dash/TasksWidget.qml
+msgid "All done"
+msgstr "Todo listo"
+
+#: modules/dashboard/dash/TasksWidget.qml
+#, qt-format
+msgid "Completed (%1)"
+msgstr "Completadas (%1)"
+
 #~ msgid "Shell shortcuts, remapping and mouse focus"
 #~ msgstr "Atajos del shell, reasignación y foco del ratón"
 
@@ -3093,7 +3153,7 @@ msgstr "Preajustes: %1 · %2 · %3 · %4 min"
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 #, qt-format
 msgid "Preset %1"
-msgstr "Preset %1"
+msgstr "Preajuste %1"
 
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Quick timer button duration (min)"

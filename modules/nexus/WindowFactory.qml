@@ -21,6 +21,12 @@ Singleton {
         root.create();
     }
 
+    // Same, but also opens one of the page's sub pages (index as in its NavRow.openSubPage)
+    function openSubPage(pageId: string, subPageIdx: int): void {
+        Updates.pendingNexusSubPageIdx = subPageIdx;
+        openPage(pageId);
+    }
+
     QtObject {
         id: dummy
     }
