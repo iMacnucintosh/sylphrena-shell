@@ -124,7 +124,8 @@ def _sync_qt6ct(colours: dict[str, str], mode: str) -> None:
     scheme_path = colors_dir / "sylphrena.conf"
     _atomic_write(scheme_path, _qt6ct_scheme_body(colours, mode))
 
-    icon_theme = f"Papirus-{mode.capitalize()}" if mode in ("dark", "light") else "Papirus-Dark"
+    icon_mode = "light" if light_apps else mode
+    icon_theme = f"Papirus-{icon_mode.capitalize()}" if icon_mode in ("dark", "light") else "Papirus-Dark"
     conf = Path.home() / ".config/qt6ct/qt6ct.conf"
     parser = configparser.ConfigParser(interpolation=None, strict=False)
     try:
@@ -271,9 +272,25 @@ def _sync_greeter(colours: dict[str, str] | None = None) -> None:
     _sync_greeter_ui()
 
 
-def _sync_gtk_settings(mode: str) -> None:
-    """Point GTK at the correct adw-gtk3 variant and enable live CSS reload."""
-    dark = mode == "dark"
+def _light_gtk_css(filename: str, text: str) -> str:
+    """Light-apps version of a GTK CSS the CLI generated (see gtk-light-css.py)."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("gtk_light_css", Path(__file__).with_name("gtk-light-css.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.light_css(filename, text)
+
+
+def _sync_gtk_settings(mode: str, light_apps: bool = False) -> None:
+    """Point GTK at the correct adw-gtk3 variant and enable live CSS reload.
+
+    With light apps the GTK theme must be the LIGHT variant even if the shell scheme is dark:
+    Chromium/Electron (Teams, Cursor…) take their dark mode from the GTK theme name, which beats
+    the portal's color-scheme=prefer-light. A dark theme name kept them dark at login and again
+    whenever the theme name changed.
+    """
+    dark = mode == "dark" and not light_apps
     gtk_theme = "adw-gtk3-dark" if dark else "adw-gtk3"
     icon_theme = f"Papirus-{mode.capitalize()}" if mode in ("dark", "light") else "Papirus-Dark"
     prefer = "true" if dark else "false"
@@ -296,13 +313,22 @@ def _sync_gtk_settings(mode: str) -> None:
         except OSError:
             pass
 
+    key = "/org/gnome/desktop/interface/gtk-theme"
     try:
-        subprocess.run(
-            ["dconf", "write", "/org/gnome/desktop/interface/gtk-theme", f"'{gtk_theme}'"],
+        cur = subprocess.run(
+            ["dconf", "read", key],
             check=False,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
+            capture_output=True,
+            text=True,
+            stdin=subprocess.DEVNULL,
+        ).stdout.strip()
+        if cur != f"'{gtk_theme}'":  # a write is a change event for every running app
+            subprocess.run(
+                ["dconf", "write", key, f"'{gtk_theme}'"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
     except OSError:
         pass
 
@@ -344,6 +370,7 @@ def _patch_theme() -> None:
     orig_apply_gtk = theme.apply_gtk
 
     scheme_key = "/org/gnome/desktop/interface/color-scheme"
+    gtk_theme_key = "/org/gnome/desktop/interface/gtk-theme"
 
     def apply_gtk_fixed(colours: dict[str, str], mode: str, icon_theme: str | None = None) -> None:
         flag = _STATE / "force-apps-light"
@@ -356,16 +383,35 @@ def _patch_theme() -> None:
             # the portal live (Zen, Electron) flash dark→light on every apply.
             if isinstance(cmd, (list, tuple)) and scheme_key in cmd:
                 return subprocess.CompletedProcess(cmd, 0)
+            # Upstream also writes gtk-theme='adw-gtk3-dark' on every apply; with light apps that
+            # would turn Chromium/Electron dark (see _sync_gtk_settings). We write the right one.
+            if isinstance(cmd, (list, tuple)) and gtk_theme_key in cmd:
+                return subprocess.CompletedProcess(cmd, 0)
             return real_run(cmd, *args, **kwargs)
+
+        # With light apps the scheme's dark GTK colours must never reach GTK apps (black headers and
+        # inputs over the light theme): filter the CSS while the CLI writes it, so there is no dark
+        # flash either.
+        orig_atomic_write = getattr(theme, "atomic_write", None)
+
+        def atomic_write_light(path, content, *args, **kwargs):
+            p = Path(path)
+            if p.name in ("gtk.css", "thunar.css") and p.parent.name in ("gtk-3.0", "gtk-4.0") and isinstance(content, str):
+                content = _light_gtk_css(p.name, content)
+            return orig_atomic_write(path, content, *args, **kwargs)
 
         # Upstream always writes adw-gtk3-dark; use the light variant for light mode.
         if light_apps:
             subprocess.run = run_keep_scheme
+            if orig_atomic_write is not None:
+                theme.atomic_write = atomic_write_light
         try:
             orig_apply_gtk(colours, mode, icon_theme)
         finally:
             subprocess.run = real_run
-        _sync_gtk_settings(mode)
+            if orig_atomic_write is not None:
+                theme.atomic_write = orig_atomic_write
+        _sync_gtk_settings(mode, light_apps)
         _trigger_gtk_color_reload()
         # Light apps: keep prefer-light so Adwaita/Qt apps stay light while Thunar
         # keeps scheme CSS. Only write it when it is not already set.
@@ -438,7 +484,7 @@ def _write_qt_app_theme(app: str, colours: dict[str, str], mode: str) -> None:
 
     if not colours:
         return
-    tr_enabled = False
+    tr_enabled: bool | None = None  # None = could not read the shell config
     tr_base = 0.85
     try:
         from sylphrena.utils.paths import user_config_path
@@ -451,12 +497,31 @@ def _write_qt_app_theme(app: str, colours: dict[str, str], mode: str) -> None:
                 tr_base = float(tr.get("base", 0.85))
     except Exception:
         pass
+    out = _XDG_CONFIG / app / "theme.json"
+    # The shell (Colours.syncSeekerTransparency) owns base/layers/wallLuminance: base is already
+    # adjusted for light mode there. Keep what it wrote instead of resetting it on every scheme apply.
+    tr_layers = 0.4
+    tr_wall = 0.5
+    try:
+        if out.is_file():
+            old_tr = (_json.loads(out.read_text() or "{}").get("transparency")) or {}
+            if isinstance(old_tr, dict):
+                if tr_enabled is None:
+                    # Shell config unreadable here: keep what the shell last synced instead of
+                    # silently switching Seeker's transparency off on every scheme apply.
+                    tr_enabled = bool(old_tr.get("enabled", False))
+                tr_base = float(old_tr.get("base", tr_base))
+                tr_layers = float(old_tr.get("layers", tr_layers))
+                tr_wall = float(old_tr.get("wallLuminance", tr_wall))
+    except Exception:
+        pass
+    if tr_enabled is None:
+        tr_enabled = False
     payload = {
         "mode": mode if mode in ("dark", "light") else "dark",
         "colours": {k: (v[1:] if isinstance(v, str) and v.startswith("#") else v) for k, v in colours.items()},
-        "transparency": {"enabled": tr_enabled, "base": tr_base},
+        "transparency": {"enabled": tr_enabled, "base": tr_base, "layers": tr_layers, "wallLuminance": tr_wall},
     }
-    out = _XDG_CONFIG / app / "theme.json"
     _atomic_write(out, _json.dumps(payload, indent=2) + "\n")
 
 

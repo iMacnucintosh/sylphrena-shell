@@ -69,6 +69,7 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 ### Scripts (`scripts/`)
 - `apply-activity-style.py` — apply de look completo en un solo proceso (~0,38 s).
 - `sylphrena-quiet.py` — aplica tema sin volcar secuencias OSC a los PTYs; recarga Kitty, sync Papirus en qt6ct, GTK/colors.css, `~/.config/seeker/theme.json` (Seeker) y `~/.config/things/theme.json` (Things, gestor de paquetes en `~/Desarrollo/things`).
+- `sync-seeker-transparency.py` — escribe `transparency` (`enabled`/`base`/`layers`/`wallLuminance`) en `~/.config/seeker/theme.json`; lo llama `Colours.syncSeekerTransparency()` (también al cambiar de fondo). Seeker construye con ellos las mismas capas translúcidas que la shell (capa 0 = `base`; capas ≥1 = tono desplazado con alfa `layers`). `sylphrena-quiet.py` conserva esos valores al aplicar un esquema (no los resetea).
 - `sync-light-apps-cli.py` — reescrituras de `cli.json` **deben conservar** el postHook de Kitty.
 - `steam-nonsteam.py` — VDF + IDs ocultos + sesiones Millennium + caché de historial.
 - `steam-activity.py` — poll de procesos `reaper` (sesiones reales) + delta de `playtime_forever` como respaldo; `snapshot` lee JSON por **stdin** (argv sigue para debug).
@@ -90,6 +91,8 @@ Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamForm
 ## 6. Trampas / aprendizajes
 
 - `cmake --install` **sobrescribe `shell.qml`**: revisar `git status` tras cada install y restaurar. (Con `ENABLE_MODULES=plugin` no pasa; la trampa solo aplica al módulo `shell`.)
+- **Apps claras vs Chromium/Electron**: su modo oscuro sale también del **nombre del tema GTK** (`gtk-theme` en dconf), y ese gana al `color-scheme=prefer-light` del portal en cuanto cambia (o al arrancar, porque persiste). Con apps claras el `gtk-theme` publicado debe ser `adw-gtk3` (claro) aunque el esquema de la shell sea oscuro. Lo hacen `_sync_gtk_settings(mode, light_apps)` y `Colours.applyAppTheme()`; la CLI upstream escribe siempre `adw-gtk3-dark` y `apply_gtk_fixed` lo filtra. Escribir dconf solo si el valor difiere (cada write es un evento para todas las apps). Diagnóstico: medir el brillo de la ventana (`grim -t ppm`) tras escribir `gtk-theme` / `color-scheme`.
+  **CSS de GTK con apps claras**: `gtk.css`/`thunar.css`/`colors.css` llevan los colores nombrados del esquema de la actividad (oscuros); sobre el tema base claro pintan cabeceras, listas e inputs de negro (DBeaver, Octopi…). Con apps claras solo se conservan los `accent_*` (`scripts/gtk-light-css.py`: lo aplica `apply_gtk_fixed` parcheando `theme.atomic_write` mientras la CLI escribe, y `sync-light-apps-cli.py --light-apps` al activarlas). Quitar apps claras regenera el CSS completo en el siguiente apply.
 - Regex de reglas Hyprland = **RE2** (`(?i)`, `\.`, patrones Lua `%%` no).
 - Tras cambiar monitor/VRR: siempre `hyprctl reload`.
 - El CLI volcaba secuencias OSC a todos los `/dev/pts`; el fork lo parchea vía `scripts/sylphrena-quiet.py` — no quitar el wrapper.
