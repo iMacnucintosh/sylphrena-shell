@@ -14,5 +14,12 @@ PersistentProperties {
 
     // Dashboard state
     property int dashboardTab
+    // A text field in the dashboard (Tasks) is being typed in: grab the keyboard and keep it open
+    property bool dashboardTyping
     property date dashboardDate: new Date()
+
+    onDashboardChanged: {
+        if (!dashboard)
+            dashboardTyping = false;
+    }
 }

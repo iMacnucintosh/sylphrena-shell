@@ -27,6 +27,12 @@ Singleton {
             title: Tr.tr("Hydration"),
             subtext: Tr.tr("Water intake tracker with reminders"),
             icon: "water_drop"
+        },
+        {
+            id: "tasks",
+            title: Tr.tr("Tasks"),
+            subtext: Tr.tr("Checklist: create, complete and delete tasks"),
+            icon: "checklist"
         }
     ]
 
@@ -53,6 +59,8 @@ Singleton {
             return Hydration.enabled;
         if (id === "calendar")
             return GlobalConfig.dashboard.calendarEnabled;
+        if (id === "tasks")
+            return Tasks.enabled;
         return false;
     }
 
@@ -61,6 +69,8 @@ Singleton {
             Hydration.setEnabled(on);
         else if (id === "calendar")
             GlobalConfig.dashboard.calendarEnabled = on;
+        else if (id === "tasks")
+            GlobalConfig.dashboard.tasksEnabled = on;
     }
 
     // Move a widget one place up (-1) or down (+1) in the order

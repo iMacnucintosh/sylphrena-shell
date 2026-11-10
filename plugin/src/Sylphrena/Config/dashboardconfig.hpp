@@ -33,6 +33,7 @@ class DashboardConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(QStringList, widgetOrder, QStringList({ u"calendar"_s, u"hydration"_s }))
     // Nothing is on by default: with no widget enabled the carousel shows a prompt to enable some.
     CONFIG_PROPERTY(bool, calendarEnabled, false)
+    CONFIG_PROPERTY(bool, tasksEnabled, false)
     CONFIG_GLOBAL_PROPERTY(int, mediaUpdateInterval, 500)
     CONFIG_GLOBAL_PROPERTY(int, resourceUpdateInterval, 1000)
     CONFIG_PROPERTY(int, dragThreshold, 50)

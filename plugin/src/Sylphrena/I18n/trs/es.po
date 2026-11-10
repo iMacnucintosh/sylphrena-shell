@@ -1736,6 +1736,34 @@ msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
 msgid "Enable widgets"
 msgstr "Activa widgets"
 
+#: services/DashWidgets.qml modules/dashboard/dash/TasksWidget.qml
+msgid "Tasks"
+msgstr "Tareas"
+
+#: services/DashWidgets.qml
+msgid "Checklist: create, complete and delete tasks"
+msgstr "Lista de tareas: crea, completa y elimina"
+
+#: modules/dashboard/dash/TasksWidget.qml
+#, qt-plural-format
+msgid "%n pending"
+msgid_plural "%n pending"
+msgstr[0] "%n pendiente"
+msgstr[1] "%n pendientes"
+
+#: modules/dashboard/dash/TasksWidget.qml
+msgid "New task"
+msgstr "Nueva tarea"
+
+#: modules/dashboard/dash/TasksWidget.qml
+msgid "Nothing to do"
+msgstr "Nada pendiente"
+
+#: modules/dashboard/dash/TasksWidget.qml
+#, qt-format
+msgid "Completed (%1)"
+msgstr "Completadas (%1)"
+
 #~ msgid "Shell shortcuts, remapping and mouse focus"
 #~ msgstr "Atajos del shell, reasignación y foco del ratón"
 

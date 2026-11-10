@@ -481,6 +481,7 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
         "showWeather": true,
         "widgetOrder": ["calendar", "hydration"],
         "calendarEnabled": false,
+        "tasksEnabled": false,
         "mediaUpdateInterval": 500,
         "resourceUpdateInterval": 1000,
         "dragThreshold": 50,
