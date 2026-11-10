@@ -184,6 +184,20 @@ Cada fase es una rama + PR propia contra `dev/0.2` (flujo de AGENTS.md §3, camb
 anterior esté fusionada y el usuario haya probado la shell. Al final de cada fase: shell
 reiniciada, log sin errores nuevos, `AGENTS.md`/`FEATURES.md`/`CONFIG.md`/`CHANGELOG.md` al día.
 
+### Red de seguridad (ya preparada el 2026-11-10)
+
+- **Código**: `main` no se toca y está en GitHub. Volver a la versión estable = `git checkout main`
+  y reiniciar la shell.
+- **Datos del usuario** (lo que git no cubre): copia en
+  `~/Backups/sylphrena-pre-0.2-2026-11-10/` de `~/.config/sylphrena`, `~/.local/state/sylphrena` y
+  `~/.local/share/madison-vpn`, con un `LEEME.txt` que explica cómo restaurar. Contiene datos
+  privados (clave de Steam, scripts de la VPN): **nunca la subas ni la copies al repo**.
+- **Sistema**: el usuario tiene Timeshift (Btrfs). Ojo: su restauración no incluye `/home` por
+  defecto, así que no devuelve la shell; para eso están las dos anteriores.
+- Antes de cualquier fase que migre configuración o estado (fases 1, 3, 4), comprueba que esa
+  copia sigue existiendo. Si una migración sale mal, restaura desde ahí en lugar de reconstruir a mano.
+- **No borres esta copia durante el plan.** Se borra solo al final (ver fase 5).
+
 ### Fase 0 — Línea base
 - Anota el estado de partida: log de arranque limpio, memoria y CPU en reposo (cómo medir: AGENTS.md §6).
 - **Hecho cuando**: tienes esas cifras apuntadas en la descripción de la PR de la fase 1.
@@ -231,6 +245,10 @@ Orden: **Hidratación** (añade servicio con notificaciones y shader) → **Rat�
 - Eliminar `addons.*` de `addonsconfig.hpp` (solo lo ya migrado) y recompilar el plugin.
 - Repetir las mediciones de la fase 0: no debe haber regresión de memoria ni de CPU en reposo.
 - Documentar en `AGENTS.md` y `FEATURES.md` cómo es una extensión y cómo se añade una.
+- **Borrar la copia de seguridad** `~/Backups/sylphrena-pre-0.2-2026-11-10/` — solo cuando se
+  cumplan las tres condiciones: `dev/0.2` fusionada en `main`, tag `v0.2.0` creado, y el usuario
+  ha usado la 0.2.0 con normalidad y **confirma expresamente** que se puede borrar. Pregúntaselo;
+  no la borres por tu cuenta. Quita entonces también este apartado de red de seguridad del plan.
 
 ## 7. Reglas de trabajo (además de AGENTS.md)
 
