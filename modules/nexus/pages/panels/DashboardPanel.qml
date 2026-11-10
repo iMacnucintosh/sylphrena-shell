@@ -61,10 +61,13 @@ PageBase {
         signal moved(value: real)
 
         Layout.fillWidth: true
+        // Same height with or without a subtext, so the rows line up evenly
+        Layout.preferredHeight: 52
         spacing: Tokens.spacing.medium
 
         ColumnLayout {
             Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter
             spacing: 0
 
             StyledText {
@@ -186,6 +189,8 @@ PageBase {
                         spacing: Tokens.spacing.medium
 
                         MaterialIcon {
+                            id: cardIcon
+
                             text: card.modelData.icon
                             color: Colours.palette.m3onSurfaceVariant
                             fontStyle: Tokens.font.icon.medium
@@ -266,7 +271,9 @@ PageBase {
                     ColumnLayout {
                         Layout.fillWidth: true
                         visible: card.isHydration && Hydration.enabled && root.hydrationSettingsOpen
-                        spacing: Tokens.spacing.small
+                        // Line the options up with the title, not with the icon
+                        Layout.leftMargin: cardIcon.width + Tokens.spacing.medium
+                        spacing: 0
 
                         SettingRow {
                             label: Tr.tr("Daily goal")
