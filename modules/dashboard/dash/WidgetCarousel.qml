@@ -19,7 +19,6 @@ Item {
     readonly property var widgets: DashWidgets.active
     readonly property int count: widgets.length
     readonly property bool multi: count > 1
-    readonly property real stripHeight: multi ? 18 : 0
     // Remembered by widget id in the screen state: reopening the panel shows the same page, and it
     // survives widgets being reordered or switched off (falls back to the first one)
     readonly property int current: {
@@ -30,7 +29,7 @@ Item {
     property real dragOffset: 0
     property real wheelAcc: 0
 
-    implicitHeight: pages.maxHeight + stripHeight
+    implicitHeight: pages.maxHeight
 
     // Slide only when the user switches page; opening the panel / reordering must not animate
     property bool userSwitch: false
@@ -70,7 +69,6 @@ Item {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: root.stripHeight
         clip: true
 
         Repeater {
@@ -170,43 +168,53 @@ Item {
         }
     }
 
-    // Dots
-    Row {
+    // Dots: overlaid on the widget, bottom centre, on a small translucent pill so they read on any page
+    StyledRect {
         visible: root.multi
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 5
-        spacing: 6
+        anchors.bottomMargin: Tokens.padding.small
+        implicitWidth: dots.implicitWidth + Tokens.padding.medium * 2
+        implicitHeight: dots.implicitHeight + Tokens.padding.small * 2
+        radius: Tokens.rounding.full
+        color: Qt.alpha(Colours.palette.m3surfaceContainerHighest, 0.75)
 
-        Repeater {
-            model: root.count
+        Row {
+            id: dots
 
-            delegate: Item {
-                id: dot
+            anchors.centerIn: parent
+            spacing: 6
 
-                required property int index
-                readonly property bool on: index === root.current
+            Repeater {
+                model: root.count
 
-                width: on ? 18 : 8
-                height: 8
+                delegate: Item {
+                    id: dot
 
-                Behavior on width {
-                    Anim {
-                        type: Anim.FastSpatial
+                    required property int index
+                    readonly property bool on: index === root.current
+
+                    width: on ? 18 : 8
+                    height: 8
+
+                    Behavior on width {
+                        Anim {
+                            type: Anim.FastSpatial
+                        }
                     }
-                }
 
-                Rectangle {
-                    anchors.fill: parent
-                    radius: height / 2
-                    color: dot.on ? Colours.palette.m3primary : Colours.palette.m3outlineVariant
-                }
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: height / 2
+                        color: dot.on ? Colours.palette.m3primary : Colours.palette.m3outline
+                    }
 
-                MouseArea {
-                    anchors.fill: parent
-                    anchors.margins: -4
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.go(dot.index)
+                    MouseArea {
+                        anchors.fill: parent
+                        anchors.margins: -4
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.go(dot.index)
+                    }
                 }
             }
         }
