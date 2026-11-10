@@ -6,6 +6,13 @@ con lo que encuentres en el código, **para y pregunta al usuario**; no improvis
 
 Estado: plan aprobado en conversación el 2026-11-10. Nada implementado todavía.
 
+**Rama de trabajo: `dev/0.2`.** Todo este refactor es la versión **0.2.0** de Sylphrena y se
+desarrolla en esta rama de larga duración. **`main` no se toca** hasta que el conjunto sea estable:
+se queda en la línea 0.1.x, que es lo que el usuario puede seguir usando si algo sale mal. Cada
+fase es una rama `feature/*` que sale de `dev/0.2` y se fusiona **en `dev/0.2`** (nunca en `main`).
+Solo al terminar la fase 5, y con el visto bueno del usuario, se abre la PR `dev/0.2` → `main` y se
+crea el tag `v0.2.0` (el build lee la versión de los tags `v0.*`; no crees el tag antes).
+
 ---
 
 ## 1. Objetivo
@@ -171,7 +178,7 @@ como propiedad requerida). No migres nada hasta tener esa prueba funcionando.
 
 ## 6. Fases
 
-Cada fase es una rama + PR propia (flujo de AGENTS.md §3). No empieces una fase sin que la
+Cada fase es una rama + PR propia contra `dev/0.2` (flujo de AGENTS.md §3, cambiando la base de la PR). No empieces una fase sin que la
 anterior esté fusionada y el usuario haya probado la shell. Al final de cada fase: shell
 reiniciada, log sin errores nuevos, `AGENTS.md`/`FEATURES.md`/`CONFIG.md`/`CHANGELOG.md` al día.
 
@@ -225,6 +232,9 @@ Orden: **Hidratación** (añade servicio con notificaciones y shader) → **Rat�
 
 ## 7. Reglas de trabajo (además de AGENTS.md)
 
+- **Un complemento no modifica la base.** «Más alcance» que un widget significa engancharse en más
+  sitios previstos, no parchear ficheros de la base. Si una extensión necesita algo que no existe,
+  se añade un punto de enganche a la base.
 - **No cambies el comportamiento visible.** Esto es una reorganización: tras cada fase el usuario
   debe ver exactamente lo mismo. Las mejoras van aparte.
 - **Reinicia la shell vía Hyprland** (`hyprctl dispatch 'hl.dsp.exec_cmd("/home/manu/.local/bin/sylph shell -r -d")'`),
@@ -250,6 +260,10 @@ Orden: **Hidratación** (añade servicio con notificaciones y shader) → **Rat�
   código que corre con los permisos del usuario).
 - **Otras distribuciones** además de Arch.
 - **Traducciones por extensión.**
+- **Temas y efectos** (cambian el aspecto global): serían un tercer tipo de extensión, con reglas propias.
+- **Dónde se alojan las extensiones**: un único repo `sylphrena-extensions` con una carpeta por
+  extensión y un índice (`index.json`) que Things lee; cada extensión se publica además como
+  paquete. Por eso en este plan viven en `extensions/` con esa misma forma de carpeta.
 
 Tenlo presente al diseñar (por eso existen `apiVersion`, el manifiesto y los widgets que no
 conocen su hueco), pero no construyas nada de esta lista.
