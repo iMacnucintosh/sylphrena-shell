@@ -204,7 +204,8 @@ ColumnLayout {
 
                 Timer {
                     interval: 50
-                    running: true
+                    // Only while the row is on screen and the timer still has time left
+                    running: timerRow.visible && timerRow.remainingMs > 0
                     repeat: true
                     onTriggered: timerRow.clock++
                 }

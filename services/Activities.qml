@@ -198,16 +198,16 @@ Singleton {
         }
     }
 
-    function onStyleApplyFinished(gen: int): void {
+    function onStyleApplyFinished(gen: int, exitCode: int): void {
         // Ignore stale exits from a cancelled Process (gen property may already
         // have been bumped for the replacement run).
         if (gen !== root.styleApplyGen || styleApplyProc.running)
             return;
-        if (styleApplyProc.exitCode !== 0) {
+        if (exitCode !== 0) {
             // Failed apply: release the key so a later trigger can retry —
             // lastAppliedStyleKey must only pin looks that actually applied
             // (a stuck key made every retrigger short-circuit silently).
-            console.warn("Activities: style apply exited with code", styleApplyProc.exitCode);
+            console.warn("Activities: style apply exited with code", exitCode);
             root.lastAppliedStyleKey = "";
         } else {
             root.lastAppliedStyleKey = root.lastAttemptStyleKey;
@@ -579,9 +579,18 @@ Singleton {
             root.overviewFsAddr = addr;
             root.overviewFsMode = mode;
             root.overviewFsWs = t.workspace?.id ?? Hypr.activeWsId;
-            Hyprland.dispatch(`focuswindow address:${addr}`);
-            Hyprland.dispatch("fullscreenstate 0 0");
+            root.setFullscreenState(addr, 0);
             return;
+        }
+    }
+
+    // Hyprland 0.57 with a Lua config rejects the old "focuswindow/fullscreenstate" syntax
+    function setFullscreenState(addr: string, mode: int): void {
+        if (Hypr.usingLua)
+            Hyprland.dispatch(`hl.dsp.window.fullscreen_state({ internal = ${mode}, client = ${mode}, window = "address:${addr}" })`);
+        else {
+            Hyprland.dispatch(`focuswindow address:${addr}`);
+            Hyprland.dispatch(`fullscreenstate ${mode} ${mode}`);
         }
     }
 
@@ -607,8 +616,7 @@ Singleton {
         });
         if (!still)
             return;
-        Hyprland.dispatch(`focuswindow address:${addr}`);
-        Hyprland.dispatch(`fullscreenstate ${mode} ${mode}`);
+        root.setFullscreenState(addr, mode);
     }
 
     function registerOverviewCard(card: var): void {
@@ -814,9 +822,10 @@ Singleton {
         id: styleApplyProc
 
         property int gen: 0
-        stdout: StdioCollector {
-            onStreamFinished: root.onStyleApplyFinished(styleApplyProc.gen)
-        }
+        // Drain stdout; the result comes from the exit code (Process has no exitCode property —
+        // reading one gave undefined, so every apply counted as failed and was never deduplicated)
+        stdout: StdioCollector {}
+        onExited: code => root.onStyleApplyFinished(styleApplyProc.gen, code)
     }
 
     Connections {
