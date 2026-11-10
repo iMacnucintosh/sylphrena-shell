@@ -18,7 +18,7 @@ PageBase {
     title: Tr.tr("Clock")
     isSubPage: true
 
-    // Same inline spin pattern as ComplementsPage hydration card (no nested ConnectedRect).
+    // Inline spin rows inside a card (no nested ConnectedRect); same pattern as SpinSettingRow.
     component SettingRow: RowLayout {
         property alias label: settingLabel.text
         property alias subtext: settingSub.text

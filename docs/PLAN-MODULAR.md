@@ -4,7 +4,7 @@ Documento de trabajo para el agente que lo implemente. Léelo entero antes de to
 [AGENTS.md](../AGENTS.md) (convenciones del repo, trampas conocidas). Si algo de este plan choca
 con lo que encuentres en el código, **para y pregunta al usuario**; no improvises un rediseño.
 
-Estado: plan aprobado en conversación el 2026-11-10. Nada implementado todavía.
+Estado: **fases 0–5 ejecutadas el 2026-11-10** en `dev/0.2` (ver [PLAN-LOG.md](./PLAN-LOG.md)). Pendiente: que el usuario pruebe y, si todo va bien, borrar la copia de seguridad, abrir la PR `dev/0.2` → `main` y crear el tag `v0.2.0`.
 
 **Rama de trabajo: `dev/0.2`.** Todo este refactor es la versión **0.2.0** de Sylphrena y se
 desarrolla en esta rama de larga duración. **`main` no se toca** hasta que el conjunto sea estable:
@@ -165,8 +165,7 @@ conectar. No lo rediseñes: complétalo.
 - `docs/examples/extension-spike/` — extensión de ejemplo con la forma exacta: `manifest.json`,
   `Service.qml`, `Widget.qml`, un fichero hermano y una subcarpeta.
 
-Nada referencia todavía a `Extensions`, así que no se instancia (un singleton QML solo se crea al
-usarlo). La fase 3 lo conecta.
+(Histórico: en el spike nada referenciaba todavía a `Extensions`; la fase 3 lo conectó.)
 
 **Contrato de una extensión**
 - El **servicio no es un singleton**. Es un fichero cuya raíz es un `Scope` (de Quickshell) con
