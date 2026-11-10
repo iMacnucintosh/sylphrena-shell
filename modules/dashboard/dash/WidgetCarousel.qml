@@ -20,7 +20,12 @@ Item {
     readonly property int count: widgets.length
     readonly property bool multi: count > 1
     readonly property real stripHeight: multi ? 18 : 0
-    property int current: 0
+    // Remembered by widget id in the screen state: reopening the panel shows the same page, and it
+    // survives widgets being reordered or switched off (falls back to the first one)
+    readonly property int current: {
+        const i = widgets.findIndex(w => w.id === screenState.dashboardWidget);
+        return i >= 0 ? i : 0;
+    }
     // Live horizontal drag offset in px (0 when idle)
     property real dragOffset: 0
     property real wheelAcc: 0
@@ -28,11 +33,10 @@ Item {
     implicitHeight: pages.maxHeight + stripHeight
 
     function go(i: int): void {
-        current = Math.max(0, Math.min(count - 1, i));
+        const w = widgets[Math.max(0, Math.min(count - 1, i))];
+        if (w)
+            screenState.dashboardWidget = w.id;
     }
-
-    // A widget being switched off or reordered must not leave the index out of range
-    onCountChanged: go(current)
 
     Item {
         id: pages
