@@ -6,8 +6,9 @@
 The strings are extracted from the extension's QML and manifest the same way scripts/trs.fish does
 for the shell (xgettext, Tr.* keywords, scripts/manifest-strings.py) and looked up in <po_file>.
 The JSON maps msgid (or "context\\u0004msgid") to its translation; Tr consults it when the shell's own
-catalog has none (see Tr.qml extraCatalogs). Untranslated strings are listed on stderr. <lang>
-defaults to the .po file name (es.po -> es).
+catalog has none (see Tr.qml extraCatalogs). Translations already in the JSON are kept when the .po
+has none (an external extension's own strings are never in the shell's .po); strings no longer used
+are dropped. Untranslated strings are listed on stderr. <lang> defaults to the .po file name.
 """
 import json
 import pathlib
@@ -79,14 +80,19 @@ def main() -> None:
         wanted = [(c, m) for c, m, _ in parse_po(pot.read_text()) if m]
 
     translations = {(c, m): s for c, m, s in parse_po(po.read_text()) if m and s}
+    out = ext / "i18n" / f"{lang}.json"
+    try:
+        existing = json.loads(out.read_text())
+    except (OSError, ValueError):
+        existing = {}
     catalog, missing = {}, []
     for c, m in wanted:
-        s = translations.get((c, m))
+        key = f"{c}\u0004{m}" if c else m
+        s = translations.get((c, m)) or existing.get(key)
         if s:
-            catalog[f"{c}\u0004{m}" if c else m] = s
+            catalog[key] = s
         else:
             missing.append(f"{c + ' | ' if c else ''}{m}")
-    out = ext / "i18n" / f"{lang}.json"
     out.parent.mkdir(exist_ok=True)
     out.write_text(json.dumps(catalog, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
     print(f"{out}: {len(catalog)} strings", file=sys.stderr)
