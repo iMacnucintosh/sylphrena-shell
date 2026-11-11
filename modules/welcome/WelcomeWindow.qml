@@ -442,218 +442,96 @@ FloatingWindow {
         }
     }
 
-    // ── 3 · Apps of the family ────────────────────────────────────────────────────────────
+    // ── 3 · Apps that come with Sylphrena (informative: the base package installs them) ────
     Component {
         id: companionsPage
 
         ColumnLayout {
-            id: companions
-
-            readonly property var seeker: Companions.find("seeker")
-            readonly property bool installed: Companions.isInstalled("seeker")
-            readonly property bool installing: Companions.installingId === "seeker"
-            property bool askPassword: false
-
-            function doInstall(): void {
-                if (pass.text.length === 0)
-                    return;
-                Companions.install("seeker", pass.text);
-                pass.text = "";
-                companions.askPassword = false;
-            }
-
             spacing: Tokens.spacing.large
 
             Component.onCompleted: Companions.check()
 
             PageHeader {
                 title: Tr.tr("Apps made for Sylphrena")
-                subtitle: Tr.tr("They follow the shell's theme. You can add them now or later.")
+                subtitle: Tr.tr("They come with Sylphrena and follow its theme.")
                 onSlotReady: (slot, size) => win.registerSlot(slot, size)
             }
 
-            ConnectedRect {
+            ColumnLayout {
                 Layout.fillWidth: true
-                first: true
-                last: true
-                implicitHeight: seekerCol.implicitHeight + Tokens.padding.large * 2
+                spacing: Tokens.spacing.extraSmall / 2
 
-                ColumnLayout {
-                    id: seekerCol
+                Repeater {
+                    model: ["seeker", "things", "kitty"]
 
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.margins: Tokens.padding.large
-                    spacing: Tokens.spacing.medium
+                    ConnectedRect {
+                        id: appCard
 
-                    RowLayout {
+                        required property string modelData
+                        required property int index
+                        readonly property var app: Companions.find(modelData)
+                        readonly property bool installed: Companions.isInstalled(modelData)
+
                         Layout.fillWidth: true
-                        spacing: Tokens.spacing.medium
-
-                        MaterialIcon {
-                            Layout.alignment: Qt.AlignVCenter
-                            text: companions.seeker.icon
-                            color: Colours.palette.m3primary
-                            fontStyle: Tokens.font.icon.extraLarge
-                            fill: 1
-                        }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 0
-
-                            StyledText {
-                                Layout.fillWidth: true
-                                text: companions.seeker.name
-                                font: Tokens.font.title.medium
-                            }
-
-                            StyledText {
-                                Layout.fillWidth: true
-                                text: companions.seeker.description
-                                color: Colours.palette.m3onSurfaceVariant
-                                font: Tokens.font.body.small
-                                wrapMode: Text.WordWrap
-                            }
-                        }
-
-                        // State of Seeker
-                        MaterialIcon {
-                            visible: companions.installed && !companions.installing
-                            Layout.alignment: Qt.AlignVCenter
-                            text: "check_circle"
-                            color: Colours.palette.m3primary
-                            fill: 1
-                        }
-
-                        StyledText {
-                            visible: companions.installed && !companions.installing
-                            Layout.alignment: Qt.AlignVCenter
-                            text: Tr.trCtx("Installed", "an app is installed")
-                            color: Colours.palette.m3primary
-                            font: Tokens.font.label.large
-                        }
-
-                        TextButton {
-                            visible: companions.installed && !companions.installing
-                            Layout.alignment: Qt.AlignVCenter
-                            type: TextButton.Tonal
-                            isRound: true
-                            horizontalPadding: Tokens.padding.large
-                            verticalPadding: Tokens.padding.small
-                            text: Tr.tr("Open")
-                            onClicked: Companions.launch("seeker")
-                        }
-
-                        IconTextButton {
-                            visible: !companions.installed && !companions.installing && !companions.askPassword
-                            Layout.alignment: Qt.AlignVCenter
-                            isRound: true
-                            horizontalPadding: Tokens.padding.large
-                            verticalPadding: Tokens.padding.small
-                            icon: "download"
-                            text: Tr.tr("Install")
-                            onClicked: {
-                                companions.askPassword = true;
-                                Qt.callLater(() => pass.forceActiveFocus());
-                            }
-                        }
-                    }
-
-                    // Working
-                    RowLayout {
-                        Layout.fillWidth: true
-                        visible: companions.installing
-                        spacing: Tokens.spacing.small
-
-                        MaterialIcon {
-                            text: "hourglass_top"
-                            color: Colours.palette.m3onSurfaceVariant
-                        }
-
-                        StyledText {
-                            Layout.fillWidth: true
-                            text: {
-                                switch (Companions.installStep) {
-                                case "download":
-                                    return Tr.tr("Downloading…");
-                                case "deps":
-                                    return Tr.tr("Installing what it needs…");
-                                case "build":
-                                    return Tr.tr("Building… this takes a minute");
-                                case "install":
-                                    return Tr.tr("Installing…");
-                                }
-                                return Tr.tr("Working…");
-                            }
-                            color: Colours.palette.m3onSurfaceVariant
-                            font: Tokens.font.body.small
-                        }
-                    }
-
-                    // Password: it installs a system package
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        visible: companions.askPassword && !companions.installing
-                        spacing: Tokens.spacing.small
-
-                        StyledText {
-                            Layout.fillWidth: true
-                            text: Tr.tr("It is installed as a system package, so it needs your password.")
-                            color: Colours.palette.m3outline
-                            font: Tokens.font.label.small
-                            wrapMode: Text.WordWrap
-                        }
+                        first: index === 0
+                        last: index === 2
+                        implicitHeight: appRow.implicitHeight + Tokens.padding.large * 2
 
                         RowLayout {
-                            Layout.fillWidth: true
-                            spacing: Tokens.spacing.small
+                            id: appRow
 
-                            StyledTextField {
-                                id: pass
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.margins: Tokens.padding.large
+                            spacing: Tokens.spacing.medium
 
+                            MaterialIcon {
+                                Layout.alignment: Qt.AlignVCenter
+                                text: appCard.app.icon
+                                color: Colours.palette.m3primary
+                                fontStyle: Tokens.font.icon.extraLarge
+                                fill: 1
+                            }
+
+                            ColumnLayout {
                                 Layout.fillWidth: true
-                                placeholderText: Tr.tr("Password")
-                                leadingIcon: "key"
-                                echoMode: TextInput.Password
-                                onAccepted: companions.doInstall()
-                                Keys.onEscapePressed: {
-                                    pass.text = "";
-                                    companions.askPassword = false;
+                                spacing: 0
+
+                                StyledText {
+                                    Layout.fillWidth: true
+                                    text: appCard.app.name
+                                    font: Tokens.font.title.medium
+                                }
+
+                                StyledText {
+                                    Layout.fillWidth: true
+                                    text: appCard.app.description
+                                    color: Colours.palette.m3onSurfaceVariant
+                                    font: Tokens.font.body.small
+                                    wrapMode: Text.WordWrap
                                 }
                             }
 
                             TextButton {
-                                isRound: true
+                                visible: appCard.installed
+                                Layout.alignment: Qt.AlignVCenter
                                 type: TextButton.Tonal
-                                horizontalPadding: Tokens.padding.large
-                                verticalPadding: Tokens.padding.small
-                                text: Tr.trCtx("Cancel", "button")
-                                onClicked: {
-                                    pass.text = "";
-                                    companions.askPassword = false;
-                                }
-                            }
-
-                            TextButton {
                                 isRound: true
                                 horizontalPadding: Tokens.padding.large
                                 verticalPadding: Tokens.padding.small
-                                disabled: pass.text.length === 0
-                                text: Tr.tr("Install")
-                                onClicked: companions.doInstall()
+                                text: Tr.tr("Open")
+                                onClicked: Companions.launch(appCard.modelData)
+                            }
+
+                            StyledText {
+                                visible: Companions.checked && !appCard.installed
+                                Layout.alignment: Qt.AlignVCenter
+                                text: Tr.tr("Not installed")
+                                color: Colours.palette.m3outline
+                                font: Tokens.font.label.medium
                             }
                         }
-                    }
-
-                    StyledText {
-                        Layout.fillWidth: true
-                        visible: Companions.installError.length > 0 && !companions.installing && !companions.installed
-                        text: Companions.installError
-                        color: Colours.palette.m3error
-                        font: Tokens.font.label.small
-                        wrapMode: Text.WordWrap
                     }
                 }
             }

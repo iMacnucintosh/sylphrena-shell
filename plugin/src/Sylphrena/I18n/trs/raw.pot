@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 14:24+0100\n"
+"POT-Creation-Date: 2026-11-11 14:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -820,7 +820,7 @@ msgstr ""
 #: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
-#: modules/nexus/pages/UpdatesPage.qml modules/welcome/WelcomeWindow.qml
+#: modules/nexus/pages/UpdatesPage.qml
 msgid "Password"
 msgstr ""
 
@@ -832,7 +832,7 @@ msgstr ""
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
-#: modules/utilities/RecordingDeleteModal.qml modules/welcome/WelcomeWindow.qml
+#: modules/utilities/RecordingDeleteModal.qml
 msgctxt "button"
 msgid "Cancel"
 msgstr ""
@@ -1741,7 +1741,7 @@ msgid "Removing…"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ExtensionsPage.qml modules/welcome/WelcomeWindow.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Installing…"
 msgstr ""
 
@@ -2436,7 +2436,7 @@ msgstr ""
 msgid "Install %1?"
 msgstr ""
 
-#: modules/nexus/pages/ExtensionsPage.qml modules/welcome/WelcomeWindow.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Install"
 msgstr ""
 
@@ -4442,12 +4442,7 @@ msgid "Apps made for Sylphrena"
 msgstr ""
 
 #: modules/welcome/WelcomeWindow.qml
-msgid "They follow the shell's theme. You can add them now or later."
-msgstr ""
-
-#: modules/welcome/WelcomeWindow.qml
-msgctxt "an app is installed"
-msgid "Installed"
+msgid "They come with Sylphrena and follow its theme."
 msgstr ""
 
 #: modules/welcome/WelcomeWindow.qml
@@ -4455,23 +4450,7 @@ msgid "Open"
 msgstr ""
 
 #: modules/welcome/WelcomeWindow.qml
-msgid "Downloading…"
-msgstr ""
-
-#: modules/welcome/WelcomeWindow.qml
-msgid "Installing what it needs…"
-msgstr ""
-
-#: modules/welcome/WelcomeWindow.qml
-msgid "Building… this takes a minute"
-msgstr ""
-
-#: modules/welcome/WelcomeWindow.qml
-msgid "Working…"
-msgstr ""
-
-#: modules/welcome/WelcomeWindow.qml
-msgid "It is installed as a system package, so it needs your password."
+msgid "Not installed"
 msgstr ""
 
 #: modules/welcome/WelcomeWindow.qml
@@ -4814,17 +4793,8 @@ msgstr ""
 msgid "Package manager: pacman, AUR and Flatpak in one list"
 msgstr ""
 
-#: services/Companions.qml services/Extensions.qml services/Updates.qml
-msgid "Incorrect password"
-msgstr ""
-
-#: services/Companions.qml services/Extensions.qml services/Updates.qml
-msgid "Too many failed attempts. Wait a minute and try again."
-msgstr ""
-
-#: services/Companions.qml services/Extensions.qml
-#, qt-format
-msgid "Failed (code %1)"
+#: services/Companions.qml
+msgid "Fast terminal: Sylphrena changes its colours live with your theme"
 msgstr ""
 
 #: services/DashWidgets.qml
@@ -4898,6 +4868,19 @@ msgstr ""
 
 #: services/Extensions.qml
 msgid "Extension installed"
+msgstr ""
+
+#: services/Extensions.qml services/Updates.qml
+msgid "Incorrect password"
+msgstr ""
+
+#: services/Extensions.qml services/Updates.qml
+msgid "Too many failed attempts. Wait a minute and try again."
+msgstr ""
+
+#: services/Extensions.qml
+#, qt-format
+msgid "Failed (code %1)"
 msgstr ""
 
 #: services/Extensions.qml
