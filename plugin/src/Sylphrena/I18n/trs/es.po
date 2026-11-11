@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:20+0100\n"
+"POT-Creation-Date: 2026-11-11 10:30+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -540,254 +540,6 @@ msgstr "Todo listo"
 msgid "Completed (%1)"
 msgstr "Completadas (%1)"
 
-#: extensions/vpn-forticlient/Popout.qml
-#: extensions/vpn-forticlient/PopoutOtp.qml
-#: extensions/vpn-forticlient/Service.qml
-#: build/i18n/extensions/vpn-forticlient/manifest.json.js
-msgid "VPN FortiClient"
-msgstr "VPN FortiClient"
-
-#: extensions/vpn-forticlient/Popout.qml
-#: modules/nexus/pages/network/EthernetDetailPage.qml
-#: modules/nexus/pages/network/NetworkDetailPage.qml
-msgid "Disconnect"
-msgstr "Desconectar"
-
-#: extensions/vpn-forticlient/Popout.qml
-#: extensions/vpn-forticlient/PopoutOtp.qml
-#: modules/bar/popouts/WirelessPassword.qml
-#: modules/nexus/pages/network/AddNetworkPage.qml
-#: modules/nexus/pages/network/EthernetDetailPage.qml
-msgid "Connect"
-msgstr "Conectar"
-
-#: extensions/vpn-forticlient/PopoutOtp.qml
-msgid "Enter your MFA OTP to connect"
-msgstr "Introduce el OTP MFA para conectar"
-
-#: extensions/vpn-forticlient/PopoutOtp.qml
-msgid "6-digit OTP"
-msgstr "OTP de 6 dígitos"
-
-#: extensions/vpn-forticlient/PopoutOtp.qml
-#: modules/bar/popouts/UpdatesPassword.qml
-#: modules/bar/popouts/WirelessPassword.qml
-#: modules/nexus/common/DialogRowButton.qml
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/network/AddNetworkPage.qml
-#: modules/nexus/pages/network/AddVpnPage.qml
-#: modules/nexus/pages/UpdatesPage.qml
-#: modules/utilities/RecordingDeleteModal.qml
-msgctxt "button"
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Host is required"
-msgstr "El host es obligatorio"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Port must be a number"
-msgstr "El puerto debe ser un número"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Certificate paths must be absolute"
-msgstr "Las rutas de los certificados deben ser absolutas"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Invalid health check host"
-msgstr "El host de comprobación no es válido"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "DNS servers must be IPv4 addresses"
-msgstr "Los servidores DNS deben ser direcciones IPv4"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Invalid DNS domain"
-msgstr "Dominio DNS no válido"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Hosts entries are 'IP name', separated by commas"
-msgstr "Las entradas de hosts son «IP nombre», separadas por comas"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Imported from ~/.config/openfortivpn/config. The password is stored only in ~/.config/sylphrena/vpn/ (readable only by you)."
-msgstr "Importado de ~/.config/openfortivpn/config. La contraseña se guarda solo en ~/.config/sylphrena/vpn/ (solo tú puedes leerla)."
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "The password is stored only in ~/.config/sylphrena/vpn/ (readable only by you), never in shell.json."
-msgstr "La contraseña se guarda solo en ~/.config/sylphrena/vpn/ (solo tú puedes leerla), nunca en shell.json."
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgctxt "vpn server hostname"
-msgid "Host"
-msgstr "Servidor"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgctxt "vpn server port"
-msgid "Port"
-msgstr "Puerto"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgctxt "vpn authentication realm"
-msgid "Realm"
-msgstr "Realm"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgctxt "vpn username"
-msgid "Username"
-msgstr "Usuario"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgctxt "vpn password"
-msgid "Password"
-msgstr "Contraseña"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Ask for a one-time code (OTP)"
-msgstr "Pedir un código de un solo uso (OTP)"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Connecting opens the code dialog in the VPN icon of the bar"
-msgstr "Al conectar se abre el diálogo del código en el icono VPN de la barra"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Allow legacy TLS"
-msgstr "Permitir TLS antiguo"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Needed by some older FortiGate servers (seclevel-1)"
-msgstr "Lo necesitan algunos servidores FortiGate antiguos (seclevel-1)"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Half-internet routes"
-msgstr "Rutas de medio Internet"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Routes 0.0.0.0/1 and 128.0.0.0/1 instead of replacing the default route"
-msgstr "Usa las rutas 0.0.0.0/1 y 128.0.0.0/1 en lugar de sustituir la ruta por defecto"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Certificate (optional)"
-msgstr "Certificado (opcional)"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Client certificate (PEM path)"
-msgstr "Certificado de cliente (ruta PEM)"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Client key (PEM path)"
-msgstr "Clave de cliente (ruta PEM)"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Trusted server certificate (SHA-256)"
-msgstr "Certificado de servidor de confianza (SHA-256)"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Only if the server certificate is not trusted by the system"
-msgstr "Solo si el sistema no confía en el certificado del servidor"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Network (optional)"
-msgstr "Red (opcional)"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Health check host"
-msgstr "Host de comprobación"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "A host inside the VPN that answers ping. If it stops answering (e.g. after suspend) the tunnel is torn down."
-msgstr "Un host dentro de la VPN que responda al ping. Si deja de responder (p. ej. tras suspender), se cierra el túnel."
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-#: modules/nexus/pages/network/EthernetDetailPage.qml
-#: modules/nexus/pages/network/NetworkDetailPage.qml
-msgid "DNS servers"
-msgstr "Servidores DNS"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Comma separated. Applied with systemd-resolved; without it the server's DNS is used."
-msgstr "Separados por comas. Se aplican con systemd-resolved; sin él se usan los DNS del servidor."
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "DNS domains"
-msgstr "Dominios DNS"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Domains resolved through the VPN, e.g. ~example.com"
-msgstr "Dominios que se resuelven por la VPN, p. ej. ~example.com"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "Hosts entries"
-msgstr "Entradas de /etc/hosts"
-
-#: extensions/vpn-forticlient/ProviderEditor.qml
-msgid "'IP name' pairs, comma separated. Added to /etc/hosts while connected."
-msgstr "Pares «IP nombre» separados por comas. Se añaden a /etc/hosts mientras hay conexión."
-
-#: extensions/vpn-forticlient/Service.qml
-msgctxt "vpn state"
-msgid "Disconnected"
-msgstr "Desconectado"
-
-#: extensions/vpn-forticlient/Service.qml
-msgid "Complement disabled"
-msgstr "Complemento desactivado"
-
-#: extensions/vpn-forticlient/Service.qml
-#: extensions/vpn-forticlient/Settings.qml
-msgid "The FortiClient helper is not installed: install the extension in Nexus → Complements"
-msgstr "El ayudante de FortiClient no está instalado: instala la extensión en Nexus → Complementos"
-
-#: extensions/vpn-forticlient/Service.qml
-msgid "No FortiClient connection: add one in Nexus → Network"
-msgstr "No hay conexiones FortiClient: añade una en Nexus → Red"
-
-#: extensions/vpn-forticlient/Service.qml
-msgctxt "vpn state"
-msgid "Connecting…"
-msgstr "Conectando…"
-
-#: extensions/vpn-forticlient/Service.qml
-msgctxt "vpn state"
-msgid "Disconnecting…"
-msgstr "Desconectando…"
-
-#: extensions/vpn-forticlient/Service.qml
-#, qt-format
-msgid "Connected · %1"
-msgstr "Conectado · %1"
-
-#: extensions/vpn-forticlient/Service.qml
-msgid "VPN dropped (reconnect after sleep)"
-msgstr "Se cayó la VPN (vuelve a conectar tras la suspensión)"
-
-#: extensions/vpn-forticlient/Service.qml
-msgid "Could not write VPN config"
-msgstr "No se pudo escribir la config de VPN"
-
-#: extensions/vpn-forticlient/Service.qml services/VPN.qml
-#, qt-format
-msgid "Connected to %1"
-msgstr "Conectado a %1"
-
-#: extensions/vpn-forticlient/Service.qml
-msgid "Login failed (user / password / OTP / certificate)."
-msgstr "Error de acceso (usuario / contraseña / OTP / certificado)."
-
-#: extensions/vpn-forticlient/Service.qml
-#, qt-format
-msgid "Could not start the VPN tunnel (code %1)."
-msgstr "No se pudo levantar el túnel VPN (código %1)."
-
-#: extensions/vpn-forticlient/Service.qml services/VPN.qml
-msgid "VPN disconnected"
-msgstr "VPN desconectada"
-
-#: extensions/vpn-forticlient/Settings.qml
-msgid "Connections: Nexus → Network → Add provider → FortiClient."
-msgstr "Conexiones: Nexus → Red → Añadir proveedor → FortiClient."
-
 #: modules/activities/OverviewContent.qml services/Keybinds.qml
 msgid "Activities overview"
 msgstr "Vista de actividades"
@@ -1096,6 +848,18 @@ msgstr "Introduce tu contraseña para actualizar el sistema en segundo plano."
 msgid "Password"
 msgstr "Contraseña"
 
+#: modules/bar/popouts/UpdatesPassword.qml
+#: modules/bar/popouts/WirelessPassword.qml
+#: modules/nexus/common/DialogRowButton.qml
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/network/AddNetworkPage.qml
+#: modules/nexus/pages/network/AddVpnPage.qml
+#: modules/nexus/pages/UpdatesPage.qml
+#: modules/utilities/RecordingDeleteModal.qml
+msgctxt "button"
+msgid "Cancel"
+msgstr "Cancelar"
+
 #: modules/bar/popouts/UpdatesPassword.qml services/Updates.qml
 msgid "Authenticating…"
 msgstr "Autenticando…"
@@ -1134,6 +898,12 @@ msgstr "No hay actualizaciones disponibles."
 #: modules/bar/popouts/UpdatesPopout.qml
 msgid "Update system"
 msgstr "Actualizar sistema"
+
+#: modules/bar/popouts/WirelessPassword.qml
+#: modules/nexus/pages/network/AddNetworkPage.qml
+#: modules/nexus/pages/network/EthernetDetailPage.qml
+msgid "Connect"
+msgstr "Conectar"
 
 #: modules/bar/popouts/WirelessPassword.qml
 msgid "Enter password"
@@ -1993,6 +1763,19 @@ msgid "Primary DNS"
 msgstr "DNS principal"
 
 #: modules/nexus/common/ExtensionCard.qml
+msgid "Remove its system components first (below)."
+msgstr "Quita antes sus componentes del sistema (abajo)."
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Remove this extension? Its settings are kept."
+msgstr "¿Eliminar esta extensión? Sus ajustes se conservan."
+
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/network/AddVpnPage.qml
+msgid "Delete"
+msgstr "Eliminar"
+
+#: modules/nexus/common/ExtensionCard.qml
 msgid "Removing system components…"
 msgstr "Quitando los componentes del sistema…"
 
@@ -2623,6 +2406,26 @@ msgstr "Permitir que los dispositivos cercanos se emparejen con este"
 msgid "Available"
 msgstr "Disponibles"
 
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Extensions are .zip packages with a manifest.json. Installing one again updates it."
+msgstr "Las extensiones son paquetes .zip con un manifest.json. Volver a instalar una la actualiza."
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Installing…"
+msgstr "Instalando…"
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Install from zip"
+msgstr "Instalar desde zip"
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Select an extension package"
+msgstr "Elige un paquete de extensión"
+
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Extension packages (.zip)"
+msgstr "Paquetes de extensión (.zip)"
+
 #: modules/nexus/pages/DisplayPage.qml
 msgctxt "monitor settings"
 msgid "Display"
@@ -2961,10 +2764,6 @@ msgid "Disconnect command"
 msgstr "Comando de desconexión"
 
 #: modules/nexus/pages/network/AddVpnPage.qml
-msgid "Delete"
-msgstr "Eliminar"
-
-#: modules/nexus/pages/network/AddVpnPage.qml
 msgctxt "button"
 msgid "Save"
 msgstr "Guardar"
@@ -3004,6 +2803,11 @@ msgstr "5 GHz"
 msgctxt "network filter"
 msgid "2.4 GHz"
 msgstr "2,4 GHz"
+
+#: modules/nexus/pages/network/EthernetDetailPage.qml
+#: modules/nexus/pages/network/NetworkDetailPage.qml
+msgid "Disconnect"
+msgstr "Desconectar"
 
 #: modules/nexus/pages/network/EthernetDetailPage.qml
 #: modules/nexus/pages/network/NetworkDetailPage.qml
@@ -3080,6 +2884,11 @@ msgstr "Introduce una dirección válida en notación CIDR"
 #: modules/nexus/pages/network/NetworkDetailPage.qml
 msgid "Enter a valid gateway address"
 msgstr "Introduce una dirección de puerta de enlace válida"
+
+#: modules/nexus/pages/network/EthernetDetailPage.qml
+#: modules/nexus/pages/network/NetworkDetailPage.qml
+msgid "DNS servers"
+msgstr "Servidores DNS"
 
 #. TRANSLATORS: describes the DNS servers field above: several addresses separated by commas
 #: modules/nexus/pages/network/EthernetDetailPage.qml
@@ -4936,6 +4745,30 @@ msgstr "Frecuencia fija; menos parpadeo con FreeSync inestable por HDMI"
 msgid "Could not read monitor list"
 msgstr "No se pudo leer la lista de monitores"
 
+#: services/Extensions.qml
+msgid "Remove its system components first"
+msgstr "Quita antes sus componentes del sistema"
+
+#: services/Extensions.qml services/VPN.qml
+msgid "Unknown error"
+msgstr "Error desconocido"
+
+#: services/Extensions.qml
+msgid "Extension not installed"
+msgstr "Extensión no instalada"
+
+#: services/Extensions.qml
+msgid "Extension removed"
+msgstr "Extensión eliminada"
+
+#: services/Extensions.qml
+msgid "Extension updated"
+msgstr "Extensión actualizada"
+
+#: services/Extensions.qml
+msgid "Extension installed"
+msgstr "Extensión instalada"
+
 #: services/Extensions.qml services/Updates.qml
 msgid "Incorrect password"
 msgstr "Contraseña incorrecta"
@@ -5574,6 +5407,15 @@ msgstr "VPN conectada"
 
 #: services/VPN.qml
 #, qt-format
+msgid "Connected to %1"
+msgstr "Conectado a %1"
+
+#: services/VPN.qml
+msgid "VPN disconnected"
+msgstr "VPN desconectada"
+
+#: services/VPN.qml
+#, qt-format
 msgid "Disconnected from %1"
 msgstr "Desconectado de %1"
 
@@ -5586,10 +5428,6 @@ msgstr "Autenticación de VPN necesaria"
 msgctxt "vpn name and reason"
 msgid "%1: %2"
 msgstr "%1: %2"
-
-#: services/VPN.qml
-msgid "Unknown error"
-msgstr "Error desconocido"
 
 #: services/VPN.qml
 msgid "VPN error"
@@ -5741,22 +5579,6 @@ msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
 #: build/i18n/extensions/tasks/manifest.json.js
 msgid "Checklist: create, complete and delete tasks"
 msgstr "Lista de tareas: crea, completa y elimina"
-
-#: build/i18n/extensions/vpn-forticlient/manifest.json.js
-msgid "FortiClient (openfortivpn) connections for the VPN of Nexus → Network"
-msgstr "Conexiones FortiClient (openfortivpn) para la VPN de Nexus → Red"
-
-#: build/i18n/extensions/vpn-forticlient/manifest.json.js
-msgid "Disabled — tunnel and related processes are stopped"
-msgstr "Desactivado: túnel y procesos asociados detenidos"
-
-#: build/i18n/extensions/vpn-forticlient/manifest.json.js
-msgid "FortiClient"
-msgstr "FortiClient"
-
-#: build/i18n/extensions/vpn-forticlient/manifest.json.js
-msgid "Installs openfortivpn if missing, the helper /usr/local/sbin/sylphrena-fortivpn and a sudoers rule that lets you run only that helper without a password"
-msgstr "Instala openfortivpn si falta, el ayudante /usr/local/sbin/sylphrena-fortivpn y una regla de sudoers que te deja ejecutar solo ese ayudante sin contraseña"
 
 #: plugin/src/Sylphrena/Config/rootnodes.cpp
 #, c-format, qt-plural-format
@@ -6134,6 +5956,172 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "VPN FortiClient"
+#~ msgstr "VPN FortiClient"
+
+#~ msgid "Enter your MFA OTP to connect"
+#~ msgstr "Introduce el OTP MFA para conectar"
+
+#~ msgid "6-digit OTP"
+#~ msgstr "OTP de 6 dígitos"
+
+#~ msgid "Host is required"
+#~ msgstr "El host es obligatorio"
+
+#~ msgid "Port must be a number"
+#~ msgstr "El puerto debe ser un número"
+
+#~ msgid "Certificate paths must be absolute"
+#~ msgstr "Las rutas de los certificados deben ser absolutas"
+
+#~ msgid "Invalid health check host"
+#~ msgstr "El host de comprobación no es válido"
+
+#~ msgid "DNS servers must be IPv4 addresses"
+#~ msgstr "Los servidores DNS deben ser direcciones IPv4"
+
+#~ msgid "Invalid DNS domain"
+#~ msgstr "Dominio DNS no válido"
+
+#~ msgid "Hosts entries are 'IP name', separated by commas"
+#~ msgstr "Las entradas de hosts son «IP nombre», separadas por comas"
+
+#~ msgid "Imported from ~/.config/openfortivpn/config. The password is stored only in ~/.config/sylphrena/vpn/ (readable only by you)."
+#~ msgstr "Importado de ~/.config/openfortivpn/config. La contraseña se guarda solo en ~/.config/sylphrena/vpn/ (solo tú puedes leerla)."
+
+#~ msgid "The password is stored only in ~/.config/sylphrena/vpn/ (readable only by you), never in shell.json."
+#~ msgstr "La contraseña se guarda solo en ~/.config/sylphrena/vpn/ (solo tú puedes leerla), nunca en shell.json."
+
+#~ msgctxt "vpn server hostname"
+#~ msgid "Host"
+#~ msgstr "Servidor"
+
+#~ msgctxt "vpn server port"
+#~ msgid "Port"
+#~ msgstr "Puerto"
+
+#~ msgctxt "vpn authentication realm"
+#~ msgid "Realm"
+#~ msgstr "Realm"
+
+#~ msgctxt "vpn username"
+#~ msgid "Username"
+#~ msgstr "Usuario"
+
+#~ msgctxt "vpn password"
+#~ msgid "Password"
+#~ msgstr "Contraseña"
+
+#~ msgid "Ask for a one-time code (OTP)"
+#~ msgstr "Pedir un código de un solo uso (OTP)"
+
+#~ msgid "Connecting opens the code dialog in the VPN icon of the bar"
+#~ msgstr "Al conectar se abre el diálogo del código en el icono VPN de la barra"
+
+#~ msgid "Allow legacy TLS"
+#~ msgstr "Permitir TLS antiguo"
+
+#~ msgid "Needed by some older FortiGate servers (seclevel-1)"
+#~ msgstr "Lo necesitan algunos servidores FortiGate antiguos (seclevel-1)"
+
+#~ msgid "Half-internet routes"
+#~ msgstr "Rutas de medio Internet"
+
+#~ msgid "Routes 0.0.0.0/1 and 128.0.0.0/1 instead of replacing the default route"
+#~ msgstr "Usa las rutas 0.0.0.0/1 y 128.0.0.0/1 en lugar de sustituir la ruta por defecto"
+
+#~ msgid "Certificate (optional)"
+#~ msgstr "Certificado (opcional)"
+
+#~ msgid "Client certificate (PEM path)"
+#~ msgstr "Certificado de cliente (ruta PEM)"
+
+#~ msgid "Client key (PEM path)"
+#~ msgstr "Clave de cliente (ruta PEM)"
+
+#~ msgid "Trusted server certificate (SHA-256)"
+#~ msgstr "Certificado de servidor de confianza (SHA-256)"
+
+#~ msgid "Only if the server certificate is not trusted by the system"
+#~ msgstr "Solo si el sistema no confía en el certificado del servidor"
+
+#~ msgid "Network (optional)"
+#~ msgstr "Red (opcional)"
+
+#~ msgid "Health check host"
+#~ msgstr "Host de comprobación"
+
+#~ msgid "A host inside the VPN that answers ping. If it stops answering (e.g. after suspend) the tunnel is torn down."
+#~ msgstr "Un host dentro de la VPN que responda al ping. Si deja de responder (p. ej. tras suspender), se cierra el túnel."
+
+#~ msgid "Comma separated. Applied with systemd-resolved; without it the server's DNS is used."
+#~ msgstr "Separados por comas. Se aplican con systemd-resolved; sin él se usan los DNS del servidor."
+
+#~ msgid "DNS domains"
+#~ msgstr "Dominios DNS"
+
+#~ msgid "Domains resolved through the VPN, e.g. ~example.com"
+#~ msgstr "Dominios que se resuelven por la VPN, p. ej. ~example.com"
+
+#~ msgid "Hosts entries"
+#~ msgstr "Entradas de /etc/hosts"
+
+#~ msgid "'IP name' pairs, comma separated. Added to /etc/hosts while connected."
+#~ msgstr "Pares «IP nombre» separados por comas. Se añaden a /etc/hosts mientras hay conexión."
+
+#~ msgctxt "vpn state"
+#~ msgid "Disconnected"
+#~ msgstr "Desconectado"
+
+#~ msgid "Complement disabled"
+#~ msgstr "Complemento desactivado"
+
+#~ msgid "The FortiClient helper is not installed: install the extension in Nexus → Complements"
+#~ msgstr "El ayudante de FortiClient no está instalado: instala la extensión en Nexus → Complementos"
+
+#~ msgid "No FortiClient connection: add one in Nexus → Network"
+#~ msgstr "No hay conexiones FortiClient: añade una en Nexus → Red"
+
+#~ msgctxt "vpn state"
+#~ msgid "Connecting…"
+#~ msgstr "Conectando…"
+
+#~ msgctxt "vpn state"
+#~ msgid "Disconnecting…"
+#~ msgstr "Desconectando…"
+
+#, qt-format
+#~ msgid "Connected · %1"
+#~ msgstr "Conectado · %1"
+
+#~ msgid "VPN dropped (reconnect after sleep)"
+#~ msgstr "Se cayó la VPN (vuelve a conectar tras la suspensión)"
+
+#~ msgid "Could not write VPN config"
+#~ msgstr "No se pudo escribir la config de VPN"
+
+#~ msgid "Login failed (user / password / OTP / certificate)."
+#~ msgstr "Error de acceso (usuario / contraseña / OTP / certificado)."
+
+#, qt-format
+#~ msgid "Could not start the VPN tunnel (code %1)."
+#~ msgstr "No se pudo levantar el túnel VPN (código %1)."
+
+#~ msgid "Connections: Nexus → Network → Add provider → FortiClient."
+#~ msgstr "Conexiones: Nexus → Red → Añadir proveedor → FortiClient."
+
+#~ msgid "FortiClient (openfortivpn) connections for the VPN of Nexus → Network"
+#~ msgstr "Conexiones FortiClient (openfortivpn) para la VPN de Nexus → Red"
+
+#~ msgid "Disabled — tunnel and related processes are stopped"
+#~ msgstr "Desactivado: túnel y procesos asociados detenidos"
+
+#~ msgid "FortiClient"
+#~ msgstr "FortiClient"
+
+#~ msgid "Installs openfortivpn if missing, the helper /usr/local/sbin/sylphrena-fortivpn and a sudoers rule that lets you run only that helper without a password"
+#~ msgstr "Instala openfortivpn si falta, el ayudante /usr/local/sbin/sylphrena-fortivpn y una regla de sudoers que te deja ejecutar solo ese ayudante sin contraseña"
 
 #, qt-format
 #~ msgctxt "selected file"
