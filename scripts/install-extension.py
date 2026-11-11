@@ -6,7 +6,7 @@
   install-extension.py remove <id> <user_dir>
 
 inspect: the same checks as install, without writing anything. Prints {"ok", "id", "name", "version",
-"system": bool, "systemDescription", "i18n": {<lang>: {...}}}: the shell asks for the password
+"description", "system": bool, "i18n": {<lang>: {...}}}: the shell asks for the password
 before installing an extension that declares system pieces (manifest `system`), and uses the
 package's own catalogs (i18n/<lang>.json) to show its texts translated before it is installed.
 
@@ -132,7 +132,7 @@ def inspect(zip_path: str, builtin_dir: str) -> dict:
         "name": manifest.get("name", manifest["id"]),
         "version": manifest.get("version", ""),
         "system": bool(system.get("install")),
-        "systemDescription": system.get("description", ""),
+        "description": manifest.get("description", "") if isinstance(manifest.get("description"), str) else "",
         "i18n": i18n,
     }
 

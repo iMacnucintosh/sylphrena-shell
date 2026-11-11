@@ -473,7 +473,7 @@ Singleton {
                             path: zipProc.command[3],
                             id: r.id,
                             name: r.name,
-                            description: r.systemDescription ?? "",
+                            description: r.description ?? "",
                             i18n: r.i18n ?? {}
                         };
                         return;

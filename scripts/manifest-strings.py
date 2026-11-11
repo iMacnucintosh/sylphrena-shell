@@ -21,7 +21,6 @@ def strings(m: dict) -> list[str]:
         for item in c.get(key) or []:
             out += [item.get(f) for f in fields]
     out.append((c.get("vpnProviderType") or {}).get("name"))
-    out.append((m.get("system") or {}).get("description"))
     seen = []
     for s in out:
         if isinstance(s, str) and s and s not in seen:
