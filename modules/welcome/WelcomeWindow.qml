@@ -536,6 +536,38 @@ FloatingWindow {
                 }
             }
 
+            // kitty comes with Sylphrena, but nobody is tied to it
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.topMargin: Tokens.spacing.small
+                spacing: Tokens.spacing.medium
+
+                MaterialIcon {
+                    Layout.alignment: Qt.AlignVCenter
+                    text: "swap_horiz"
+                    color: Colours.palette.m3onSurfaceVariant
+                    fontStyle: Tokens.font.icon.large
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: Tr.tr("kitty comes preinstalled, but you can use any terminal you like.")
+                    color: Colours.palette.m3onSurfaceVariant
+                    font: Tokens.font.body.medium
+                    wrapMode: Text.WordWrap
+                }
+
+                TextButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    type: TextButton.Tonal
+                    isRound: true
+                    horizontalPadding: Tokens.padding.large
+                    verticalPadding: Tokens.padding.small
+                    text: Tr.tr("Choose terminal")
+                    onClicked: WindowFactory.openPage("apps")
+                }
+            }
+
             Item {
                 Layout.fillHeight: true
             }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 14:32+0100\n"
+"POT-Creation-Date: 2026-11-11 15:04+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -4453,6 +4453,14 @@ msgstr "Abrir"
 #: modules/welcome/WelcomeWindow.qml
 msgid "Not installed"
 msgstr "No instalada"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "kitty comes preinstalled, but you can use any terminal you like."
+msgstr "kitty viene preinstalada, pero puedes usar la terminal que más te guste."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Choose terminal"
+msgstr "Elegir terminal"
 
 #: modules/welcome/WelcomeWindow.qml
 msgid "You are all set"

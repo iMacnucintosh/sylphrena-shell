@@ -151,7 +151,7 @@ Una ventana propia, **flotante y de tamaño fijo** (960×720, centrada: Hyprland
 
 1. **Qué es Sylphrena:** el orbe, una frase, quién la hace (**iMacnucintosh**, con enlace a GitHub) y el crédito al proyecto original (**caelestia-shell**, de soramane).
 2. **Qué te ofrece:** tarjetas con Actividades, Nexus, el panel, Material You, Extensiones y bloqueo/inicio de sesión.
-3. **Aplicaciones hechas para Sylphrena:** presenta **Seeker** (explorador de archivos), **Things** (gestor de paquetes) y **kitty** (la terminal, que la shell recolorea en vivo). Es **informativo**: no instala nada (las instala el paquete base); si una está instalada ofrece abrirla, y si no, indica «No instalada».
+3. **Aplicaciones hechas para Sylphrena:** presenta **Seeker** (explorador de archivos), **Things** (gestor de paquetes) y **kitty** (la terminal, que la shell recolorea en vivo). Es **informativo**: no instala nada (las instala el paquete base); si una está instalada ofrece abrirla, y si no, indica «No instalada». Debajo, una nota aclara que **kitty viene preinstalada pero se puede usar cualquier otra terminal**, con un botón «Elegir terminal» que abre Nexus → Aplicaciones.
 4. **Todo listo:** abre Nexus o termina. Incluye una invitación a **crear tus propias extensiones** (una carpeta con un manifiesto y unos pocos ficheros QML) y a compartirlas en el Sylphrena Hub, con enlace a su repo. El paso 2 también lo menciona en la tarjeta de Extensiones.
 
 Cerrarla, omitirla o terminarla cuenta como vista (`~/.local/state/sylphrena/welcome.json`); para que vuelva a salir sola: `qs -c sylphrena ipc call welcome reset`. Las capturas reales de la shell se añadirán más adelante (por ahora el orbe y tarjetas Material You).
