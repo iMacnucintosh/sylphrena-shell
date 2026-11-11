@@ -7,6 +7,7 @@ import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
 import qs.components.controls
+import qs.components.filedialog
 import qs.services
 import qs.modules.nexus.common
 
@@ -146,18 +147,90 @@ PageBase {
                 }
             }
 
-            IconTextButton {
-                Layout.alignment: Qt.AlignRight
-                icon: "restart_alt"
-                text: Tr.tr("Reset all")
-                type: IconTextButton.Tonal
-                isRound: true
-                shapeMorph: true
-                onClicked: {
-                    root.stopRecording();
-                    root.cancelOverwrite();
-                    Keybinds.resetAll();
+            Loader {
+                Layout.fillWidth: true
+                active: !!Keybinds.ioResult
+                visible: active
+
+                sourceComponent: StyledRect {
+                    color: Keybinds.ioResult?.ok ? Colours.palette.m3secondaryContainer : Colours.palette.m3errorContainer
+                    radius: Tokens.rounding.large
+                    implicitHeight: ioText.implicitHeight + Tokens.padding.medium * 2
+
+                    StyledText {
+                        id: ioText
+
+                        anchors.fill: parent
+                        anchors.margins: Tokens.padding.medium
+                        text: Keybinds.ioResult?.text ?? ""
+                        color: Keybinds.ioResult?.ok ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onErrorContainer
+                        font: Tokens.font.body.small
+                        wrapMode: Text.WordWrap
+                    }
                 }
+            }
+
+            RowLayout {
+                Layout.alignment: Qt.AlignRight
+                spacing: Tokens.spacing.small
+
+                IconTextButton {
+                    icon: "upload"
+                    text: Tr.tr("Export")
+                    type: IconTextButton.Tonal
+                    isRound: true
+                    shapeMorph: true
+                    onClicked: {
+                        root.stopRecording();
+                        Keybinds.ioResult = null;
+                        exportPicker.open();
+                    }
+                }
+
+                IconTextButton {
+                    icon: "download"
+                    text: Tr.tr("Import")
+                    type: IconTextButton.Tonal
+                    isRound: true
+                    shapeMorph: true
+                    onClicked: {
+                        root.stopRecording();
+                        root.cancelOverwrite();
+                        Keybinds.ioResult = null;
+                        importPicker.open();
+                    }
+                }
+
+                IconTextButton {
+                    icon: "restart_alt"
+                    text: Tr.tr("Reset all")
+                    type: IconTextButton.Tonal
+                    isRound: true
+                    shapeMorph: true
+                    onClicked: {
+                        root.stopRecording();
+                        root.cancelOverwrite();
+                        Keybinds.ioResult = null;
+                        Keybinds.resetAll();
+                    }
+                }
+            }
+
+            FileDialog {
+                id: exportPicker
+
+                mode: "folder"
+                title: Tr.tr("Choose where to save your shortcuts")
+                onAccepted: path => Keybinds.exportTo(path)
+            }
+
+            FileDialog {
+                id: importPicker
+
+                title: Tr.tr("Choose a shortcuts file")
+                filterLabel: Tr.tr("Shortcuts (JSON)")
+                filters: ["json"]
+                onAccepted: path => Keybinds.importFrom(path)
             }
 
             Repeater {

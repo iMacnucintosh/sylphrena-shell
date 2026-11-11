@@ -474,6 +474,24 @@ Singleton {
         root.focusActivity(root.mappedActivities[idx].id);
     }
 
+    function focusActivityByIndex(index: int): void {
+        const act = root.mappedActivities[index];
+        if (root.enabled && act)
+            root.focusActivity(act.id);
+    }
+
+    // Send the focused window to the first desktop of the next/previous activity and follow it
+    function moveActiveWindowToActivityOffset(offset: int): void {
+        if (!root.enabled || root.mappedActivities.length === 0)
+            return;
+        const toplevel = Hyprland.activeToplevel;
+        if (!toplevel)
+            return;
+        const n = root.mappedActivities.length;
+        const idx = (((root.currentActivityIndex + offset) % n) + n) % n;
+        root.moveWindowToWorkspace(toplevel, root.mappedActivities[idx].startWs, true, true);
+    }
+
     function focusWorkspace(ws: int): void {
         // Hyprland-lua expects dsp expressions; classic syntax still works for non-lua
         Hyprland.dispatch(`hl.dsp.focus({ workspace = ${ws} })`);

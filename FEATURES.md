@@ -280,6 +280,7 @@ El reloj lleva siempre la pastilla de fondo; al hover se resalta como el resto d
 Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 
 - **Atajos de Hyprland remapeables** desde Nexus (genera `sylphrena-binds.lua`), incluyendo teclas **F13+** y **Última ventana** (Super+\` por defecto; cruza escritorios/actividades vía Hyprland).
+- **Exportar / importar atajos** (Nexus → Keyboard & mouse, botones «Exportar» e «Importar»): «Exportar» guarda `sylphrena-keybinds.json` (formato `{format, version, binds}`: lo que difiere de los atajos por defecto) en la carpeta que elijas con Seeker; «Importar» lo lee, **sustituye** tus atajos y los aplica. Se ignoran las acciones desconocidas y los valores no válidos, y si dos acciones quedan con la misma tecla solo se conserva la primera. Un fichero que no es de atajos no cambia nada. Sirve para pasar la configuración a otro equipo o tener una copia.
 - **Foco del ratón** en Nexus → Keyboard & mouse: al pasar por encima (Hyprland `follow_mouse = 1`) o al hacer clic (`= 2`). Genera `sylphrena-input.lua`.
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
 - Apariencia **unificada en Activities**: una sola página para el comportamiento (iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
@@ -317,6 +318,14 @@ Popout flotante junto al cursor (estilo Sylphrena), respaldado por **cliphist** 
 | Activity siguiente | Super + Ctrl + → |
 | Última ventana (cualquier escritorio/actividad) | Super + \` (grave) |
 | Historial del clipboard | Super + Shift + V |
+| Ir a la actividad 1–4 | Super + Ctrl + 1…4 |
+| Mover la ventana a la actividad siguiente / anterior (y seguirla) | Super + Ctrl + Shift + → / ← |
+| Pantalla completa | Super + F |
+| Mover la ventana con el teclado | Super + Shift + flechas |
+| Fijar ventana (solo flotantes) | Super + Shift + P |
+| Volumen +/−, silencio, silenciar micro | teclas XF86 (antes fijas en `hyprland.lua`; ahora remapeables) |
+
+El resto de atajos de base son los de Caelestia (cerrar Super + C, terminal Super + Q, launcher Super + Espacio, escritorios Super + 1…0, mover a escritorio Super + Shift + 1…0…). La lista completa y los que tengas cambiados salen en el paso «Tus atajos» del asistente de bienvenida, con un botón para editarlos en Nexus.
 
 Cámbialos en **Nexus → Keyboard & mouse**.
 

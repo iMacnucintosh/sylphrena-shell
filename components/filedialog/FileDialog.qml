@@ -15,6 +15,8 @@ Item {
     property string filterLabel: Tr.tr("All files")
     property list<string> filters: ["*"]
     property string title: Tr.tr("Select a file")
+    // "file" or "folder" (Seeker --pick-mode)
+    property string mode: "file"
 
     signal accepted(path: string)
     signal rejected
@@ -73,7 +75,7 @@ Item {
             let filePath = uris[0];
             if (filePath.startsWith("file://"))
                 filePath = decodeURIComponent(filePath.slice("file://".length));
-            const exts = loader.filters.filter(f => f && f !== "*").map(f => f.toLowerCase());
+            const exts = loader.mode === "folder" ? [] : loader.filters.filter(f => f && f !== "*").map(f => f.toLowerCase());
             if (exts.length) {
                 const lower = filePath.toLowerCase();
                 if (!exts.some(ext => lower.endsWith(`.${ext}`))) {
@@ -95,7 +97,7 @@ Item {
             const args = [
                 bin,
                 "--pick",
-                "--pick-mode=file",
+                `--pick-mode=${loader.mode}`,
                 `--pick-result=${loader.resultPath}`,
                 `--pick-title=${loader.title}`,
                 `--pick-accept=${Tr.tr("Select")}`,

@@ -2,7 +2,10 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## 0.3.0 (en desarrollo, rama `dev/0.3`)
+## 0.3.0 (en desarrollo)
+
+- **Atajos por defecto ampliados** (pantalla completa, mover ventana con el teclado, fijar, ir a la actividad N, mover la ventana a la actividad siguiente/anterior, volumen y micro remapeables) y un paso nuevo del asistente de bienvenida, «Tus atajos»: tabla de los que están en uso (se actualiza al cambiarlos en Nexus) y botón «Editar en Nexus».
+- **Atajos: exportar e importar** la configuración actual desde Nexus → Keyboard & mouse (fichero JSON `sylphrena-keybinds.json`; la importación valida y sustituye). El selector de ficheros (`FileDialog`) admite `mode: "folder"`.
 
 - **Asistente de bienvenida** (con una invitación a crear extensiones propias y un enlace al hub; ventana de 4 pasos, con el orbe animado: grande y centrado en el primero, vuela al lado del título en los siguientes, sale sola en el primer arranque y se reabre desde Nexus → Acerca de): qué es Sylphrena y quién la hace, qué ofrece y apps de la familia. El paso de apps (Seeker, Things, kitty) es informativo: las instalará el paquete base. Servicios nuevos `Companions` y `Welcome`. Nexus → Extensiones gana la fila «Buscar más en Things».
 - **Contrato con Things** (fase 0): `apiVersion` y `requires.sylphrena` en el manifiesto (una extensión incompatible se lista pero no se carga, con el motivo); recibo `.source.json` para distinguir las del hub de las locales; comandos IPC `extensions list | rescan | enable | disable | prepareRemoval`; `scripts/ext.py` (instalar/quitar desde terminal, base de `sylph ext`). Corregido: la versión que lleva compilada el plugin se quedaba en `0.1.0` por la caché de CMake. Detalle en `AGENTS.md` («Contrato con Things»).
