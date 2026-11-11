@@ -167,6 +167,9 @@ PageBase {
                 required property int index
                 readonly property bool isSelected: modelData.id === VPN.selectedProvider
                 readonly property bool isConnected: isSelected && VPN.connected
+                // Connection of a provider type contributed by an extension (e.g. FortiClient)
+                readonly property bool typed: !!modelData.type
+                readonly property var typeEntry: VPN.typeOf(modelData)
 
                 anchors.left: providerList.list.contentItem.left
                 anchors.right: providerList.list.contentItem.right
@@ -200,7 +203,7 @@ PageBase {
                             id: providerIcon
 
                             anchors.centerIn: parent
-                            text: provider.modelData.external ? (provider.modelData.icon ?? "vpn_key") : provider.isConnected || provider.isSelected ? "vpn_key" : "vpn_key_off"
+                            text: provider.typed ? (provider.typeEntry?.icon ?? "vpn_key_alert") : provider.isConnected || provider.isSelected ? "vpn_key" : "vpn_key_off"
                             fill: provider.isConnected ? 1 : 0
                             color: provider.isConnected ? Colours.palette.m3onPrimaryContainer : provider.isSelected ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurfaceVariant
                             fontStyle: Tokens.font.icon.medium
@@ -222,8 +225,11 @@ PageBase {
                         StyledText {
                             Layout.fillWidth: true
                             text: {
+                                if (provider.typed && !provider.typeEntry)
+                                    return Tr.tr("Its extension is disabled");
                                 if (!provider.isSelected)
-                                    return Tr.tr("Tap to select");
+                                    // TRANSLATORS: %1 = VPN provider type, e.g. FortiClient
+                                    return provider.typed ? Tr.tr("%1 · Tap to select").arg(provider.typeEntry.displayName) : Tr.tr("Tap to select");
                                 if (VPN.connecting)
                                     return Tr.tr("Connecting...");
                                 if (VPN.disconnecting)
@@ -260,10 +266,10 @@ PageBase {
 
                     Item {
                         Layout.rightMargin: Tokens.spacing.small
-                        opacity: provider.isConnected && !provider.modelData.external && root?.cappedWidth > Tokens.sizes.nexus.networkShowVpnDetailWidth ? 1 : 0
+                        opacity: provider.isConnected && !provider.typed && root?.cappedWidth > Tokens.sizes.nexus.networkShowVpnDetailWidth ? 1 : 0
                         visible: opacity > 0
 
-                        implicitWidth: provider.isConnected && !provider.modelData.external && root?.cappedWidth > Tokens.sizes.nexus.networkShowVpnDetailWidth ? providerDetailRow.implicitWidth : 0
+                        implicitWidth: provider.isConnected && !provider.typed && root?.cappedWidth > Tokens.sizes.nexus.networkShowVpnDetailWidth ? providerDetailRow.implicitWidth : 0
                         implicitHeight: providerDetailRow.implicitHeight
 
                         Behavior on opacity {
@@ -341,11 +347,8 @@ PageBase {
                         type: IconButton.Tonal
                         isRound: true
                         icon: "edit"
-                        // Providers of extensions are edited with the editor the extension contributes (if any)
-                        visible: !provider.modelData.external || !!provider.modelData.editor
                         onClicked: {
-                            root.nState.editingVpnExt = provider.modelData.external ? provider.modelData.ext.id : "";
-                            root.nState.editingVpnIndex = provider.modelData.external ? -1 : provider.index;
+                            root.nState.editingVpnIndex = provider.index;
                             root.nState.openSubPage(4); // Add/edit provider sub-page
                         }
                     }
@@ -359,7 +362,6 @@ PageBase {
             icon: "add"
             text: Tr.tr("Add provider")
             onClicked: {
-                root.nState.editingVpnExt = "";
                 root.nState.editingVpnIndex = -1;
                 root.nState.openSubPage(4); // Add/edit provider sub-page
             }

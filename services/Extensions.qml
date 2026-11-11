@@ -64,23 +64,21 @@ Singleton {
     // A `dialog` popout takes the keyboard, and stays open while hovering its `parentIcon`.
     readonly property var popouts: contributions("popouts")
 
-    // VPN providers of the loaded extensions (manifest `vpnProvider`), shaped like the entries of the
-    // base VPN provider list so the selector can mix both: [{ id, name, displayName, icon, interface,
-    // external, ext, service }]. Ids are namespaced (`ext:<extension id>`) so they never clash with
-    // the ids of the providers in the config.
-    readonly property var vpnProviders: {
+    // VPN provider types of the loaded extensions (manifest `vpnProviderType`): [{ id, name,
+    // displayName, icon, editor, ext, service }]. The connections of a type are ordinary entries of the
+    // VPN providers of the config with `type` = this id (`ext:<extension id>`) and their settings in
+    // `options`; the extension's service connects them (see services/VPN.qml).
+    readonly property var vpnProviderTypes: {
         const out = [];
         for (const e of loaded) {
-            const p = e.manifest.contributes?.vpnProvider;
-            if (p && e.service)
+            const t = e.manifest.contributes?.vpnProviderType;
+            if (t && e.service)
                 out.push({
                     id: `ext:${e.id}`,
-                    name: p.name ?? e.manifest.name,
-                    displayName: Tr.tr(p.name ?? e.manifest.name),
-                    icon: p.icon ?? e.manifest.icon ?? "vpn_key",
-                    interface: "",
-                    editor: p.editor ?? "",
-                    external: true,
+                    name: t.name ?? e.manifest.name,
+                    displayName: Tr.tr(t.name ?? e.manifest.name),
+                    icon: t.icon ?? e.manifest.icon ?? "vpn_key",
+                    editor: t.editor ?? "",
                     ext: e,
                     service: e.service
                 });
@@ -144,12 +142,11 @@ Singleton {
         return c ? { id: `${extId}/settings`, ext: e, component: c } : null;
     }
 
-    // The provider editor (manifest `vpnProvider.editor`) of an enabled extension, as an entry for ExtensionSlot (or null)
-    function vpnEditorEntry(extId: string): var {
-        const e = loaded.find(x => x.id === extId);
-        const file = e?.manifest.contributes?.vpnProvider?.editor;
-        const c = file ? root.component(e, file) : null;
-        return c ? { id: `${extId}/vpnEditor`, ext: e, component: c } : null;
+    // The connection editor of a VPN provider type (`ext:<extension id>`), as an entry for ExtensionSlot (or null)
+    function vpnEditorEntry(typeId: string): var {
+        const t = vpnProviderTypes.find(x => x.id === typeId);
+        const c = t?.editor ? root.component(t.ext, t.editor) : null;
+        return c ? { id: `${t.ext.id}/vpnEditor`, ext: t.ext, component: c } : null;
     }
 
     function service(id: string): var {

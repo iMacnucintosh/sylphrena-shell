@@ -21,8 +21,8 @@ Singleton {
 
     property bool connectPending: false
     property bool disconnectPending: false
-    readonly property bool connecting: root.selectedExternal ? (root.selectedExternal.service.connecting ?? false) : (connectProc.running || connectPending)
-    readonly property bool disconnecting: root.selectedExternal ? (root.selectedExternal.service.disconnecting ?? false) : (disconnectProc.running || disconnectPending)
+    readonly property bool connecting: root.selectedExternal ? ((root.selectedExternal.service.connecting ?? false) && root.selectedExternal.service.pendingId === root.selectedProvider) : (connectProc.running || connectPending)
+    readonly property bool disconnecting: root.selectedExternal ? ((root.selectedExternal.service.disconnecting ?? false) && root.selectedExternal.service.activeId === root.selectedProvider) : (disconnectProc.running || disconnectPending)
 
     // Internal id of the currently selected provider (persisted). Only one
     // provider can be selected at a time; empty means none. Keyed by id rather
@@ -49,15 +49,20 @@ Singleton {
     // The selected provider entry, or null when nothing valid is selected.
     readonly property var selected: root.providers.find(p => p.id === root.selectedProvider) ?? null
 
-    // Providers contributed by extensions (e.g. FortiClient), see Extensions.vpnProviders. They are
-    // driven by the extension's own service instead of the generic command engine below.
-    readonly property var externalProviders: Extensions.vpnProviders
-    readonly property var selectedExternal: root.externalProviders.find(p => p.id === root.selectedProvider) ?? null
-    // Every provider the selector can offer: the configured ones, then the extensions'.
-    readonly property var allProviders: [...root.providers, ...root.externalProviders]
-    // A selection that points at an extension which is not loaded (yet): wait for it, never fall back
-    // to the generic engine with a provider it does not know.
-    readonly property bool externalPending: root.selectedProvider.startsWith("ext:") && !root.selectedExternal
+    // Provider types contributed by extensions (e.g. FortiClient), see Extensions.vpnProviderTypes.
+    // A provider whose `type` is one of them is a connection of that type: the extension's service
+    // drives it (with the entry's `options`) instead of the generic command engine below.
+    readonly property var providerTypes: Extensions.vpnProviderTypes
+    // Type entry ({ id, displayName, icon, editor, ext, service }) of a provider, or null
+    function typeOf(p: var): var {
+        return p?.type ? (root.providerTypes.find(t => t.id === p.type) ?? null) : null;
+    }
+    readonly property var selectedExternal: root.typeOf(root.selected)
+    // Kept for the UI: the providers of every type, in config order
+    readonly property var allProviders: root.providers
+    // A selected connection whose extension is not loaded (yet, or disabled): never fall back to the
+    // generic engine with it.
+    readonly property bool externalPending: !!root.selected?.type && !root.selectedExternal
 
     // The single point where every configured provider - a customised built-in
     // or a fully user-defined entry - is folded into one uniform endpoint
@@ -68,10 +73,10 @@ Singleton {
     // provider name.
     readonly property var active: {
         const ext = root.selectedExternal;
-        if (ext)
+        if (ext || root.externalPending)
             return {
-                name: ext.id,
-                displayName: ext.displayName,
+                name: root.selected.name,
+                displayName: root.selected.displayName || root.selected.name,
                 interface: "",
                 connectCmd: [],
                 disconnectCmd: [],
@@ -117,7 +122,7 @@ Singleton {
     readonly property var providers: GlobalConfig.utilities.vpn.provider.values
 
     // Provider entry keys which are cleared when empty instead of written.
-    readonly property list<string> optionalKeys: ["displayName", "interface", "connectCmd", "disconnectCmd"]
+    readonly property list<string> optionalKeys: ["displayName", "interface", "connectCmd", "disconnectCmd", "type"]
 
     // Generate a stable, opaque internal id for a provider entry.
     function generateId(): string {
@@ -127,7 +132,7 @@ Singleton {
     // Write a value to a provider entry, clearing the option when empty so the
     // config stays sparse.
     function setOrReset(provider: var, key: string, value: var): void {
-        if (value.length > 0)
+        if (value !== undefined && value !== null && value.length > 0)
             provider[key] = value;
         else
             provider.resetOption(key);
@@ -141,8 +146,10 @@ Singleton {
             name: data.name
         };
         for (const key of root.optionalKeys)
-            if (data[key].length > 0)
+            if ((data[key] ?? "").length > 0)
                 props[key] = data[key];
+        if (data.options && Object.keys(data.options).length > 0)
+            props.options = data.options;
         return props;
     }
 
@@ -151,10 +158,13 @@ Singleton {
         return GlobalConfig.utilities.vpn.provider.at(index)?.id ?? "";
     }
 
-    // Add a new provider. data: { name, displayName, interface, connectCmd[],
-    // disconnectCmd[] }. Newly added providers are not selected by default.
-    function addProvider(data: var): void {
-        GlobalConfig.utilities.vpn.provider.insert(root.buildProviderProps(root.generateId(), data));
+    // Add a new provider and return its id. data: { name, displayName, interface, connectCmd[],
+    // disconnectCmd[] } for a command provider, or { name, displayName, type, options } for a
+    // connection of an extension's provider type. Newly added providers are not selected by default.
+    function addProvider(data: var): string {
+        const id = root.generateId();
+        GlobalConfig.utilities.vpn.provider.insert(root.buildProviderProps(id, data));
+        return id;
     }
 
     // Update an existing provider (by index), preserving its internal id so the
@@ -167,7 +177,11 @@ Singleton {
             provider.id = root.generateId();
         provider.name = data.name;
         for (const key of root.optionalKeys)
-            root.setOrReset(provider, key, data[key]);
+            root.setOrReset(provider, key, data[key] ?? "");
+        if (data.options && Object.keys(data.options).length > 0)
+            provider.options = data.options;
+        else
+            provider.resetOption("options");
     }
 
     // Delete a provider by index. ensureSelection() re-homes the selection to
@@ -203,10 +217,6 @@ Singleton {
     // (or clear it when the list is empty).
     function ensureSelection(): void {
         const providers = root.providers;
-        // An extension's provider stays selected while that extension loads; once it is loaded and
-        // the id is gone (extension disabled), fall through to the first configured provider.
-        if (root.selectedProvider.startsWith("ext:") && (!Extensions.ready || root.externalProviders.some(p => p.id === root.selectedProvider)))
-            return;
         if (providers.some(p => p.id === root.selectedProvider))
             return;
         const next = providers.length > 0 ? providers[0].id : "";
@@ -217,7 +227,12 @@ Singleton {
     function connect(): void {
         if (root.selectedExternal) {
             if (!root.connected && !root.connecting)
-                root.selectedExternal.service.connect();
+                root.selectedExternal.service.connect(root.selected);
+            return;
+        }
+        if (root.externalPending) {
+            if (GlobalConfig.utilities.toasts.vpnChanged)
+                Toaster.toast(Tr.tr("VPN connection failed"), Tr.tr("Enable the extension of this provider in Nexus → Complements"), "vpn_key_alert");
             return;
         }
         if (status.state === "needs-auth" && status.authUrl) {
@@ -276,17 +291,19 @@ Singleton {
     // reports its own changes.
     function syncExternal(): void {
         const s = root.selectedExternal?.service;
+        const id = root.selectedProvider;
         let state = "disconnected";
         let reason = "";
         if (s) {
-            if (s.connected) {
+            // The service runs one tunnel at a time: only mirror what belongs to this connection
+            if (s.connected && s.activeId === id) {
                 state = "connected";
-            } else if (s.otpOpen) {
+            } else if (s.otpOpen && s.pendingId === id) {
                 state = "needs-auth";
-                reason = Tr.mark("Authentication required");
-            } else if (s.busy) {
+                reason = Tr.mark("Enter the code in the VPN icon of the bar");
+            } else if (s.busy && s.pendingId === id) {
                 state = "connecting";
-            } else if (s.lastError) {
+            } else if (s.lastError && !s.connected) {
                 state = "error";
                 reason = s.lastError;
             }
@@ -592,7 +609,7 @@ Singleton {
 
     onProvidersChanged: root.ensureSelection()
 
-    // Once the extensions are loaded, a selection that points at one that is not there is stale
+    // Re-check the selection once the extensions are loaded
     Connections {
         function onReadyChanged(): void {
             root.ensureSelection();
@@ -601,7 +618,7 @@ Singleton {
         target: Extensions
     }
 
-    onExternalProvidersChanged: {
+    onProviderTypesChanged: {
         root.ensureSelection();
         if (root.selectedExternal || root.externalPending)
             root.syncExternal();
@@ -630,7 +647,7 @@ Singleton {
         root.ensureSelection();
         if (root.selectedProvider.length > 0) {
             // Extension providers need an interactive step (OTP): never auto-connect them
-            root.autoConnectPending = GlobalConfig.utilities.vpn.enabled && !root.selectedProvider.startsWith("ext:");
+            root.autoConnectPending = GlobalConfig.utilities.vpn.enabled && !root.selected?.type;
             statusCheckTimer.start();
         }
     }
@@ -714,6 +731,14 @@ Singleton {
         }
 
         function onLastErrorChanged(): void {
+            root.syncExternal();
+        }
+
+        function onActiveIdChanged(): void {
+            root.syncExternal();
+        }
+
+        function onPendingIdChanged(): void {
             root.syncExternal();
         }
 

@@ -11,14 +11,23 @@ import qs.services
 import qs.modules.nexus.common
 
 // Add or edit a VPN provider. editingVpnIndex (-1 = add) is read from NexusState.
+// A provider is either a command provider (built-in names or custom connect/disconnect commands) or
+// a connection of a provider type contributed by an extension (VPN.providerTypes, e.g. FortiClient):
+// then the extension's editor fills `options` and keeps its own secrets.
 PageBase {
     id: root
 
     readonly property int editIndex: nState.editingVpnIndex
     readonly property bool editing: editIndex >= 0
     readonly property var existing: editing ? (VPN.providers[editIndex] ?? null) : null
-    // Provider of an extension: the extension contributes its own editor instead of the generic form
-    readonly property var extEntry: nState.editingVpnExt ? Extensions.vpnEditorEntry(nState.editingVpnExt) : null
+
+    // "" = command provider, else the id of a provider type (`ext:<extension id>`)
+    property string selectedType: ""
+    readonly property var typeEntry: selectedType ? (VPN.providerTypes.find(t => t.id === selectedType) ?? null) : null
+    readonly property var extEntry: typeEntry ? Extensions.vpnEditorEntry(selectedType) : null
+    // Choosing the type only makes sense for a new provider
+    readonly property bool showTypes: !editing && VPN.providerTypes.length > 0
+    property string formError: ""
 
     function splitCmd(arr: var): string {
         return arr?.join(" ") ?? "";
@@ -34,6 +43,46 @@ PageBase {
     }
 
     function submit(): void {
+        if (root.selectedType)
+            root.submitTyped();
+        else
+            root.submitCommands();
+    }
+
+    function submitTyped(): void {
+        const editor = slot.item;
+        const name = connNameField.text.trim();
+        if (name.length === 0) {
+            connNameField.isError = true;
+            connNameField.forceActiveFocus();
+            return;
+        }
+        if (!editor)
+            return;
+        const err = editor.validate?.() ?? "";
+        root.formError = err;
+        if (err)
+            return;
+
+        const data = {
+            name: name,
+            displayName: name,
+            type: root.selectedType,
+            options: editor.collectOptions?.() ?? {}
+        };
+        let id;
+        if (editing) {
+            id = existing.id;
+            VPN.updateProvider(editIndex, data);
+        } else {
+            id = VPN.addProvider(data);
+        }
+        // Secrets (password, …) stay with the extension, outside shell.json
+        editor.commit?.(id);
+        nState.closeSubPage();
+    }
+
+    function submitCommands(): void {
         const name = nameField.text.trim();
         if (name.length === 0) {
             nameField.isError = true;
@@ -76,16 +125,18 @@ PageBase {
         nState.closeSubPage();
     }
 
-    title: editing || extEntry ? Tr.tr("Edit VPN provider") : Tr.tr("Add VPN provider")
+    title: editing ? Tr.tr("Edit VPN provider") : Tr.tr("Add VPN provider")
     isSubPage: true
 
     Component.onCompleted: {
         if (existing) {
+            root.selectedType = existing.type ?? "";
             nameField.text = existing.name;
             displayField.text = existing.displayName;
             interfaceField.text = existing.interface;
             connectField.text = splitCmd(existing.connectCmd);
             disconnectField.text = splitCmd(existing.disconnectCmd);
+            connNameField.text = existing.displayName || existing.name;
         }
     }
 
@@ -95,18 +146,91 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.large
 
-        ExtensionSlot {
+        // ---- Type ----------------------------------------------------------
+        ButtonRow {
             Layout.fillWidth: true
-            visible: !!root.extEntry
-            entry: root.extEntry
-            props: ({
-                    close: () => root.nState.closeSubPage()
-                })
+            visible: root.showTypes
+            spacing: Tokens.spacing.small
+
+            TextButton {
+                fillWidth: true
+                isToggle: true
+                isRound: true
+                type: TextButton.Tonal
+                verticalPadding: Tokens.padding.medium
+                checked: root.selectedType === ""
+                text: Tr.tr("Commands")
+                onClicked: {
+                    root.selectedType = "";
+                    root.formError = "";
+                }
+            }
+
+            Repeater {
+                model: VPN.providerTypes
+
+                TextButton {
+                    required property var modelData
+
+                    fillWidth: true
+                    isToggle: true
+                    isRound: true
+                    type: TextButton.Tonal
+                    verticalPadding: Tokens.padding.medium
+                    checked: root.selectedType === modelData.id
+                    text: modelData.displayName
+                    onClicked: {
+                        root.selectedType = modelData.id;
+                        root.formError = "";
+                    }
+                }
+            }
         }
 
+        // ---- Connection of an extension's provider type --------------------
         ColumnLayout {
             Layout.fillWidth: true
-            visible: !root.extEntry
+            visible: root.selectedType !== ""
+            spacing: Tokens.spacing.large
+
+            StyledText {
+                Layout.fillWidth: true
+                Layout.leftMargin: Tokens.padding.small
+                visible: !root.extEntry
+                text: Tr.tr("This provider type comes from an extension that is disabled. Enable it in Nexus → Complements to edit the connection.")
+                color: Colours.palette.m3error
+                font: Tokens.font.body.small
+                wrapMode: Text.WordWrap
+            }
+
+            StyledTextField {
+                id: connNameField
+
+                Layout.fillWidth: true
+                placeholderText: Tr.tr("Connection name")
+                supportingText: Tr.tr("Shown in the list")
+                errorText: Tr.tr("Provider name is required")
+                leadingIcon: root.typeEntry?.icon ?? "vpn_key"
+                inputMethodHints: Qt.ImhNoPredictiveText
+            }
+
+            ExtensionSlot {
+                id: slot
+
+                Layout.fillWidth: true
+                visible: !!root.extEntry
+                entry: root.extEntry
+                props: ({
+                        options: root.existing?.type ? (root.existing.options ?? {}) : {},
+                        providerId: root.existing?.type ? root.existing.id : ""
+                    })
+            }
+        }
+
+        // ---- Command provider ------------------------------------------------
+        ColumnLayout {
+            Layout.fillWidth: true
+            visible: root.selectedType === ""
             spacing: Tokens.spacing.large
 
             StyledText {
@@ -186,57 +310,71 @@ PageBase {
 
                 onAccepted: root.submit()
             }
+        }
 
-            RowLayout {
+        StyledText {
+            Layout.fillWidth: true
+            Layout.leftMargin: Tokens.padding.small
+            visible: root.formError.length > 0
+            text: root.formError
+            color: Colours.palette.m3error
+            font: Tokens.font.body.small
+            wrapMode: Text.WordWrap
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.topMargin: (root.editing ? Tokens.spacing.medium : Tokens.spacing.extraSmall) - parent.spacing
+            spacing: Tokens.spacing.small
+
+            IconTextButton {
+                visible: root.editing
+                isRound: true
+                horizontalPadding: Tokens.padding.extraLarge
+                verticalPadding: Tokens.padding.medium
+                inactiveColour: Colours.palette.m3errorContainer
+                inactiveOnColour: Colours.palette.m3onErrorContainer
+                iconLabel.fill: 1
+                iconLabel.grade: 25
+                icon: "delete_forever"
+                text: Tr.tr("Delete")
+                onClicked: {
+                    const id = root.existing.id;
+                    const t = VPN.typeOf(root.existing);
+                    if (id === VPN.selectedProvider && VPN.connected)
+                        VPN.disconnect();
+                    VPN.deleteProvider(root.editIndex);
+                    // The extension drops what it keeps for the connection (its secrets file, …)
+                    t?.service?.forget?.(id);
+                    root.nState.closeSubPage();
+                }
+            }
+
+            Item {
                 Layout.fillWidth: true
-                Layout.topMargin: (root.editing ? Tokens.spacing.medium : Tokens.spacing.extraSmall) - parent.spacing
-                spacing: Tokens.spacing.small
+            }
 
-                IconTextButton {
-                    visible: root.editing
+            ButtonRow {
+                spacing: parent.spacing
+
+                TextButton {
                     isRound: true
+                    shapeMorph: true
                     horizontalPadding: Tokens.padding.extraLarge
                     verticalPadding: Tokens.padding.medium
-                    inactiveColour: Colours.palette.m3errorContainer
-                    inactiveOnColour: Colours.palette.m3onErrorContainer
-                    iconLabel.fill: 1
-                    iconLabel.grade: 25
-                    icon: "delete_forever"
-                    text: Tr.tr("Delete")
-                    onClicked: {
-                        if (root.existing.id === VPN.selectedProvider && VPN.connected)
-                            VPN.disconnect();
-                        VPN.deleteProvider(root.editIndex);
-                        root.nState.closeSubPage();
-                    }
+                    type: TextButton.Tonal
+                    text: Tr.trCtx("Cancel", "button")
+                    onClicked: root.nState.closeSubPage()
                 }
 
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                ButtonRow {
-                    spacing: parent.spacing
-
-                    TextButton {
-                        isRound: true
-                        shapeMorph: true
-                        horizontalPadding: Tokens.padding.extraLarge
-                        verticalPadding: Tokens.padding.medium
-                        type: TextButton.Tonal
-                        text: Tr.trCtx("Cancel", "button")
-                        onClicked: root.nState.closeSubPage()
-                    }
-
-                    TextButton {
-                        isRound: true
-                        shapeMorph: true
-                        horizontalPadding: Tokens.padding.extraLarge
-                        verticalPadding: Tokens.padding.medium
-                        text: root.editing ? Tr.trCtx("Save", "button") : Tr.trCtx("Add", "button")
-                        disabled: !nameField.text.trim()
-                        onClicked: root.submit()
-                    }
+                TextButton {
+                    isRound: true
+                    shapeMorph: true
+                    horizontalPadding: Tokens.padding.extraLarge
+                    verticalPadding: Tokens.padding.medium
+                    text: root.editing ? Tr.trCtx("Save", "button") : Tr.trCtx("Add", "button")
+                    disabled: root.selectedType ? (!connNameField.text.trim() || !root.extEntry) : !nameField.text.trim()
+                    onClicked: root.submit()
                 }
             }
         }
