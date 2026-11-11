@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:30+0100\n"
+"POT-Creation-Date: 2026-11-11 13:29+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -488,33 +488,6 @@ msgstr "Cantidad del botón de suma rápida (ml)"
 #, qt-format
 msgid "%1 / %2 ml"
 msgstr "%1 / %2 ml"
-
-#: extensions/razer-mouse/Service.qml
-#, qt-format
-msgid "Basilisk V4 Pro · %1 % · charging"
-msgstr "Basilisk V4 Pro · %1 % · cargando"
-
-#: extensions/razer-mouse/Service.qml
-#, qt-format
-msgid "Basilisk V4 Pro · %1 %"
-msgstr "Basilisk V4 Pro · %1 %"
-
-#: extensions/razer-mouse/Service.qml
-msgid "Mouse not found — needs synapsex-cli"
-msgstr "Ratón no encontrado: necesita synapsex-cli"
-
-#: extensions/razer-mouse/Service.qml
-msgid "Mouse battery low"
-msgstr "Batería del ratón baja"
-
-#: extensions/razer-mouse/Service.qml
-#, qt-format
-msgid "Razer Basilisk V4 Pro: %1 % left"
-msgstr "Razer Basilisk V4 Pro: queda un %1 %"
-
-#: extensions/razer-mouse/Service.qml
-msgid "Mouse"
-msgstr "Ratón"
 
 #: extensions/tasks/Widget.qml
 #, qt-plural-format
@@ -5550,14 +5523,6 @@ msgstr "Control de agua con recordatorios"
 msgid "Off — also stops the reminders and the tracking"
 msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
 
-#: build/i18n/extensions/razer-mouse/manifest.json.js
-msgid "Razer mouse battery"
-msgstr "Batería del ratón Razer"
-
-#: build/i18n/extensions/razer-mouse/manifest.json.js
-msgid "Shows the mouse battery in the dashboard, in place of storage"
-msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
-
 #: build/i18n/extensions/tasks/manifest.json.js
 msgid "Checklist: create, complete and delete tasks"
 msgstr "Lista de tareas: crea, completa y elimina"
@@ -5938,6 +5903,33 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#, qt-format
+#~ msgid "Basilisk V4 Pro · %1 % · charging"
+#~ msgstr "Basilisk V4 Pro · %1 % · cargando"
+
+#, qt-format
+#~ msgid "Basilisk V4 Pro · %1 %"
+#~ msgstr "Basilisk V4 Pro · %1 %"
+
+#~ msgid "Mouse not found — needs synapsex-cli"
+#~ msgstr "Ratón no encontrado: necesita synapsex-cli"
+
+#~ msgid "Mouse battery low"
+#~ msgstr "Batería del ratón baja"
+
+#, qt-format
+#~ msgid "Razer Basilisk V4 Pro: %1 % left"
+#~ msgstr "Razer Basilisk V4 Pro: queda un %1 %"
+
+#~ msgid "Mouse"
+#~ msgstr "Ratón"
+
+#~ msgid "Razer mouse battery"
+#~ msgstr "Batería del ratón Razer"
+
+#~ msgid "Shows the mouse battery in the dashboard, in place of storage"
+#~ msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
 
 #~ msgid "Your password (sudo)"
 #~ msgstr "Tu contraseña (sudo)"
