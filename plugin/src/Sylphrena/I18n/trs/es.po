@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 16:11+0100\n"
+"POT-Creation-Date: 2026-11-11 16:14+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -4045,6 +4045,46 @@ msgid "PrtSc"
 msgstr "ImprPant"
 
 #: modules/welcome/WelcomeWindow.qml
+msgid "Vol +"
+msgstr "Vol +"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Vol −"
+msgstr "Vol −"
+
+#: modules/welcome/WelcomeWindow.qml services/Keybinds.qml
+msgid "Mute"
+msgstr "Silenciar"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Mic mute"
+msgstr "Silenciar mic"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Brightness +"
+msgstr "Brillo +"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Brightness −"
+msgstr "Brillo −"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Play"
+msgstr "Reproducir"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Pause"
+msgstr "Pausa"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Previous"
+msgstr "Anterior"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Stop"
+msgstr "Parar"
+
+#: modules/welcome/WelcomeWindow.qml
 msgid "Left click"
 msgstr "Clic izquierdo"
 
@@ -4919,10 +4959,6 @@ msgstr "Bajar volumen"
 #: services/Keybinds.qml
 msgid "Lower the volume of the default output"
 msgstr "Baja el volumen de la salida predeterminada"
-
-#: services/Keybinds.qml
-msgid "Mute"
-msgstr "Silenciar"
 
 #: services/Keybinds.qml
 msgid "Mute or unmute the default output"
@@ -6516,10 +6552,6 @@ msgstr "Configura el shell"
 
 #~ msgid "Show activity pills on the bar and use activity shortcuts"
 #~ msgstr "Mostrar pastillas de actividad en la barra y usar atajos de actividad"
-
-#~ msgctxt "recorder state"
-#~ msgid "Paused"
-#~ msgstr "En pausa"
 
 #~ msgctxt "recorder state"
 #~ msgid "Running..."

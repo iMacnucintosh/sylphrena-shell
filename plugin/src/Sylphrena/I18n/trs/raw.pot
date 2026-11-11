@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 16:11+0100\n"
+"POT-Creation-Date: 2026-11-11 16:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4044,6 +4044,46 @@ msgid "PrtSc"
 msgstr ""
 
 #: modules/welcome/WelcomeWindow.qml
+msgid "Vol +"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Vol −"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml services/Keybinds.qml
+msgid "Mute"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Mic mute"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Brightness +"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Brightness −"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Play"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Pause"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Previous"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Stop"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
 msgid "Left click"
 msgstr ""
 
@@ -4917,10 +4957,6 @@ msgstr ""
 
 #: services/Keybinds.qml
 msgid "Lower the volume of the default output"
-msgstr ""
-
-#: services/Keybinds.qml
-msgid "Mute"
 msgstr ""
 
 #: services/Keybinds.qml

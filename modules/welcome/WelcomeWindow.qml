@@ -603,6 +603,18 @@ FloatingWindow {
                     delete: "Del",
                     print: Tr.tr("PrtSc"),
                     tab: "Tab",
+                    xf86audioraisevolume: Tr.tr("Vol +"),
+                    xf86audiolowervolume: Tr.tr("Vol −"),
+                    xf86audiomute: Tr.tr("Mute"),
+                    xf86audiomicmute: Tr.tr("Mic mute"),
+                    xf86monbrightnessup: Tr.tr("Brightness +"),
+                    xf86monbrightnessdown: Tr.tr("Brightness −"),
+                    xf86audioplay: Tr.tr("Play"),
+                    xf86audiopause: Tr.tr("Pause"),
+                    xf86audionext: Tr.tr("Next"),
+                    xf86audioprev: Tr.tr("Previous"),
+                    xf86audiostop: Tr.tr("Stop"),
+                    sys_req: "SysRq",
                     "mouse:272": Tr.tr("Left click"),
                     "mouse:273": Tr.tr("Right click"),
                     mouse_down: Tr.tr("Wheel ↓"),
@@ -657,6 +669,7 @@ FloatingWindow {
                             keys: sc.keys(Keybinds.bindFor(a.id))
                         });
                     }
+                    out[out.length - 1].last = true;
                 }
                 return out;
             }
@@ -671,14 +684,14 @@ FloatingWindow {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 radius: Tokens.rounding.large
-                color: Colours.tPalette.m3surfaceContainer
+                color: Colours.palette.m3surfaceContainerLow
                 clip: true
 
                 ListView {
                     anchors.fill: parent
-                    anchors.margins: Tokens.padding.medium
+                    anchors.margins: Tokens.padding.large
                     clip: true
-                    spacing: 2
+                    spacing: 0
                     model: sc.rows
                     boundsBehavior: Flickable.StopAtBounds
 
@@ -688,16 +701,30 @@ FloatingWindow {
                         required property var modelData
 
                         width: ListView.view.width
-                        implicitHeight: row.modelData.header ? 34 : 30
+                        implicitHeight: row.modelData.header ? 52 : 42
 
                         StyledText {
                             visible: !!row.modelData.header
                             anchors.left: parent.left
                             anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 4
+                            anchors.bottomMargin: Tokens.padding.small
+                            anchors.leftMargin: Tokens.padding.small
                             text: row.modelData.header ?? ""
                             color: Colours.palette.m3primary
-                            font: Tokens.font.label.large
+                            font: Tokens.font.title.small
+                        }
+
+                        // Divider under every shortcut (not under a header, nor the last row of a group)
+                        Rectangle {
+                            visible: !row.modelData.header && !row.modelData.last
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            anchors.leftMargin: Tokens.padding.small
+                            anchors.rightMargin: Tokens.padding.small
+                            height: 1
+                            color: Colours.palette.m3outlineVariant
+                            opacity: 0.5
                         }
 
                         StyledText {
@@ -736,14 +763,15 @@ FloatingWindow {
                                     required property string modelData
 
                                     implicitWidth: Math.max(capLabel.implicitWidth + Tokens.padding.medium * 2, 26)
-                                    implicitHeight: capLabel.implicitHeight + Tokens.padding.small
+                                    implicitHeight: capLabel.implicitHeight + Tokens.padding.small * 1.5
                                     radius: Tokens.rounding.small
-                                    color: Colours.tPalette.m3surfaceContainerHighest
+                                    color: Colours.palette.m3secondaryContainer
 
                                     StyledText {
                                         id: capLabel
 
                                         anchors.centerIn: parent
+                                        color: Colours.palette.m3onSecondaryContainer
                                         text: cap.modelData
                                         font: Tokens.font.label.medium
                                     }
