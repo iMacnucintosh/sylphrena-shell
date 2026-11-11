@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 13:29+0100\n"
+"POT-Creation-Date: 2026-11-11 13:38+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -4695,6 +4695,16 @@ msgstr "Frecuencia fija; menos parpadeo con FreeSync inestable por HDMI"
 #: services/Displays.qml
 msgid "Could not read monitor list"
 msgstr "No se pudo leer la lista de monitores"
+
+#: services/Extensions.qml
+#, qt-format
+msgid "Needs a newer Sylphrena (extension API %1)"
+msgstr "Necesita una versión más nueva de Sylphrena (API de extensiones %1)"
+
+#: services/Extensions.qml
+#, qt-format
+msgid "Needs Sylphrena %1"
+msgstr "Necesita Sylphrena %1"
 
 #: services/Extensions.qml services/VPN.qml
 msgid "Unknown error"

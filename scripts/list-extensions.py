@@ -2,7 +2,7 @@
 """List extension manifests found in the given directories, as one JSON array on stdout.
 
 Each entry: {"dir": <absolute folder>, "manifest": <parsed manifest.json>, "i18n": {<lang>: {...}}}
-(`i18n` = the extension's own catalogs, i18n/<lang>.json: msgid or "context\u0004msgid" ->
+(`source` = receipt of the hub, or null for local ones; `i18n` = the extension's own catalogs, i18n/<lang>.json: msgid or "context\u0004msgid" ->
 translation; only string pairs are kept). Folders without a
 readable manifest (or whose id does not match [a-z0-9-]+) are skipped. Later directories do not
 override earlier ones: the first folder that claims an id wins.
@@ -29,6 +29,16 @@ def catalogs(folder: Path) -> dict:
     return out
 
 
+def source(folder: Path):
+    """Receipt left by Things when it installs from the hub (.source.json): {source, version, sha256, ...}.
+    No receipt = the extension is local (installed by hand, from a zip, or shipped with the shell)."""
+    try:
+        data = json.loads((folder / ".source.json").read_text())
+    except (OSError, ValueError):
+        return None
+    return {k: v for k, v in data.items() if isinstance(k, str) and isinstance(v, (str, int, float, bool))} if isinstance(data, dict) else None
+
+
 seen, out = set(), []
 for root in sys.argv[1:]:
     base = Path(root)
@@ -43,5 +53,5 @@ for root in sys.argv[1:]:
         if not isinstance(ext_id, str) or not re.fullmatch(r"[a-z0-9-]+", ext_id) or ext_id in seen:
             continue
         seen.add(ext_id)
-        out.append({"dir": str(folder.resolve()), "manifest": manifest, "i18n": catalogs(folder)})
+        out.append({"dir": str(folder.resolve()), "manifest": manifest, "i18n": catalogs(folder), "source": source(folder)})
 print(json.dumps(out))

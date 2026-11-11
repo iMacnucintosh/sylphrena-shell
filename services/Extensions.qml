@@ -379,9 +379,67 @@ Singleton {
         return _components[url];
     }
 
+    // ── Compatibility (manifest `apiVersion`, `requires.sylphrena`) ─────────────────────────────
+    // Version of the extension contract this shell implements, and of the shell itself (from the git
+    // tag it was built from). An extension that needs more is listed but not loaded.
+    readonly property int apiVersion: 1
+    readonly property string shellVersion: CUtils.version
+
+    // Numbers of "1", "1.2", "1.2.3" or "v1.2.3-dev" as [major, minor, patch]
+    function _parts(v: string): var {
+        const m = `${v}`.match(/^v?(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
+        return m ? [parseInt(m[1]), parseInt(m[2] ?? "0"), parseInt(m[3] ?? "0")] : null;
+    }
+
+    // -1, 0 or 1; null when one of them is not a version
+    function compareVersions(a: string, b: string): var {
+        const x = root._parts(a);
+        const y = root._parts(b);
+        if (!x || !y)
+            return null;
+        for (let i = 0; i < 3; i++)
+            if (x[i] !== y[i])
+                return x[i] < y[i] ? -1 : 1;
+        return 0;
+    }
+
+    // Does `version` meet `spec`? Space separated comparators, all must hold: ">=0.3.0 <1.0.0", "=0.3.1".
+    // An empty spec or an unknown shell version (a build without tags) always passes; a spec that does
+    // not parse never does (a typo must not silently load an extension for the wrong version).
+    function versionSatisfies(version: string, spec: string): bool {
+        if (!spec || !version)
+            return true;
+        for (const part of `${spec}`.trim().split(/\s+/)) {
+            const m = part.match(/^(>=|<=|>|<|=)?(\d+(?:\.\d+){0,2})$/);
+            if (!m)
+                return false;
+            const c = root.compareVersions(version, m[2]);
+            if (c === null)
+                return false;
+            const ok = { ">=": c >= 0, "<=": c <= 0, ">": c > 0, "<": c < 0, "=": c === 0 }[m[1] ?? "="];
+            if (!ok)
+                return false;
+        }
+        return true;
+    }
+
+    // "" when the extension can run here, else why not (shown as its error)
+    function incompatibility(manifest: var): string {
+        const api = manifest.apiVersion ?? 1;
+        if (api > root.apiVersion)
+            return Tr.tr("Needs a newer Sylphrena (extension API %1)").arg(api);
+        const spec = manifest.requires?.sylphrena ?? "";
+        if (!root.versionSatisfies(root.shellVersion, spec))
+            return Tr.tr("Needs Sylphrena %1").arg(spec);
+        return "";
+    }
+
     function create(d: var): var {
         const e = { id: d.manifest.id, dir: d.dir, manifest: d.manifest, config: null, service: null, error: "" };
         e.config = configComp.createObject(root, { extId: e.id });
+        e.error = root.incompatibility(d.manifest);
+        if (e.error)
+            return e;
         const file = d.manifest.contributes?.service;
         if (file) {
             const c = root.component(e, file);
@@ -642,12 +700,58 @@ Singleton {
     IpcHandler {
         target: "extensions"
 
+        // Look for extensions again (after installing or removing one by hand, or with Things)
+        function rescan(): void {
+            root.rescan();
+        }
+
+        // Every extension found: id, version, whether it is local (no hub receipt), enabled, error
+        function list(): string {
+            return JSON.stringify(root.discovered.map(d => ({
+                        id: d.manifest.id,
+                        name: d.manifest.name ?? d.manifest.id,
+                        version: d.manifest.version ?? "",
+                        kind: d.manifest.type ?? "",
+                        dir: d.dir,
+                        local: !d.source,
+                        source: d.source ?? null,
+                        enabled: root.isEnabled(d.manifest.id),
+                        error: root.loaded.find(e => e.id === d.manifest.id)?.error || root.incompatibility(d.manifest)
+                    })));
+        }
+
+        function enable(id: string): string {
+            const d = root.discovered.find(x => x.manifest.id === id);
+            if (!d)
+                return "unknown";
+            if (root.incompatibility(d.manifest))
+                return "incompatible";
+            if (!root.systemReady(id))
+                return "needs-system";
+            root.setEnabled(id, true);
+            return "ok";
+        }
+
+        function disable(id: string): string {
+            root.setEnabled(id, false);
+            return "ok";
+        }
+
+        // To call BEFORE deleting an extension's files (Things, `scripts/ext.py`): the extension forgets
+        // its connections / data in the shell (files it keeps, VPN connections of its provider type)
+        function prepareRemoval(id: string): string {
+            root._dropConnections(id);
+            return "ok";
+        }
+
         function status(): string {
             return JSON.stringify({
                 enabled: root.enabledIds,
                 discovered: root.discovered.map(d => d.manifest.id),
                 loaded: root.loaded.map(e => ({ id: e.id, error: e.error, hasService: !!e.service, widgets: (e.manifest.contributes?.widgets ?? []).length })),
                 widgets: root.widgets.length,
+                shellVersion: root.shellVersion,
+                apiVersion: root.apiVersion,
                 system: root.systemState
             });
         }
