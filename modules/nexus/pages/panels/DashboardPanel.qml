@@ -46,53 +46,11 @@ PageBase {
         }
     ]
 
-    property bool hydrationSettingsOpen: false
+    // Id of the widget whose settings are expanded in the carousel section (one at a time)
+    property string openSettingsId: ""
 
     title: Tr.tr("Dashboard")
     isSubPage: true
-
-    component SettingRow: RowLayout {
-        property alias label: settingLabel.text
-        property alias subtext: settingSub.text
-        property alias value: spin.value
-        property alias from: spin.from
-        property alias to: spin.to
-        property alias stepSize: spin.stepSize
-        signal moved(value: real)
-
-        Layout.fillWidth: true
-        // Same height with or without a subtext, so the rows line up evenly
-        Layout.preferredHeight: 52
-        spacing: Tokens.spacing.medium
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
-            spacing: 0
-
-            StyledText {
-                id: settingLabel
-                Layout.fillWidth: true
-                font: Tokens.font.body.small
-                elide: Text.ElideRight
-            }
-
-            StyledText {
-                id: settingSub
-                Layout.fillWidth: true
-                visible: text.length > 0
-                color: Colours.palette.m3outline
-                font: Tokens.font.label.small
-                elide: Text.ElideRight
-            }
-        }
-
-        StyledSpinBox {
-            id: spin
-            cLayer: 2
-            onValueModified: parent.moved(value)
-        }
-    }
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -166,7 +124,10 @@ PageBase {
 
                 required property var modelData
                 required property int index
-                readonly property bool isHydration: modelData.id === "hydration"
+                readonly property var service: modelData.ext ? Extensions.service(modelData.ext) : null
+                readonly property bool enabled: DashWidgets.isEnabled(modelData.id)
+                readonly property bool hasSettings: !!modelData.hasSettings && enabled && !!service
+                readonly property bool settingsOpen: hasSettings && root.openSettingsId === modelData.id
 
                 Layout.fillWidth: true
                 first: index === 0
@@ -210,11 +171,9 @@ PageBase {
 
                             StyledText {
                                 Layout.fillWidth: true
-                                text: card.isHydration && Hydration.enabled && root.hydrationSettingsOpen
-                                    ? Tr.tr("%1 ml · reminder every %2 min").arg(GlobalConfig.addons.hydration.dailyGoalMl).arg(GlobalConfig.addons.hydration.reminderMinutes)
-                                    : card.isHydration && !Hydration.enabled
-                                        ? Tr.tr("Off — also stops the reminders and the tracking")
-                                        : card.modelData.subtext
+                                text: card.settingsOpen && card.service?.summary
+                                    ? card.service.summary
+                                    : !card.enabled && card.modelData.offNote ? card.modelData.offNote : card.modelData.subtext
                                 color: Colours.palette.m3outline
                                 font: Tokens.font.label.small
                                 elide: Text.ElideRight
@@ -247,89 +206,42 @@ PageBase {
                         }
 
                         IconButton {
-                            visible: card.isHydration && Hydration.enabled
+                            visible: card.hasSettings
                             isRound: true
-                            icon: root.hydrationSettingsOpen ? "expand_less" : "expand_more"
+                            icon: card.settingsOpen ? "expand_less" : "expand_more"
                             type: IconButton.Text
                             font: Tokens.font.icon.builders.small.weight(Font.Bold).build()
                             padding: Tokens.padding.small
                             Layout.alignment: Qt.AlignVCenter
-                            onClicked: root.hydrationSettingsOpen = !root.hydrationSettingsOpen
+                            onClicked: root.openSettingsId = card.settingsOpen ? "" : card.modelData.id
                         }
 
                         StyledSwitch {
                             Layout.alignment: Qt.AlignVCenter
-                            checked: DashWidgets.isEnabled(card.modelData.id)
+                            checked: card.enabled
                             onToggled: {
                                 DashWidgets.setEnabled(card.modelData.id, checked);
-                                if (card.isHydration)
-                                    root.hydrationSettingsOpen = checked;
+                                // Open the settings of what was just enabled; close those of what was disabled
+                                root.openSettingsId = checked && card.modelData.hasSettings ? card.modelData.id : "";
                             }
                         }
                     }
 
-                    ColumnLayout {
+                    // Settings contributed by the extension (its Settings.qml)
+                    Loader {
+                        id: settingsLoader
+
                         Layout.fillWidth: true
-                        visible: card.isHydration && Hydration.enabled && root.hydrationSettingsOpen
-                        // Line the options up with the title, not with the icon
-                        Layout.leftMargin: cardIcon.width + Tokens.spacing.medium
-                        spacing: 0
+                        active: card.settingsOpen
+                        visible: active
+                        sourceComponent: settingsComp
+                    }
 
-                        SettingRow {
-                            label: Tr.tr("Daily goal")
-                            subtext: Tr.tr("Target water intake per day (ml)")
-                            value: GlobalConfig.addons.hydration.dailyGoalMl
-                            from: 500
-                            to: 8000
-                            stepSize: 100
-                            onMoved: v => Hydration.setDailyGoal(v)
-                        }
+                    Component {
+                        id: settingsComp
 
-                        SettingRow {
-                            label: Tr.tr("Reminder interval")
-                            subtext: Tr.tr("Minutes without a sip before a reminder")
-                            value: GlobalConfig.addons.hydration.reminderMinutes
-                            from: 5
-                            to: 120
-                            stepSize: 5
-                            onMoved: v => Hydration.setReminderMinutes(v)
-                        }
-
-                        SettingRow {
-                            label: Tr.tr("Preset %1").arg(1)
-                            subtext: Tr.tr("Quick-add button amount (ml)")
-                            value: GlobalConfig.addons.hydration.presetMl0
-                            from: 1
-                            to: 1000
-                            stepSize: 1
-                            onMoved: v => Hydration.setPreset(0, v)
-                        }
-
-                        SettingRow {
-                            label: Tr.tr("Preset %1").arg(2)
-                            value: GlobalConfig.addons.hydration.presetMl1
-                            from: 1
-                            to: 1000
-                            stepSize: 1
-                            onMoved: v => Hydration.setPreset(1, v)
-                        }
-
-                        SettingRow {
-                            label: Tr.tr("Preset %1").arg(3)
-                            value: GlobalConfig.addons.hydration.presetMl2
-                            from: 1
-                            to: 1000
-                            stepSize: 1
-                            onMoved: v => Hydration.setPreset(2, v)
-                        }
-
-                        SettingRow {
-                            label: Tr.tr("Preset %1").arg(4)
-                            value: GlobalConfig.addons.hydration.presetMl3
-                            from: 1
-                            to: 1000
-                            stepSize: 1
-                            onMoved: v => Hydration.setPreset(3, v)
+                        ExtensionSlot {
+                            entry: Extensions.settingsEntry(card.modelData.ext)
                         }
                     }
                 }

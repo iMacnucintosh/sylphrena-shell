@@ -34,6 +34,12 @@ end
 function gen_trs
     echo > $pot_file
     gen JavaScript **.qml
+    # Extension manifests (JSON): their translatable fields, as Tr.tr() calls
+    set -l mdir build/i18n/extensions
+    rm -rf $mdir
+    python3 scripts/manifest-strings.py $mdir extensions
+    xgettext -L JavaScript -o $pot_file --join-existing --from-code=UTF-8 --no-wrap \
+        --add-location=file --package-name=sylphrena-shell -k -ktr:1 $mdir/*/manifest.json.js
     gen C++ **.cpp **.hpp
 
     # Strip js format then tag qt-format, with qt-plural-format for the %n count

@@ -2,6 +2,7 @@
 
 #include <qstring.h>
 #include <qvariantlist.h>
+#include <qvariantmap.h>
 
 #include "settings/objectnode.hpp"
 #include "common.hpp"
@@ -39,6 +40,11 @@ class UtilitiesVpnProvider : public settings::ObjectNode {
     CONFIG_PROPERTY(QString, interface, {})
     CONFIG_PROPERTY(QStringList, connectCmd, {})
     CONFIG_PROPERTY(QStringList, disconnectCmd, {})
+    // Empty: a command provider (the fields above). "ext:<extension id>": a connection of a provider
+    // type contributed by an extension (manifest `vpnProviderType`), configured by `options`.
+    CONFIG_PROPERTY(QString, type, {})
+    // Settings of a typed connection, owned by its extension (never secrets).
+    CONFIG_PROPERTY(QVariantMap, options, {})
 };
 CONFIG_LIST_TYPE(UtilitiesVpnProvider, UtilitiesVpnProviderList)
 

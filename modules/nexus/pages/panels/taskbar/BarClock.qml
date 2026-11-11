@@ -18,7 +18,7 @@ PageBase {
     title: Tr.tr("Clock")
     isSubPage: true
 
-    // Same inline spin pattern as ComplementsPage hydration card (no nested ConnectedRect).
+    // Inline spin rows inside a card (no nested ConnectedRect); same pattern as SpinSettingRow.
     component SettingRow: RowLayout {
         property alias label: settingLabel.text
         property alias subtext: settingSub.text
@@ -91,10 +91,10 @@ PageBase {
         }
 
         // Timers live inside the clock popout; expose enable + presets here.
-        // Complements keeps the same addons.timers.enabled state.
         ConnectedRect {
             id: timersCard
 
+            last: true
             Layout.fillWidth: true
             implicitHeight: timersCol.implicitHeight + Tokens.padding.medium * 2
 
@@ -213,24 +213,8 @@ PageBase {
                         stepSize: 1
                         onMoved: v => GlobalConfig.addons.timers.presetMins3 = v
                     }
-
-                    StyledText {
-                        Layout.fillWidth: true
-                        text: Tr.tr("Hub for enabling Timers: Complements")
-                        color: Colours.palette.m3outline
-                        font: Tokens.font.label.small
-                        wrapMode: Text.WordWrap
-                    }
                 }
             }
-        }
-
-        NavRow {
-            last: true
-            icon: "extension"
-            text: Tr.tr("Configure Timers in Complements")
-            subtext: Tr.tr("Complements owns the opt-in toggle; presets above stay on the clock")
-            onClicked: root.nState.currentPageIdx = PageRegistry.idxOf("complements")
         }
     }
 }

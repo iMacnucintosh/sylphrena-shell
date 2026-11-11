@@ -11,17 +11,17 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    readonly property var builtinIcons: ({
+    // Built-in icons plus the ones extensions declare (labels for the list and the "add" menu)
+    readonly property var builtinIcons: Object.assign({
             lockStatus: Tr.tr("Lock keys"),
             kbLayout: Tr.tr("Keyboard layout"),
             audio: Tr.tr("Speakers"),
             microphone: Tr.tr("Microphone"),
             network: Tr.tr("Network"),
             bluetooth: Tr.tr("Bluetooth"),
-            vpn: Tr.tr("Madison VPN"),
             updates: Tr.tr("Updates"),
             battery: Tr.tr("Battery")
-        })
+        }, Object.fromEntries(Extensions.statusIconDecls.map(d => [d.id, Tr.tr(d.title)])))
 
     title: Tr.tr("Status icons")
     isSubPage: true
@@ -109,20 +109,11 @@ PageBase {
 
         ToggleRow {
             first: true
+            last: true
             text: Tr.tr("Updates only when relevant")
             subtext: Tr.tr("The updates badge appears only with pending or installing packages")
             checked: Config.bar.status.onlyShowUpdatesWithUpdates
             onToggled: GlobalConfig.bar.status.onlyShowUpdatesWithUpdates = checked
-        }
-
-        NavRow {
-            last: true
-            icon: "shield_lock"
-            text: Tr.tr("Madison VPN")
-            subtext: MadisonVpn.enabled
-                ? Tr.tr("Visible while the complement is enabled — configure in Complements")
-                : Tr.tr("Hidden — enable it in Complements")
-            onClicked: root.nState.currentPageIdx = PageRegistry.idxOf("complements")
         }
     }
 }

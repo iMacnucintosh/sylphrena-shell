@@ -51,8 +51,8 @@ ColumnLayout {
             const items = (ch.item as StatusIcons).items;
             const icon = items.childAt(items.width / 2, mapToItem(items, 0, y).y);
             if (icon) {
-                // Keep OTP / settings / updates-password dialogs open while hovering parent icon
-                if (icon.name === "vpn" && (popouts.currentName === "vpnOtp" || popouts.currentName === "vpnSettings"))
+                // Keep dialogs open while hovering their parent icon (extension popouts declare it)
+                if (Extensions.popouts.some(p => p.dialog && p.parentIcon === icon.name && p.name === popouts.currentName))
                     return;
                 if (icon.name === "updates" && popouts.currentName === "updatesPassword")
                     return;

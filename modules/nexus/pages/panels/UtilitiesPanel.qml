@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick.Layouts
 import Sylphrena.Config
 import Sylphrena.I18n
+import qs.services
 import qs.modules.nexus.common
 
 PageBase {
@@ -149,6 +150,37 @@ PageBase {
             disabled: !Config.utilities.cards.quickToggles
             checked: root.isToggleOn("vpn")
             onToggled: root.setToggleOn("vpn", checked)
+        }
+
+        // Clipboard (core feature: cliphist history + paste popout)
+        SectionHeader {
+            text: Tr.tr("Clipboard")
+        }
+
+        ToggleRow {
+            first: true
+            leadingIcon: "content_paste"
+            text: Tr.tr("Clipboard")
+            subtext: Clipboard.enabled
+                ? Tr.tr("Floating popout (Super+Shift+V) backed by cliphist")
+                : Tr.tr("Disabled — watcher processes are stopped")
+            checked: GlobalConfig.utilities.clipboard.enabled
+            onToggled: {
+                GlobalConfig.utilities.clipboard.enabled = checked;
+                // The service only reacts via ensureWatchers()
+                Clipboard.ensureWatchers();
+            }
+        }
+
+        StepperRow {
+            last: true
+            label: Tr.tr("History size")
+            subtext: Tr.tr("Maximum number of clipboard entries to keep")
+            value: GlobalConfig.utilities.clipboard.maxItems
+            from: 10
+            to: 200
+            stepSize: 10
+            onMoved: v => GlobalConfig.utilities.clipboard.maxItems = Math.round(v)
         }
     }
 }

@@ -81,10 +81,10 @@ QtObject {
             }
         },
         Component {
-            // Complements
+            // Extensions
             StackPage {
                 Component {
-                    ComplementsPage {}
+                    ExtensionsPage {}
                 }
             }
         },

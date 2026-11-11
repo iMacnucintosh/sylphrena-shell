@@ -49,10 +49,10 @@ QtObject {
             category: "appearance"
         },
         {
-            id: "complements",
-            label: Tr.tr("Complements"),
+            id: "extensions",
+            label: Tr.tr("Extensions"),
             icon: "extension",
-            description: Tr.tr("Optional fork features (VPN, clipboard, Steam, …)"),
+            description: Tr.tr("Extend the features of the system"),
             category: "appearance"
         },
 

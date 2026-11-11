@@ -7,12 +7,6 @@ namespace sylphrena::shell::config {
 
 using Qt::StringLiterals::operator""_s;
 
-class AddonsMadisonVpn : public settings::ObjectNode {
-    CONFIG_NODE(AddonsMadisonVpn, settings::ObjectNode)
-
-    CONFIG_PROPERTY(bool, enabled, true)
-};
-
 class AddonsTimers : public settings::ObjectNode {
     CONFIG_NODE(AddonsTimers, settings::ObjectNode)
 
@@ -24,44 +18,10 @@ class AddonsTimers : public settings::ObjectNode {
     CONFIG_PROPERTY(int, presetMins3, 30)
 };
 
-class AddonsHydration : public settings::ObjectNode {
-    CONFIG_NODE(AddonsHydration, settings::ObjectNode)
-
-    CONFIG_PROPERTY(bool, enabled, false)
-    CONFIG_PROPERTY(int, dailyGoalMl, 3000)
-    CONFIG_PROPERTY(int, reminderMinutes, 15)
-    CONFIG_PROPERTY(int, presetMl0, 20)
-    CONFIG_PROPERTY(int, presetMl1, 83)
-    CONFIG_PROPERTY(int, presetMl2, 250)
-    CONFIG_PROPERTY(int, presetMl3, 500)
-};
-
-class AddonsSteam : public settings::ObjectNode {
-    CONFIG_NODE(AddonsSteam, settings::ObjectNode)
-
-    CONFIG_PROPERTY(bool, enabled, false)
-    CONFIG_PROPERTY(QString, apiKey, {})
-    CONFIG_PROPERTY(QString, steamId, {})
-    CONFIG_PROPERTY(int, refreshMinutes, 10)
-};
-
-class AddonsRazerMouse : public settings::ObjectNode {
-    CONFIG_NODE(AddonsRazerMouse, settings::ObjectNode)
-
-    CONFIG_PROPERTY(bool, enabled, false)
-    // synapsex-cli to read the battery with; empty = look it up in PATH, then in ~/Desarrollo/Projects/synapsex
-    CONFIG_PROPERTY(QString, cliPath, {})
-    CONFIG_PROPERTY(int, refreshMinutes, 5)
-};
-
 class AddonsConfig : public settings::ObjectNode {
     CONFIG_NODE(AddonsConfig, settings::ObjectNode)
 
-    CONFIG_GLOBAL_SUBOBJECT(AddonsMadisonVpn, madisonVpn)
     CONFIG_GLOBAL_SUBOBJECT(AddonsTimers, timers)
-    CONFIG_GLOBAL_SUBOBJECT(AddonsHydration, hydration)
-    CONFIG_GLOBAL_SUBOBJECT(AddonsSteam, steam)
-    CONFIG_GLOBAL_SUBOBJECT(AddonsRazerMouse, razerMouse)
 };
 
 } // namespace sylphrena::shell::config

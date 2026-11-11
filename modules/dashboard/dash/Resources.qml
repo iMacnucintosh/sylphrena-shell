@@ -46,20 +46,23 @@ Item {
             fgColour: Colours.palette.m3tertiary
         }
 
-        // Storage, unless the Razer mouse complement is on and the mouse answers: then its battery
-        // takes this slot. One item that switches content (toggling two items' visibility left the
-        // ring collapsed: its size follows its height, which the layout only gives once visible).
+        // Storage, unless an extension contributes a ring with something to show (e.g. the Razer
+        // mouse battery): then it takes this slot. One item that switches content (toggling two
+        // items' visibility left the ring collapsed: its size follows its height, which the layout
+        // only gives once visible).
         Resource {
-            icon: RazerMouse.shown ? "mouse" : "hard_disk"
-            reading: RazerMouse.shown ? RazerMouse.percent / 100 : Storage.percentage
-            fgColour: RazerMouse.shown && RazerMouse.low ? Colours.palette.m3error : Colours.palette.m3secondary
+            readonly property var ext: Extensions.resourceRing
+
+            icon: ext ? ext.ring.icon : "hard_disk"
+            reading: ext ? ext.ring.value : Storage.percentage
+            fgColour: ext?.ring.warn ? Colours.palette.m3error : Colours.palette.m3secondary
 
             MaterialIcon {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: Tokens.padding.small
-                visible: RazerMouse.shown && RazerMouse.charging
-                text: "bolt"
+                visible: !!parent.ext?.ring.badge
+                text: parent.ext?.ring.badge ?? ""
                 fill: 1
                 fontStyle: Tokens.font.icon.small
                 color: Colours.palette.m3tertiary

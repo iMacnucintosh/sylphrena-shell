@@ -38,6 +38,5 @@ qt_add_shaders(sylphrena-shaders "shaders"
         smoke.frag
         soft-warp-fade.frag
         voronoi-shatter.frag
-        water.frag
         zoom-blur-pull.frag
 )

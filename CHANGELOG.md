@@ -2,6 +2,24 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 0.2.0 (2026-11-11)
+
+### Extensiones
+
+- La shell se separa en **base** y **extensiones**. Una extensión es una carpeta (`extensions/<id>/`, o en `~/.local/share/sylphrena/extensions/`) con `manifest.json`, un servicio y sus componentes; se activan en Nexus (`extensions.enabled`, nada por defecto) y se cargan/descargan en caliente. Enganches: `service`, `widgets`, `settings`, `resourceRing`, `statusIcons`, `popouts`, `dashboardTabs`, `vpnProviderType`. Guía: `AGENTS.md` («Extensiones») y `docs/examples/extension-spike/`.
+- **Migradas**: Tareas, Hidratación (widgets), batería del ratón Razer, VPN FortiClient (antes «Madison VPN») y Juegos (Steam) (complementos). Su configuración se migra sola (`scripts/migrate-config.py`).
+- **Base**: Portapapeles (ajustes en Panels → Utilities) y Temporizadores dejan de ser complementos. Calendario como único widget de serie.
+- **VPN unificada y FortiClient genérico**: una extensión puede aportar un **tipo** de proveedor a la VPN de Nexus → Red (`vpnProviderType`). Añadir proveedor deja elegir «Comandos» (lo de siempre) o **FortiClient**, con su formulario: OTP opcional, certificados, TLS antiguo, host de comprobación, DNS/dominios y entradas de `/etc/hosts`. Varias conexiones posibles. Lo no secreto va en `shell.json` (`type` + `options`); la contraseña solo en `~/.config/sylphrena/vpn/<id>.conf` (600). El túnel usa un ayudante root genérico en el repo (`sylphrena-fortivpn`) que valida el fichero y ya no tiene nada de una red concreta.
+- La página de Nexus **Complementos** pasa a llamarse **Extensiones** (id `extensions`, `ExtensionsPage.qml`). Arriba lleva la fila «Instalar desde zip» con un botón «Examinar» (y la tarjeta de contraseña debajo cuando hace falta) y debajo la sección «Instaladas». El Reloj ya no enlaza a ella para los Timers, que se activan en el propio Reloj.
+- La tarjeta de cada extensión muestra siempre su descripción (ya no el estado en vivo ni el aviso de «desactivado»); el estado lo enseña cada extensión donde quiera.
+- «Añadir proveedor» → FortiClient: la primera fila permite **importar conexiones desde un fichero** (el que exporta la extensión), y el formulario de una conexión nueva ya no se rellena solo con `~/.config/openfortivpn/config`. Borrar una conexión limpia también las copias de certificados que importó la extensión.
+- Eliminar una extensión borra también sus conexiones VPN (con sus ficheros); desactivarla las conserva y las marca como «extensión desactivada».
+- Instalar una extensión desde zip (nueva o actualización) la activa al terminar.
+- **Instalar extensiones desde zip** (Nexus → Extensiones): se valida el zip y se instala en `~/.local/share/sylphrena/extensions/`, sin reiniciar; reinstalar actualiza y las instaladas así se pueden eliminar. Las extensiones externas traen sus traducciones (`i18n/<lang>.json`), que `Tr` usa cuando la shell no tiene la cadena. **VPN FortiClient sale del repo** de la shell: se distribuye como zip aparte.
+- **Extensiones con piezas de sistema** (manifiesto `system`): lo que necesitan como root se instala **con el zip** (la contraseña se pide al instalarlo y va a `sudo` por stdin) y se quita al **eliminar** la extensión. Si queda a medias, su tarjeta ofrece «Completar». Instalar es independiente de activar. FortiClient instala así `openfortivpn`, su ayudante y la regla de sudoers; `install-system.sh` queda solo para la base (greeter).
+- Corregido: el paso del greeter de `install-system.sh` se paraba («Both … are real directories») porque tras el cambio de nombre comparaba su directorio consigo mismo. Las cadenas de los manifiestos de extensión vuelven a traducirse (`scripts/manifest-strings.py` en `trs.fish raw`). El popout de la barra solo conecta y desconecta.
+- Sin rutas ni datos personales en el repo (`shell.qml` ya no lleva `/home/<usuario>`).
+
 ## 2026-11-10
 
 ### Dashboard
@@ -262,7 +280,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ### Complementos / Madison VPN / Timers
 
-- **Nexus → Complementos**: toggles Madison VPN + Timers (iconos `verified_user` / `timer`).
+- **Nexus → Extensiones**: toggles Madison VPN + Timers (iconos `verified_user` / `timer`).
 - VPN off: oculta icono, para poll, teardown disconnect+heal.
 - Timers off: limpia timers activos y oculta la sección en el popout del reloj.
 - Icono VPN en la pastilla de status (bajo Bluetooth) cuando el complemento está on.
