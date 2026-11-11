@@ -705,6 +705,12 @@ Singleton {
             root.rescan();
         }
 
+        // The folder with the shell's scripts (ext.py, install-extension.py): where Things finds the
+        // tool that installs extensions, wherever the shell is installed
+        function tools(): string {
+            return Quickshell.shellPath("scripts");
+        }
+
         // Every extension found: id, version, whether it is local (no hub receipt), enabled, error
         function list(): string {
             return JSON.stringify(root.discovered.map(d => ({
