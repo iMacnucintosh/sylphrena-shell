@@ -117,7 +117,7 @@ StyledRect {
                             }
 
                             StyledText {
-                                text: "Previsión horaria"
+                                text: Tr.tr("Hourly forecast")
                                 font.pixelSize: Theme.font.titleMedium
                             }
                         }
@@ -179,7 +179,7 @@ StyledRect {
                                     StyledText {
                                         Layout.topMargin: Theme.spacing.extraSmall
                                         Layout.alignment: Qt.AlignHCenter
-                                        text: hour.index === 0 ? "Ahora" : Qt.formatDateTime(new Date(hour.cond.time), "HH:00")
+                                        text: hour.index === 0 ? Tr.tr("Now") : Qt.formatDateTime(new Date(hour.cond.time), "HH:00")
                                         color: Theme.palette.m3onSurfaceVariant
                                         font.pixelSize: Theme.font.bodyMedium
                                     }

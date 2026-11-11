@@ -37,7 +37,7 @@ Item {
     TextMetrics {
         id: nonAnimPlaceholder
 
-        text: root.busy ? "Comprobando..." : "Introduce tu contraseña"
+        text: root.busy ? "Comprobando..." : Tr.tr("Enter your password")
         font: placeholder.font
     }
 

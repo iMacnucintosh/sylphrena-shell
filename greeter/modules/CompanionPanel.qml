@@ -17,31 +17,31 @@ StyledRect {
     readonly property string greeting: {
         const h = Time.now.getHours();
         if (h >= 6 && h < 12)
-            return "Buenos días";
+            return Tr.tr("Good morning");
         if (h >= 12 && h < 21)
-            return "Buenas tardes";
-        return "Buenas noches";
+            return Tr.tr("Good afternoon");
+        return Tr.tr("Good night");
     }
 
     // Curious wind-spirit voice: original lines, no quotes from any book.
     readonly property var idleLines: [
-        "¡Ahí estás! Te estaba buscando entre los vientos",
-        "El aliento antes que el silencio",
-        "La grieta antes que el acero",
-        "Los pasos antes que la meta",
-        "El cielo está quieto… buen momento para la jornada",
-        "Puedo esperar. Los espíritus del viento somos pacientes… a veces",
-        "Tu vínculo con esta máquina aún no se ha cerrado",
-        "Cuéntame un secreto: la contraseña basta"
+        Tr.tr("There you are! I was looking for you among the winds"),
+        Tr.tr("Breath before silence"),
+        Tr.tr("The crack before the steel"),
+        Tr.tr("Steps before the goal"),
+        Tr.tr("The sky is still… a good moment for the day"),
+        Tr.tr("I can wait. We wind spirits are patient… sometimes"),
+        Tr.tr("Your bond with this machine is not sealed yet"),
+        Tr.tr("Tell me a secret: the password is enough")
     ]
 
     readonly property string liveLine: {
         if (root.welcomed)
-            return "¡El vínculo se cierra! Bienvenido a casa, Manuel";
+            return Tr.tr("The bond closes! Welcome home, %1").arg(Theme.displayName);
         if (root.listening)
-            return "Escucho… ¿eres tú de verdad?";
+            return Tr.tr("I am listening… is it really you?");
         if (root.troubled)
-            return "Eso no fue muy honorable. Probemos otra vez";
+            return Tr.tr("That was not very honourable. Let us try again");
         return root.idleLines[root.statusIndex];
     }
 

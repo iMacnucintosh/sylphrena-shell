@@ -73,7 +73,7 @@ Singleton {
 
         const session = Sessions.current;
         if (!session) {
-            root.fail("No se ha encontrado ninguna sesión.");
+            root.fail(Tr.tr("No session was found."));
             return;
         }
 
@@ -120,7 +120,7 @@ Singleton {
             if (!root.pending) {
                 console.warn("greeter: auth prompt with empty pending password");
                 Greetd.cancelSession();
-                root.fail("Contraseña incorrecta. Inténtalo de nuevo.");
+                root.fail(Tr.tr("Wrong password. Try again."));
                 return;
             }
 
@@ -131,7 +131,7 @@ Singleton {
 
         function onAuthFailure(message: string): void {
             console.warn(`greeter: authFailure ${message}`);
-            root.fail("Contraseña incorrecta. Inténtalo de nuevo.");
+            root.fail(Tr.tr("Wrong password. Try again."));
         }
 
         function onReadyToLaunch(): void {
@@ -171,7 +171,7 @@ Singleton {
         id: launchWatchdog
 
         interval: 4000
-        onTriggered: root.fail("La sesión no ha respondido. Inténtalo de nuevo.")
+        onTriggered: root.fail(Tr.tr("The session did not respond. Try again."))
     }
 
     // Demo mode (running inside a normal session): no greetd socket, so fake
@@ -182,7 +182,7 @@ Singleton {
         interval: 700
         onTriggered: {
             if (root.pending === "fail")
-                root.fail("Contraseña incorrecta. Inténtalo de nuevo.");
+                root.fail(Tr.tr("Wrong password. Try again."));
             else {
                 root.pending = "";
                 root.busy = false;
