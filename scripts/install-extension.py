@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """Install or remove an extension in the user's extension folder (Nexus → Complements).
 
+  install-extension.py inspect <zip> <builtin_dir>
   install-extension.py install <zip> <user_dir> <builtin_dir>
   install-extension.py remove <id> <user_dir>
+
+inspect: the same checks as install, without writing anything. Prints {"ok", "id", "name", "version",
+"system": bool, "systemDescription"}: the shell asks for the password before installing an
+extension that declares system pieces (manifest `system`).
 
 install: the zip holds one extension, its manifest.json either at the root or inside a single top
 folder. It is checked before anything is written: no absolute paths, no "..", no symlinks or other
@@ -70,25 +75,46 @@ def find_root(paths: list[PurePosixPath]) -> PurePosixPath:
     raise Bad("no manifest.json at the root of the zip or of its only folder")
 
 
-def install(zip_path: str, user_dir: str, builtin_dir: str) -> dict:
+def open_checked(zip_path: str, builtin_dir: str):
+    """(zipfile, members, root, manifest) of a zip that passed every check."""
     try:
         zf = zipfile.ZipFile(zip_path)
     except (OSError, zipfile.BadZipFile) as e:
         raise Bad(f"not a valid zip: {e}")
+    items = members(zf)
+    root = find_root([p for _, p in items])
+    try:
+        manifest = json.loads(zf.read(str(root / "manifest.json")))
+    except (KeyError, ValueError) as e:
+        raise Bad(f"invalid manifest.json: {e}")
+    if not isinstance(manifest, dict):
+        raise Bad("invalid manifest.json")
+    ext_id = manifest.get("id")
+    if not isinstance(ext_id, str) or not ID_RE.fullmatch(ext_id):
+        raise Bad("the manifest id must match [a-z0-9-]+")
+    if (Path(builtin_dir) / ext_id / "manifest.json").exists():
+        raise Bad(f"'{ext_id}' is an extension shipped with the shell")
+    return zf, items, root, manifest
+
+
+def inspect(zip_path: str, builtin_dir: str) -> dict:
+    zf, _, _, manifest = open_checked(zip_path, builtin_dir)
+    zf.close()
+    system = manifest.get("system") if isinstance(manifest.get("system"), dict) else {}
+    return {
+        "ok": True,
+        "id": manifest["id"],
+        "name": manifest.get("name", manifest["id"]),
+        "version": manifest.get("version", ""),
+        "system": bool(system.get("install")),
+        "systemDescription": system.get("description", ""),
+    }
+
+
+def install(zip_path: str, user_dir: str, builtin_dir: str) -> dict:
+    zf, items, root, manifest = open_checked(zip_path, builtin_dir)
+    ext_id = manifest["id"]
     with zf:
-        items = members(zf)
-        root = find_root([p for _, p in items])
-        try:
-            manifest = json.loads(zf.read(str(root / "manifest.json")))
-        except (KeyError, ValueError) as e:
-            raise Bad(f"invalid manifest.json: {e}")
-        if not isinstance(manifest, dict):
-            raise Bad("invalid manifest.json")
-        ext_id = manifest.get("id")
-        if not isinstance(ext_id, str) or not ID_RE.fullmatch(ext_id):
-            raise Bad("the manifest id must match [a-z0-9-]+")
-        if (Path(builtin_dir) / ext_id / "manifest.json").exists():
-            raise Bad(f"'{ext_id}' is an extension shipped with the shell")
 
         base = Path(user_dir)
         base.mkdir(parents=True, exist_ok=True)
@@ -136,7 +162,9 @@ def remove(ext_id: str, user_dir: str) -> dict:
 
 def main() -> None:
     try:
-        if len(sys.argv) == 5 and sys.argv[1] == "install":
+        if len(sys.argv) == 4 and sys.argv[1] == "inspect":
+            result = inspect(sys.argv[2], sys.argv[3])
+        elif len(sys.argv) == 5 and sys.argv[1] == "install":
             result = install(sys.argv[2], sys.argv[3], sys.argv[4])
         elif len(sys.argv) == 4 and sys.argv[1] == "remove":
             result = remove(sys.argv[2], sys.argv[3])

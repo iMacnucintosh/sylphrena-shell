@@ -32,6 +32,19 @@ Singleton {
     // ── Installed from a zip ───────────────────────────────────────────────────
     property bool zipBusy: false
     property string zipError: ""
+    // A zip whose extension needs administrator rights (manifest `system`), waiting for the password:
+    // { path, id, name, description }. Cancelling installs nothing.
+    property var zipPending: null
+
+    // Steps that continue another one: the system install once the rescan lists the new extension
+    // (with the password, held only until then), a QML reload after updating a loaded extension, the
+    // toast to show when it all worked, and the removal of the files once its system pieces are gone.
+    property string _systemAfterScan: ""
+    property string _pendingPassword: ""
+    property bool _reloadAfterSystem: false
+    property string _doneToast: ""
+    property string _removeAfterUninstall: ""
+    property string _zipMode: ""
 
     // Installed by the user (zip or by hand), as opposed to shipped with the shell: can be removed
     function isUserInstalled(id: string): bool {
@@ -46,30 +59,62 @@ Singleton {
         listProc.running = true;
     }
 
-    function installZip(path: string): void {
-        if (zipProc.running)
-            return;
+    function _runZip(mode: string, args: var): void {
+        root._zipMode = mode;
         root.zipBusy = true;
         root.zipError = "";
-        zipProc.command = ["python3", Quickshell.shellPath("scripts/install-extension.py"), "install", path, root.userDir, Quickshell.shellPath("extensions")];
+        zipProc.command = ["python3", Quickshell.shellPath("scripts/install-extension.py"), mode, ...args];
         zipProc.running = true;
     }
 
-    // Remove an extension installed by the user. Its system pieces must be removed first (they need
-    // the password); its config and state are kept, like when it is disabled.
-    function removeExtension(id: string): void {
-        if (zipProc.running || !root.isUserInstalled(id))
+    // Check the zip first: an extension that needs administrator rights asks for the password before
+    // anything is written (zipPending), the others are installed right away.
+    function installZip(path: string): void {
+        if (zipProc.running || systemProc.running)
             return;
-        if (root.hasSystem(discovered.find(x => x.manifest.id === id)?.manifest) && ["installed", "outdated"].includes(systemState[id])) {
-            root.zipError = Tr.tr("Remove its system components first");
+        root.zipPending = null;
+        root._runZip("inspect", [path, Quickshell.shellPath("extensions")]);
+    }
+
+    function confirmZip(password: string): void {
+        const z = root.zipPending;
+        if (!z || zipProc.running || systemProc.running || password.length === 0)
+            return;
+        root._pendingPassword = password;
+        root._runZip("install", [z.path, root.userDir, Quickshell.shellPath("extensions")]);
+    }
+
+    function cancelZip(): void {
+        root.zipPending = null;
+        root.zipError = "";
+    }
+
+    // Remove an extension installed by the user, with its system pieces when it has them installed
+    // (then `password` is needed: they go first, and the files only if that worked). Its config and
+    // state are kept, like when it is disabled.
+    function removeExtension(id: string, password: string): void {
+        if (zipProc.running || systemProc.running || !root.isUserInstalled(id))
+            return;
+        root.zipError = "";
+        if (root.needsSystemRemoval(id)) {
+            if (!password)
+                return;
+            root._removeAfterUninstall = id;
+            root.runSystem(id, "uninstall", password);
             return;
         }
+        root._removeFiles(id);
+    }
+
+    function needsSystemRemoval(id: string): bool {
+        const d = discovered.find(x => x.manifest.id === id);
+        return root.hasSystem(d?.manifest) && ["installed", "outdated"].includes(systemState[id]);
+    }
+
+    function _removeFiles(id: string): void {
         if (root.isEnabled(id))
             root.setEnabled(id, false);
-        root.zipBusy = true;
-        root.zipError = "";
-        zipProc.command = ["python3", Quickshell.shellPath("scripts/install-extension.py"), "remove", id, root.userDir];
-        zipProc.running = true;
+        root._runZip("remove", [id, root.userDir]);
     }
 
     // ── System pieces (manifest `system`: { install, uninstall, check, description }) ──────────
@@ -373,6 +418,14 @@ Singleton {
                     console.warn(`Extensions: bad listing: ${e}`);
                 }
                 root.ready = true;
+                // A zip just unpacked whose extension needs its system install
+                const id = root._systemAfterScan;
+                if (id) {
+                    const pw = root._pendingPassword;
+                    root._systemAfterScan = "";
+                    root._pendingPassword = "";
+                    root.runSystem(id, "install", pw);
+                }
             }
         }
     }
@@ -384,6 +437,7 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: {
                 root.zipBusy = false;
+                const mode = root._zipMode;
                 let r = null;
                 try {
                     r = JSON.parse(text);
@@ -391,19 +445,46 @@ Singleton {
                     r = { ok: false, error: text.trim() || `${e}` };
                 }
                 if (!r.ok) {
+                    root._pendingPassword = "";
+                    root.zipPending = null;
                     root.zipError = r.error ?? Tr.tr("Unknown error");
-                    Toaster.toast(Tr.tr("Extension not installed"), root.zipError, "extension_off", Toast.Error);
+                    Toaster.toast(mode === "remove" ? Tr.tr("Extension not removed") : Tr.tr("Extension not installed"), root.zipError, "extension_off", Toast.Error);
                     return;
                 }
-                if (r.name === undefined) {
+                if (mode === "remove") {
                     Toaster.toast(Tr.tr("Extension removed"), r.id, "extension_off");
                     root.rescan();
                     return;
                 }
-                const name = Tr.tr(r.name);
-                Toaster.toast(r.updated ? Tr.tr("Extension updated") : Tr.tr("Extension installed"), `${name} ${r.version ?? ""}`.trim(), "extension");
+                if (mode === "inspect") {
+                    if (r.system) {
+                        root.zipPending = {
+                            path: zipProc.command[3],
+                            id: r.id,
+                            name: r.name,
+                            description: r.systemDescription ?? ""
+                        };
+                        return;
+                    }
+                    root._runZip("install", [zipProc.command[3], root.userDir, Quickshell.shellPath("extensions")]);
+                    return;
+                }
+                // install
+                const toast = `${Tr.tr(r.name)} ${r.version ?? ""}`.trim();
+                const title = r.updated ? Tr.tr("Extension updated") : Tr.tr("Extension installed");
                 // A loaded extension keeps its old code until QML is reloaded (the engine caches it)
-                if (r.updated && root.isEnabled(r.id))
+                const reload = r.updated && root.isEnabled(r.id);
+                if (root.zipPending) {
+                    // Its system install runs once the rescan lists it; the toast comes after
+                    root.zipPending = null;
+                    root._systemAfterScan = r.id;
+                    root._reloadAfterSystem = reload;
+                    root._doneToast = `${title}\n${toast}`;
+                    root.rescan();
+                    return;
+                }
+                Toaster.toast(title, toast, "extension");
+                if (reload)
                     Qt.callLater(() => Quickshell.reload(true));
                 else
                     root.rescan();
@@ -446,6 +527,7 @@ Singleton {
         onExited: code => {
             systemTimeout.stop();
             const id = root.systemBusyId;
+            const action = root.systemAction;
             root.systemBusyId = "";
             if (code !== 0) {
                 // What sudo or the script said (never the password); a rejected password is told apart
@@ -458,9 +540,29 @@ Singleton {
                     root.systemError = Tr.tr("Too many failed attempts. Wait a minute and try again.");
                 else
                     root.systemError = said.length > 0 ? said[said.length - 1] : Tr.tr("Failed (code %1)").arg(code);
-                console.warn(`Extensions: ${id}: system ${root.systemAction} failed (${code}): ${said.join(" | ")}`);
+                console.warn(`Extensions: ${id}: system ${action} failed (${code}): ${said.join(" | ")}`);
+                Toaster.toast(action === "uninstall" ? Tr.tr("Extension not removed") : Tr.tr("Installation incomplete"), root.systemError, "extension_off", Toast.Error);
             }
             root.systemAction = "";
+            const toast = root._doneToast;
+            const reload = root._reloadAfterSystem;
+            const removeId = root._removeAfterUninstall;
+            root._doneToast = "";
+            root._reloadAfterSystem = false;
+            root._removeAfterUninstall = "";
+            if (code === 0 && toast) {
+                const [title, body] = toast.split("\n");
+                Toaster.toast(title, body, "extension");
+            }
+            if (code === 0 && reload) {
+                Qt.callLater(() => Quickshell.reload(true));
+                return;
+            }
+            // Removing an extension: its system pieces are gone, now its files
+            if (code === 0 && action === "uninstall" && removeId === id) {
+                root._removeFiles(id);
+                return;
+            }
             root.checkSystem();
         }
     }

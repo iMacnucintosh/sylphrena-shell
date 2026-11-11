@@ -9,10 +9,11 @@ import qs.components.controls
 import qs.services
 
 // One extension in a Nexus list: icon, name, status line, enable switch and, when the extension
-// contributes `settings`, an expandable area with its Settings.qml. An extension that declares
-// `system` pieces (root helper, package, …) shows their state and an Install / Update / Remove
-// button that asks for the password inline; it can be enabled only once installed. Nothing here is
-// specific to a given extension: it all comes from the manifest and the extension's service.
+// contributes `settings`, an expandable area with its Settings.qml. Extensions installed from a zip
+// can be deleted (asking for the password when they installed something as root, which goes with
+// them). If that root part is missing or out of date (a failed install), "Installation incomplete"
+// offers to complete it. Nothing here is specific to a given extension: it all comes from the
+// manifest and the extension's service.
 ConnectedRect {
     id: root
 
@@ -30,18 +31,27 @@ ConnectedRect {
     readonly property string systemState: Extensions.systemState[manifest.id] ?? ""
     readonly property bool systemBusy: Extensions.systemBusyId === manifest.id
     readonly property string systemError: Extensions.systemErrorId === manifest.id ? Extensions.systemError : ""
-    // "install" | "uninstall" while the password field is shown
-    property string pendingAction: ""
-    // Installed by the user (from a zip): it can be removed from here
+    // The root part is missing or older than the extension's: offer to complete the install
+    readonly property bool incomplete: hasSystem && ["missing", "outdated"].includes(systemState)
+    // Installed by the user (from a zip): it can be deleted from here
     readonly property bool removable: Extensions.isUserInstalled(manifest.id)
-    property bool confirmRemove: false
+    // "" | "remove" | "complete": what the confirmation row below is for
+    property string pendingAction: ""
+    readonly property bool needsPassword: root.pendingAction === "complete" || (root.pendingAction === "remove" && Extensions.needsSystemRemoval(root.manifest.id))
 
-    function confirmSystem(): void {
-        if (passField.text.length === 0)
-            return;
-        Extensions.runSystem(root.manifest.id, root.pendingAction, passField.text);
+    function cancelAction(): void {
         passField.text = "";
         root.pendingAction = "";
+    }
+
+    function confirmAction(): void {
+        if (root.needsPassword && passField.text.length === 0)
+            return;
+        if (root.pendingAction === "remove")
+            Extensions.removeExtension(root.manifest.id, passField.text);
+        else if (root.pendingAction === "complete")
+            Extensions.runSystem(root.manifest.id, "install", passField.text);
+        root.cancelAction();
     }
 
     Layout.fillWidth: true
@@ -106,13 +116,16 @@ ConnectedRect {
             }
 
             IconButton {
-                visible: root.removable && !root.confirmRemove
+                visible: root.removable && root.pendingAction === ""
                 isRound: true
                 type: IconButton.Text
                 icon: "delete"
                 padding: Tokens.padding.small
                 Layout.alignment: Qt.AlignVCenter
-                onClicked: root.confirmRemove = true
+                onClicked: {
+                    root.pendingAction = "remove";
+                    Qt.callLater(() => passField.forceActiveFocus());
+                }
             }
 
             StyledSwitch {
@@ -127,140 +140,73 @@ ConnectedRect {
             }
         }
 
-        // ---- Remove (extensions installed by the user) ---------------------------
+        // ---- Installation incomplete (its root part failed or is out of date) ----
         RowLayout {
             Layout.fillWidth: true
-            visible: root.confirmRemove
-            spacing: Tokens.spacing.small
+            visible: root.incomplete || root.systemBusy
+            spacing: Tokens.spacing.medium
+
+            MaterialIcon {
+                Layout.alignment: Qt.AlignVCenter
+                text: "warning"
+                color: Colours.palette.m3error
+                fontStyle: Tokens.font.icon.small
+            }
 
             StyledText {
                 Layout.fillWidth: true
-                text: root.hasSystem && ["installed", "outdated"].includes(root.systemState) ? Tr.tr("Remove its system components first (below).") : Tr.tr("Remove this extension? Its settings are kept.")
+                text: root.systemBusy ? (Extensions.systemAction === "uninstall" ? Tr.tr("Removing…") : Tr.tr("Installing…")) : Tr.tr("Installation incomplete: it needs your password to finish")
                 font: Tokens.font.label.medium
                 wrapMode: Text.WordWrap
             }
 
             TextButton {
-                isRound: true
-                type: TextButton.Tonal
-                horizontalPadding: Tokens.padding.large
-                verticalPadding: Tokens.padding.small
-                text: Tr.trCtx("Cancel", "button")
-                onClicked: root.confirmRemove = false
-            }
-
-            TextButton {
+                Layout.alignment: Qt.AlignVCenter
+                visible: !root.systemBusy && root.pendingAction === ""
                 isRound: true
                 horizontalPadding: Tokens.padding.large
                 verticalPadding: Tokens.padding.small
-                disabled: Extensions.zipBusy || (root.hasSystem && ["installed", "outdated"].includes(root.systemState))
-                inactiveColour: Colours.palette.m3error
-                inactiveOnColour: Colours.palette.m3onError
-                text: Tr.tr("Delete")
+                text: Tr.tr("Complete")
                 onClicked: {
-                    root.confirmRemove = false;
-                    Extensions.removeExtension(root.manifest.id);
+                    root.pendingAction = "complete";
+                    Qt.callLater(() => passField.forceActiveFocus());
                 }
             }
         }
 
-        // ---- System pieces ----------------------------------------------------
+        // ---- Confirmation (delete / complete), with the password when needed ------
         ColumnLayout {
             Layout.fillWidth: true
-            visible: root.hasSystem
+            visible: root.pendingAction !== ""
             spacing: Tokens.spacing.small
 
-            RowLayout {
+            StyledText {
                 Layout.fillWidth: true
-                spacing: Tokens.spacing.medium
-
-                MaterialIcon {
-                    Layout.alignment: Qt.AlignVCenter
-                    text: root.systemState === "installed" ? "verified" : root.systemState === "outdated" ? "update" : "install_desktop"
-                    color: root.systemState === "installed" ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
-                    fontStyle: Tokens.font.icon.small
-                }
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 0
-
-                    StyledText {
-                        Layout.fillWidth: true
-                        text: {
-                            if (root.systemBusy)
-                                return Extensions.systemAction === "uninstall" ? Tr.tr("Removing system components…") : Tr.tr("Installing system components…");
-                            switch (root.systemState) {
-                            case "installed":
-                                return Tr.tr("System components installed");
-                            case "outdated":
-                                return Tr.tr("A newer version of its system components is available");
-                            case "missing":
-                                return Tr.tr("Needs system components (asks for your password once)");
-                            }
-                            return Tr.tr("Checking system components…");
-                        }
-                        font: Tokens.font.label.medium
-                        wrapMode: Text.WordWrap
-                    }
-
-                    StyledText {
-                        Layout.fillWidth: true
-                        visible: text.length > 0 && root.systemState !== "installed"
-                        text: root.manifest.system?.description ? Tr.tr(root.manifest.system.description) : ""
-                        color: Colours.palette.m3outline
-                        font: Tokens.font.label.small
-                        wrapMode: Text.WordWrap
-                    }
-                }
-
-                // Remove: whenever something is installed, current or not
-                TextButton {
-                    Layout.alignment: Qt.AlignVCenter
-                    visible: !root.systemBusy && root.pendingAction === "" && ["installed", "outdated"].includes(root.systemState)
-                    isRound: true
-                    type: TextButton.Text
-                    horizontalPadding: Tokens.padding.large
-                    verticalPadding: Tokens.padding.small
-                    text: Tr.tr("Remove")
-                    onClicked: {
-                        root.pendingAction = "uninstall";
-                        Qt.callLater(() => passField.forceActiveFocus());
-                    }
-                }
-
-                // Install (missing) / Update (outdated)
-                TextButton {
-                    Layout.alignment: Qt.AlignVCenter
-                    visible: !root.systemBusy && root.pendingAction === "" && ["missing", "outdated"].includes(root.systemState)
-                    isRound: true
-                    horizontalPadding: Tokens.padding.large
-                    verticalPadding: Tokens.padding.small
-                    text: root.systemState === "outdated" ? Tr.tr("Update") : Tr.tr("Install")
-                    onClicked: {
-                        root.pendingAction = "install";
-                        Qt.callLater(() => passField.forceActiveFocus());
-                    }
-                }
+                visible: root.pendingAction === "remove"
+                text: Extensions.needsSystemRemoval(root.manifest.id) ? Tr.tr("Delete this extension and what it installed as administrator? Its settings are kept.") : Tr.tr("Delete this extension? Its settings are kept.")
+                font: Tokens.font.label.medium
+                wrapMode: Text.WordWrap
             }
 
             RowLayout {
                 Layout.fillWidth: true
-                visible: root.pendingAction !== ""
                 spacing: Tokens.spacing.small
 
                 StyledTextField {
                     id: passField
 
                     Layout.fillWidth: true
+                    visible: root.needsPassword
                     placeholderText: Tr.tr("Your password (sudo)")
                     leadingIcon: "key"
                     echoMode: TextInput.Password
-                    onAccepted: root.confirmSystem()
-                    Keys.onEscapePressed: {
-                        passField.text = "";
-                        root.pendingAction = "";
-                    }
+                    onAccepted: root.confirmAction()
+                    Keys.onEscapePressed: root.cancelAction()
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                    visible: !root.needsPassword
                 }
 
                 TextButton {
@@ -269,30 +215,29 @@ ConnectedRect {
                     horizontalPadding: Tokens.padding.large
                     verticalPadding: Tokens.padding.small
                     text: Tr.trCtx("Cancel", "button")
-                    onClicked: {
-                        passField.text = "";
-                        root.pendingAction = "";
-                    }
+                    onClicked: root.cancelAction()
                 }
 
                 TextButton {
                     isRound: true
                     horizontalPadding: Tokens.padding.large
                     verticalPadding: Tokens.padding.small
-                    disabled: passField.text.length === 0
-                    text: root.pendingAction === "uninstall" ? Tr.tr("Remove") : root.systemState === "outdated" ? Tr.tr("Update") : Tr.tr("Install")
-                    onClicked: root.confirmSystem()
+                    disabled: Extensions.zipBusy || (root.needsPassword && passField.text.length === 0)
+                    inactiveColour: root.pendingAction === "remove" ? Colours.palette.m3error : Colours.palette.m3primary
+                    inactiveOnColour: root.pendingAction === "remove" ? Colours.palette.m3onError : Colours.palette.m3onPrimary
+                    text: root.pendingAction === "remove" ? Tr.tr("Delete") : Tr.tr("Complete")
+                    onClicked: root.confirmAction()
                 }
             }
+        }
 
-            StyledText {
-                Layout.fillWidth: true
-                visible: root.systemError.length > 0
-                text: root.systemError
-                color: Colours.palette.m3error
-                font: Tokens.font.label.small
-                wrapMode: Text.WordWrap
-            }
+        StyledText {
+            Layout.fillWidth: true
+            visible: root.systemError.length > 0
+            text: root.systemError
+            color: Colours.palette.m3error
+            font: Tokens.font.label.small
+            wrapMode: Text.WordWrap
         }
 
         Loader {

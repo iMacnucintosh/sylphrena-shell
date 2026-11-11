@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:30+0100\n"
+"POT-Creation-Date: 2026-11-11 10:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -853,6 +853,7 @@ msgstr ""
 #: modules/bar/popouts/WirelessPassword.qml
 #: modules/nexus/common/DialogRowButton.qml
 #: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/ComplementsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
@@ -865,8 +866,7 @@ msgstr ""
 msgid "Authenticating…"
 msgstr ""
 
-#: modules/bar/popouts/UpdatesPassword.qml
-#: modules/nexus/common/ExtensionCard.qml modules/nexus/pages/UpdatesPage.qml
+#: modules/bar/popouts/UpdatesPassword.qml modules/nexus/pages/UpdatesPage.qml
 msgid "Update"
 msgstr ""
 
@@ -1762,52 +1762,38 @@ msgid "Primary DNS"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
-msgid "Remove its system components first (below)."
+msgid "Removing…"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
-msgid "Remove this extension? Its settings are kept."
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Installing…"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Installation incomplete: it needs your password to finish"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Complete"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Delete this extension and what it installed as administrator? Its settings are kept."
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Delete this extension? Its settings are kept."
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Your password (sudo)"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 msgid "Delete"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Removing system components…"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Installing system components…"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "System components installed"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "A newer version of its system components is available"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Needs system components (asks for your password once)"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Checking system components…"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Remove"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Install"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Your password (sudo)"
 msgstr ""
 
 #: modules/nexus/common/KeybindRow.qml
@@ -2410,11 +2396,17 @@ msgid "Extensions are .zip packages with a manifest.json. Installing one again u
 msgstr ""
 
 #: modules/nexus/pages/ComplementsPage.qml
-msgid "Installing…"
+msgid "Install from zip"
+msgstr ""
+
+#. TRANSLATORS: %1 = extension name
+#: modules/nexus/pages/ComplementsPage.qml
+#, qt-format
+msgid "%1 needs administrator rights to install"
 msgstr ""
 
 #: modules/nexus/pages/ComplementsPage.qml
-msgid "Install from zip"
+msgid "Install"
 msgstr ""
 
 #: modules/nexus/pages/ComplementsPage.qml
@@ -4744,12 +4736,12 @@ msgstr ""
 msgid "Could not read monitor list"
 msgstr ""
 
-#: services/Extensions.qml
-msgid "Remove its system components first"
-msgstr ""
-
 #: services/Extensions.qml services/VPN.qml
 msgid "Unknown error"
+msgstr ""
+
+#: services/Extensions.qml
+msgid "Extension not removed"
 msgstr ""
 
 #: services/Extensions.qml
@@ -4779,6 +4771,10 @@ msgstr ""
 #: services/Extensions.qml
 #, qt-format
 msgid "Failed (code %1)"
+msgstr ""
+
+#: services/Extensions.qml
+msgid "Installation incomplete"
 msgstr ""
 
 #: services/Hypr.qml

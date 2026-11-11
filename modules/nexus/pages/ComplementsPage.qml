@@ -59,10 +59,83 @@ PageBase {
                 isRound: true
                 horizontalPadding: Tokens.padding.extraLarge
                 verticalPadding: Tokens.padding.medium
-                disabled: Extensions.zipBusy || zipPicker.busy
+                disabled: Extensions.zipBusy || zipPicker.busy || !!Extensions.zipPending || Extensions.systemBusyId !== ""
                 icon: "upload_file"
                 text: Extensions.zipBusy ? Tr.tr("Installing…") : Tr.tr("Install from zip")
                 onClicked: zipPicker.open()
+            }
+        }
+
+        // The extension in the zip installs something as administrator: password first, or nothing
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.topMargin: Tokens.spacing.small
+            visible: !!Extensions.zipPending
+            spacing: Tokens.spacing.small
+
+            StyledText {
+                Layout.fillWidth: true
+                Layout.leftMargin: Tokens.padding.small
+                // TRANSLATORS: %1 = extension name
+                text: Tr.tr("%1 needs administrator rights to install").arg(Extensions.zipPending ? Tr.tr(Extensions.zipPending.name) : "")
+                font: Tokens.font.body.medium
+                wrapMode: Text.WordWrap
+            }
+
+            StyledText {
+                Layout.fillWidth: true
+                Layout.leftMargin: Tokens.padding.small
+                visible: text.length > 0
+                text: Extensions.zipPending?.description ? Tr.tr(Extensions.zipPending.description) : ""
+                color: Colours.palette.m3onSurfaceVariant
+                font: Tokens.font.body.small
+                wrapMode: Text.WordWrap
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Tokens.spacing.small
+
+                StyledTextField {
+                    id: zipPass
+
+                    Layout.fillWidth: true
+                    placeholderText: Tr.tr("Your password (sudo)")
+                    leadingIcon: "key"
+                    echoMode: TextInput.Password
+                    onAccepted: installBtn.clicked()
+                    Keys.onEscapePressed: cancelBtn.clicked()
+                }
+
+                TextButton {
+                    id: cancelBtn
+
+                    isRound: true
+                    type: TextButton.Tonal
+                    horizontalPadding: Tokens.padding.large
+                    verticalPadding: Tokens.padding.small
+                    text: Tr.trCtx("Cancel", "button")
+                    onClicked: {
+                        zipPass.text = "";
+                        Extensions.cancelZip();
+                    }
+                }
+
+                TextButton {
+                    id: installBtn
+
+                    isRound: true
+                    horizontalPadding: Tokens.padding.large
+                    verticalPadding: Tokens.padding.small
+                    disabled: zipPass.text.length === 0 || Extensions.zipBusy
+                    text: Tr.tr("Install")
+                    onClicked: {
+                        if (zipPass.text.length === 0)
+                            return;
+                        Extensions.confirmZip(zipPass.text);
+                        zipPass.text = "";
+                    }
+                }
             }
         }
 
