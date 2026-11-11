@@ -17,6 +17,31 @@ import subprocess
 import sys
 from pathlib import Path
 
+
+def _display_name() -> str:
+    """The name the login screen greets: the user's full name (GECOS), else the account name."""
+    try:
+        import pwd
+
+        full = pwd.getpwuid(os.getuid()).pw_gecos.split(",")[0].strip()
+        if full:
+            return full.split()[0]
+    except (ImportError, KeyError, OSError):
+        pass
+    return Path.home().name
+
+
+def _weather_location() -> str:
+    """"lat,lon" the user chose for the weather in Nexus (shell.json), or "" (the greeter then shows no weather)."""
+    import json
+
+    base = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
+    try:
+        value = json.loads((base / "sylphrena" / "shell.json").read_text())["services"]["weatherLocation"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+    return value if isinstance(value, str) and "," in value else ""
+
 _XDG_CONFIG = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
 _XDG_STATE = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state")
 
@@ -290,8 +315,8 @@ def _sync_greeter(colours: dict[str, str] | None = None) -> None:
     # always picks up the current session user without a separate setup step.
     greeter_cfg = {
         "user": Path.home().name,
-        "displayName": "Manuel",
-        "location": "41.60956,-4.79692",
+        "displayName": _display_name(),
+        "location": _weather_location(),
     }
     try:
         _atomic_write(_GREETER_DIR / "greeter.json", json.dumps(greeter_cfg, indent=2) + "\n")

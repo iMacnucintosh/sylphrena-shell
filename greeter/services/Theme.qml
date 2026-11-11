@@ -20,9 +20,9 @@ Singleton {
     readonly property var c: scheme.colours ?? ({})
     readonly property bool light: scheme.mode === "light"
 
-    readonly property string user: config.user ?? "manu"
+    readonly property string user: config.user ?? ""
     readonly property string displayName: config.displayName ?? user
-    readonly property string location: config.location ?? "41.60956,-4.79692"
+    readonly property string location: config.location ?? ""
     readonly property string wallpaper: `${dir}/wallpaper`
     readonly property string face: `${dir}/face`
 

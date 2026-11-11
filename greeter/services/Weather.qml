@@ -98,6 +98,9 @@ Singleton {
     }
 
     function reload(): void {
+        // No location chosen (Nexus → weather): no request, the card shows "no data"
+        if (!Theme.location || !Theme.location.includes(","))
+            return;
         if (!proc.running)
             proc.running = true;
     }
