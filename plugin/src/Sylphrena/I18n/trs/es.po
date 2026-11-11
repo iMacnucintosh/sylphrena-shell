@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 13:53+0100\n"
+"POT-Creation-Date: 2026-11-11 14:01+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -819,7 +819,7 @@ msgstr "Introduce tu contraseña para actualizar el sistema en segundo plano."
 #: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
-#: modules/nexus/pages/UpdatesPage.qml
+#: modules/nexus/pages/UpdatesPage.qml modules/welcome/WelcomeWindow.qml
 msgid "Password"
 msgstr "Contraseña"
 
@@ -831,7 +831,7 @@ msgstr "Contraseña"
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
-#: modules/utilities/RecordingDeleteModal.qml
+#: modules/utilities/RecordingDeleteModal.qml modules/welcome/WelcomeWindow.qml
 msgctxt "button"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -920,7 +920,7 @@ msgstr "El portapapeles está vacío"
 
 #: modules/dashboard/Content.qml modules/nexus/pages/panels/DashboardPanel.qml
 #: modules/nexus/pages/PanelsPage.qml modules/nexus/pages/ShellPage.qml
-#: services/Keybinds.qml
+#: modules/welcome/WelcomeWindow.qml services/Keybinds.qml
 msgid "Dashboard"
 msgstr "Panel"
 
@@ -1742,7 +1742,7 @@ msgid "Removing…"
 msgstr "Eliminando…"
 
 #: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ExtensionsPage.qml
+#: modules/nexus/pages/ExtensionsPage.qml modules/welcome/WelcomeWindow.qml
 msgid "Installing…"
 msgstr "Instalando…"
 
@@ -1846,7 +1846,7 @@ msgid "About"
 msgstr "Acerca de"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/ShellPage.qml
-#: services/Keybinds.qml
+#: modules/welcome/WelcomeWindow.qml services/Keybinds.qml
 msgid "Activities"
 msgstr "Actividades"
 
@@ -1863,6 +1863,7 @@ msgid "Dashboard, taskbar, launcher, sidebar"
 msgstr "Panel, barra de tareas, lanzador, barra lateral"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/ExtensionsPage.qml
+#: modules/welcome/WelcomeWindow.qml
 msgid "Extensions"
 msgstr "Extensiones"
 
@@ -1997,6 +1998,14 @@ msgstr "Shell"
 msgctxt "the sylphrena command line tool"
 msgid "CLI"
 msgstr "CLI"
+
+#: modules/nexus/pages/AboutPage.qml
+msgid "Welcome guide"
+msgstr "Guía de bienvenida"
+
+#: modules/nexus/pages/AboutPage.qml
+msgid "What Sylphrena is and what it offers"
+msgstr "Qué es Sylphrena y qué ofrece"
 
 #: modules/nexus/pages/apps/AllApps.qml modules/nexus/pages/AppsPage.qml
 msgid "All apps"
@@ -2432,7 +2441,7 @@ msgstr "Examinar"
 msgid "Install %1?"
 msgstr "¿Instalar %1?"
 
-#: modules/nexus/pages/ExtensionsPage.qml
+#: modules/nexus/pages/ExtensionsPage.qml modules/welcome/WelcomeWindow.qml
 msgid "Install"
 msgstr "Instalar"
 
@@ -4361,6 +4370,127 @@ msgctxt "button"
 msgid "Delete"
 msgstr "Eliminar"
 
+#: modules/welcome/WelcomeWindow.qml
+msgid "Welcome to Sylphrena"
+msgstr "Te damos la bienvenida a Sylphrena"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Skip"
+msgstr "Omitir"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Back"
+msgstr "Atrás"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Next"
+msgstr "Siguiente"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Finish"
+msgstr "Terminar"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "A Material You desktop shell for Hyprland, made to be yours: every look, shortcut and widget can be changed, and what you do not need can be left out."
+msgstr "Una shell de escritorio Material You para Hyprland, pensada para que sea tuya: se puede cambiar el aspecto, los atajos y los widgets, y dejar fuera lo que no necesites."
+
+#. TRANSLATORS: %1 = the author's name on GitHub
+#: modules/welcome/WelcomeWindow.qml
+#, qt-format
+msgid "Made by %1"
+msgstr "Hecho por %1"
+
+#. TRANSLATORS: %1 = the name of the original project, %2 = its author
+#: modules/welcome/WelcomeWindow.qml
+#, qt-format
+msgid "A fork of %1 by %2"
+msgstr "Un fork de %1, de %2"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "What Sylphrena gives you"
+msgstr "Qué te ofrece Sylphrena"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "A quick look. Everything is in Nexus, the settings window."
+msgstr "Un vistazo rápido. Todo está en Nexus, la ventana de ajustes."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "A look for each part of your day: wallpaper, colours and the apps pinned to its desktops."
+msgstr "Un aspecto para cada parte de tu día: fondo, colores y las apps ancladas a sus escritorios."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Every setting in one window, with search."
+msgstr "Todos los ajustes en una sola ventana, con búsqueda."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Weather, music, performance and your widgets at a glance."
+msgstr "El tiempo, la música, el rendimiento y tus widgets de un vistazo."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Colours that follow your wallpaper, in the shell and in your apps."
+msgstr "Colores que siguen a tu fondo de pantalla, en la shell y en tus aplicaciones."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Add only what you need: widgets, VPN, games and more."
+msgstr "Añade solo lo que necesites: widgets, VPN, juegos y más."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Lock and login"
+msgstr "Bloqueo e inicio de sesión"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "A lock screen and a login screen that match the shell."
+msgstr "Una pantalla de bloqueo y otra de inicio de sesión que combinan con la shell."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Apps made for Sylphrena"
+msgstr "Aplicaciones hechas para Sylphrena"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "They follow the shell's theme. You can add them now or later."
+msgstr "Siguen el tema de la shell. Puedes añadirlas ahora o más adelante."
+
+#: modules/welcome/WelcomeWindow.qml
+msgctxt "an app is installed"
+msgid "Installed"
+msgstr "Instalada"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Open"
+msgstr "Abrir"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Downloading…"
+msgstr "Descargando…"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Installing what it needs…"
+msgstr "Instalando lo que necesita…"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Building… this takes a minute"
+msgstr "Compilando… tarda un minuto"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Working…"
+msgstr "Trabajando…"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "It is installed as a system package, so it needs your password."
+msgstr "Se instala como un paquete del sistema, así que necesita tu contraseña."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "You are all set"
+msgstr "Todo listo"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Open Nexus whenever you want to change something. This guide is in Nexus → About."
+msgstr "Abre Nexus cuando quieras cambiar algo. Esta guía está en Nexus → Acerca de."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Open Nexus"
+msgstr "Abrir Nexus"
+
 #: modules/windowinfo/Buttons.qml
 msgid "Move to workspace"
 msgstr "Mover al espacio de trabajo"
@@ -4677,6 +4807,19 @@ msgstr "Explorador de archivos Material You, en sintonía con el tema de la shel
 msgid "Package manager: pacman, AUR and Flatpak in one list"
 msgstr "Gestor de paquetes: pacman, AUR y Flatpak en una sola lista"
 
+#: services/Companions.qml services/Extensions.qml services/Updates.qml
+msgid "Incorrect password"
+msgstr "Contraseña incorrecta"
+
+#: services/Companions.qml services/Extensions.qml services/Updates.qml
+msgid "Too many failed attempts. Wait a minute and try again."
+msgstr "Demasiados intentos fallidos. Espera un minuto y vuelve a intentarlo."
+
+#: services/Companions.qml services/Extensions.qml
+#, qt-format
+msgid "Failed (code %1)"
+msgstr "Falló (código %1)"
+
 #: services/DashWidgets.qml
 msgid "Calendar"
 msgstr "Calendario"
@@ -4749,19 +4892,6 @@ msgstr "Extensión actualizada"
 #: services/Extensions.qml
 msgid "Extension installed"
 msgstr "Extensión instalada"
-
-#: services/Extensions.qml services/Updates.qml
-msgid "Incorrect password"
-msgstr "Contraseña incorrecta"
-
-#: services/Extensions.qml services/Updates.qml
-msgid "Too many failed attempts. Wait a minute and try again."
-msgstr "Demasiados intentos fallidos. Espera un minuto y vuelve a intentarlo."
-
-#: services/Extensions.qml
-#, qt-format
-msgid "Failed (code %1)"
-msgstr "Falló (código %1)"
 
 #: services/Extensions.qml
 msgid "Installation incomplete"
@@ -5995,9 +6125,6 @@ msgstr "Configura el shell"
 #~ msgid "Removing system components…"
 #~ msgstr "Quitando los componentes del sistema…"
 
-#~ msgid "Installing system components…"
-#~ msgstr "Instalando los componentes del sistema…"
-
 #~ msgid "System components installed"
 #~ msgstr "Componentes del sistema instalados"
 
@@ -6306,9 +6433,6 @@ msgstr "Configura el shell"
 
 #~ msgid "Integrations"
 #~ msgstr "Integraciones"
-
-#~ msgid "Open in Nexus"
-#~ msgstr "Abrir en Nexus"
 
 #~ msgid "Activities, wallpaper and colours"
 #~ msgstr "Actividades, fondo de pantalla y colores"

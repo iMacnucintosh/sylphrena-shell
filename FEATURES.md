@@ -145,6 +145,19 @@ La extensión `vpn-forticlient` (tipo de proveedor FortiClient para la VPN de Ne
 
 ---
 
+## Asistente de bienvenida
+
+Una ventana propia con cuatro pasos que sale **sola la primera vez** que arranca la shell (a los 4 s) y se puede volver a abrir desde **Nexus → Acerca de → Guía de bienvenida**:
+
+1. **Qué es Sylphrena:** el orbe, una frase, quién la hace (**iMacnucintosh**, con enlace a GitHub) y el crédito al proyecto original (**caelestia-shell**, de soramane).
+2. **Qué te ofrece:** tarjetas con Actividades, Nexus, el panel, Material You, Extensiones y bloqueo/inicio de sesión.
+3. **Aplicaciones hechas para Sylphrena:** hoy **Seeker** (explorador de archivos). Si no está instalado, el botón **Instalar** pide tu contraseña y lo descarga, lo compila con `makepkg` y lo instala como paquete del sistema (necesita el `packaging/PKGBUILD` del repo de Seeker en su rama principal); si ya lo tienes, indica «Instalada» y ofrece abrirlo.
+4. **Todo listo:** abre Nexus o termina.
+
+Cerrarla, omitirla o terminarla cuenta como vista (`~/.local/state/sylphrena/welcome.json`); para que vuelva a salir sola: `qs -c sylphrena ipc call welcome reset`. Las capturas reales de la shell se añadirán más adelante (por ahora el orbe y tarjetas Material You).
+
+En **Nexus → Extensiones**, la fila **Buscar más en Things** abre Things (botón desactivado, con aviso, si no está instalado).
+
 ## Pantalla (modos, escala, VRR)
 
 Bloque **Pantalla** inline en **Nexus → Dispositivos conectados** (categoría Dispositivos; sin entrada propia en el sidebar), una tarjeta por monitor:

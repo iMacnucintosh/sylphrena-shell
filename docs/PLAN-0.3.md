@@ -3,7 +3,7 @@
 Documento de trabajo. Léelo junto con [AGENTS.md](../AGENTS.md). Si algo choca con el código,
 **para y pregunta al usuario**; no improvises un rediseño.
 
-Estado: **fase 0 hecha (2026-11-11)**; fase 1 por empezar. La 0.2.0 está publicada (`v0.2.0`, PR #34). La rama de trabajo
+Estado: **fase 0 y fase B (base) hechas (2026-11-11)**; fase 1 (Things) por empezar. La 0.2.0 está publicada (`v0.2.0`, PR #34). La rama de trabajo
 es `dev/0.3` y sigue el mismo flujo: cada fase en una rama `feature/*` que sale de `dev/0.3` y se
 fusiona en ella; `main` no se toca hasta cerrar la 0.3 (PR `dev/0.3` → `main` y tag `v0.3.0`).
 
@@ -65,6 +65,22 @@ Entregado:
 - Corregido de paso: el plugin instalado decía `0.1.0` (caché de CMake con `-DVERSION`); ahora toma el último tag.
 - Pendiente de la fase 0 en el **hub** (se hace en la fase 4): que `build.py` copie `requires` / `apiVersion` del manifiesto al `index.json` y los valide.
 
+### Fase B · Cerrar la base: asistente de bienvenida y enlace a Things — HECHA (2026-11-11)
+Orden decidido por el usuario: antes de centrarse en Things, dejar bien cerrado el sistema base.
+Decisiones:
+- **Ventana propia** de 4 pasos que sale sola la primera vez y se reabre desde Nexus → Acerca de.
+- **Visual:** el orbe y tarjetas Material You; **capturas reales a futuro**.
+- **Autoría:** alias de GitHub (`iMacnucintosh`) con enlace + crédito a `caelestia-shell` (soramane). Sin nombre real ni correo.
+- **Instalar Seeker (y Things luego):** `packaging/PKGBUILD` en el repo de cada app + `makepkg`/`pacman -U` desde la shell (`scripts/install-companion.sh`), contraseña por stdin en RAM.
+- **Sin extensiones de serie:** Nexus → Extensiones lleva la fila «Buscar más en Things» (abre Things; desactivada con aviso si no está instalado).
+
+Entregado: `services/Companions.qml`, `services/Welcome.qml`, `modules/welcome/WelcomeWindow.qml`, `scripts/install-companion.sh`, entrada en Acerca de, fila de Things en Extensiones, `packaging/PKGBUILD` en el repo de Seeker (rama local `feature/pkgbuild`).
+
+**Pendiente de esta fase (depende del usuario):**
+- Fusionar y subir la rama `feature/pkgbuild` de **Seeker**: el asistente clona la rama principal de GitHub y, sin el PKGBUILD allí, la instalación falla con «has no packaging/PKGBUILD».
+- Probar la instalación real (necesita contraseña): solo se ha probado con `--dry-run` y construyendo el paquete.
+- Lo mismo para **Things** (su PKGBUILD) cuando se ofrezca en el asistente.
+
 ### Fase 1 · Things lee el hub
 - Pestaña «Sylphrena» en Things (junto a pacman/AUR/Flatpak): lista del `index.json` (extensiones y,
   cuando haya, widgets), con descripción, versión, estado (instalada / actualizable) e icono.
@@ -96,7 +112,7 @@ Entregado:
 - Añadir widgets al hub y documentar cómo publicar (ya está en el README del hub).
 
 ## 4. Preguntas abiertas
-- **Primer arranque sin extensiones:** con Tareas, Hidratación y Juegos fuera de la shell, una instalación nueva no tiene nada que activar hasta abrir Things. ¿Basta con el botón «Buscar más en Things» en Nexus → Extensiones, o conviene una pista en el dashboard («Activa widgets»)?
+- ~~Primer arranque sin extensiones~~ (respondida: la página Extensiones lleva un enlace a Things; el asistente de bienvenida presenta la shell).
 - **Firma del índice** (decidido no hacerla ahora): ¿en qué versión se revisa?
 - **Qué pasa con una extensión del hub que se quita del catálogo** (retirada): ¿Things avisa en «instaladas» o la ignora?
 

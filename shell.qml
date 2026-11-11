@@ -38,6 +38,7 @@ ShellRoot {
         Updates;
         ConfigMigration;
         Extensions;
+        Welcome;
         // Weather: first Dash/Weather UI calls Weather.reload() — skip boot network hit
 
         if (GlobalConfig.utilities.vpn.enabled)
