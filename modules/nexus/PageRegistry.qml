@@ -52,7 +52,7 @@ QtObject {
             id: "extensions",
             label: Tr.tr("Extensions"),
             icon: "extension",
-            description: Tr.tr("Install and enable extensions (VPN, games, …)"),
+            description: Tr.tr("Extend the features of the system"),
             category: "appearance"
         },
 

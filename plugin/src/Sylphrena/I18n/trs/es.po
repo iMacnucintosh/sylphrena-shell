@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:14+0100\n"
+"POT-Creation-Date: 2026-11-11 11:18+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1897,8 +1897,8 @@ msgid "Extensions"
 msgstr "Extensiones"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Install and enable extensions (VPN, games, …)"
-msgstr "Instala y activa extensiones (VPN, juegos, …)"
+msgid "Extend the features of the system"
+msgstr "Amplía las funciones del sistema"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
 msgid "Keyboard & mouse"
@@ -2452,8 +2452,9 @@ msgid "Install from zip"
 msgstr "Instalar desde zip"
 
 #: modules/nexus/pages/ExtensionsPage.qml
-msgid "A .zip package (installing again updates it)"
-msgstr "Un paquete .zip (volver a instalar lo actualiza)"
+#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
+msgid "Browse"
+msgstr "Examinar"
 
 #. TRANSLATORS: %1 = extension name
 #: modules/nexus/pages/ExtensionsPage.qml
@@ -4234,10 +4235,6 @@ msgid "How the wallpaper colours are interpreted."
 msgstr "Cómo se interpretan los colores del fondo de pantalla."
 
 #: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
-msgid "Browse"
-msgstr "Examinar"
-
-#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
 msgid "Select an image"
 msgstr "Selecciona una imagen"
 
@@ -5944,6 +5941,12 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "Install and enable extensions (VPN, games, …)"
+#~ msgstr "Instala y activa extensiones (VPN, juegos, …)"
+
+#~ msgid "A .zip package (installing again updates it)"
+#~ msgstr "Un paquete .zip (volver a instalar lo actualiza)"
 
 #, qt-format
 #~ msgid "%1 needs administrator rights to install"

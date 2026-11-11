@@ -22,19 +22,66 @@ PageBase {
         spacing: Tokens.spacing.extraSmall / 2
 
         // ---- Install from a zip (into ~/.local/share/sylphrena/extensions) ------
-        RowButton {
+        ConnectedRect {
             id: installRow
 
             readonly property bool busy: Extensions.zipBusy || zipPicker.busy || Extensions.systemBusyId !== ""
 
+            Layout.fillWidth: true
             first: true
             last: !Extensions.zipPending
-            icon: busy ? "hourglass_top" : "upload_file"
-            text: busy ? Tr.tr("Installing…") : Tr.tr("Install from zip")
-            subtext: Extensions.zipError.length > 0 ? Extensions.zipError : Tr.tr("A .zip package (installing again updates it)")
-            subLabel.color: Extensions.zipError.length > 0 ? Colours.palette.m3error : Colours.palette.m3outline
-            disabled: busy || !!Extensions.zipPending
-            onClicked: zipPicker.open()
+            implicitHeight: installLayout.implicitHeight + Tokens.padding.medium * 2
+
+            RowLayout {
+                id: installLayout
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: Tokens.padding.largeIncreased
+                spacing: Tokens.spacing.medium
+
+                MaterialIcon {
+                    Layout.alignment: Qt.AlignVCenter
+                    text: installRow.busy ? "hourglass_top" : "upload_file"
+                    color: Colours.palette.m3onSurfaceVariant
+                    fontStyle: Tokens.font.icon.medium
+                    fill: 1
+                }
+
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 0
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: installRow.busy ? Tr.tr("Installing…") : Tr.tr("Install from zip")
+                        font: Tokens.font.body.small
+                        elide: Text.ElideRight
+                    }
+
+                    // Only when something went wrong
+                    StyledText {
+                        Layout.fillWidth: true
+                        visible: Extensions.zipError.length > 0
+                        text: Extensions.zipError
+                        color: Colours.palette.m3error
+                        font: Tokens.font.label.small
+                        wrapMode: Text.WordWrap
+                    }
+                }
+
+                IconTextButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    isRound: true
+                    horizontalPadding: Tokens.padding.large
+                    verticalPadding: Tokens.padding.small
+                    disabled: installRow.busy || !!Extensions.zipPending
+                    icon: "folder_open"
+                    text: Tr.tr("Browse")
+                    onClicked: zipPicker.open()
+                }
+            }
         }
 
         // The extension in the zip installs something as administrator: password first, or nothing

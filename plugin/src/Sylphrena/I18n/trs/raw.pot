@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:14+0100\n"
+"POT-Creation-Date: 2026-11-11 11:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1896,7 +1896,7 @@ msgid "Extensions"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Install and enable extensions (VPN, games, …)"
+msgid "Extend the features of the system"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
@@ -2451,7 +2451,8 @@ msgid "Install from zip"
 msgstr ""
 
 #: modules/nexus/pages/ExtensionsPage.qml
-msgid "A .zip package (installing again updates it)"
+#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
+msgid "Browse"
 msgstr ""
 
 #. TRANSLATORS: %1 = extension name
@@ -4230,10 +4231,6 @@ msgstr ""
 
 #: modules/nexus/pages/wallandstyle/ColourSelect.qml
 msgid "How the wallpaper colours are interpreted."
-msgstr ""
-
-#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
-msgid "Browse"
 msgstr ""
 
 #: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
