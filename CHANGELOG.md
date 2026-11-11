@@ -4,6 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## 0.3.0 (en desarrollo)
 
+- **Paquetes del AUR:** `sylphrena-shell-git`, `sylphrena-cli-git`, `seeker-git` y `things-git` (PKGBUILD y `.SRCINFO` en el `packaging/` de cada repo; guía en `packaging/README.md`). El paquete instala la configuración en `/etc/xdg/quickshell/sylphrena` con los permisos de ejecución, y el selector de ficheros encuentra Seeker también en el PATH.
 - **Configuración inicial:** una instalación nueva arranca con los ajustes recomendados de Nexus, una sola actividad (Principal, dos escritorios) y su fondo, incluido en `assets/wallpapers/` (`setup-defaults.py`; nunca pisa una configuración existente).
 - **Instalar una extensión desde un zip** ya vuelve, pero en **Things** (sección Sylphrena → «Instalar desde zip»: selector de Seeker, vista previa con `ext.py inspect`, confirmación; queda como «local») y en terminal con `sylph ext install <zip>`. Things pide el catálogo al hub al abrir (la caché ya no lo deja desfasado una hora).
 - **Atajos por defecto ampliados** (pantalla completa, mover ventana con el teclado, fijar, ir a la actividad N, mover la ventana a la actividad siguiente/anterior, volumen y micro remapeables) y un paso nuevo del asistente de bienvenida, «Tus atajos»: tabla de los que están en uso (se actualiza al cambiarlos en Nexus) y botón «Editar en Nexus».
