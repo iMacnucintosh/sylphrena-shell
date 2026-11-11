@@ -123,12 +123,10 @@ ColumnLayout {
                 onClicked: {
                     root.screenState.utilities = false;
                     root.screenState.sidebar = false;
-                    const explorer = GlobalConfig.general.apps.explorer;
-                    const target = recording.modelData.path;
-                    if (explorer.length > 0)
-                        Quickshell.execDetached([...explorer, target]);
-                    else
-                        Quickshell.execDetached(["xdg-open", Paths.recsdir]);
+                    // System default file manager via FileManager1: opens the folder with the file selected.
+                    // Fallback to xdg-open on the folder if no FileManager1 service answers.
+                    const uri = encodeURI("file://" + recording.modelData.path);
+                    Quickshell.execDetached(["sh", "-c", 'gdbus call --session --dest org.freedesktop.FileManager1 --object-path /org/freedesktop/FileManager1 --method org.freedesktop.FileManager1.ShowItems "[\'$1\']" "" >/dev/null 2>&1 || xdg-open "$2"', "sh", uri, Paths.recsdir]);
                 }
             }
 
