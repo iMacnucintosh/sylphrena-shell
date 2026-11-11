@@ -24,10 +24,10 @@ FloatingWindow {
     // The orb is one item of the window that flies to the slot each step reserves for it: big and
     // centred in the first one, small beside the title in the rest. Position = centre of the orb.
     property Item slot: null
-    property real slotOrb: 168
+    property real slotOrb: 150
     property real orbCx: 0
     property real orbCy: 0
-    property real orbPx: 168
+    property real orbPx: 150
     // False until the first placement: the orb must not fly in from a corner when the window opens
     property bool placed: false
 
@@ -62,10 +62,15 @@ FloatingWindow {
     title: Tr.tr("Welcome to Sylphrena")
     color: Colours.tPalette.m3surface
     surfaceFormat.opaque: false
-    implicitWidth: 880
-    implicitHeight: 640
-    minimumSize.width: 720
-    minimumSize.height: 560
+    // A small window of fixed size: Hyprland floats those (and centres them) instead of tiling them
+    readonly property int windowWidth: 960
+    readonly property int windowHeight: 720
+    implicitWidth: windowWidth
+    implicitHeight: windowHeight
+    minimumSize.width: windowWidth
+    minimumSize.height: windowHeight
+    maximumSize.width: windowWidth
+    maximumSize.height: windowHeight
 
     contentItem.Config.screen: screen.name
     contentItem.Tokens.screen: screen.name
@@ -273,10 +278,10 @@ FloatingWindow {
                 id: heroSlot
 
                 Layout.alignment: Qt.AlignHCenter
-                implicitWidth: 168 * 1.55
-                implicitHeight: 168 * 1.55
+                implicitWidth: 150 * 1.55
+                implicitHeight: 150 * 1.55
 
-                Component.onCompleted: win.registerSlot(heroSlot, 168)
+                Component.onCompleted: win.registerSlot(heroSlot, 150)
             }
 
             StyledText {

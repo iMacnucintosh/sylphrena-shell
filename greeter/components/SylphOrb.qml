@@ -24,7 +24,7 @@ Item {
     readonly property int ringStaggerMs: 1800
     readonly property int orbitMs: 28000
     // Pixel size of the center glyph. Keep in step with components/SylphOrb.qml.
-    readonly property int iconPx: Math.max(32, Math.round(orbSize * 0.45))
+    readonly property int iconPx: Math.max(12, Math.round(orbSize * 0.45))
 
     readonly property list<int> morphShapes: [
         MaterialShape.SoftBurst,
