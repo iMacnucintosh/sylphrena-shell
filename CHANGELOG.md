@@ -2,7 +2,7 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## 0.2.0 (rama `dev/0.2`, sin publicar)
+## 0.2.0 (2026-11-11)
 
 ### Extensiones
 
