@@ -12,7 +12,7 @@ import qs.utils
 // config (Nexus → Network, `type: "ext:vpn-forticlient"`), whose `options` hold its settings. The
 // password never goes to shell.json: it lives in ~/.config/sylphrena/vpn/<id>.conf (mode 600), the
 // openfortivpn file this service generates from `options` + password. The tunnel runs through the
-// root helper of helper/sylphrena-fortivpn (installed by scripts/install-system.sh).
+// root helper of helper/sylphrena-fortivpn (installed with the extension: manifest `system`).
 Scope {
     id: root
 
@@ -83,7 +83,7 @@ Scope {
         if (connectProc.running || disconnectProc.running || writerProc.running || statusProc.running)
             return;
         if (!root.helperInstalled) {
-            // Installed later with scripts/install-system.sh: picked up by the next poll
+            // Installed later from Nexus → Complements: picked up by the next poll
             if (!helperCheck.running)
                 helperCheck.running = true;
             return;
@@ -113,7 +113,7 @@ Scope {
         if (!root.helperInstalled) {
             if (!helperCheck.running)
                 helperCheck.running = true;
-            root.lastError = Tr.tr("The FortiClient helper is not installed: run scripts/install-system.sh");
+            root.lastError = Tr.tr("The FortiClient helper is not installed: install the extension in Nexus → Complements");
             return;
         }
         if (!c) {

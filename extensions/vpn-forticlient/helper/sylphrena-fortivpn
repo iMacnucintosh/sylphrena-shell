@@ -1,8 +1,8 @@
 #!/bin/bash
 # Root helper of the vpn-forticlient extension of Sylphrena.
 #
-# Installed root-owned as /usr/local/sbin/sylphrena-fortivpn by scripts/system/20-forticlient.sh,
-# with a sudoers rule (NOPASSWD) for the user who ran the install. The shell calls it with
+# Installed root-owned as /usr/local/sbin/sylphrena-fortivpn by ../system/install.sh (Nexus →
+# Complements → Install), with a sudoers rule (NOPASSWD) for the user who installed it. The shell calls it with
 # `sudo -n`. Nothing here is specific to a company or network: every per-connection detail comes
 # from the connection file and the arguments.
 #

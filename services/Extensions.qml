@@ -26,6 +26,19 @@ Singleton {
     property var loaded: []
     property bool ready: false
 
+    // ── System pieces (manifest `system`: { install, uninstall, check, description }) ──────────
+    // Some extensions need something as root (a helper, a sudoers rule, a package). They declare
+    // shell scripts for it; installing asks for the password once, in Nexus → Complements, and is
+    // separate from enabling: an extension with `system` can only be enabled once installed.
+    // id -> "installed" | "outdated" | "missing" (only extensions that declare `system`)
+    property var systemState: ({})
+    // The extension whose system pieces are being installed / removed, and which of the two
+    property string systemBusyId: ""
+    property string systemAction: ""
+    // Last failure, for the extension in systemErrorId
+    property string systemErrorId: ""
+    property string systemError: ""
+
     // Widgets declared by every discovered extension (for settings pages, even when disabled):
     // [{ id, extId, title, subtext, icon }]
     readonly property var widgetDecls: {
@@ -124,7 +137,63 @@ Singleton {
         return enabledIds.includes(id);
     }
 
+    function hasSystem(manifest: var): bool {
+        return !!manifest?.system?.install;
+    }
+
+    // True when the extension needs no system pieces or they are installed (current or not)
+    function systemReady(id: string): bool {
+        const d = discovered.find(x => x.manifest.id === id);
+        return !root.hasSystem(d?.manifest) || ["installed", "outdated"].includes(systemState[id]);
+    }
+
+    function systemScript(d: var, key: string): string {
+        const rel = d?.manifest.system?.[key] ?? "";
+        // From a manifest: relative, no "..", only .sh
+        if (!/^[A-Za-z0-9_\/.-]+\.sh$/.test(rel) || rel.includes("..") || rel.startsWith("/"))
+            return "";
+        return `${d.dir}/${rel}`;
+    }
+
+    // Re-run the `check` script of every extension that declares `system`
+    function checkSystem(): void {
+        const args = [];
+        for (const d of discovered) {
+            if (!root.hasSystem(d.manifest))
+                continue;
+            args.push(d.manifest.id, root.systemScript(d, "check"));
+        }
+        if (args.length === 0 || systemCheckProc.running)
+            return;
+        systemCheckProc.command = ["sh", "-c", 'while [ $# -gt 1 ]; do s=missing; if [ -n "$2" ]; then bash "$2" >/dev/null 2>&1; r=$?; [ $r -eq 0 ] && s=installed; [ $r -eq 3 ] && s=outdated; fi; echo "$1 $s"; shift 2; done', "sh", ...args];
+        systemCheckProc.running = true;
+    }
+
+    // Install (action "install") or remove ("uninstall") the system pieces of an extension, as root.
+    // The password goes to sudo through stdin and is dropped right after; never to a file or argv.
+    // Removing disables the extension first (its service stops what it runs).
+    function runSystem(id: string, action: string, password: string): void {
+        const d = discovered.find(x => x.manifest.id === id);
+        const script = root.systemScript(d, action);
+        if (!script || systemProc.running)
+            return;
+        if (action === "uninstall" && root.isEnabled(id))
+            root.setEnabled(id, false);
+        root.systemBusyId = id;
+        root.systemAction = action;
+        root.systemErrorId = "";
+        root.systemError = "";
+        systemProc._password = password;
+        systemProc.command = ["sudo", "-S", "-k", "-p", "", "--", "bash", script];
+        systemProc.stdinEnabled = true;
+        systemTimeout.restart();
+        systemProc.running = true;
+    }
+
     function setEnabled(id: string, on: bool): void {
+        // An extension with system pieces is enabled only once they are installed
+        if (on && !root.systemReady(id))
+            return;
         // Let the service clean up (stop a tunnel, …) before it is destroyed
         if (!on)
             loaded.find(e => e.id === id)?.service?.aboutToDisable?.();
@@ -219,7 +288,10 @@ Singleton {
         loaded = next;
     }
 
-    onDiscoveredChanged: sync()
+    onDiscoveredChanged: {
+        sync();
+        checkSystem();
+    }
     onEnabledIdsChanged: sync()
 
     Component {
@@ -251,6 +323,71 @@ Singleton {
         }
     }
 
+    Process {
+        id: systemCheckProc
+
+        stdinEnabled: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const next = {};
+                for (const line of text.split("\n")) {
+                    const [id, state] = line.trim().split(" ");
+                    if (id && state)
+                        next[id] = state;
+                }
+                root.systemState = next;
+            }
+        }
+    }
+
+    Process {
+        id: systemProc
+
+        property string _password: ""
+
+        stdinEnabled: true
+        stdout: StdioCollector {}
+        stderr: StdioCollector {
+            id: systemErr
+        }
+        onStarted: {
+            systemProc.write(systemProc._password + "\n");
+            systemProc._password = "";
+            systemProc.stdinEnabled = false;
+        }
+        onExited: code => {
+            systemTimeout.stop();
+            const id = root.systemBusyId;
+            root.systemBusyId = "";
+            if (code !== 0) {
+                // What sudo or the script said (never the password); a rejected password is told apart
+                const said = `${systemErr.text}`.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+                const low = said.join(" ").toLowerCase();
+                root.systemErrorId = id;
+                if (/incorrect password|try again|lo siento|contraseña incorrecta|no password was provided|intento/.test(low))
+                    root.systemError = Tr.tr("Incorrect password");
+                else if (low.includes("locked") || low.includes("bloquead"))
+                    root.systemError = Tr.tr("Too many failed attempts. Wait a minute and try again.");
+                else
+                    root.systemError = said.length > 0 ? said[said.length - 1] : Tr.tr("Failed (code %1)").arg(code);
+                console.warn(`Extensions: ${id}: system ${root.systemAction} failed (${code}): ${said.join(" | ")}`);
+            }
+            root.systemAction = "";
+            root.checkSystem();
+        }
+    }
+
+    Timer {
+        id: systemTimeout
+
+        // A package download can take a while; a hung sudo must not keep the card busy forever
+        interval: 5 * 60 * 1000
+        onTriggered: {
+            if (systemProc.running)
+                systemProc.running = false;
+        }
+    }
+
     IpcHandler {
         target: "extensions"
 
@@ -259,7 +396,8 @@ Singleton {
                 enabled: root.enabledIds,
                 discovered: root.discovered.map(d => d.manifest.id),
                 loaded: root.loaded.map(e => ({ id: e.id, error: e.error, hasService: !!e.service, widgets: (e.manifest.contributes?.widgets ?? []).length })),
-                widgets: root.widgets.length
+                widgets: root.widgets.length,
+                system: root.systemState
             });
         }
     }

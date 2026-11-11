@@ -7,6 +7,12 @@
   "icon": "verified_user",
   "version": "0.1.0",
   "apiVersion": 1,
+  "system": {
+    "install": "system/install.sh",
+    "uninstall": "system/uninstall.sh",
+    "check": "system/check.sh",
+    "description": "Installs openfortivpn if missing, the helper /usr/local/sbin/sylphrena-fortivpn and a sudoers rule that lets you run only that helper without a password"
+  },
   "contributes": {
     "service": "Service.qml",
     "settings": "Settings.qml",
