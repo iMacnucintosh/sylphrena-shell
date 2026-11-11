@@ -68,18 +68,13 @@ Entregado:
 ### Fase B · Cerrar la base: asistente de bienvenida y enlace a Things — HECHA (2026-11-11)
 Orden decidido por el usuario: antes de centrarse en Things, dejar bien cerrado el sistema base.
 Decisiones:
-- **Ventana propia** de 4 pasos que sale sola la primera vez y se reabre con un botón de varita en la tarjeta de Sylphrena de Nexus → Acerca de.
-- **Visual:** el orbe y tarjetas Material You; **capturas reales a futuro**.
+- **Ventana propia**, flotante y de tamaño fijo (960×720), de 4 pasos; sale sola la primera vez y se reabre con un botón de varita en la tarjeta de Sylphrena de Nexus → Acerca de. El orbe vuela del centro al lado del título.
+- **Visual:** el orbe y tarjetas Material You; **capturas reales a futuro**. Invita a crear extensiones propias (enlace al hub).
 - **Autoría:** alias de GitHub (`iMacnucintosh`) con enlace + crédito a `caelestia-shell` (soramane). Sin nombre real ni correo.
-- **Instalar Seeker (y Things luego):** `packaging/PKGBUILD` en el repo de cada app + `makepkg`/`pacman -U` desde la shell (`scripts/install-companion.sh`), contraseña por stdin en RAM.
+- **El asistente es solo informativo con las apps** (Seeker, Things, kitty): **las instala el paquete base** (fase 3), no el asistente. (Se descartó instalar desde el asistente con `makepkg`: añadía contraseña, compilación y fallos posibles.)
 - **Sin extensiones de serie:** Nexus → Extensiones lleva la fila «Buscar más en Things» (abre Things; desactivada con aviso si no está instalado).
 
-Entregado: `services/Companions.qml`, `services/Welcome.qml`, `modules/welcome/WelcomeWindow.qml`, `scripts/install-companion.sh`, entrada en Acerca de, fila de Things en Extensiones, `packaging/PKGBUILD` en el repo de Seeker (rama local `feature/pkgbuild`).
-
-**Pendiente de esta fase (depende del usuario):**
-- Fusionar y subir la rama `feature/pkgbuild` de **Seeker**: el asistente clona la rama principal de GitHub y, sin el PKGBUILD allí, la instalación falla con «has no packaging/PKGBUILD».
-- Probar la instalación real (necesita contraseña): solo se ha probado con `--dry-run` y construyendo el paquete.
-- Lo mismo para **Things** (su PKGBUILD) cuando se ofrezca en el asistente.
+Entregado: `services/Companions.qml`, `services/Welcome.qml`, `modules/welcome/WelcomeWindow.qml`, botón en Acerca de, fila de Things en Extensiones.
 
 ### Fase 1 · Things lee el hub
 - Pestaña «Sylphrena» en Things (junto a pacman/AUR/Flatpak): lista del `index.json` (extensiones y,
@@ -98,7 +93,9 @@ Entregado: `services/Companions.qml`, `services/Welcome.qml`, `modules/welcome/W
 - Actualizar la documentación (AGENTS.md, FEATURES.md, CHANGELOG.md) y las cadenas (i18n).
 
 ### Fase 3 · Empaquetado
-- Things como dependencia del paquete de Sylphrena (AUR); sigue siendo opcional en el código.
+- **El paquete base depende de Things, Seeker y kitty** (decidido): Things y Seeker necesitan su `PKGBUILD` (Seeker ya lo tiene en la rama local `feature/pkgbuild` de su repo, sin fusionar; Things falta); kitty es de los repos oficiales. Siguen siendo opcionales en el código (la shell funciona sin ellos).
+- **Conectar kitty:** ser dueña de kitty significa que la base debe dejarlo integrado, no solo instalado: en el primer arranque, añadir a `~/.config/kitty/kitty.conf` (solo si faltan, con copia) el `include` del tema, `allow_remote_control yes` y `listen_on …`, y crear la plantilla y el script de recarga (hoy se hace a mano, ver FEATURES «Kitty y colores»).
+- Dependencias duras del paquete (no sugerencias): `qt6ct`, `cliphist`, `wl-clipboard`, `wtype`, fuentes; recomendadas: Papirus y `adw-gtk-theme`.
 - `scripts/install-system.sh` y el instalador de Things se coordinan (un solo sitio que instale lo de root).
 
 ### Fase 4 · El hub crece (y la shell se queda sin extensiones propias)

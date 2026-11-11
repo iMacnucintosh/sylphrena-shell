@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 14:24+0100\n"
+"POT-Creation-Date: 2026-11-11 14:32+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -819,7 +819,7 @@ msgstr "Introduce tu contraseña para actualizar el sistema en segundo plano."
 #: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
-#: modules/nexus/pages/UpdatesPage.qml modules/welcome/WelcomeWindow.qml
+#: modules/nexus/pages/UpdatesPage.qml
 msgid "Password"
 msgstr "Contraseña"
 
@@ -831,7 +831,7 @@ msgstr "Contraseña"
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
-#: modules/utilities/RecordingDeleteModal.qml modules/welcome/WelcomeWindow.qml
+#: modules/utilities/RecordingDeleteModal.qml
 msgctxt "button"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -1742,7 +1742,7 @@ msgid "Removing…"
 msgstr "Eliminando…"
 
 #: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ExtensionsPage.qml modules/welcome/WelcomeWindow.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Installing…"
 msgstr "Instalando…"
 
@@ -2437,7 +2437,7 @@ msgstr "Examinar"
 msgid "Install %1?"
 msgstr "¿Instalar %1?"
 
-#: modules/nexus/pages/ExtensionsPage.qml modules/welcome/WelcomeWindow.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Install"
 msgstr "Instalar"
 
@@ -4443,37 +4443,16 @@ msgid "Apps made for Sylphrena"
 msgstr "Aplicaciones hechas para Sylphrena"
 
 #: modules/welcome/WelcomeWindow.qml
-msgid "They follow the shell's theme. You can add them now or later."
-msgstr "Siguen el tema de la shell. Puedes añadirlas ahora o más adelante."
-
-#: modules/welcome/WelcomeWindow.qml
-msgctxt "an app is installed"
-msgid "Installed"
-msgstr "Instalada"
+msgid "They come with Sylphrena and follow its theme."
+msgstr "Vienen con Sylphrena y siguen su tema."
 
 #: modules/welcome/WelcomeWindow.qml
 msgid "Open"
 msgstr "Abrir"
 
 #: modules/welcome/WelcomeWindow.qml
-msgid "Downloading…"
-msgstr "Descargando…"
-
-#: modules/welcome/WelcomeWindow.qml
-msgid "Installing what it needs…"
-msgstr "Instalando lo que necesita…"
-
-#: modules/welcome/WelcomeWindow.qml
-msgid "Building… this takes a minute"
-msgstr "Compilando… tarda un minuto"
-
-#: modules/welcome/WelcomeWindow.qml
-msgid "Working…"
-msgstr "Trabajando…"
-
-#: modules/welcome/WelcomeWindow.qml
-msgid "It is installed as a system package, so it needs your password."
-msgstr "Se instala como un paquete del sistema, así que necesita tu contraseña."
+msgid "Not installed"
+msgstr "No instalada"
 
 #: modules/welcome/WelcomeWindow.qml
 msgid "You are all set"
@@ -4815,18 +4794,9 @@ msgstr "Explorador de archivos Material You, en sintonía con el tema de la shel
 msgid "Package manager: pacman, AUR and Flatpak in one list"
 msgstr "Gestor de paquetes: pacman, AUR y Flatpak en una sola lista"
 
-#: services/Companions.qml services/Extensions.qml services/Updates.qml
-msgid "Incorrect password"
-msgstr "Contraseña incorrecta"
-
-#: services/Companions.qml services/Extensions.qml services/Updates.qml
-msgid "Too many failed attempts. Wait a minute and try again."
-msgstr "Demasiados intentos fallidos. Espera un minuto y vuelve a intentarlo."
-
-#: services/Companions.qml services/Extensions.qml
-#, qt-format
-msgid "Failed (code %1)"
-msgstr "Falló (código %1)"
+#: services/Companions.qml
+msgid "Fast terminal: Sylphrena changes its colours live with your theme"
+msgstr "Terminal rápida: Sylphrena le cambia los colores en vivo con tu tema"
 
 #: services/DashWidgets.qml
 msgid "Calendar"
@@ -4900,6 +4870,19 @@ msgstr "Extensión actualizada"
 #: services/Extensions.qml
 msgid "Extension installed"
 msgstr "Extensión instalada"
+
+#: services/Extensions.qml services/Updates.qml
+msgid "Incorrect password"
+msgstr "Contraseña incorrecta"
+
+#: services/Extensions.qml services/Updates.qml
+msgid "Too many failed attempts. Wait a minute and try again."
+msgstr "Demasiados intentos fallidos. Espera un minuto y vuelve a intentarlo."
+
+#: services/Extensions.qml
+#, qt-format
+msgid "Failed (code %1)"
+msgstr "Falló (código %1)"
 
 #: services/Extensions.qml
 msgid "Installation incomplete"
@@ -6071,6 +6054,28 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "They follow the shell's theme. You can add them now or later."
+#~ msgstr "Siguen el tema de la shell. Puedes añadirlas ahora o más adelante."
+
+#~ msgctxt "an app is installed"
+#~ msgid "Installed"
+#~ msgstr "Instalada"
+
+#~ msgid "Downloading…"
+#~ msgstr "Descargando…"
+
+#~ msgid "Installing what it needs…"
+#~ msgstr "Instalando lo que necesita…"
+
+#~ msgid "Building… this takes a minute"
+#~ msgstr "Compilando… tarda un minuto"
+
+#~ msgid "Working…"
+#~ msgstr "Trabajando…"
+
+#~ msgid "It is installed as a system package, so it needs your password."
+#~ msgstr "Se instala como un paquete del sistema, así que necesita tu contraseña."
 
 #~ msgid "What Sylphrena is and what it offers"
 #~ msgstr "Qué es Sylphrena y qué ofrece"
