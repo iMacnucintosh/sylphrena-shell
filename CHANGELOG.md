@@ -9,6 +9,8 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 - **La shell se adelgaza (fase 2):** instalar, actualizar y quitar extensiones pasa a **Things** (sección «Sylphrena») y a `scripts/ext.py`. Nexus → Extensiones queda en «instaladas + interruptor + ajustes + Buscar más en Things»: se retiran «Instalar desde zip», la tarjeta de contraseña, la gestión de piezas de sistema y el botón de eliminar. Se conserva la comprobación (sin root) de las piezas de sistema, el aviso de por qué una extensión no corre y `prepareRemoval`. IPC nuevo `extensions reload`; `enable` devuelve `pending` si la extensión aún no está listada.
 - **Se quita la extensión de batería del ratón Razer** (`razer-mouse`) y el enganche `resourceRing`: acoplaba la shell a `synapsex` y se reimplementará mejor más adelante. El dashboard recupera siempre el anillo de almacenamiento. Al arrancar, la migración de configuración quita `addons.razerMouse` y el id `razer-mouse` de `extensions.enabled`.
 
+- **Empaquetado (fase 3):** kitty se conecta solo a los colores de la shell (`setup-kitty.py`: bloque marcado en `kitty.conf` con copia, plantilla y script de recarga incluidos en el repo: `assets/kitty/`, `scripts/kitty-reload-colours.sh`); `PKGBUILD` de Things (rama `feature/pkgbuild` de su repo) y borrador de `packaging/PKGBUILD` de la shell con las dependencias duras (`qt6ct`, `cliphist`, `wl-clipboard`, `wtype`, fuentes, y Things, Seeker y kitty) y recomendadas (Papirus, `adw-gtk-theme`); `cmake --install` del módulo `shell` ahora instala también `scripts/`, `extensions/` y `greeter/`.
+
 ## 0.2.0 (2026-11-11)
 
 ### Extensiones

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 15:23+0100\n"
+"POT-Creation-Date: 2026-11-11 15:29+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -5180,6 +5180,14 @@ msgstr "Capturas de pantalla"
 #, qt-format
 msgid "Already used by “%1”"
 msgstr "Ya está en uso por «%1»"
+
+#: services/KittySetup.qml
+msgid "kitty now follows your colours"
+msgstr "kitty ahora sigue tus colores"
+
+#: services/KittySetup.qml
+msgid "Sylphrena added a block to your kitty.conf (a backup is next to it). Remove the block to disconnect it."
+msgstr "Sylphrena ha añadido un bloque a tu kitty.conf (hay una copia de seguridad al lado). Quita el bloque para desconectarlo."
 
 #: services/Nmcli.qml
 msgid "Enterprise"
