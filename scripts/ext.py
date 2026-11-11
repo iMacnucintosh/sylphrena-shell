@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Manage Sylphrena extensions: from a terminal, and what Things calls (`sylph ext` will wrap it).
+"""Manage Sylphrena extensions: from a terminal, and what Things calls (`sylph ext …` runs it).
 The shell owns the extension contract, so this is the one implementation of installing and removing
 (see AGENTS.md, «Contrato con Things»).
 
