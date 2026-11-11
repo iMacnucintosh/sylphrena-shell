@@ -3,7 +3,7 @@
 Documento de trabajo. Léelo junto con [AGENTS.md](../AGENTS.md). Si algo choca con el código,
 **para y pregunta al usuario**; no improvises un rediseño.
 
-Estado: **fase 0 y fase B (base) hechas (2026-11-11)**; fase 1 (Things) por empezar. La 0.2.0 está publicada (`v0.2.0`, PR #34). La rama de trabajo
+Estado: **fases 0, B (base) y 1 (Things, en local) hechas (2026-11-11)**; fase 2 (adelgazar la shell) por empezar. La 0.2.0 está publicada (`v0.2.0`, PR #34). La rama de trabajo
 es `dev/0.3` y sigue el mismo flujo: cada fase en una rama `feature/*` que sale de `dev/0.3` y se
 fusiona en ella; `main` no se toca hasta cerrar la 0.3 (PR `dev/0.3` → `main` y tag `v0.3.0`).
 
@@ -76,17 +76,16 @@ Decisiones:
 
 Entregado: `services/Companions.qml`, `services/Welcome.qml`, `modules/welcome/WelcomeWindow.qml`, botón en Acerca de, fila de Things en Extensiones.
 
-### Fase 1 · Things lee el hub
-Decisiones (2026-11-11): **sección propia «Sylphrena»** en la columna lateral de Things (no un filtro más junto a pacman/AUR/Flatpak) y **la lógica de instalar vive en la shell** (`scripts/ext.py install-hub …`), Things solo la llama (como un comando más de su cola `Operations`, con su `askpass`).
-Hecho en la shell: `ext.py install-hub`, `list --json`, `info`, `sudo -A` con `SUDO_ASKPASS`, y `inspect` con `requires`/`apiVersion`. Pendiente: el índice del hub con `requires`/`apiVersion`/`system`, y todo lo de Things (`HubCatalog` en C++, fuente `sylphrena` en `Operations`, vista QML, localizar `ext.py`).
-- Pestaña «Sylphrena» en Things (junto a pacman/AUR/Flatpak): lista del `index.json` (extensiones y,
-  cuando haya, widgets), con descripción, versión, estado (instalada / actualizable) e icono.
-- Instalar / actualizar / quitar: lógica de `scripts/install-extension.py` (validación del zip: sin
-  rutas absolutas ni `..`, sin enlaces, límites de tamaño, id válido) y `sha256` del índice.
-- Piezas de sistema (`system.install/uninstall/check`): Things ejecuta esos scripts con su flujo de
-  contraseña (en RAM, `sudo -S -k`, nunca a fichero ni argv).
-- Caché del índice con TTL y funcionamiento sin conexión con los últimos datos.
-- Tras instalar, activar la extensión (la shell lo hace al detectarla; ver fase 2) y avisar con `rescan`.
+### Fase 1 · Things lee el hub — HECHA en local, sin publicar (2026-11-11)
+Decisiones: **sección propia «Sylphrena»** en la columna lateral de Things (no un filtro más junto a pacman/AUR/Flatpak) y **la lógica de instalar vive en la shell** (`scripts/ext.py install-hub …`); Things solo la llama, como un comando más de su cola `Operations`, con su `askpass` (solo si la extensión tiene piezas de sistema).
+Hecho:
+- **Shell:** `ext.py install-hub`, `remove`, `list --json`, `info`, `sudo -A` con `SUDO_ASKPASS`; `inspect` con `requires`/`apiVersion`; IPC `extensions tools` (dónde está `ext.py`).
+- **Hub** (`~/Desarrollo/sylphrena-hub`, rama `feature/index-fields`, local): el índice lleva `apiVersion`, `requires` y `system`; `vpn-forticlient` 0.4.2 con `requires`.
+- **Things** (`~/Desarrollo/things`, rama `feature/hub`, local): `HubCatalog` (índice con caché de 1 h y sin conexión, cada entrada validada, cruzado con lo instalado: disponible / instalada / actualización / local), fuente `sylphrena` en `Operations` (vista previa, cola, registro en vivo, error del propio `ext.py`), sección «Sylphrena» (`Ctrl+4`, contador de actualizaciones) y `HubPage.qml`. README al día.
+- **Probado:** estados y validación del catálogo con un índice de pruebas (URL ajena, sha256 roto, id/versión/tipo inválidos, índice roto o de otro esquema); la sección en pantalla; instalar y quitar **de extremo a extremo desde Things** con un hub y un zip locales (`--hub-op`, `SYLPHRENA_HUB_TEST_PREFIX`).
+- **Sin probar:** el camino con **contraseña** (extensión con piezas de sistema: `SUDO_ASKPASS` de Things → `ext.py` → `sudo -A`) y la descarga real desde GitHub (la release `vpn-forticlient-0.4.2` no está publicada).
+
+Pendiente para cerrar la fase (depende del usuario): publicar en el hub la release `vpn-forticlient-0.4.2` e integrar `feature/index-fields`; hacer PR de `feature/hub` en el repo de Things; y probar la instalación real con contraseña.
 
 ### Fase 2 · La shell se adelgaza
 - Nexus → Extensiones: instaladas + interruptor + ajustes + «Buscar más en Things». Se retiran de la
