@@ -2,7 +2,7 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## 0.3.0 (en desarrollo)
+## 0.3.0 (2026-11-11)
 
 - **Paquetes del AUR:** `sylphrena-shell-git`, `sylphrena-cli-git`, `seeker-git` y `things-git` (PKGBUILD y `.SRCINFO` en el `packaging/` de cada repo; guía en `packaging/README.md`). El paquete instala la configuración en `/etc/xdg/quickshell/sylphrena` con los permisos de ejecución, y el selector de ficheros encuentra Seeker también en el PATH.
 - **Configuración inicial:** una instalación nueva arranca con los ajustes recomendados de Nexus, una sola actividad (Principal, dos escritorios) y su fondo, incluido en `assets/wallpapers/` (`setup-defaults.py`; nunca pisa una configuración existente).
