@@ -174,39 +174,21 @@ ConnectedRect {
             }
         }
 
-        // ---- Confirmation (delete / complete), with the password when needed ------
+        // ---- Confirmation (delete / complete): question and buttons, the password below when needed --
         ColumnLayout {
             Layout.fillWidth: true
             visible: root.pendingAction !== ""
-            spacing: Tokens.spacing.small
-
-            StyledText {
-                Layout.fillWidth: true
-                visible: root.pendingAction === "remove"
-                text: Extensions.needsSystemRemoval(root.manifest.id) ? Tr.tr("Delete this extension and what it installed as administrator? Its settings are kept.") : Tr.tr("Delete this extension? Its settings are kept.")
-                font: Tokens.font.label.medium
-                wrapMode: Text.WordWrap
-            }
+            spacing: Tokens.spacing.medium
 
             RowLayout {
                 Layout.fillWidth: true
                 spacing: Tokens.spacing.small
 
-                StyledTextField {
-                    id: passField
-
+                StyledText {
                     Layout.fillWidth: true
-                    visible: root.needsPassword
-                    placeholderText: Tr.tr("Your password (sudo)")
-                    leadingIcon: "key"
-                    echoMode: TextInput.Password
-                    onAccepted: root.confirmAction()
-                    Keys.onEscapePressed: root.cancelAction()
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                    visible: !root.needsPassword
+                    text: root.pendingAction === "remove" ? Tr.tr("Delete this extension?") : Tr.tr("Finish the installation?")
+                    font: Tokens.font.body.small
+                    elide: Text.ElideRight
                 }
 
                 TextButton {
@@ -229,6 +211,18 @@ ConnectedRect {
                     onClicked: root.confirmAction()
                 }
             }
+
+            StyledTextField {
+                id: passField
+
+                Layout.fillWidth: true
+                visible: root.needsPassword
+                placeholderText: Tr.tr("Your password (sudo)")
+                leadingIcon: "key"
+                echoMode: TextInput.Password
+                onAccepted: root.confirmAction()
+                Keys.onEscapePressed: root.cancelAction()
+            }
         }
 
         StyledText {
@@ -242,7 +236,7 @@ ConnectedRect {
 
         Loader {
             Layout.fillWidth: true
-            active: root.hasSettings && root.settingsOpen
+            active: root.hasSettings && root.settingsOpen && root.pendingAction === ""
             visible: active
             sourceComponent: ExtensionSlot {
                 entry: Extensions.settingsEntry(root.manifest.id)

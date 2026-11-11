@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:54+0100\n"
+"POT-Creation-Date: 2026-11-11 11:10+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1780,22 +1780,22 @@ msgid "Complete"
 msgstr "Completar"
 
 #: modules/nexus/common/ExtensionCard.qml
-msgid "Delete this extension and what it installed as administrator? Its settings are kept."
-msgstr "¿Eliminar esta extensión y lo que instaló como administrador? Sus ajustes se conservan."
+msgid "Delete this extension?"
+msgstr "¿Eliminar esta extensión?"
 
 #: modules/nexus/common/ExtensionCard.qml
-msgid "Delete this extension? Its settings are kept."
-msgstr "¿Eliminar esta extensión? Sus ajustes se conservan."
-
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Your password (sudo)"
-msgstr "Tu contraseña (sudo)"
+msgid "Finish the installation?"
+msgstr "¿Terminar la instalación?"
 
 #: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 msgid "Delete"
 msgstr "Eliminar"
+
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Your password (sudo)"
+msgstr "Tu contraseña (sudo)"
 
 #: modules/nexus/common/KeybindRow.qml
 msgid "Press a key…"
@@ -5952,6 +5952,9 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "Delete this extension and what it installed as administrator? Its settings are kept."
+#~ msgstr "¿Eliminar esta extensión y lo que instaló como administrador? Sus ajustes se conservan."
 
 #~ msgid "Remove its system components first (below)."
 #~ msgstr "Quita antes sus componentes del sistema (abajo)."

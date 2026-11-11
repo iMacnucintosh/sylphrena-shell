@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:54+0100\n"
+"POT-Creation-Date: 2026-11-11 11:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1779,21 +1779,21 @@ msgid "Complete"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
-msgid "Delete this extension and what it installed as administrator? Its settings are kept."
+msgid "Delete this extension?"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
-msgid "Delete this extension? Its settings are kept."
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Your password (sudo)"
+msgid "Finish the installation?"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 msgid "Delete"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/ComplementsPage.qml
+msgid "Your password (sudo)"
 msgstr ""
 
 #: modules/nexus/common/KeybindRow.qml
