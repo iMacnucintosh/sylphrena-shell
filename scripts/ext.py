@@ -1,28 +1,53 @@
 #!/usr/bin/env python3
-"""Manage Sylphrena extensions from a terminal: the fallback when Things is not there (and what
-`sylph ext` will call). Things uses the same contract (see AGENTS.md, «Contrato con Things»).
+"""Manage Sylphrena extensions: from a terminal, and what Things calls (`sylph ext` will wrap it).
+The shell owns the extension contract, so this is the one implementation of installing and removing
+(see AGENTS.md, «Contrato con Things»).
 
-  ext.py list
-  ext.py install <zip>      unpack (checked), install its system pieces if it has them (asks for sudo
-                            in this terminal), enable it
-  ext.py remove <id>        the extension forgets its data in the shell, its system pieces go, then its files
+  ext.py list [--json]       the extensions found (JSON: id, name, version, local, source, enabled, error)
+  ext.py info                {"running", "shellVersion", "apiVersion"} of the shell that is running
+  ext.py install <zip>       a local zip: unpack (checked), install its system pieces if it has them
+                             (sudo), enable it. It stays "local" (no hub receipt)
+  ext.py install-hub <id> --url <zip url> --sha256 <hex> --version <v>
+                             what Things runs: download from the hub, check the sha256 and the
+                             compatibility with this shell, install, write the receipt, enable it
+  ext.py remove <id>         the extension forgets its data in the shell, its system pieces go, then its files
   ext.py enable <id> | disable <id>
   ext.py rescan
 
+Root: the system pieces run with `sudo`; with SUDO_ASKPASS set (Things sets it) as `sudo -A`, so the
+password is asked by the caller's own dialog and never reaches this script.
+
 The shell must be running for rescan / enable / disable and for the extension to forget its data
 (`qs -c sylphrena ipc …`); without it the files are still installed or removed and the shell picks
-them up when it starts.
+them up when it starts. Progress goes to stdout as «==> …» lines.
 """
+import datetime
+import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
+import tempfile
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SHELL = HERE.parent
 USER_DIR = Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local/share") / "sylphrena" / "extensions"
 BUILTIN = SHELL / "extensions"
+
+# Zips of the hub live in the releases of its repository. Anything else is refused (defence in depth:
+# the URL comes from a catalog). Tests may point SYLPHRENA_HUB_TEST_PREFIX at a local folder (file://…).
+HUB_RELEASES = "https://github.com/iMacnucintosh/sylphrena-hub/releases/download/"
+MAX_ZIP = 50 * 1024 * 1024
+ID_RE = re.compile(r"^[a-z0-9-]+$")
+SHA_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+def step(msg: str) -> None:
+    print(f"==> {msg}", flush=True)
 
 
 def run(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
@@ -48,6 +73,10 @@ def installer(*args: str) -> dict:
         return {"ok": False, "error": (r.stderr or r.stdout).strip() or "installer failed"}
 
 
+def sudo() -> list[str]:
+    return ["sudo", "-A"] if os.environ.get("SUDO_ASKPASS") else ["sudo"]
+
+
 def system_script(ext_dir: Path, key: str) -> Path | None:
     try:
         manifest = json.loads((ext_dir / "manifest.json").read_text())
@@ -61,21 +90,98 @@ def system_script(ext_dir: Path, key: str) -> Path | None:
 
 
 def sudo_script(path: Path) -> bool:
-    print(f"  running {path.relative_to(path.parents[1])} as root…")
-    return subprocess.run(["sudo", "bash", str(path)]).returncode == 0
+    step(f"running {path.relative_to(path.parents[1])} as root")
+    return subprocess.run([*sudo(), "bash", str(path)]).returncode == 0
 
 
-def cmd_list() -> int:
+# ── Compatibility (mirrors Extensions.qml: apiVersion, requires.sylphrena) ──────────────────────────
+
+def _parts(v: str) -> list[int] | None:
+    m = re.match(r"^v?(\d+)(?:\.(\d+))?(?:\.(\d+))?", str(v))
+    return [int(m.group(1)), int(m.group(2) or 0), int(m.group(3) or 0)] if m else None
+
+
+def satisfies(version: str, spec: str) -> bool:
+    """Space separated comparators, all must hold. Empty spec or unknown version always passes;
+    a spec that does not parse never does."""
+    if not spec or not version:
+        return True
+    have = _parts(version)
+    for part in str(spec).split():
+        m = re.match(r"^(>=|<=|>|<|=)?(\d+(?:\.\d+){0,2})$", part)
+        if not m or not have:
+            return False
+        want = _parts(m.group(2))
+        c = (have > want) - (have < want)
+        ok = {">=": c >= 0, "<=": c <= 0, ">": c > 0, "<": c < 0, "=": c == 0}[m.group(1) or "="]
+        if not ok:
+            return False
+    return True
+
+
+def shell_info() -> dict:
+    raw = ipc("status")
+    if raw:
+        try:
+            d = json.loads(raw)
+            return {"running": True, "shellVersion": d.get("shellVersion", ""), "apiVersion": d.get("apiVersion", 1)}
+        except ValueError:
+            pass
+    return {"running": False, "shellVersion": "", "apiVersion": 1}
+
+
+def incompatibility(info: dict, shell: dict) -> str:
+    """Why an extension (inspect output) cannot run on this shell, or "" (also "" if the shell is not running)."""
+    if not shell["running"]:
+        return ""
+    if int(info.get("apiVersion") or 1) > int(shell["apiVersion"] or 1):
+        return f"needs a newer Sylphrena (extension API {info['apiVersion']})"
+    spec = info.get("requires") or ""
+    if not satisfies(shell["shellVersion"], spec):
+        return f"needs Sylphrena {spec} (this is {shell['shellVersion']})"
+    return ""
+
+
+# ── Commands ─────────────────────────────────────────────────────────────────────────────────────
+
+def cmd_list(as_json: bool) -> int:
     raw = ipc("list")
     if raw:
         items = json.loads(raw)
     else:  # the shell is not running: read the folders
         r = run([sys.executable, str(HERE / "list-extensions.py"), str(BUILTIN), str(USER_DIR)])
-        items = [{"id": d["manifest"]["id"], "version": d["manifest"].get("version", ""), "local": not d.get("source"), "enabled": None, "error": ""} for d in json.loads(r.stdout)]
+        items = [{"id": d["manifest"]["id"], "name": d["manifest"].get("name", d["manifest"]["id"]), "version": d["manifest"].get("version", ""),
+                  "kind": d["manifest"].get("type", ""), "local": not d.get("source"), "source": d.get("source"), "enabled": None, "error": ""}
+                 for d in json.loads(r.stdout)]
+    if as_json:
+        print(json.dumps(items, ensure_ascii=False))
+        return 0
     for i in items:
         origin = "local" if i["local"] else "hub"
         state = "" if i["enabled"] is None else ("on" if i["enabled"] else "off")
         print(f"{i['id']:<22} {i['version']:<8} {origin:<6} {state:<4} {i.get('error') or ''}".rstrip())
+    return 0
+
+
+def cmd_info() -> int:
+    print(json.dumps(shell_info()))
+    return 0
+
+
+def finish_install(ext_id: str, receipt: dict | None) -> int:
+    """After unpacking: receipt, system pieces, rescan, enable."""
+    ext_dir = USER_DIR / ext_id
+    if receipt is not None:
+        (ext_dir / ".source.json").write_text(json.dumps(receipt, indent=2) + "\n")
+    script = system_script(ext_dir, "install")
+    if script:
+        step("It needs administrator rights")
+        if not sudo_script(script):
+            print("error: the system part failed: run the same command again to retry", file=sys.stderr)
+            return 1
+    running = ipc("rescan") is not None
+    enabled = running and ipc("enable", ext_id) == "ok"
+    step("installed" + (" and enabled" if enabled else "") + ("" if running else " (the shell is not running: it will find it when it starts)"))
     return 0
 
 
@@ -84,22 +190,79 @@ def cmd_install(zip_path: str) -> int:
     if not info.get("ok"):
         print(f"error: {info.get('error')}", file=sys.stderr)
         return 1
-    print(f"{info['name']} {info['version']}: {info.get('description', '')}")
+    why = incompatibility(info, shell_info())
+    if why:
+        print(f"error: {info['name']} {info['version']} {why}", file=sys.stderr)
+        return 1
+    step(f"{info['name']} {info['version']}: {info.get('description', '')}")
     result = installer("install", zip_path, str(USER_DIR), str(BUILTIN))
     if not result.get("ok"):
         print(f"error: {result.get('error')}", file=sys.stderr)
         return 1
-    ext_dir = USER_DIR / result["id"]
-    script = system_script(ext_dir, "install")
-    if script:
-        print("It needs administrator rights.")
-        if not sudo_script(script):
-            print("The system part failed: run the same command again to retry.", file=sys.stderr)
+    return finish_install(result["id"], None)
+
+
+def download(url: str, dest: Path) -> str:
+    """Fetch the zip to `dest`, capped, and return its sha256."""
+    test_prefix = os.environ.get("SYLPHRENA_HUB_TEST_PREFIX", "")
+    if not (url.startswith(HUB_RELEASES) or (test_prefix and url.startswith(test_prefix))):
+        raise ValueError("the download is not from the Sylphrena Hub releases")
+    h = hashlib.sha256()
+    size = 0
+    req = urllib.request.Request(url, headers={"User-Agent": "sylphrena-ext"})
+    with urllib.request.urlopen(req, timeout=60) as r, open(dest, "wb") as f:
+        while True:
+            chunk = r.read(65536)
+            if not chunk:
+                break
+            size += len(chunk)
+            if size > MAX_ZIP:
+                raise ValueError("the zip is too big")
+            h.update(chunk)
+            f.write(chunk)
+    return h.hexdigest()
+
+
+def cmd_install_hub(args: list[str]) -> int:
+    if not args or not ID_RE.match(args[0]):
+        print("usage: ext.py install-hub <id> --url <url> --sha256 <hex> --version <v>", file=sys.stderr)
+        return 2
+    ext_id = args[0]
+    opts = dict(zip(args[1::2], args[2::2]))
+    url, sha, version = opts.get("--url", ""), opts.get("--sha256", "").lower(), opts.get("--version", "")
+    if not url or not SHA_RE.match(sha) or not version:
+        print("error: --url, --sha256 (64 hex) and --version are required", file=sys.stderr)
+        return 2
+    with tempfile.TemporaryDirectory(prefix="sylphrena-hub-") as tmp:
+        zip_path = Path(tmp) / f"{ext_id}.zip"
+        step(f"Downloading {ext_id} {version}")
+        try:
+            got = download(url, zip_path)
+        except (ValueError, OSError, urllib.error.URLError) as e:
+            print(f"error: {e}", file=sys.stderr)
             return 1
-    running = ipc("rescan") is not None
-    enabled = running and ipc("enable", result["id"]) == "ok"
-    print("installed" + (" and enabled" if enabled else "") + ("" if running else " (the shell is not running: it will find it when it starts)"))
-    return 0
+        step("Checking the download")
+        if got != sha:
+            print("error: the sha256 of the download does not match the catalog; nothing was installed", file=sys.stderr)
+            return 1
+        info = installer("inspect", str(zip_path), str(BUILTIN))
+        if not info.get("ok"):
+            print(f"error: {info.get('error')}", file=sys.stderr)
+            return 1
+        if info["id"] != ext_id:
+            print(f"error: the zip holds '{info['id']}', not '{ext_id}'", file=sys.stderr)
+            return 1
+        why = incompatibility(info, shell_info())
+        if why:
+            print(f"error: {info['name']} {info['version']} {why}", file=sys.stderr)
+            return 1
+        step("Installing")
+        result = installer("install", str(zip_path), str(USER_DIR), str(BUILTIN))
+        if not result.get("ok"):
+            print(f"error: {result.get('error')}", file=sys.stderr)
+            return 1
+    receipt = {"source": "hub", "version": version, "sha256": sha, "installedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")}
+    return finish_install(ext_id, receipt)
 
 
 def cmd_remove(ext_id: str) -> int:
@@ -107,6 +270,7 @@ def cmd_remove(ext_id: str) -> int:
     if not (ext_dir / "manifest.json").is_file():
         print(f"error: '{ext_id}' is not installed in {USER_DIR}", file=sys.stderr)
         return 1
+    step("Removing")
     ipc("prepareRemoval", ext_id)
     script = system_script(ext_dir, "uninstall")
     if script and not sudo_script(script):
@@ -118,16 +282,20 @@ def cmd_remove(ext_id: str) -> int:
         print(f"error: {result.get('error')}", file=sys.stderr)
         return 1
     ipc("rescan")
-    print("removed")
+    step("removed")
     return 0
 
 
 def main() -> int:
     a = sys.argv[1:]
-    if a[:1] == ["list"] and len(a) == 1:
-        return cmd_list()
+    if a[:1] == ["list"] and a[1:] in ([], ["--json"]):
+        return cmd_list(a[1:] == ["--json"])
+    if a == ["info"]:
+        return cmd_info()
     if a[:1] == ["install"] and len(a) == 2:
         return cmd_install(a[1])
+    if a[:1] == ["install-hub"]:
+        return cmd_install_hub(a[1:])
     if a[:1] == ["remove"] and len(a) == 2:
         return cmd_remove(a[1])
     if a[:1] in (["enable"], ["disable"]) and len(a) == 2:
