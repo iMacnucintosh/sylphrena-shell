@@ -21,6 +21,33 @@ FloatingWindow {
 
     property bool done: false
 
+    // The orb is one item of the window that flies to the slot each step reserves for it: big and
+    // centred in the first one, small beside the title in the rest. Position = centre of the orb.
+    property Item slot: null
+    property real slotOrb: 168
+    property real orbCx: 0
+    property real orbCy: 0
+    property real orbPx: 168
+    // False until the first placement: the orb must not fly in from a corner when the window opens
+    property bool placed: false
+
+    function registerSlot(item: Item, orbSize: real): void {
+        win.slot = item;
+        win.slotOrb = orbSize;
+        settle.restart();
+    }
+
+    function syncOrb(): void {
+        if (!win.slot)
+            return;
+        const p = win.slot.mapToItem(win.contentItem, win.slot.width / 2, win.slot.height / 2);
+        win.orbCx = p.x;
+        win.orbCy = p.y;
+        win.orbPx = win.slotOrb;
+        if (!win.placed)
+            Qt.callLater(() => win.placed = true);
+    }
+
     signal finished
 
     // Close the window (finishing, skipping or closing it by hand all end up here)
@@ -46,6 +73,17 @@ FloatingWindow {
     onVisibleChanged: {
         if (!visible)
             win.dismiss();
+    }
+
+    // Layout settles a moment after a page loads or the window is resized: place the orb then
+    onWidthChanged: settle.restart()
+    onHeightChanged: settle.restart()
+
+    Timer {
+        id: settle
+
+        interval: 60
+        onTriggered: win.syncOrb()
     }
 
     ColumnLayout {
@@ -145,6 +183,80 @@ FloatingWindow {
         }
     }
 
+    // The orb (above the pages)
+    SylphOrb {
+        id: orb
+
+        x: win.orbCx - width / 2
+        y: win.orbCy - height / 2
+        orbSize: Math.round(win.orbPx)
+
+        Behavior on x {
+            enabled: win.placed
+
+            Anim {
+                type: Anim.DefaultSpatial
+            }
+        }
+
+        Behavior on y {
+            enabled: win.placed
+
+            Anim {
+                type: Anim.DefaultSpatial
+            }
+        }
+
+        Behavior on orbSize {
+            enabled: win.placed
+
+            Anim {
+                type: Anim.DefaultSpatial
+            }
+        }
+    }
+
+    // Header of the steps after the first: a slot for the small orb, then title and subtitle
+    component PageHeader: RowLayout {
+        id: header
+
+        property string title
+        property string subtitle
+
+        signal slotReady(Item slot, real orbSize)
+
+        Layout.fillWidth: true
+        spacing: Tokens.spacing.medium
+
+        Item {
+            id: headerSlot
+
+            Layout.alignment: Qt.AlignVCenter
+            implicitWidth: 56
+            implicitHeight: 56
+
+            Component.onCompleted: header.slotReady(headerSlot, 36)
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: Tokens.spacing.extraSmall / 2
+
+            StyledText {
+                text: header.title
+                font: Tokens.font.headline.medium
+            }
+
+            StyledText {
+                Layout.fillWidth: true
+                text: header.subtitle
+                color: Colours.palette.m3onSurfaceVariant
+                font: Tokens.font.body.medium
+                wrapMode: Text.WordWrap
+            }
+        }
+    }
+
     // ── 1 · Who Sylphrena is ──────────────────────────────────────────────────────────────
     Component {
         id: welcomePage
@@ -156,11 +268,15 @@ FloatingWindow {
                 Layout.fillHeight: true
             }
 
-            SylphOrb {
+            // Where the orb sits in this step (it is the window's orb, see above)
+            Item {
+                id: heroSlot
+
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: implicitWidth
-                Layout.preferredHeight: implicitHeight
-                orbSize: 168
+                implicitWidth: 168 * 1.55
+                implicitHeight: 168 * 1.55
+
+                Component.onCompleted: win.registerSlot(heroSlot, 168)
             }
 
             StyledText {
@@ -225,19 +341,10 @@ FloatingWindow {
         ColumnLayout {
             spacing: Tokens.spacing.large
 
-            ColumnLayout {
-                spacing: Tokens.spacing.extraSmall
-
-                StyledText {
-                    text: Tr.tr("What Sylphrena gives you")
-                    font: Tokens.font.headline.medium
-                }
-
-                StyledText {
-                    text: Tr.tr("A quick look. Everything is in Nexus, the settings window.")
-                    color: Colours.palette.m3onSurfaceVariant
-                    font: Tokens.font.body.medium
-                }
+            PageHeader {
+                title: Tr.tr("What Sylphrena gives you")
+                subtitle: Tr.tr("A quick look. Everything is in Nexus, the settings window.")
+                onSlotReady: (slot, size) => win.registerSlot(slot, size)
             }
 
             GridLayout {
@@ -354,19 +461,10 @@ FloatingWindow {
 
             Component.onCompleted: Companions.check()
 
-            ColumnLayout {
-                spacing: Tokens.spacing.extraSmall
-
-                StyledText {
-                    text: Tr.tr("Apps made for Sylphrena")
-                    font: Tokens.font.headline.medium
-                }
-
-                StyledText {
-                    text: Tr.tr("They follow the shell's theme. You can add them now or later.")
-                    color: Colours.palette.m3onSurfaceVariant
-                    font: Tokens.font.body.medium
-                }
+            PageHeader {
+                title: Tr.tr("Apps made for Sylphrena")
+                subtitle: Tr.tr("They follow the shell's theme. You can add them now or later.")
+                onSlotReady: (slot, size) => win.registerSlot(slot, size)
             }
 
             ConnectedRect {
@@ -568,32 +666,14 @@ FloatingWindow {
         ColumnLayout {
             spacing: Tokens.spacing.large
 
+            PageHeader {
+                title: Tr.tr("You are all set")
+                subtitle: Tr.tr("Open Nexus whenever you want to change something. This guide is in Nexus → About.")
+                onSlotReady: (slot, size) => win.registerSlot(slot, size)
+            }
+
             Item {
                 Layout.fillHeight: true
-            }
-
-            MaterialIcon {
-                Layout.alignment: Qt.AlignHCenter
-                text: "check_circle"
-                color: Colours.palette.m3primary
-                fontStyle: Tokens.font.icon.extraLarge
-                fill: 1
-            }
-
-            StyledText {
-                Layout.alignment: Qt.AlignHCenter
-                text: Tr.tr("You are all set")
-                font: Tokens.font.headline.medium
-            }
-
-            StyledText {
-                Layout.alignment: Qt.AlignHCenter
-                Layout.maximumWidth: 520
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.WordWrap
-                text: Tr.tr("Open Nexus whenever you want to change something. This guide is in Nexus → About.")
-                color: Colours.palette.m3onSurfaceVariant
-                font: Tokens.font.body.large
             }
 
             IconTextButton {
