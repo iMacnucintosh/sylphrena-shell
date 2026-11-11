@@ -161,7 +161,6 @@ FloatingWindow {
                 Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
                 orbSize: 168
-                welcomed: true
             }
 
             StyledText {
