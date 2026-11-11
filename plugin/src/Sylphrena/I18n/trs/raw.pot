@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 13:38+0100\n"
+"POT-Creation-Date: 2026-11-11 13:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2440,6 +2440,18 @@ msgid "Installed"
 msgstr ""
 
 #: modules/nexus/pages/ExtensionsPage.qml
+msgid "Find more in Things"
+msgstr ""
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Things is not installed"
+msgstr ""
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Open Things"
+msgstr ""
+
+#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Select an extension package"
 msgstr ""
 
@@ -4654,6 +4666,14 @@ msgstr ""
 
 #: services/Clipboard.qml
 msgid "Binary data"
+msgstr ""
+
+#: services/Companions.qml
+msgid "Material You file manager, in tune with the shell's theme"
+msgstr ""
+
+#: services/Companions.qml
+msgid "Package manager: pacman, AUR and Flatpak in one list"
 msgstr ""
 
 #: services/DashWidgets.qml
