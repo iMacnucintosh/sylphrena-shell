@@ -214,16 +214,31 @@ ConnectedRect {
                     }
                 }
 
+                // Remove: whenever something is installed, current or not
                 TextButton {
                     Layout.alignment: Qt.AlignVCenter
-                    visible: !root.systemBusy && root.pendingAction === "" && root.systemState !== ""
+                    visible: !root.systemBusy && root.pendingAction === "" && ["installed", "outdated"].includes(root.systemState)
                     isRound: true
-                    type: root.systemState === "installed" ? TextButton.Text : TextButton.Filled
+                    type: TextButton.Text
                     horizontalPadding: Tokens.padding.large
                     verticalPadding: Tokens.padding.small
-                    text: root.systemState === "installed" ? Tr.tr("Remove") : root.systemState === "outdated" ? Tr.tr("Update") : Tr.tr("Install")
+                    text: Tr.tr("Remove")
                     onClicked: {
-                        root.pendingAction = root.systemState === "installed" ? "uninstall" : "install";
+                        root.pendingAction = "uninstall";
+                        Qt.callLater(() => passField.forceActiveFocus());
+                    }
+                }
+
+                // Install (missing) / Update (outdated)
+                TextButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    visible: !root.systemBusy && root.pendingAction === "" && ["missing", "outdated"].includes(root.systemState)
+                    isRound: true
+                    horizontalPadding: Tokens.padding.large
+                    verticalPadding: Tokens.padding.small
+                    text: root.systemState === "outdated" ? Tr.tr("Update") : Tr.tr("Install")
+                    onClicked: {
+                        root.pendingAction = "install";
                         Qt.callLater(() => passField.forceActiveFocus());
                     }
                 }
@@ -265,7 +280,7 @@ ConnectedRect {
                     horizontalPadding: Tokens.padding.large
                     verticalPadding: Tokens.padding.small
                     disabled: passField.text.length === 0
-                    text: root.pendingAction === "uninstall" ? Tr.tr("Remove") : Tr.tr("Install")
+                    text: root.pendingAction === "uninstall" ? Tr.tr("Remove") : root.systemState === "outdated" ? Tr.tr("Update") : Tr.tr("Install")
                     onClicked: root.confirmSystem()
                 }
             }
