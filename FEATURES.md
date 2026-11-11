@@ -152,7 +152,7 @@ Una ventana propia con cuatro pasos que sale **sola la primera vez** que arranca
 1. **Qué es Sylphrena:** el orbe, una frase, quién la hace (**iMacnucintosh**, con enlace a GitHub) y el crédito al proyecto original (**caelestia-shell**, de soramane).
 2. **Qué te ofrece:** tarjetas con Actividades, Nexus, el panel, Material You, Extensiones y bloqueo/inicio de sesión.
 3. **Aplicaciones hechas para Sylphrena:** hoy **Seeker** (explorador de archivos). Si no está instalado, el botón **Instalar** pide tu contraseña y lo descarga, lo compila con `makepkg` y lo instala como paquete del sistema (necesita el `packaging/PKGBUILD` del repo de Seeker en su rama principal); si ya lo tienes, indica «Instalada» y ofrece abrirlo.
-4. **Todo listo:** abre Nexus o termina.
+4. **Todo listo:** abre Nexus o termina. Incluye una invitación a **crear tus propias extensiones** (una carpeta con un manifiesto y unos pocos ficheros QML) y a compartirlas en el Sylphrena Hub, con enlace a su repo. El paso 2 también lo menciona en la tarjeta de Extensiones.
 
 Cerrarla, omitirla o terminarla cuenta como vista (`~/.local/state/sylphrena/welcome.json`); para que vuelva a salir sola: `qs -c sylphrena ipc call welcome reset`. Las capturas reales de la shell se añadirán más adelante (por ahora el orbe y tarjetas Material You).
 

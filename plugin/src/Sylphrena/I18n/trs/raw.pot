@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 14:01+0100\n"
+"POT-Creation-Date: 2026-11-11 14:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4430,7 +4430,7 @@ msgid "Colours that follow your wallpaper, in the shell and in your apps."
 msgstr ""
 
 #: modules/welcome/WelcomeWindow.qml
-msgid "Add only what you need: widgets, VPN, games and more."
+msgid "Add only what you need: widgets, VPN, games and more. Or build your own."
 msgstr ""
 
 #: modules/welcome/WelcomeWindow.qml
@@ -4484,6 +4484,18 @@ msgstr ""
 
 #: modules/welcome/WelcomeWindow.qml
 msgid "Open Nexus whenever you want to change something. This guide is in Nexus → About."
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Make it yours: create your own extensions"
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "An extension is a folder with a manifest and a few QML files. Build one for yourself, and share it in the Sylphrena Hub for others to install."
+msgstr ""
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Sylphrena Hub"
 msgstr ""
 
 #: modules/welcome/WelcomeWindow.qml

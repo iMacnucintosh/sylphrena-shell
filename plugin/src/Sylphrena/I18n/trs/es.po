@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 14:01+0100\n"
+"POT-Creation-Date: 2026-11-11 14:10+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -4431,8 +4431,8 @@ msgid "Colours that follow your wallpaper, in the shell and in your apps."
 msgstr "Colores que siguen a tu fondo de pantalla, en la shell y en tus aplicaciones."
 
 #: modules/welcome/WelcomeWindow.qml
-msgid "Add only what you need: widgets, VPN, games and more."
-msgstr "Añade solo lo que necesites: widgets, VPN, juegos y más."
+msgid "Add only what you need: widgets, VPN, games and more. Or build your own."
+msgstr "Añade solo lo que necesites: widgets, VPN, juegos y más. O crea las tuyas."
 
 #: modules/welcome/WelcomeWindow.qml
 msgid "Lock and login"
@@ -4486,6 +4486,18 @@ msgstr "Todo listo"
 #: modules/welcome/WelcomeWindow.qml
 msgid "Open Nexus whenever you want to change something. This guide is in Nexus → About."
 msgstr "Abre Nexus cuando quieras cambiar algo. Esta guía está en Nexus → Acerca de."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Make it yours: create your own extensions"
+msgstr "Hazla tuya: crea tus propias extensiones"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "An extension is a folder with a manifest and a few QML files. Build one for yourself, and share it in the Sylphrena Hub for others to install."
+msgstr "Una extensión es una carpeta con un manifiesto y unos pocos ficheros QML. Crea una para ti y compártela en el Sylphrena Hub para que otros la instalen."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Sylphrena Hub"
+msgstr "Sylphrena Hub"
 
 #: modules/welcome/WelcomeWindow.qml
 msgid "Open Nexus"

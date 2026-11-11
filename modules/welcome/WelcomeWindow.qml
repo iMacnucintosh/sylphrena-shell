@@ -379,7 +379,7 @@ FloatingWindow {
                         {
                             icon: "extension",
                             title: Tr.tr("Extensions"),
-                            text: Tr.tr("Add only what you need: widgets, VPN, games and more.")
+                            text: Tr.tr("Add only what you need: widgets, VPN, games and more. Or build your own.")
                         },
                         {
                             icon: "lock",
@@ -670,6 +670,76 @@ FloatingWindow {
                 title: Tr.tr("You are all set")
                 subtitle: Tr.tr("Open Nexus whenever you want to change something. This guide is in Nexus → About.")
                 onSlotReady: (slot, size) => win.registerSlot(slot, size)
+            }
+
+            // Invitation to build extensions
+            ConnectedRect {
+                Layout.fillWidth: true
+                Layout.topMargin: Tokens.spacing.large
+                first: true
+                last: true
+                implicitHeight: makeCol.implicitHeight + Tokens.padding.large * 2
+
+                ColumnLayout {
+                    id: makeCol
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.margins: Tokens.padding.large
+                    spacing: Tokens.spacing.medium
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: Tokens.spacing.medium
+
+                        MaterialIcon {
+                            Layout.alignment: Qt.AlignTop
+                            text: "code"
+                            color: Colours.palette.m3primary
+                            fontStyle: Tokens.font.icon.extraLarge
+                            fill: 1
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: Tokens.spacing.extraSmall
+
+                            StyledText {
+                                Layout.fillWidth: true
+                                text: Tr.tr("Make it yours: create your own extensions")
+                                font: Tokens.font.title.medium
+                                wrapMode: Text.WordWrap
+                            }
+
+                            StyledText {
+                                Layout.fillWidth: true
+                                text: Tr.tr("An extension is a folder with a manifest and a few QML files. Build one for yourself, and share it in the Sylphrena Hub for others to install.")
+                                color: Colours.palette.m3onSurfaceVariant
+                                font: Tokens.font.body.medium
+                                wrapMode: Text.WordWrap
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: Tokens.spacing.small
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        IconTextButton {
+                            isRound: true
+                            horizontalPadding: Tokens.padding.large
+                            verticalPadding: Tokens.padding.small
+                            icon: "open_in_new"
+                            text: Tr.tr("Sylphrena Hub")
+                            onClicked: Quickshell.execDetached(["xdg-open", "https://github.com/iMacnucintosh/sylphrena-hub"])
+                        }
+                    }
+                }
             }
 
             Item {
