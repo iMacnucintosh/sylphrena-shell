@@ -21,8 +21,8 @@ Singleton {
 
     property bool connectPending: false
     property bool disconnectPending: false
-    readonly property bool connecting: connectProc.running || connectPending
-    readonly property bool disconnecting: disconnectProc.running || disconnectPending
+    readonly property bool connecting: root.selectedExternal ? ((root.selectedExternal.service.connecting ?? false) && root.selectedExternal.service.pendingId === root.selectedProvider) : (connectProc.running || connectPending)
+    readonly property bool disconnecting: root.selectedExternal ? ((root.selectedExternal.service.disconnecting ?? false) && root.selectedExternal.service.activeId === root.selectedProvider) : (disconnectProc.running || disconnectPending)
 
     // Internal id of the currently selected provider (persisted). Only one
     // provider can be selected at a time; empty means none. Keyed by id rather
@@ -49,6 +49,21 @@ Singleton {
     // The selected provider entry, or null when nothing valid is selected.
     readonly property var selected: root.providers.find(p => p.id === root.selectedProvider) ?? null
 
+    // Provider types contributed by extensions (e.g. FortiClient), see Extensions.vpnProviderTypes.
+    // A provider whose `type` is one of them is a connection of that type: the extension's service
+    // drives it (with the entry's `options`) instead of the generic command engine below.
+    readonly property var providerTypes: Extensions.vpnProviderTypes
+    // Type entry ({ id, displayName, icon, editor, ext, service }) of a provider, or null
+    function typeOf(p: var): var {
+        return p?.type ? (root.providerTypes.find(t => t.id === p.type) ?? null) : null;
+    }
+    readonly property var selectedExternal: root.typeOf(root.selected)
+    // Kept for the UI: the providers of every type, in config order
+    readonly property var allProviders: root.providers
+    // A selected connection whose extension is not loaded (yet, or disabled): never fall back to the
+    // generic engine with it.
+    readonly property bool externalPending: !!root.selected?.type && !root.selectedExternal
+
     // The single point where every configured provider - a customised built-in
     // or a fully user-defined entry - is folded into one uniform endpoint
     // object. Built-in knowledge lives in the adapters below; config values
@@ -57,6 +72,22 @@ Singleton {
     // Everything downstream runs off this object and never branches on a
     // provider name.
     readonly property var active: {
+        const ext = root.selectedExternal;
+        if (ext || root.externalPending)
+            return {
+                name: root.selected.name,
+                displayName: root.selected.displayName || root.selected.name,
+                interface: "",
+                connectCmd: [],
+                disconnectCmd: [],
+                statusCmd: ["true"],
+                parse: () => root.status,
+                service: "",
+                connectHint: null,
+                registerCmd: null,
+                serverCmd: null,
+                parseServer: null
+            };
         const custom = root.selected;
         const name = custom ? (custom.name || "custom") : "wireguard";
         const adapter = adapters.find(a => a.name === name) ?? null;
@@ -91,7 +122,7 @@ Singleton {
     readonly property var providers: GlobalConfig.utilities.vpn.provider.values
 
     // Provider entry keys which are cleared when empty instead of written.
-    readonly property list<string> optionalKeys: ["displayName", "interface", "connectCmd", "disconnectCmd"]
+    readonly property list<string> optionalKeys: ["displayName", "interface", "connectCmd", "disconnectCmd", "type"]
 
     // Generate a stable, opaque internal id for a provider entry.
     function generateId(): string {
@@ -101,7 +132,7 @@ Singleton {
     // Write a value to a provider entry, clearing the option when empty so the
     // config stays sparse.
     function setOrReset(provider: var, key: string, value: var): void {
-        if (value.length > 0)
+        if (value !== undefined && value !== null && value.length > 0)
             provider[key] = value;
         else
             provider.resetOption(key);
@@ -115,8 +146,10 @@ Singleton {
             name: data.name
         };
         for (const key of root.optionalKeys)
-            if (data[key].length > 0)
+            if ((data[key] ?? "").length > 0)
                 props[key] = data[key];
+        if (data.options && Object.keys(data.options).length > 0)
+            props.options = data.options;
         return props;
     }
 
@@ -125,10 +158,13 @@ Singleton {
         return GlobalConfig.utilities.vpn.provider.at(index)?.id ?? "";
     }
 
-    // Add a new provider. data: { name, displayName, interface, connectCmd[],
-    // disconnectCmd[] }. Newly added providers are not selected by default.
-    function addProvider(data: var): void {
-        GlobalConfig.utilities.vpn.provider.insert(root.buildProviderProps(root.generateId(), data));
+    // Add a new provider and return its id. data: { name, displayName, interface, connectCmd[],
+    // disconnectCmd[] } for a command provider, or { name, displayName, type, options } for a
+    // connection of an extension's provider type. Newly added providers are not selected by default.
+    function addProvider(data: var): string {
+        const id = root.generateId();
+        GlobalConfig.utilities.vpn.provider.insert(root.buildProviderProps(id, data));
+        return id;
     }
 
     // Update an existing provider (by index), preserving its internal id so the
@@ -141,7 +177,11 @@ Singleton {
             provider.id = root.generateId();
         provider.name = data.name;
         for (const key of root.optionalKeys)
-            root.setOrReset(provider, key, data[key]);
+            root.setOrReset(provider, key, data[key] ?? "");
+        if (data.options && Object.keys(data.options).length > 0)
+            provider.options = data.options;
+        else
+            provider.resetOption("options");
     }
 
     // Delete a provider by index. ensureSelection() re-homes the selection to
@@ -153,8 +193,12 @@ Singleton {
     // Make the provider at `index` the selected one. If a VPN is currently
     // connected, disconnect first, switch, then reconnect.
     function setActiveProvider(index: int): void {
-        const id = root.providerIdAt(index);
-        if (id.length === 0)
+        root.setActiveProviderById(root.providerIdAt(index));
+    }
+
+    // Same, by provider id (works for the providers of extensions too).
+    function setActiveProviderById(id: string): void {
+        if (id.length === 0 || id === root.selectedProvider)
             return;
         if (root.connected) {
             root.pendingSwitchProvider = id;
@@ -181,6 +225,16 @@ Singleton {
     }
 
     function connect(): void {
+        if (root.selectedExternal) {
+            if (!root.connected && !root.connecting)
+                root.selectedExternal.service.connect(root.selected);
+            return;
+        }
+        if (root.externalPending) {
+            if (GlobalConfig.utilities.toasts.vpnChanged)
+                Toaster.toast(Tr.tr("VPN connection failed"), Tr.tr("Enable the extension of this provider in Nexus → Extensions"), "vpn_key_alert");
+            return;
+        }
         if (status.state === "needs-auth" && status.authUrl) {
             emitStatusToast(status);
             return;
@@ -192,6 +246,11 @@ Singleton {
     }
 
     function disconnect(): void {
+        if (root.selectedExternal) {
+            if (root.connected && !root.disconnecting)
+                root.selectedExternal.service.disconnect();
+            return;
+        }
         if (connected && !connecting) {
             disconnectPending = true;
             disconnectProc.exec(active.disconnectCmd);
@@ -218,9 +277,47 @@ Singleton {
     }
 
     function checkStatus(): void {
+        if (root.selectedExternal || root.externalPending) {
+            root.syncExternal();
+            return;
+        }
         if (root.selectedProvider.length > 0) {
             statusProc.running = true;
         }
+    }
+
+    // Mirror the service of an extension's provider into the same status object the generic engine
+    // fills, so every consumer (Nexus, quick toggle) reads one thing. No toast here: the extension
+    // reports its own changes.
+    function syncExternal(): void {
+        const s = root.selectedExternal?.service;
+        const id = root.selectedProvider;
+        let state = "disconnected";
+        let reason = "";
+        if (s) {
+            // The service runs one tunnel at a time: only mirror what belongs to this connection
+            if (s.connected && s.activeId === id) {
+                state = "connected";
+            } else if (s.otpOpen && s.pendingId === id) {
+                state = "needs-auth";
+                reason = Tr.mark("Enter the code in the VPN icon of the bar");
+            } else if (s.busy && s.pendingId === id) {
+                state = "connecting";
+            } else if (s.lastError && !s.connected) {
+                state = "error";
+                reason = s.lastError;
+            }
+        }
+        root.status = {
+            connected: state === "connected",
+            state: state,
+            reason: reason,
+            authUrl: "",
+            server: ""
+        };
+        root.connected = state === "connected";
+        root.connectPending = false;
+        root.disconnectPending = false;
     }
 
     // Refresh live In/Out byte counters, tunnel latency and - for providers
@@ -512,6 +609,21 @@ Singleton {
 
     onProvidersChanged: root.ensureSelection()
 
+    // Re-check the selection once the extensions are loaded
+    Connections {
+        function onReadyChanged(): void {
+            root.ensureSelection();
+        }
+
+        target: Extensions
+    }
+
+    onProviderTypesChanged: {
+        root.ensureSelection();
+        if (root.selectedExternal || root.externalPending)
+            root.syncExternal();
+    }
+
     onSelectedProviderChanged: {
         status = {
             connected: false,
@@ -534,7 +646,8 @@ Singleton {
         root.ensureProviderIds();
         root.ensureSelection();
         if (root.selectedProvider.length > 0) {
-            root.autoConnectPending = GlobalConfig.utilities.vpn.enabled;
+            // Extension providers need an interactive step (OTP): never auto-connect them
+            root.autoConnectPending = GlobalConfig.utilities.vpn.enabled && !root.selected?.type;
             statusCheckTimer.start();
         }
     }
@@ -603,10 +716,41 @@ Singleton {
 
     // ── Generic engine ──────────────────────────────────────────────────────
 
+    // Follow the service of the selected extension provider
+    Connections {
+        function onConnectedChanged(): void {
+            root.syncExternal();
+        }
+
+        function onBusyChanged(): void {
+            root.syncExternal();
+        }
+
+        function onOtpOpenChanged(): void {
+            root.syncExternal();
+        }
+
+        function onLastErrorChanged(): void {
+            root.syncExternal();
+        }
+
+        function onActiveIdChanged(): void {
+            root.syncExternal();
+        }
+
+        function onPendingIdChanged(): void {
+            root.syncExternal();
+        }
+
+        enabled: root.selectedExternal !== null
+        ignoreUnknownSignals: true
+        target: root.selectedExternal?.service ?? null
+    }
+
     Process {
         id: nmMonitor
 
-        running: root.selectedProvider.length > 0
+        running: root.selectedProvider.length > 0 && !root.selectedExternal && !root.externalPending
         command: ["nmcli", "monitor"]
         stdout: SplitParser {
             onRead: statusCheckTimer.restart()

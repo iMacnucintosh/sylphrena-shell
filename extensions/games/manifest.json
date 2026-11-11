@@ -3,7 +3,6 @@
   "type": "addon",
   "name": "Games (Steam)",
   "description": "Steam library, achievements and play time in a dashboard tab",
-  "offNote": "Disabled — Games tab is hidden",
   "icon": "sports_esports",
   "version": "0.1.0",
   "apiVersion": 1,

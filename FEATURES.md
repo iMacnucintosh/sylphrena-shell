@@ -118,42 +118,31 @@ Inspirado en [arch-update-checker](https://github.com/iMacnucintosh/arch-update-
 
 ## Extensiones (v0.2)
 
-Las funciones opcionales viven en `extensions/` y se activan en Nexus: **widgets** del carrusel (Tareas, Hidratación) en `Panels → Dashboard → Carrusel de widgets` y **complementos** (VPN FortiClient, batería del ratón Razer, Juegos) en `Complementos`. Nada está activado por defecto y desactivar una extensión no borra sus datos. Para escribir una, ver `AGENTS.md` (sección «Extensiones») y el ejemplo `docs/examples/extension-spike/`; las de usuario van en `~/.local/share/sylphrena/extensions/<id>/` (se descubren al arrancar la shell).
+Las funciones opcionales viven en `extensions/` y se activan en Nexus: **widgets** del carrusel (Tareas, Hidratación) en `Panels → Dashboard → Carrusel de widgets` y **extensiones** (VPN FortiClient, batería del ratón Razer, Juegos) en `Extensiones`. Nada está activado por defecto y desactivar una extensión no borra sus datos. Para escribir una, ver `AGENTS.md` (sección «Extensiones») y el ejemplo `docs/examples/extension-spike/`; las de usuario se instalan desde zip (Nexus → Extensiones → Instalar desde zip) en `~/.local/share/sylphrena/extensions/<id>/`.
 
-## Complementos
+## Extensiones
 
-Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
+Página **Nexus → Extensiones** (sustituye el placeholder de Plugins):
 
 - Lista de features opcionales del fork, con icono identificativo por fila.
-- **VPN FortiClient**: interruptor on/off. Al desactivar se oculta el icono, se para el poll y se ejecuta teardown (`disconnect` + `heal`) para matar `openfortivpn`/helper.
-- **Timers** (base): ya no está en Complementos; su interruptor on/off y sus presets viven en **Nexus → Panels → Taskbar → Clock** (`addons.timers.enabled`). Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue).
-- **Batería del ratón Razer** (extensión `razer-mouse`, tipo complemento, `extensions/razer-mouse/`): se activa en Nexus → Complementos (`extensions.enabled`). Lee la batería del Basilisk V4 Pro (2,4 GHz) con `synapsex-cli battery` (proyecto `~/Desarrollo/Projects/synapsex`; se busca en `PATH` y, si no, en `target/release/`, o se fija con `cliPath` en `~/.config/sylphrena/extensions/razer-mouse.json`, junto a `refreshMinutes`) y la muestra en la columna de recursos del dashboard, **en el hueco del anillo de almacenamiento** (con rayo si carga y en rojo ≤ 20 %): es el punto de enganche `resourceRing` de las extensiones. Se guarda el último valor leído (`~/.local/state/sylphrena/razer-mouse.json`). Avisa una vez al bajar del 20 % y del 10 %. Apagado no consulta nada y vuelve el anillo de almacenamiento.
+- **VPN FortiClient** (extensión aparte, se instala desde zip pidiendo la contraseña: ver «Extensiones instaladas desde zip»); después, interruptor on/off. Al activarla aparece el tipo **FortiClient** en Nexus → Red → Añadir proveedor.
+- **Timers** (base): ya no está en Extensiones; su interruptor on/off y sus presets viven en **Nexus → Panels → Taskbar → Clock** (`addons.timers.enabled`). Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue).
+- **Batería del ratón Razer** (extensión `razer-mouse`, tipo complemento, `extensions/razer-mouse/`): se activa en Nexus → Extensiones (`extensions.enabled`). Lee la batería del Basilisk V4 Pro (2,4 GHz) con `synapsex-cli battery` (proyecto `~/Desarrollo/Projects/synapsex`; se busca en `PATH` y, si no, en `target/release/`, o se fija con `cliPath` en `~/.config/sylphrena/extensions/razer-mouse.json`, junto a `refreshMinutes`) y la muestra en la columna de recursos del dashboard, **en el hueco del anillo de almacenamiento** (con rayo si carga y en rojo ≤ 20 %): es el punto de enganche `resourceRing` de las extensiones. Se guarda el último valor leído (`~/.local/state/sylphrena/razer-mouse.json`). Avisa una vez al bajar del 20 % y del 10 %. Apagado no consulta nada y vuelve el anillo de almacenamiento.
 - **Hidratación** (extensión `hydration`, `extensions/hydration/`): se activa en `Panels → Dashboard → Carrusel de widgets` (`extensions.enabled`); apagarla descarga el servicio (recordatorios y seguimiento) pero conserva los datos. Depósito con waves (shader propio `water.frag.qsb`), meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Sus ajustes viven en `~/.config/sylphrena/extensions/hydration.json` (se migran solos desde `addons.hydration`). Estado en `~/.local/state/sylphrena/hydration.json`.
 - **Juegos (Steam)** (extensión `games`, `extensions/games/`; ajustes en `~/.config/sylphrena/extensions/games.json`): interruptor on/off (opt-in). Al activar añade la pestaña **Juegos** en el dashboard (a la derecha de Tiempo). Configura API key (oculta por defecto) + Steam ID / vanity / URL de perfil, y el intervalo de refresco (default 10 min). Muestra perfil y nivel, estadísticas globales en shapes Material You (juegos visibles — sin la colección Hidden —, horas, compleción media de logros y juegos al 100 %, amigos en línea), tarjeta del juego destacado con portada y progreso, y un selector de portadas ordenado por última partida. Logros en una lista con scroll: desbloqueados por rareza y bloqueados de más común a más raro, con insignia y descripción. Mapa de calor mensual (puntos = días con logros; el tiempo por día se registra con el shell en marcha). Juegos no Steam desde `shortcuts.vdf`, con horas de Millennium si está instalado. Los logros del perfil deben ser públicos. El muestreo de logros para la compleción media está **capado a 60 juegos** (los más jugados, por orden de playtime) y el refresco periódico **solo corre mientras el dashboard muestra la pestaña Juegos** (no quema API en segundo plano). Caché de logros/schema/% global en disco (`~/.local/state/sylphrena/steam-achievements-cache.json`, TTL ~1 día) para arranques en frío más rápidos; el servicio QML es un façade (`Steam`) con capas en `services/steam/*`.
 
-## VPN FortiClient (openfortivpn)
+## Extensiones instaladas desde zip
 
-Es la extensión `vpn-forticlient` (`extensions/vpn-forticlient/`): se activa en Nexus → Complementos (`extensions.enabled`). Al desactivarla desde Nexus se para el túnel.
+Además de las que trae la shell (`extensions/`), una extensión puede instalarse aparte: **Nexus → Extensiones → Instalar desde zip**. El zip lleva la carpeta de la extensión (con su `manifest.json` en la raíz o en su única carpeta). Antes de escribir nada se comprueba: sin rutas absolutas ni `..`, sin enlaces ni ficheros especiales, tamaño limitado, `id` válido y que no sea una extensión de la shell. Se descomprime en `~/.local/share/sylphrena/extensions/<id>` y aparece sin reiniciar. Volver a instalar el mismo id la **actualiza** (si estaba activa, la shell recarga para usar el código nuevo). Las instaladas así tienen un botón **Eliminar** en su tarjeta; su configuración y estado se conservan.
 
-Icono en la pastilla de status (debajo de Bluetooth):
+Si la extensión necesita algo como administrador (manifiesto `system`: un ayudante, una regla de sudoers, un paquete), **la contraseña se pide al instalar el zip** y se instala todo de una vez; si cancelas no se instala nada. **Eliminar** la pide también y quita esa parte junto con la extensión. Solo si algo queda a medias (contraseña incorrecta, por ejemplo) la tarjeta muestra «Instalación incompleta» con **Completar**. Script: `scripts/install-extension.py`.
 
-- Clic desconectado → diálogo OTP integrado → conecta
-- Clic conectado → desconecta
-- Estado con poll (`status_vpn.sh`); exige que la intranet responda (no basta con `ppp0` vivo)
-- Tras **suspender el PC**: al reanudar se ejecuta `heal` (limpia túnel zombie + DNS/`hosts`) y el icono refleja la realidad
+Una extensión de fuera trae sus **traducciones** en `i18n/<idioma>.json` (msgid, o `contexto\u0004msgid`, → traducción); `Tr` las usa cuando la shell no tiene la cadena. Para generarlas desde un `.po`: `scripts/extension-catalog.py <carpeta de la extensión> plugin/src/Sylphrena/I18n/trs/es.po`.
 
-**Scripts**: la shell los busca en `~/.local/share/sylphrena/vpn-forticlient/` y **no los incluye** (dependen de cada red y de un ayudante con privilegios fuera del repo). Contrato:
 
-| Script | Argumento | Salida |
-|---|---|---|
-| `connect_vpn.sh` | OTP como `$1` | código de salida 0 si conecta |
-| `disconnect_vpn.sh` | — | — |
-| `heal_vpn.sh` | — | `connected\|IP` o `disconnected\|` |
-| `status_vpn.sh` | — | `connected\|IP` o `disconnected\|` |
+### VPN FortiClient
 
-Un paquete genérico con estos scripts queda como trabajo futuro (ver `docs/PLAN-MODULAR.md`). Si antes tenías los scripts en `~/.local/share/madison-vpn/`, enlázalos: `ln -s ~/.local/share/madison-vpn ~/.local/share/sylphrena/vpn-forticlient`. La clave de configuración `addons.madisonVpn` se migra sola a `addons.fortiVpn` (`scripts/migrate-config.py`).
-
-Credenciales en `~/.config/openfortivpn/config` (las mismas que Plasma; **no** van en este repo). Engranaje en el popout VPN para editar host/puerto/usuario/`set-dns`/`trusted-cert` (password/OTP no se muestran). En Nexus → Panels → Status icons puedes mostrar/ocultar «Madison VPN» cuando el complemento está activo.
+La extensión `vpn-forticlient` (tipo de proveedor FortiClient para la VPN de Nexus → Red: OTP opcional, certificados, host de comprobación, DNS, entradas de hosts; contraseña solo en `~/.config/sylphrena/vpn/<id>.conf`) ya no viene con la shell: vive en su propio repo, junto a su zip y su documentación. Se instala desde zip (pide la contraseña: ayudante root `sylphrena-fortivpn` + regla de sudoers). Sus conexiones en `shell.json` (`type: "ext:vpn-forticlient"`) se conservan aunque no esté instalada: aparecen como «extensión desactivada».
 
 ---
 
@@ -281,7 +270,7 @@ Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 - **Foco del ratón** en Nexus → Keyboard & mouse: al pasar por encima (Hyprland `follow_mouse = 1`) o al hacer clic (`= 2`). Genera `sylphrena-input.lua`.
 - Categoría **Activities** en el mapa de teclas (siguiente / anterior / overview).
 - Apariencia **unificada en Activities**: una sola página para el comportamiento (iconos, desktops, apps ancladas) y el look — la tarjeta de **Principal** lleva la etiqueta "Look general" (es el estilo que heredan las demás) y cada activity personaliza o hereda (con botón "Usar look de Principal" para volver). Sin página global duplicada: el toggle "Mostrar fondo de pantalla" (switch maestro) vive en General.
-- **Complementos** — solo features opcionales (VPN FortiClient, Juegos/Steam, batería del ratón Razer). **Portapapeles y Temporizadores son base** (v0.2): el portapapeles se configura en **Nexus → Panels → Utilities → Portapapeles** (interruptor + tamaño del historial) y los temporizadores en **Panels → Taskbar → Clock**.
+- **Extensiones** — solo features opcionales (VPN FortiClient, Juegos/Steam, batería del ratón Razer). **Portapapeles y Temporizadores son base** (v0.2): el portapapeles se configura en **Nexus → Panels → Utilities → Portapapeles** (interruptor + tamaño del historial) y los temporizadores en **Panels → Taskbar → Clock**.
 - **Status icons honestos**: el badge de updates y la fila de VPN rigen el auto-ocultado con config explícita (`bar.status.onlyShowUpdatesWithUpdates`; VPN atado al complemento) y es visible en `Panels → Taskbar → Status icons → Auto-hide`. La batería quedó **vanilla**: se muestra/oculta con el toggle de la lista "Visible icons" y su popout es el de siempre («No se ha detectado ninguna batería» o «Power profile: %1» en desktops, con el selector de perfiles intacto).
 - **Workspaces divididos contenido/apariencia**: mostrar ventanas + special workspaces + max icons viven en **Activities → Escritorios de la barra** (junto al resto del modelo de desktops del fork); la apariencia (número, indicador, fondo, por monitor) se queda en `Panels → Taskbar → Workspaces`, con cross-links navegables entre ambas.
 - **IA del sidebar (fase 1)**: títulos de categoría visibles; orden **Escritorio y apariencia** (Activities, Panels, Complements) → Entrada → **Dispositivos** (Network, Connected devices [Bluetooth + Display inline], Audio) → Apps → Sistema → Acerca de. `smartScheme` en Activities; incrementos volumen/brillo en Audio. Display ya no es página top-level del nav.

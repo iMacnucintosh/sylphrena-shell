@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:40+0100\n"
+"POT-Creation-Date: 2026-11-11 11:30+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,48 +17,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. TRANSLATORS: %1 = name of the selected file
-#: components/filedialog/CurrentItem.qml
-#, qt-format
-msgctxt "selected file"
-msgid "\"%1\" selected"
-msgstr "\"%1\" seleccionado"
+#: components/bluetooth/BtModeSelector.qml modules/nexus/pages/ShellPage.qml
+msgid "Music"
+msgstr "Música"
 
-#: components/filedialog/DialogButtons.qml
-msgctxt "file filter"
-msgid "Filter:"
-msgstr "Filtro:"
+#: components/bluetooth/BtModeSelector.qml
+msgid "Calls"
+msgstr "Llamadas"
 
-#: components/filedialog/DialogButtons.qml
-msgctxt "file filter separator"
-msgid ", "
-msgstr ", "
-
-#. TRANSLATORS: %1 = filter label, %2 = file patterns
-#: components/filedialog/DialogButtons.qml
-#, qt-format
-msgctxt "file filter label and patterns"
-msgid "%1 (%2)"
-msgstr "%1 (%2)"
-
-#: components/filedialog/DialogButtons.qml
-#: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/ShellPage.qml
-msgctxt "button"
-msgid "Select"
-msgstr "Seleccionar"
-
-#: components/filedialog/DialogButtons.qml
-#: modules/bar/popouts/UpdatesPassword.qml modules/bar/popouts/VpnOtp.qml
-#: modules/bar/popouts/VpnSettings.qml modules/bar/popouts/WirelessPassword.qml
-#: modules/launcher/DesktopEditDialog.qml
-#: modules/nexus/common/DialogRowButton.qml
-#: modules/nexus/pages/network/AddNetworkPage.qml
-#: modules/nexus/pages/network/AddVpnPage.qml
-#: modules/nexus/pages/UpdatesPage.qml
-#: modules/utilities/RecordingDeleteModal.qml
-msgctxt "button"
-msgid "Cancel"
-msgstr "Cancelar"
+#: components/bluetooth/BtModeSelector.qml
+msgctxt "bluetooth audio mode"
+msgid "Auto"
+msgstr "Auto"
 
 #: components/filedialog/FileDialog.qml
 msgid "All files"
@@ -68,14 +38,9 @@ msgstr "Todos los archivos"
 msgid "Select a file"
 msgstr "Selecciona un archivo"
 
-#: components/filedialog/FolderContents.qml
-msgid "This folder is empty"
-msgstr "Esta carpeta está vacía"
-
-#: components/filedialog/Sidebar.qml
-msgctxt "file dialog sidebar heading"
-msgid "Files"
-msgstr "Archivos"
+#: components/filedialog/FileDialog.qml
+msgid "Select"
+msgstr "Seleccionar"
 
 #: daemons/BatteryMonitor.qml
 msgid "Battery warning"
@@ -125,6 +90,456 @@ msgstr "Diseño compacto desactivado"
 msgid "Hyprland settings restored"
 msgstr "Ajustes de Hyprland restaurados"
 
+#: docs/examples/extension-spike/Widget.qml extensions/tasks/Widget.qml
+#: build/i18n/extensions/tasks/manifest.json.js
+msgid "Tasks"
+msgstr "Tareas"
+
+#. TRANSLATORS: %1 = a number
+#: extensions/games/games/AchievementList.qml
+#: modules/nexus/pages/DisplayPage.qml utils/Strings.qml
+#, qt-format
+msgid "%1%"
+msgstr "%1%"
+
+#: extensions/games/games/AchievementList.qml
+#: extensions/games/games/FocusHero.qml extensions/games/Tab.qml
+msgid "Achievements"
+msgstr "Logros"
+
+#: extensions/games/games/AchievementList.qml
+#, qt-format
+msgid "%1 / %2"
+msgstr "%1 / %2"
+
+#: extensions/games/games/AchievementList.qml
+#, qt-format
+msgid "Locked · %1"
+msgstr "Bloqueados · %1"
+
+#: extensions/games/games/ActivityCard.qml
+#, qt-format
+msgid "Activity in %1"
+msgstr "Actividad en %1"
+
+#: extensions/games/games/ActivityCard.qml
+msgid "Sessions"
+msgstr "Sesiones"
+
+#: extensions/games/games/ActivityCard.qml
+msgid "Total"
+msgstr "Total"
+
+#: extensions/games/games/ActivityCard.qml
+msgid "Longest"
+msgstr "Más larga"
+
+#: extensions/games/games/ActivityCard.qml
+msgid "Less"
+msgstr "Menos"
+
+#: extensions/games/games/ActivityCard.qml
+msgid "More"
+msgstr "Más"
+
+#: extensions/games/games/ActivityCard.qml
+msgid "Dots mark achievement days. Playtime is recorded from now on."
+msgstr "Los puntos marcan días con logros. El tiempo de juego se registra a partir de ahora."
+
+#: extensions/games/games/ActivityCard.qml
+msgid "Playtime is recorded while the shell is running."
+msgstr "El tiempo de juego se registra mientras el shell está en marcha."
+
+#: extensions/games/games/FocusHero.qml
+msgid "Playing now"
+msgstr "Jugando ahora"
+
+#: extensions/games/games/FocusHero.qml
+msgid "Non-Steam"
+msgstr "No Steam"
+
+#: extensions/games/games/FocusHero.qml
+msgid "Played recently"
+msgstr "Jugado recientemente"
+
+#: extensions/games/games/FocusHero.qml
+#, qt-format
+msgid "Last played %1"
+msgstr "Última partida: %1"
+
+#: extensions/games/games/FocusHero.qml
+msgid "From your library"
+msgstr "De tu biblioteca"
+
+#: extensions/games/games/FocusHero.qml
+msgid "No recently played games"
+msgstr "Sin juegos recientes"
+
+#: extensions/games/games/FocusHero.qml
+#, qt-format
+msgid "%1 in 2 weeks"
+msgstr "%1 en 2 semanas"
+
+#: extensions/games/games/FocusHero.qml
+#, qt-format
+msgid "%1 of %2 achievements"
+msgstr "%1 de %2 logros"
+
+#: extensions/games/games/FocusHero.qml extensions/games/Tab.qml
+msgid "Loading…"
+msgstr "Cargando…"
+
+#: extensions/games/games/FocusHero.qml
+msgid "Perfect!"
+msgstr "¡Perfecto!"
+
+#: extensions/games/games/ProfileHeader.qml
+#, qt-format
+msgid "Playing %1"
+msgstr "Jugando a %1"
+
+#: extensions/games/games/ProfileHeader.qml
+msgid "Level"
+msgstr "Nivel"
+
+#: extensions/games/games/SessionList.qml
+msgid "Recent sessions"
+msgstr "Sesiones recientes"
+
+#: extensions/games/games/SessionList.qml
+msgid "No sessions recorded yet"
+msgstr "Aún no hay sesiones registradas"
+
+#: extensions/games/games/SessionList.qml
+msgid "Install Non-Steam Playtimes (Millennium) to track sessions"
+msgstr "Instala Non-Steam Playtimes (Millennium) para registrar sesiones"
+
+#: extensions/games/games/SessionList.qml services/NotifData.qml
+msgid "now"
+msgstr "ahora"
+
+#: extensions/games/Service.qml
+msgid "Disabled — Games tab is hidden"
+msgstr "Desactivado: la pestaña Juegos está oculta"
+
+#: extensions/games/Service.qml
+msgid "Needs API key and Steam ID"
+msgstr "Necesita API key y Steam ID"
+
+#: extensions/games/Service.qml
+msgid "Loading Steam data…"
+msgstr "Cargando datos de Steam…"
+
+#: extensions/games/Service.qml
+#, qt-format
+msgid "Connected as %1"
+msgstr "Conectado como %1"
+
+#: extensions/games/Service.qml
+msgid "Ready"
+msgstr "Listo"
+
+#: extensions/games/Settings.qml
+msgid "Steam API key"
+msgstr "API key de Steam"
+
+#: extensions/games/Settings.qml
+msgid "From steamcommunity.com/dev/apikey"
+msgstr "En steamcommunity.com/dev/apikey"
+
+#: extensions/games/Settings.qml
+msgid "API key"
+msgstr "API key"
+
+#: extensions/games/Settings.qml
+msgid "Steam ID"
+msgstr "Steam ID"
+
+#: extensions/games/Settings.qml
+msgid "SteamID64, vanity name, or profile URL"
+msgstr "SteamID64, vanity o URL de perfil"
+
+#: extensions/games/Settings.qml
+msgid "Steam ID or vanity"
+msgstr "Steam ID o vanity"
+
+#: extensions/games/Settings.qml
+msgid "Auto refresh"
+msgstr "Actualización automática"
+
+#: extensions/games/Settings.qml
+msgid "Minutes between automatic Steam updates"
+msgstr "Minutos entre actualizaciones automáticas de Steam"
+
+#: extensions/games/Settings.qml
+msgid "Refresh now"
+msgstr "Actualizar ahora"
+
+#: extensions/games/steam/SteamAchievements.qml
+msgid "Playtime tracked by Millennium"
+msgstr "Tiempo de juego registrado por Millennium"
+
+#: extensions/games/steam/SteamAchievements.qml
+msgid "Non-Steam game — no Steam achievements"
+msgstr "Juego no Steam — sin logros de Steam"
+
+#: extensions/games/steam/SteamAchievements.qml
+msgid "Steam achievements are private for this profile"
+msgstr "Los logros de Steam son privados en este perfil"
+
+#: extensions/games/steam/SteamAchievements.qml
+msgid "This game has no achievements"
+msgstr "Este juego no tiene logros"
+
+#: extensions/games/steam/SteamAchievements.qml
+#: extensions/games/steam/SteamLibrary.qml
+msgid "Unknown game"
+msgstr "Juego desconocido"
+
+#: extensions/games/steam/SteamApi.qml
+msgid "Invalid Steam API response"
+msgstr "Respuesta inválida de la API de Steam"
+
+#: extensions/games/steam/SteamApi.qml
+msgid "Steam request failed"
+msgstr "Falló la petición a Steam"
+
+#: extensions/games/steam/SteamApi.qml
+msgid "Could not resolve Steam vanity URL"
+msgstr "No se pudo resolver el vanity de Steam"
+
+#: extensions/games/steam/SteamFormat.qml
+msgid "No playtime"
+msgstr "Sin tiempo de juego"
+
+#: extensions/games/steam/SteamFormat.qml
+#, qt-format
+msgid "%1 min"
+msgstr "%1 min"
+
+#: extensions/games/steam/SteamFormat.qml
+#, qt-format
+msgid "%1 h %2 min"
+msgstr "%1 h %2 min"
+
+#: extensions/games/steam/SteamFormat.qml
+#, qt-format
+msgid "%1 h"
+msgstr "%1 h"
+
+#: extensions/games/steam/SteamFormat.qml
+msgid "In-game"
+msgstr "En partida"
+
+#: extensions/games/steam/SteamFormat.qml
+msgid "Online"
+msgstr "En línea"
+
+#: extensions/games/steam/SteamFormat.qml
+msgid "Busy"
+msgstr "Ocupado"
+
+#: extensions/games/steam/SteamFormat.qml
+msgid "Away"
+msgstr "Ausente"
+
+#: extensions/games/steam/SteamFormat.qml
+msgid "Snooze"
+msgstr "Descansando"
+
+#: extensions/games/steam/SteamFormat.qml
+msgid "Looking to trade"
+msgstr "Buscando intercambio"
+
+#: extensions/games/steam/SteamFormat.qml
+msgid "Looking to play"
+msgstr "Buscando partida"
+
+#: extensions/games/steam/SteamFormat.qml
+msgid "Offline"
+msgstr "Desconectado"
+
+#: extensions/games/steam/SteamLibrary.qml
+msgid "Steam profile not found"
+msgstr "Perfil de Steam no encontrado"
+
+#: extensions/games/steam/SteamLibrary.qml
+msgid "Could not load friend status"
+msgstr "No se pudo cargar el estado de amigos"
+
+#: extensions/games/steam/SteamLibrary.qml
+msgid "Friends list is private"
+msgstr "La lista de amigos es privada"
+
+#: extensions/games/Tab.qml
+msgid "Configure Steam"
+msgstr "Configura Steam"
+
+#: extensions/games/Tab.qml
+msgid "Could not load Steam data"
+msgstr "No se pudieron cargar los datos de Steam"
+
+#: extensions/games/Tab.qml
+msgid "Add your API key and Steam ID in Nexus → Extensions."
+msgstr "Añade tu API key y Steam ID en Nexus → Extensiones."
+
+#: extensions/games/Tab.qml modules/nexus/pages/ShellPage.qml
+#: build/i18n/extensions/games/manifest.json.js
+#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
+msgid "Games"
+msgstr "Juegos"
+
+#: extensions/games/Tab.qml
+msgid "in your library"
+msgstr "en tu biblioteca"
+
+#: extensions/games/Tab.qml
+msgid "Hours"
+msgstr "Horas"
+
+#: extensions/games/Tab.qml
+#, qt-format
+msgid "+%1 in 2 weeks"
+msgstr "+%1 en 2 semanas"
+
+#: extensions/games/Tab.qml
+msgid "played in total"
+msgstr "jugadas en total"
+
+#: extensions/games/Tab.qml
+#, qt-format
+msgid "Top: %1"
+msgstr "Top: %1"
+
+#: extensions/games/Tab.qml
+#, qt-format
+msgid "%1 / %2 unlocked"
+msgstr "%1 de %2"
+
+#: extensions/games/Tab.qml
+#, qt-format
+msgid "%1 perfect games"
+msgstr "Al 100 %: %1"
+
+#: extensions/games/Tab.qml
+msgid "Friends"
+msgstr "Amigos"
+
+#: extensions/games/Tab.qml
+#, qt-format
+msgid "online · %1 in game"
+msgstr "en línea · %1 jugando"
+
+#: extensions/games/Tab.qml
+msgid "Private"
+msgstr "Privado"
+
+#: extensions/games/Tab.qml
+msgid "No achievements unlocked yet"
+msgstr "Aún no has desbloqueado logros"
+
+#: extensions/hydration/Service.qml
+#, qt-format
+msgid "%1 ml · reminder every %2 min"
+msgstr "%1 ml · recordatorio cada %2 min"
+
+#: extensions/hydration/Service.qml
+msgid "Time to drink water"
+msgstr "Hora de beber agua"
+
+#: extensions/hydration/Service.qml
+#, qt-format
+msgid "%1 / %2 ml — tap an amount to log it"
+msgstr "%1 / %2 ml — toca una cantidad para registrarla"
+
+#: extensions/hydration/Service.qml
+#: build/i18n/extensions/hydration/manifest.json.js
+msgid "Hydration"
+msgstr "Hidratación"
+
+#: extensions/hydration/Settings.qml
+msgid "Daily goal"
+msgstr "Meta diaria"
+
+#: extensions/hydration/Settings.qml
+msgid "Target water intake per day (ml)"
+msgstr "Cantidad de agua objetivo al día (ml)"
+
+#: extensions/hydration/Settings.qml
+msgid "Reminder interval"
+msgstr "Intervalo de recordatorio"
+
+#: extensions/hydration/Settings.qml
+msgid "Minutes without a sip before a reminder"
+msgstr "Minutos sin un trago antes del recordatorio"
+
+#. TRANSLATORS: %1 = preset index (1-based)
+#: extensions/hydration/Settings.qml
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Preset %1"
+msgstr "Preajuste %1"
+
+#: extensions/hydration/Settings.qml
+msgid "Quick-add button amount (ml)"
+msgstr "Cantidad del botón de suma rápida (ml)"
+
+#: extensions/hydration/Widget.qml
+#, qt-format
+msgid "%1 / %2 ml"
+msgstr "%1 / %2 ml"
+
+#: extensions/razer-mouse/Service.qml
+#, qt-format
+msgid "Basilisk V4 Pro · %1 % · charging"
+msgstr "Basilisk V4 Pro · %1 % · cargando"
+
+#: extensions/razer-mouse/Service.qml
+#, qt-format
+msgid "Basilisk V4 Pro · %1 %"
+msgstr "Basilisk V4 Pro · %1 %"
+
+#: extensions/razer-mouse/Service.qml
+msgid "Mouse not found — needs synapsex-cli"
+msgstr "Ratón no encontrado: necesita synapsex-cli"
+
+#: extensions/razer-mouse/Service.qml
+msgid "Mouse battery low"
+msgstr "Batería del ratón baja"
+
+#: extensions/razer-mouse/Service.qml
+#, qt-format
+msgid "Razer Basilisk V4 Pro: %1 % left"
+msgstr "Razer Basilisk V4 Pro: queda un %1 %"
+
+#: extensions/razer-mouse/Service.qml
+msgid "Mouse"
+msgstr "Ratón"
+
+#: extensions/tasks/Widget.qml
+#, qt-plural-format
+msgid "%n pending"
+msgid_plural "%n pending"
+msgstr[0] "%n pendiente"
+msgstr[1] "%n pendientes"
+
+#: extensions/tasks/Widget.qml
+msgid "New task"
+msgstr "Nueva tarea"
+
+#: extensions/tasks/Widget.qml
+msgid "Nothing to do"
+msgstr "Nada pendiente"
+
+#: extensions/tasks/Widget.qml
+msgid "All done"
+msgstr "Todo listo"
+
+#: extensions/tasks/Widget.qml
+#, qt-format
+msgid "Completed (%1)"
+msgstr "Completadas (%1)"
+
 #: modules/activities/OverviewContent.qml services/Keybinds.qml
 msgid "Activities overview"
 msgstr "Vista de actividades"
@@ -160,7 +575,6 @@ msgid "Desktop"
 msgstr "Escritorio"
 
 #: modules/bar/components/RecordingIndicator.qml
-#, fuzzy
 msgctxt "recording status"
 msgid "PAUSE"
 msgstr "EN PAUSA"
@@ -170,6 +584,14 @@ msgstr "EN PAUSA"
 msgctxt "recording status"
 msgid "REC"
 msgstr "REC"
+
+#: modules/bar/popouts/ActivityMenu.qml
+msgid "Activity"
+msgstr "Actividad"
+
+#: modules/bar/popouts/ActivityMenu.qml
+msgid "Close all windows"
+msgstr "Cerrar todas las ventanas"
 
 #: modules/bar/popouts/AudioPopout.qml
 msgctxt "audio output device"
@@ -190,7 +612,7 @@ msgstr "Volumen (silenciado)"
 msgid "Volume (%1%)"
 msgstr "Volumen (%1%)"
 
-#: modules/bar/popouts/AudioPopout.qml modules/bar/popouts/Bluetooth.qml
+#: modules/bar/popouts/AudioPopout.qml
 msgid "Open settings"
 msgstr "Abrir ajustes"
 
@@ -295,55 +717,6 @@ msgstr "Calculando el tiempo hasta la carga completa..."
 msgid "Performance degraded"
 msgstr "Rendimiento reducido"
 
-#: modules/bar/popouts/Bluetooth.qml
-msgctxt "bluetooth audio mode"
-msgid "Auto"
-msgstr "Auto"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "Audio mode"
-msgstr "Modo de audio"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "Microphone always available, call quality"
-msgstr "Micro siempre disponible, calidad de llamada"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "Best sound quality, no microphone"
-msgstr "La mejor calidad de sonido, sin micro"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "High quality until an app uses the microphone"
-msgstr "Alta calidad hasta que una app use el micro"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "Channel"
-msgstr "Canal"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "Calls · %1"
-msgstr "Llamadas · %1"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "High quality · %1"
-msgstr "Alta calidad · %1"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "Music quality"
-msgstr "Calidad de la música"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "Applies when the headset is in music mode"
-msgstr "Se aplica cuando los auriculares están en modo música"
-
-#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
-msgid "Codec used to play music"
-msgstr "Códec con el que se reproduce la música"
-
-#: modules/bar/popouts/Bluetooth.qml
-msgid "Calls"
-msgstr "Llamadas"
-
 #: modules/bar/popouts/Bluetooth.qml modules/nexus/pages/BluetoothPage.qml
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
@@ -364,14 +737,7 @@ msgctxt "bluetooth adapter state"
 msgid "Discovering"
 msgstr "Buscando"
 
-#: modules/bar/popouts/Network.qml
-#, qt-plural-format
-msgid "%n device available"
-msgid_plural "%n devices available"
-msgstr[0] "%n dispositivo disponible"
-msgstr[1] "%n dispositivos disponibles"
-
-#: modules/bar/popouts/ClockPopout.qml modules/nexus/pages/ComplementsPage.qml
+#: modules/bar/popouts/ClockPopout.qml
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Timers"
 msgstr "Temporizadores"
@@ -451,6 +817,13 @@ msgid "Ethernet"
 msgstr "Ethernet"
 
 #: modules/bar/popouts/Network.qml
+#, qt-plural-format
+msgid "%n device available"
+msgid_plural "%n devices available"
+msgstr[0] "%n dispositivo disponible"
+msgstr[1] "%n dispositivos disponibles"
+
+#: modules/bar/popouts/Network.qml
 msgctxt "unknown network interface"
 msgid "Unknown"
 msgstr "Desconocida"
@@ -470,10 +843,25 @@ msgstr "Introduce tu contraseña para actualizar el sistema en segundo plano."
 
 #: modules/bar/popouts/UpdatesPassword.qml
 #: modules/bar/popouts/WirelessPassword.qml
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
 msgid "Password"
 msgstr "Contraseña"
+
+#: modules/bar/popouts/UpdatesPassword.qml
+#: modules/bar/popouts/WirelessPassword.qml
+#: modules/nexus/common/DialogRowButton.qml
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/ExtensionsPage.qml
+#: modules/nexus/pages/network/AddNetworkPage.qml
+#: modules/nexus/pages/network/AddVpnPage.qml
+#: modules/nexus/pages/UpdatesPage.qml
+#: modules/utilities/RecordingDeleteModal.qml
+msgctxt "button"
+msgid "Cancel"
+msgstr "Cancelar"
 
 #: modules/bar/popouts/UpdatesPassword.qml services/Updates.qml
 msgid "Authenticating…"
@@ -513,72 +901,11 @@ msgstr "No hay actualizaciones disponibles."
 msgid "Update system"
 msgstr "Actualizar sistema"
 
-#: modules/bar/popouts/Vpn.qml modules/bar/popouts/VpnOtp.qml
-#: modules/nexus/pages/ComplementsPage.qml
-#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
-#: services/FortiVpn.qml
-msgid "VPN FortiClient"
-msgstr "VPN FortiClient"
-
-#: modules/bar/popouts/Vpn.qml
-#: modules/nexus/pages/network/EthernetDetailPage.qml
-#: modules/nexus/pages/network/NetworkDetailPage.qml
-msgid "Disconnect"
-msgstr "Desconectar"
-
-#: modules/bar/popouts/Vpn.qml modules/bar/popouts/VpnOtp.qml
 #: modules/bar/popouts/WirelessPassword.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/EthernetDetailPage.qml
 msgid "Connect"
 msgstr "Conectar"
-
-#: modules/bar/popouts/VpnOtp.qml
-msgid "Enter your MFA OTP to connect"
-msgstr "Introduce el OTP MFA para conectar"
-
-#: modules/bar/popouts/VpnOtp.qml
-msgid "6-digit OTP"
-msgstr "OTP de 6 dígitos"
-
-#: modules/bar/popouts/VpnSettings.qml
-msgid "VPN settings"
-msgstr "Ajustes de VPN"
-
-#: modules/bar/popouts/VpnSettings.qml
-msgid "Stored in ~/.config/openfortivpn/config"
-msgstr "Se guarda en ~/.config/openfortivpn/config"
-
-#: modules/bar/popouts/VpnSettings.qml
-msgctxt "vpn server hostname"
-msgid "Host"
-msgstr "Servidor"
-
-#: modules/bar/popouts/VpnSettings.qml
-msgctxt "vpn server port"
-msgid "Port"
-msgstr "Puerto"
-
-#: modules/bar/popouts/VpnSettings.qml
-msgctxt "vpn authentication realm"
-msgid "Realm"
-msgstr "Realm"
-
-#: modules/bar/popouts/VpnSettings.qml
-msgctxt "vpn username"
-msgid "Username"
-msgstr "Usuario"
-
-#: modules/bar/popouts/VpnSettings.qml
-msgctxt "vpn password"
-msgid "Password"
-msgstr "Contraseña"
-
-#: modules/bar/popouts/VpnSettings.qml
-#: modules/nexus/pages/network/AddVpnPage.qml
-msgctxt "button"
-msgid "Save"
-msgstr "Guardar"
 
 #: modules/bar/popouts/WirelessPassword.qml
 msgid "Enter password"
@@ -602,7 +929,7 @@ msgstr "Error de conexión. Comprueba la contraseña e inténtalo de nuevo."
 msgid "Connecting..."
 msgstr "Conectando..."
 
-#: modules/clipboard/Panel.qml modules/nexus/pages/ComplementsPage.qml
+#: modules/clipboard/Panel.qml modules/nexus/pages/panels/UtilitiesPanel.qml
 msgid "Clipboard"
 msgstr "Portapapeles"
 
@@ -638,17 +965,6 @@ msgstr "Rendimiento"
 msgid "Weather"
 msgstr "Tiempo"
 
-#: modules/dashboard/Content.qml modules/dashboard/GamesTab.qml
-#: modules/nexus/pages/ShellPage.qml
-#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
-msgid "Games"
-msgstr "Juegos"
-
-#: modules/dashboard/dash/HydrationWidget.qml
-#, qt-format
-msgid "%1 / %2 ml"
-msgstr "%1 / %2 ml"
-
 #: modules/dashboard/dash/Media.qml
 msgid "No media"
 msgstr "Sin contenido multimedia"
@@ -673,190 +989,9 @@ msgctxt "system uptime"
 msgid "up %1"
 msgstr "activo %1"
 
-#. TRANSLATORS: %1 = a number
-#: modules/dashboard/games/AchievementList.qml
-#: modules/nexus/pages/DisplayPage.qml utils/Strings.qml
-#, qt-format
-msgid "%1%"
-msgstr "%1%"
-
-#: modules/dashboard/games/AchievementList.qml
-#: modules/dashboard/games/FocusHero.qml modules/dashboard/GamesTab.qml
-msgid "Achievements"
-msgstr "Logros"
-
-#: modules/dashboard/games/AchievementList.qml
-#, qt-format
-msgid "%1 / %2"
-msgstr "%1 / %2"
-
-#: modules/dashboard/games/AchievementList.qml
-#, qt-format
-msgid "Locked · %1"
-msgstr "Bloqueados · %1"
-
-#: modules/dashboard/games/ActivityCard.qml
-#, qt-format
-msgid "Activity in %1"
-msgstr "Actividad en %1"
-
-#: modules/dashboard/games/ActivityCard.qml
-msgid "Sessions"
-msgstr "Sesiones"
-
-#: modules/dashboard/games/ActivityCard.qml
-#, fuzzy
-msgid "Total"
-msgstr "Total"
-
-#: modules/dashboard/games/ActivityCard.qml
-msgid "Longest"
-msgstr "Más larga"
-
-#: modules/dashboard/games/ActivityCard.qml
-msgid "Less"
-msgstr "Menos"
-
-#: modules/dashboard/games/ActivityCard.qml
-msgid "More"
-msgstr "Más"
-
-#: modules/dashboard/games/ActivityCard.qml
-msgid "Dots mark achievement days. Playtime is recorded from now on."
-msgstr "Los puntos marcan días con logros. El tiempo de juego se registra a partir de ahora."
-
-#: modules/dashboard/games/ActivityCard.qml
-msgid "Playtime is recorded while the shell is running."
-msgstr "El tiempo de juego se registra mientras el shell está en marcha."
-
-#: modules/dashboard/games/FocusHero.qml
-msgid "Playing now"
-msgstr "Jugando ahora"
-
-#: modules/dashboard/games/FocusHero.qml
-msgid "Non-Steam"
-msgstr "No Steam"
-
-#: modules/dashboard/games/FocusHero.qml
-msgid "Played recently"
-msgstr "Jugado recientemente"
-
-#: modules/dashboard/games/FocusHero.qml
-#, qt-format
-msgid "Last played %1"
-msgstr "Última partida: %1"
-
-#: modules/dashboard/games/FocusHero.qml
-msgid "From your library"
-msgstr "De tu biblioteca"
-
-#: modules/dashboard/games/FocusHero.qml
-msgid "No recently played games"
-msgstr "Sin juegos recientes"
-
-#: modules/dashboard/games/FocusHero.qml
-#, qt-format
-msgid "%1 in 2 weeks"
-msgstr "%1 en 2 semanas"
-
-#: modules/dashboard/games/FocusHero.qml
-#, qt-format
-msgid "%1 of %2 achievements"
-msgstr "%1 de %2 logros"
-
-#: modules/dashboard/games/FocusHero.qml modules/dashboard/GamesTab.qml
-msgid "Loading…"
-msgstr "Cargando…"
-
-#: modules/dashboard/games/FocusHero.qml
-msgid "Perfect!"
-msgstr "¡Perfecto!"
-
-#: modules/dashboard/games/ProfileHeader.qml
-#, qt-format
-msgid "Playing %1"
-msgstr "Jugando a %1"
-
-#: modules/dashboard/games/ProfileHeader.qml
-msgid "Level"
-msgstr "Nivel"
-
-#: modules/dashboard/games/SessionList.qml
-msgid "Recent sessions"
-msgstr "Sesiones recientes"
-
-#: modules/dashboard/games/SessionList.qml
-msgid "No sessions recorded yet"
-msgstr "Aún no hay sesiones registradas"
-
-#: modules/dashboard/games/SessionList.qml
-msgid "Install Non-Steam Playtimes (Millennium) to track sessions"
-msgstr "Instala Non-Steam Playtimes (Millennium) para registrar sesiones"
-
-#: modules/dashboard/games/SessionList.qml services/NotifData.qml
-msgid "now"
-msgstr "ahora"
-
-#: modules/dashboard/GamesTab.qml
-msgid "Configure Steam"
-msgstr "Configura Steam"
-
-#: modules/dashboard/GamesTab.qml
-msgid "Could not load Steam data"
-msgstr "No se pudieron cargar los datos de Steam"
-
-#: modules/dashboard/GamesTab.qml
-msgid "Add your API key and Steam ID in Nexus → Complements."
-msgstr "Añade tu API key y Steam ID en Nexus → Complementos."
-
-#: modules/dashboard/GamesTab.qml
-msgid "in your library"
-msgstr "en tu biblioteca"
-
-#: modules/dashboard/GamesTab.qml
-msgid "Hours"
-msgstr "Horas"
-
-#: modules/dashboard/GamesTab.qml
-#, qt-format
-msgid "+%1 in 2 weeks"
-msgstr "+%1 en 2 semanas"
-
-#: modules/dashboard/GamesTab.qml
-msgid "played in total"
-msgstr "jugadas en total"
-
-#: modules/dashboard/GamesTab.qml
-#, qt-format
-msgid "Top: %1"
-msgstr "Top: %1"
-
-#: modules/dashboard/GamesTab.qml
-#, qt-format
-msgid "%1 / %2 unlocked"
-msgstr "%1 de %2"
-
-#: modules/dashboard/GamesTab.qml
-#, qt-format
-msgid "%1 perfect games"
-msgstr "Al 100 %: %1"
-
-#: modules/dashboard/GamesTab.qml
-msgid "Friends"
-msgstr "Amigos"
-
-#: modules/dashboard/GamesTab.qml
-#, qt-format
-msgid "online · %1 in game"
-msgstr "en línea · %1 jugando"
-
-#: modules/dashboard/GamesTab.qml
-msgid "Private"
-msgstr "Privado"
-
-#: modules/dashboard/GamesTab.qml
-msgid "No achievements unlocked yet"
-msgstr "Aún no has desbloqueado logros"
+#: modules/dashboard/dash/WidgetCarousel.qml
+msgid "Enable widgets"
+msgstr "Activa widgets"
 
 #: modules/dashboard/Media.qml modules/lock/Media.qml
 msgid "Nothing playing"
@@ -914,14 +1049,13 @@ msgstr "No hay widgets activados"
 msgid "Enable widgets in the dashboard settings"
 msgstr "Activa widgets en los ajustes del panel"
 
-#: modules/dashboard/Performance.qml
+#: modules/dashboard/Performance.qml modules/nexus/pages/AboutPage.qml
 #: modules/nexus/pages/panels/DashboardPanel.qml
 msgid "CPU"
 msgstr "CPU"
 
-#: modules/dashboard/Performance.qml
+#: modules/dashboard/Performance.qml modules/nexus/pages/AboutPage.qml
 #: modules/nexus/pages/panels/DashboardPanel.qml
-#: modules/nexus/pages/ServicesPage.qml
 msgid "GPU"
 msgstr "GPU"
 
@@ -972,6 +1106,7 @@ msgid "Usage"
 msgstr "Uso"
 
 #: modules/dashboard/performance/MemoryCard.qml
+#: modules/nexus/pages/AboutPage.qml
 #: modules/nexus/pages/panels/DashboardPanel.qml
 msgid "Memory"
 msgstr "Memoria"
@@ -1020,11 +1155,13 @@ msgid "Used"
 msgstr "En uso"
 
 #: modules/dashboard/performance/StorageCard.qml
+#: modules/nexus/pages/AboutPage.qml
 #: modules/nexus/pages/panels/DashboardPanel.qml
 msgid "Storage"
 msgstr "Almacenamiento"
 
 #: modules/dashboard/performance/StorageCard.qml
+#: modules/nexus/pages/AboutPage.qml
 msgid "No disks detected"
 msgstr "No se han detectado discos"
 
@@ -1134,6 +1271,11 @@ msgid "Description"
 msgstr "Descripción"
 
 #: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/apps/AppInfo.qml
+msgctxt "desktop entry GenericName"
+msgid "Generic name"
+msgstr "Nombre genérico"
+
+#: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/apps/AppInfo.qml
 msgid "Icon"
 msgstr "Icono"
 
@@ -1141,12 +1283,43 @@ msgstr "Icono"
 msgid "Theme name or file path"
 msgstr "Nombre del tema o ruta de archivo"
 
+#: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/apps/AppInfo.qml
+msgid "Command"
+msgstr "Comando"
+
+#: modules/launcher/DesktopEditDialog.qml
+msgid "Exec line (%U, %f, … allowed)"
+msgstr "Línea Exec (se permiten %U, %f, …)"
+
+#: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/apps/AppInfo.qml
+msgid "Working directory"
+msgstr "Directorio de trabajo"
+
+#: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/apps/AppInfo.qml
+msgid "Categories"
+msgstr "Categorías"
+
+#: modules/launcher/DesktopEditDialog.qml
+msgid "Separated by ; or ,"
+msgstr "Separadas por ; o ,"
+
+#: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/apps/AppInfo.qml
+msgid "Keywords"
+msgstr "Palabras clave"
+
+#: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/apps/AppInfo.qml
+msgid "Startup class"
+msgstr "Clase de arranque"
+
+#: modules/launcher/DesktopEditDialog.qml
+msgid "Run in terminal"
+msgstr "Ejecutar en un terminal"
+
 #: modules/launcher/DesktopEditDialog.qml modules/nexus/pages/KeybindsPage.qml
 msgid "Cancel"
 msgstr "Cancelar"
 
 #: modules/launcher/DesktopEditDialog.qml
-#, fuzzy
 msgid "Save"
 msgstr "Guardar"
 
@@ -1511,16 +1684,11 @@ msgid_plural "%n notifications"
 msgstr[0] "%n notificación"
 msgstr[1] "%n notificaciones"
 
-#: modules/lock/NotifDock.qml
+#: modules/lock/NotifDock.qml modules/nexus/PageRegistry.qml
 #: modules/nexus/pages/services/NotificationsPage.qml
-#: modules/nexus/pages/ServicesPage.qml modules/sidebar/NotifDock.qml
-#: services/Keybinds.qml
+#: modules/sidebar/NotifDock.qml services/Keybinds.qml
 msgid "Notifications"
 msgstr "Notificaciones"
-
-#: services/NotifData.qml
-msgid "Notification"
-msgstr "Notificación"
 
 #: modules/lock/NotifDock.qml
 msgid "Unlock for notifications"
@@ -1557,9 +1725,8 @@ msgid "Unknown"
 msgstr "Desconocido"
 
 #: modules/nexus/common/DialogSelectButton.qml
-#, fuzzy
 msgid "Search"
-msgstr "Buscar apps"
+msgstr "Buscar"
 
 #: modules/nexus/common/EthernetSection.qml
 #: modules/nexus/pages/network/EthernetDetailPage.qml
@@ -1596,6 +1763,36 @@ msgstr "Dirección IP local"
 #: modules/nexus/common/EthernetSection.qml
 msgid "Primary DNS"
 msgstr "DNS principal"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Removing…"
+msgstr "Eliminando…"
+
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Installing…"
+msgstr "Instalando…"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Installation incomplete: it needs your password to finish"
+msgstr "Instalación incompleta: necesita tu contraseña para terminar"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Complete"
+msgstr "Completar"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Delete this extension?"
+msgstr "¿Eliminar esta extensión?"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Finish the installation?"
+msgstr "¿Terminar la instalación?"
+
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/network/AddVpnPage.qml
+msgid "Delete"
+msgstr "Eliminar"
 
 #: modules/nexus/common/KeybindRow.qml
 msgid "Press a key…"
@@ -1692,13 +1889,13 @@ msgstr "Paneles"
 msgid "Dashboard, taskbar, launcher, sidebar"
 msgstr "Panel, barra de tareas, lanzador, barra lateral"
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/ComplementsPage.qml
-msgid "Complements"
-msgstr "Complementos"
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/ExtensionsPage.qml
+msgid "Extensions"
+msgstr "Extensiones"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Optional extensions (VPN, games, mouse battery, …)"
-msgstr "Extensiones opcionales (VPN, juegos, batería del ratón, …)"
+msgid "Extend the features of the system"
+msgstr "Amplía las funciones del sistema"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
 msgid "Keyboard & mouse"
@@ -1708,115 +1905,9 @@ msgstr "Teclado y ratón"
 msgid "Shortcuts, remappings"
 msgstr "Atajos, reasignaciones"
 
-#: services/DashWidgets.qml
-msgid "Calendar"
-msgstr "Calendario"
-
-#: services/DashWidgets.qml
-msgid "Month view of the dashboard"
-msgstr "Vista mensual del panel"
-
-#: services/DashWidgets.qml
-msgid "Water intake tracker with reminders"
-msgstr "Control de agua con recordatorios"
-
-#: modules/nexus/pages/panels/DashboardPanel.qml
-msgid "Widget carousel"
-msgstr "Carrusel de widgets"
-
-#: modules/nexus/pages/panels/DashboardPanel.qml
-msgid "The centre of the Dashboard shows one widget at a time; switch with the dots, the wheel or by dragging. Enable and reorder them here."
-msgstr "El centro del panel muestra un widget a la vez; cambia con los puntos, la rueda o arrastrando. Aquí los activas y los ordenas."
-
-#: modules/nexus/pages/panels/DashboardPanel.qml
-msgid "Off — also stops the reminders and the tracking"
-msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
-
-#: modules/dashboard/dash/WidgetCarousel.qml
-msgid "Enable widgets"
-msgstr "Activa widgets"
-
-#: services/DashWidgets.qml modules/dashboard/dash/TasksWidget.qml
-msgid "Tasks"
-msgstr "Tareas"
-
-#: services/DashWidgets.qml
-msgid "Checklist: create, complete and delete tasks"
-msgstr "Lista de tareas: crea, completa y elimina"
-
-#: modules/dashboard/dash/TasksWidget.qml
-#, qt-plural-format
-msgid "%n pending"
-msgid_plural "%n pending"
-msgstr[0] "%n pendiente"
-msgstr[1] "%n pendientes"
-
-#: modules/dashboard/dash/TasksWidget.qml
-msgid "New task"
-msgstr "Nueva tarea"
-
-#: modules/dashboard/dash/TasksWidget.qml
-msgid "Nothing to do"
-msgstr "Nada pendiente"
-
-#: modules/dashboard/dash/TasksWidget.qml
-msgid "All done"
-msgstr "Todo listo"
-
-#: modules/dashboard/dash/TasksWidget.qml
-#, qt-format
-msgid "Completed (%1)"
-msgstr "Completadas (%1)"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Razer mouse battery"
-msgstr "Batería del ratón Razer"
-
-#: modules/nexus/pages/ComplementsPage.qml
-#, qt-format
-msgid "Basilisk V4 Pro · %1 % · charging"
-msgstr "Basilisk V4 Pro · %1 % · cargando"
-
-#: modules/nexus/pages/ComplementsPage.qml
-#, qt-format
-msgid "Basilisk V4 Pro · %1 %"
-msgstr "Basilisk V4 Pro · %1 %"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Mouse not found — needs synapsex-cli"
-msgstr "Ratón no encontrado: necesita synapsex-cli"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Shows the mouse battery in the dashboard, in place of storage"
-msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
-
-#: services/RazerMouse.qml
-msgid "Mouse battery low"
-msgstr "Batería del ratón baja"
-
-#: services/RazerMouse.qml
-#, qt-format
-msgid "Razer Basilisk V4 Pro: %1 % left"
-msgstr "Razer Basilisk V4 Pro: queda un %1 %"
-
-#: services/RazerMouse.qml
-msgid "Mouse"
-msgstr "Ratón"
-
-#: services/Updates.qml
-#, qt-format
-msgid "Authentication failed: %1"
-msgstr "No se pudo autenticar: %1"
-
-#~ msgid "Shell shortcuts, remapping and mouse focus"
-#~ msgstr "Atajos del shell, reasignación y foco del ratón"
-
 #: modules/nexus/PageRegistry.qml
 msgid "Wi-Fi, ethernet, VPN"
 msgstr "Wi-Fi, ethernet, VPN"
-
-#~ msgid "Wi-Fi, ethernet, VPN (NetworkManager)"
-#~ msgstr "Wi-Fi, ethernet, VPN (NetworkManager)"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/BluetoothPage.qml
 msgid "Connected devices"
@@ -1827,15 +1918,13 @@ msgid "Bluetooth, pairing, displays"
 msgstr "Bluetooth, emparejado, pantallas"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AudioPage.qml
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
 msgid "Audio"
 msgstr "Audio"
 
 #: modules/nexus/PageRegistry.qml
 msgid "Output, input"
 msgstr "Salida, entrada"
-
-#~ msgid "App volumes, sound devices"
-#~ msgstr "Volumen de aplicaciones, dispositivos de sonido"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AppsPage.qml
 #: modules/nexus/pages/panels/LauncherPanel.qml
@@ -1846,9 +1935,6 @@ msgstr "Aplicaciones"
 #: modules/nexus/PageRegistry.qml
 msgid "Defaults, library"
 msgstr "Predeterminadas, biblioteca"
-
-#~ msgid "Default apps, favourites, hidden apps"
-#~ msgstr "Aplicaciones predeterminadas, favoritas, ocultas"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/UpdatesPage.qml
 msgid "System updates"
@@ -1862,11 +1948,9 @@ msgstr "Idioma y región"
 msgid "Location, units"
 msgstr "Ubicación, unidades"
 
-#~ msgid "UI language, weather location, display units"
-#~ msgstr "Idioma de la interfaz, ubicación del tiempo, unidades de medida"
-
-#~ msgid "Tuning"
-#~ msgstr "Ajuste fino"
+#: modules/nexus/PageRegistry.qml
+msgid "Categories, toasts"
+msgstr "Categorías, avisos emergentes"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/AboutPage.qml
 msgid "System information"
@@ -1894,8 +1978,24 @@ msgid "BIOS version"
 msgstr "Versión BIOS"
 
 #: modules/nexus/pages/AboutPage.qml
+msgid "Uptime"
+msgstr "Tiempo activo"
+
+#: modules/nexus/pages/AboutPage.qml
 msgid "Packages"
 msgstr "Paquetes"
+
+#: modules/nexus/pages/AboutPage.qml modules/nexus/pages/UpdatesSettings.qml
+msgid "Arch repositories"
+msgstr "Repositorios de Arch"
+
+#: modules/nexus/pages/AboutPage.qml modules/nexus/pages/UpdatesSettings.qml
+msgid "AUR"
+msgstr "AUR"
+
+#: modules/nexus/pages/AboutPage.qml modules/nexus/pages/UpdatesSettings.qml
+msgid "Flatpak"
+msgstr "Flatpak"
 
 #: modules/nexus/pages/AboutPage.qml
 msgid "Hardware"
@@ -1907,10 +2007,7 @@ msgid "Primary monitor"
 msgstr "Monitor principal"
 
 #: modules/nexus/pages/AboutPage.qml
-msgid "Uptime"
-msgstr "Tiempo activo"
-
-#: modules/nexus/pages/AboutPage.qml
+#, qt-format
 msgid "%1 free"
 msgstr "%1 libre"
 
@@ -1931,6 +2028,11 @@ msgstr "CLI"
 #: modules/nexus/pages/apps/AllApps.qml modules/nexus/pages/AppsPage.qml
 msgid "All apps"
 msgstr "Todas las aplicaciones"
+
+#: modules/nexus/pages/apps/AllApps.qml modules/nexus/pages/AppsPage.qml
+#: modules/nexus/pages/ShellPage.qml
+msgid "Search apps"
+msgstr "Buscar apps"
 
 #: modules/nexus/pages/apps/AppInfo.qml
 msgid "App info"
@@ -1975,33 +2077,13 @@ msgid "App ID"
 msgstr "ID de la aplicación"
 
 #: modules/nexus/pages/apps/AppInfo.qml
-msgid "Command"
-msgstr "Comando"
-
-#: modules/nexus/pages/apps/AppInfo.qml
 msgid "Exec"
 msgstr "Exec"
 
-#: modules/nexus/pages/apps/AppInfo.qml
-msgid "Working directory"
-msgstr "Directorio de trabajo"
-
-#: modules/nexus/pages/apps/AppInfo.qml
-msgid "Startup class"
-msgstr "Clase de arranque"
-
-#: modules/nexus/pages/apps/AppInfo.qml
-msgctxt "desktop entry GenericName"
-msgid "Generic name"
-msgstr "Nombre genérico"
-
-#: modules/nexus/pages/apps/AppInfo.qml
-msgid "Categories"
-msgstr "Categorías"
-
-#: modules/nexus/pages/apps/AppInfo.qml
-msgid "Keywords"
-msgstr "Palabras clave"
+#: modules/nexus/pages/apps/AppInfo.qml modules/nexus/pages/ShellPage.qml
+#: services/Keybinds.qml
+msgid "Terminal"
+msgstr "Terminal"
 
 #: modules/nexus/pages/apps/AppInfo.qml
 msgid "Runs in a terminal"
@@ -2010,18 +2092,6 @@ msgstr "Se ejecuta en un terminal"
 #: modules/nexus/pages/apps/AppInfo.qml
 msgid "Desktop file"
 msgstr "Archivo .desktop"
-
-#: modules/launcher/DesktopEditDialog.qml
-msgid "Exec line (%U, %f, … allowed)"
-msgstr "Línea Exec (se permiten %U, %f, …)"
-
-#: modules/launcher/DesktopEditDialog.qml
-msgid "Separated by ; or ,"
-msgstr "Separadas por ; o ,"
-
-#: modules/launcher/DesktopEditDialog.qml
-msgid "Run in terminal"
-msgstr "Ejecutar en un terminal"
 
 #: modules/nexus/pages/AppsPage.qml
 msgid "Default applications"
@@ -2069,6 +2139,7 @@ msgid "No apps playing audio"
 msgstr "Ninguna aplicación está reproduciendo audio"
 
 #: modules/nexus/pages/AudioPage.qml
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
 msgctxt "audio output"
 msgid "Output"
 msgstr "Salida"
@@ -2199,6 +2270,48 @@ msgid "Connect"
 msgstr "Conectar"
 
 #: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Audio mode"
+msgstr "Modo de audio"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Microphone always available, call quality"
+msgstr "Micro siempre disponible, calidad de llamada"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Best sound quality, no microphone"
+msgstr "La mejor calidad de sonido, sin micro"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "High quality until an app uses the microphone"
+msgstr "Alta calidad hasta que una app use el micro"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Channel"
+msgstr "Canal"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+#, qt-format
+msgid "Calls · %1"
+msgstr "Llamadas · %1"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+#, qt-format
+msgid "High quality · %1"
+msgstr "Alta calidad · %1"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Music quality"
+msgstr "Calidad de la música"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Applies when the headset is in music mode"
+msgstr "Se aplica cuando los auriculares están en modo música"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
+msgid "Codec used to play music"
+msgstr "Códec con el que se reproduce la música"
+
+#: modules/nexus/pages/bluetooth/BtDeviceInfo.qml
 msgctxt "bluetooth device state"
 msgid "Trusted"
 msgstr "De confianza"
@@ -2272,157 +2385,14 @@ msgstr "Emparejable"
 msgid "Allow nearby devices to pair with this one"
 msgstr "Permitir que los dispositivos cercanos se emparejen con este"
 
-#: modules/nexus/pages/BluetoothPage.qml modules/nexus/pages/DisplayPage.qml
+#: modules/nexus/pages/DisplayPage.qml
 msgctxt "monitor settings"
 msgid "Display"
 msgstr "Pantalla"
 
-#: modules/nexus/pages/BluetoothPage.qml
-msgid "Output modes, scale, adaptive sync (VRR)"
-msgstr "Modos, escala y VRR (sync adaptativo) por salida"
-
-#: modules/nexus/pages/ComplementsPage.qml modules/nexus/pages/UpdatesPage.qml
-msgid "Available"
-msgstr "Disponibles"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "FortiClient / openfortivpn status icon and connect flow"
-msgstr "Icono de estado FortiClient / openfortivpn y flujo de conexión"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Disabled — tunnel and related processes are stopped"
-msgstr "Desactivado: túnel y procesos asociados detenidos"
-
-#: modules/nexus/pages/ComplementsPage.qml
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Quick timers"
-msgstr "Temporizadores rápidos"
-
-#: modules/nexus/pages/ComplementsPage.qml
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Disabled — active timers are cleared"
-msgstr "Desactivado: se cancelan los temporizadores activos"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Floating popout (Super+Shift+V) backed by cliphist"
-msgstr "Popout flotante (Super+Shift+V) con cliphist"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Disabled — watcher processes are stopped"
-msgstr "Desactivado — los vigilantes del portapapeles se han detenido"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "History size"
-msgstr "Tamaño del historial"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Maximum number of clipboard entries to keep"
-msgstr "Número máximo de entradas del portapapeles a conservar"
-
-#: modules/nexus/pages/ComplementsPage.qml services/Hydration.qml
-msgid "Hydration"
-msgstr "Hidratación"
-
-#: modules/nexus/pages/ComplementsPage.qml
-#, qt-format
-msgid "%1 ml · reminder every %2 min"
-msgstr "%1 ml · recordatorio cada %2 min"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Replaces the dashboard calendar with a water intake tracker"
-msgstr "Sustituye el calendario del dashboard por un seguidor de agua"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Disabled — calendar stays on the dashboard"
-msgstr "Desactivado: el calendario permanece en el dashboard"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Daily goal"
-msgstr "Meta diaria"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Target water intake per day (ml)"
-msgstr "Cantidad de agua objetivo al día (ml)"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Reminder interval"
-msgstr "Intervalo de recordatorio"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Minutes without a sip before a reminder"
-msgstr "Minutos sin un trago antes del recordatorio"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Preset 1"
-msgstr "Preset 1"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Quick-add button amount (ml)"
-msgstr "Cantidad del botón de suma rápida (ml)"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Preset 2"
-msgstr "Preset 2"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Preset 3"
-msgstr "Preset 3"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Preset 4"
-msgstr "Preset 4"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Games (Steam)"
-msgstr "Juegos (Steam)"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Steam API key"
-msgstr "API key de Steam"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "From steamcommunity.com/dev/apikey"
-msgstr "En steamcommunity.com/dev/apikey"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "API key"
-msgstr "API key"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Steam ID"
-msgstr "Steam ID"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "SteamID64, vanity name, or profile URL"
-msgstr "SteamID64, vanity o URL de perfil"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Steam ID or vanity"
-msgstr "Steam ID o vanity"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Auto refresh"
-msgstr "Actualización automática"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Minutes between automatic Steam updates"
-msgstr "Minutos entre actualizaciones automáticas de Steam"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Refresh now"
-msgstr "Actualizar ahora"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "FortiClient VPN config: ~/.config/openfortivpn/config (popout gear). Scripts: ~/.local/share/sylphrena/vpn-forticlient/"
-msgstr "Config VPN FortiClient: ~/.config/openfortivpn/config (engranaje del popout). Scripts: ~/.local/share/sylphrena/vpn-forticlient/"
-
 #: modules/nexus/pages/DisplayPage.qml
 msgid "No displays detected"
 msgstr "No se detectaron pantallas"
-
-#: modules/nexus/pages/DisplayPage.qml
-msgid "Resolution & refresh rate"
-msgstr "Resolución y frecuencia"
 
 #: modules/nexus/pages/DisplayPage.qml
 msgid "Resolution"
@@ -2431,14 +2401,6 @@ msgstr "Resolución"
 #: modules/nexus/pages/DisplayPage.qml
 msgid "Refresh rate"
 msgstr "Frecuencia de actualización"
-
-#: services/Displays.qml
-msgid "%1 Hz"
-msgstr "%1 Hz"
-
-#: services/Displays.qml
-msgid "%1×%2"
-msgstr "%1×%2"
 
 #: modules/nexus/pages/DisplayPage.qml
 msgid "Scale"
@@ -2481,6 +2443,37 @@ msgstr "Diseño compacto"
 #: modules/nexus/pages/DisplayPage.qml
 msgid "Session toggle for zero gaps/rounding lives in Panels → Utilities"
 msgstr "El interruptor de sesión sin gaps/redondeo vive en Paneles → Utilities"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Install from zip"
+msgstr "Instalar desde zip"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
+msgid "Browse"
+msgstr "Examinar"
+
+#. TRANSLATORS: %1 = extension name
+#: modules/nexus/pages/ExtensionsPage.qml
+#, qt-format
+msgid "Install %1?"
+msgstr "¿Instalar %1?"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Install"
+msgstr "Instalar"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Installed"
+msgstr "Instaladas"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Select an extension package"
+msgstr "Elige un paquete de extensión"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Extension packages (.zip)"
+msgstr "Paquetes de extensión (.zip)"
 
 #: modules/nexus/pages/KeybindsPage.qml
 msgid "Mouse focus"
@@ -2694,6 +2687,27 @@ msgstr "Editar proveedor de VPN"
 msgid "Add VPN provider"
 msgstr "Añadir proveedor de VPN"
 
+#: modules/nexus/pages/network/AddVpnPage.qml
+msgid "Commands"
+msgstr "Comandos"
+
+#: modules/nexus/pages/network/AddVpnPage.qml
+msgid "This provider type comes from an extension that is disabled. Enable it in Nexus → Extensions to edit the connection."
+msgstr "Este tipo de proveedor es de una extensión desactivada. Actívala en Nexus → Extensiones para editar la conexión."
+
+#: modules/nexus/pages/network/AddVpnPage.qml
+msgid "Connection name"
+msgstr "Nombre de la conexión"
+
+#. TRANSLATORS: the name shown in the VPN provider list on the network page
+#: modules/nexus/pages/network/AddVpnPage.qml
+msgid "Shown in the list"
+msgstr "Se muestra en la lista"
+
+#: modules/nexus/pages/network/AddVpnPage.qml
+msgid "Provider name is required"
+msgstr "El nombre del proveedor es obligatorio"
+
 #. TRANSLATORS: the four names in brackets are provider identifiers, leave them untranslated
 #: modules/nexus/pages/network/AddVpnPage.qml
 msgid "Built-in names (wireguard, warp, tailscale, netbird) auto-fill their commands. For others, provide the connect/disconnect commands."
@@ -2709,17 +2723,8 @@ msgid "Built-in id or a custom name"
 msgstr "ID integrado o un nombre personalizado"
 
 #: modules/nexus/pages/network/AddVpnPage.qml
-msgid "Provider name is required"
-msgstr "El nombre del proveedor es obligatorio"
-
-#: modules/nexus/pages/network/AddVpnPage.qml
 msgid "Display name"
 msgstr "Nombre para mostrar"
-
-#. TRANSLATORS: the name shown in the VPN provider list on the network page
-#: modules/nexus/pages/network/AddVpnPage.qml
-msgid "Shown in the list"
-msgstr "Se muestra en la lista"
 
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/network/EthernetDetailPage.qml
@@ -2749,8 +2754,9 @@ msgid "Disconnect command"
 msgstr "Comando de desconexión"
 
 #: modules/nexus/pages/network/AddVpnPage.qml
-msgid "Delete"
-msgstr "Eliminar"
+msgctxt "button"
+msgid "Save"
+msgstr "Guardar"
 
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
@@ -2787,6 +2793,11 @@ msgstr "5 GHz"
 msgctxt "network filter"
 msgid "2.4 GHz"
 msgstr "2,4 GHz"
+
+#: modules/nexus/pages/network/EthernetDetailPage.qml
+#: modules/nexus/pages/network/NetworkDetailPage.qml
+msgid "Disconnect"
+msgstr "Desconectar"
 
 #: modules/nexus/pages/network/EthernetDetailPage.qml
 #: modules/nexus/pages/network/NetworkDetailPage.qml
@@ -2959,6 +2970,14 @@ msgid "Show all networks (%1)"
 msgstr "Mostrar todas las redes (%1)"
 
 #: modules/nexus/pages/NetworkPage.qml
+msgid "Wi-Fi rescan"
+msgstr "Reescaneo de Wi-Fi"
+
+#: modules/nexus/pages/NetworkPage.qml
+msgid "How often available networks are rescanned (seconds)"
+msgstr "Con qué frecuencia se vuelven a buscar las redes disponibles (segundos)"
+
+#: modules/nexus/pages/NetworkPage.qml
 #: modules/nexus/pages/panels/UtilitiesPanel.qml services/VPN.qml
 msgid "VPN"
 msgstr "VPN"
@@ -2966,6 +2985,16 @@ msgstr "VPN"
 #: modules/nexus/pages/NetworkPage.qml
 msgid "No VPN providers configured"
 msgstr "No hay proveedores de VPN configurados"
+
+#: modules/nexus/pages/NetworkPage.qml
+msgid "Its extension is disabled"
+msgstr "Su extensión está desactivada"
+
+#. TRANSLATORS: %1 = VPN provider type, e.g. FortiClient
+#: modules/nexus/pages/NetworkPage.qml
+#, qt-format
+msgid "%1 · Tap to select"
+msgstr "%1 · Toca para seleccionar"
 
 #: modules/nexus/pages/NetworkPage.qml
 msgid "Tap to select"
@@ -3007,6 +3036,31 @@ msgid "Add provider"
 msgstr "Añadir proveedor"
 
 #: modules/nexus/pages/panels/DashboardPanel.qml
+msgctxt "lyrics backend"
+msgid "Auto"
+msgstr "Automático"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgctxt "lyrics backend"
+msgid "Local"
+msgstr "Local"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgctxt "gpu type"
+msgid "Auto"
+msgstr "Automático"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgctxt "gpu type"
+msgid "Generic"
+msgstr "Genérico"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgctxt "gpu type"
+msgid "None"
+msgstr "Ninguno"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
 #: modules/nexus/pages/panels/LauncherPanel.qml
 #: modules/nexus/pages/panels/SidebarPanel.qml
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
@@ -3037,12 +3091,89 @@ msgid "Display seconds for the clock in the main panel"
 msgstr "Muestra los segundos del reloj en el panel principal"
 
 #: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Widget carousel"
+msgstr "Carrusel de widgets"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "The centre of the Dashboard shows one widget at a time; switch with the dots, the wheel or by dragging. Enable and reorder them here."
+msgstr "El centro del panel muestra un widget a la vez; cambia con los puntos, la rueda o arrastrando. Aquí los activas y los ordenas."
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
 msgid "Tabs"
 msgstr "Pestañas"
 
 #: modules/nexus/pages/panels/DashboardPanel.qml
 msgid "Performance widgets"
 msgstr "Widgets de rendimiento"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Polling"
+msgstr "Sondeo"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Media refresh"
+msgstr "Actualización de multimedia"
+
+#. TRANSLATORS: ms is the millisecond unit, leave it untranslated
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "How often the media position updates (ms)"
+msgstr "Con qué frecuencia se actualiza la posición del contenido multimedia (ms)"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "System stats refresh"
+msgstr "Actualización de estadísticas del sistema"
+
+#. TRANSLATORS: CPU and GPU are hardware abbreviations, leave them untranslated
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "CPU, memory and GPU update interval (seconds)"
+msgstr "Intervalo de actualización de CPU, memoria y GPU (segundos)"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Media & lyrics"
+msgstr "Multimedia y letras"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Lyrics backend"
+msgstr "Motor de letras"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Source used to fetch synced lyrics"
+msgstr "Fuente usada para obtener letras sincronizadas"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Default player"
+msgstr "Reproductor predeterminado"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Preferred media player when several are open"
+msgstr "Reproductor multimedia preferido cuando hay varios abiertos"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgctxt "default media player"
+msgid "Auto"
+msgstr "Automático"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Service tuning"
+msgstr "Ajuste de servicios"
+
+#. TRANSLATORS: bars of a spectrum analyser, not the taskbar
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Visualiser bars"
+msgstr "Barras del visualizador"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Number of bars in the audio visualisers"
+msgstr "Número de barras en los visualizadores de audio"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+#, qt-format
+msgid "Monitoring: %1"
+msgstr "Monitorizando: %1"
+
+#: modules/nexus/pages/panels/DashboardPanel.qml
+msgid "Override for GPU type"
+msgstr "Forzar tipo de GPU"
 
 #: modules/nexus/pages/panels/DashboardPanel.qml
 #: modules/nexus/pages/panels/LauncherPanel.qml
@@ -3103,7 +3234,6 @@ msgstr "Permite acciones que apagan o cierran la sesión"
 msgid "Fuzzy search"
 msgstr "Búsqueda difusa"
 
-#: modules/nexus/pages/apps/AppInfo.qml
 #: modules/nexus/pages/panels/LauncherPanel.qml
 msgid "Actions"
 msgstr "Acciones"
@@ -3189,27 +3319,17 @@ msgstr "Mostrar segundos"
 msgid "Presets: %1 · %2 · %3 · %4 min"
 msgstr "Preajustes: %1 · %2 · %3 · %4 min"
 
-#. TRANSLATORS: %1 = preset index (1-based)
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
-#, qt-format
-msgid "Preset %1"
-msgstr "Preajuste %1"
+msgid "Quick timers"
+msgstr "Temporizadores rápidos"
+
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+msgid "Disabled — active timers are cleared"
+msgstr "Desactivado: se cancelan los temporizadores activos"
 
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Quick timer button duration (min)"
 msgstr "Duración del botón de temporizador rápido (min)"
-
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Hub for enabling Timers: Complements"
-msgstr "Hub para activar Timers: Complementos"
-
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Configure Timers in Complements"
-msgstr "Configurar Timers en Complementos"
-
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Complements owns the opt-in toggle; presets above stay on the clock"
-msgstr "Complementos es dueño del interruptor; los presets de arriba siguen en el reloj"
 
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 msgid "Lock keys"
@@ -3260,14 +3380,6 @@ msgstr "Updates solo cuando toca"
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 msgid "The updates badge appears only with pending or installing packages"
 msgstr "El icono de updates aparece solo con paquetes pendientes o instalándose"
-
-#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
-msgid "Visible while the complement is enabled — configure in Complements"
-msgstr "Visible mientras el complemento esté activo — configúralo en Complementos"
-
-#: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
-msgid "Hidden — enable it in Complements"
-msgstr "Oculto — actívalo en Complementos"
 
 #: modules/nexus/pages/panels/taskbar/BarTray.qml
 #: modules/nexus/pages/panels/TaskbarPanel.qml
@@ -3440,13 +3552,8 @@ msgid "Show the idle inhibitor card"
 msgstr "Muestra la tarjeta del inhibidor de inactividad"
 
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
-#: modules/utilities/cards/Record.qml
 msgid "Screen recorder"
 msgstr "Grabador de pantalla"
-
-#: modules/utilities/cards/Toggles.qml modules/utilities/cards/Record.qml
-msgid "Record screen"
-msgstr "Grabar pantalla"
 
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
 msgid "Show the screen recorder card"
@@ -3483,9 +3590,8 @@ msgid "Open the settings window"
 msgstr "Abrir la ventana de ajustes"
 
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
-#, fuzzy
 msgid "Prevent sleep / idle suspend"
-msgstr "Impidiendo el modo de suspensión"
+msgstr "Impedir la suspensión por inactividad"
 
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
 msgid "Maximise screen use: no frame or gaps"
@@ -3502,6 +3608,22 @@ msgstr "Silenciar notificaciones"
 #: modules/nexus/pages/panels/UtilitiesPanel.qml
 msgid "Connect or disconnect the VPN"
 msgstr "Conectar o desconectar la VPN"
+
+#: modules/nexus/pages/panels/UtilitiesPanel.qml
+msgid "Floating popout (Super+Shift+V) backed by cliphist"
+msgstr "Popout flotante (Super+Shift+V) con cliphist"
+
+#: modules/nexus/pages/panels/UtilitiesPanel.qml
+msgid "Disabled — watcher processes are stopped"
+msgstr "Desactivado — los vigilantes del portapapeles se han detenido"
+
+#: modules/nexus/pages/panels/UtilitiesPanel.qml
+msgid "History size"
+msgstr "Tamaño del historial"
+
+#: modules/nexus/pages/panels/UtilitiesPanel.qml
+msgid "Maximum number of clipboard entries to keep"
+msgstr "Número máximo de entradas del portapapeles a conservar"
 
 #: modules/nexus/pages/PanelsPage.qml
 msgctxt "panel status"
@@ -3549,6 +3671,16 @@ msgstr "Importantes"
 msgctxt "show toasts over fullscreen apps"
 msgid "On"
 msgstr "Activado"
+
+#: modules/nexus/pages/services/NotificationsPage.qml
+msgctxt "toast position: top-right corner"
+msgid "Top"
+msgstr "Superior"
+
+#: modules/nexus/pages/services/NotificationsPage.qml
+msgctxt "toast position: bottom-right corner"
+msgid "Bottom"
+msgstr "Inferior"
 
 #: modules/nexus/pages/services/NotificationsPage.qml
 msgid "Show in fullscreen"
@@ -3600,26 +3732,16 @@ msgid "Whether toasts appear over fullscreen apps"
 msgstr "Si los avisos emergentes aparecen sobre las aplicaciones en pantalla completa"
 
 #: modules/nexus/pages/services/NotificationsPage.qml
-msgid "Visible toasts"
-msgstr "Avisos visibles"
-
-#: modules/nexus/pages/services/NotificationsPage.qml
-msgctxt "toast position: top-right corner"
-msgid "Top"
-msgstr "Superior"
-
-#: modules/nexus/pages/services/NotificationsPage.qml
-msgctxt "toast position: bottom-right corner"
-msgid "Bottom"
-msgstr "Inferior"
+msgid "Position"
+msgstr "Posición"
 
 #: modules/nexus/pages/services/NotificationsPage.qml
 msgid "Screen corner where toasts appear"
 msgstr "Esquina de la pantalla donde aparecen los avisos"
 
 #: modules/nexus/pages/services/NotificationsPage.qml
-msgid "Position"
-msgstr "Posición"
+msgid "Visible toasts"
+msgstr "Avisos visibles"
 
 #: modules/nexus/pages/services/NotificationsPage.qml
 msgid "Maximum number of toasts shown at once"
@@ -3673,115 +3795,6 @@ msgstr "Nuevas actualizaciones del sistema"
 msgid "Now playing"
 msgstr "Reproduciendo ahora"
 
-#: modules/nexus/pages/ServicesPage.qml
-msgctxt "lyrics backend"
-msgid "Auto"
-msgstr "Automático"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgctxt "lyrics backend"
-msgid "Local"
-msgstr "Local"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgctxt "gpu type"
-msgid "Auto"
-msgstr "Automático"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgctxt "gpu type"
-msgid "Generic"
-msgstr "Genérico"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgctxt "gpu type"
-msgid "None"
-msgstr "Ninguno"
-
-#: modules/nexus/PageRegistry.qml
-msgid "Categories, toasts"
-msgstr "Categorías, avisos emergentes"
-
-#~ msgid "Notifications, toasts, timeouts"
-#~ msgstr "Notificaciones, avisos emergentes, tiempos de espera"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Polling"
-msgstr "Sondeo"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Media refresh"
-msgstr "Actualización de multimedia"
-
-#. TRANSLATORS: ms is the millisecond unit, leave it untranslated
-#: modules/nexus/pages/ServicesPage.qml
-msgid "How often the media position updates (ms)"
-msgstr "Con qué frecuencia se actualiza la posición del contenido multimedia (ms)"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "System stats refresh"
-msgstr "Actualización de estadísticas del sistema"
-
-#. TRANSLATORS: CPU and GPU are hardware abbreviations, leave them untranslated
-#: modules/nexus/pages/ServicesPage.qml
-msgid "CPU, memory and GPU update interval (seconds)"
-msgstr "Intervalo de actualización de CPU, memoria y GPU (segundos)"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Wi-Fi rescan"
-msgstr "Reescaneo de Wi-Fi"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "How often available networks are rescanned (seconds)"
-msgstr "Con qué frecuencia se vuelven a buscar las redes disponibles (segundos)"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Media & lyrics"
-msgstr "Multimedia y letras"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Lyrics backend"
-msgstr "Motor de letras"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Source used to fetch synced lyrics"
-msgstr "Fuente usada para obtener letras sincronizadas"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Default player"
-msgstr "Reproductor predeterminado"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Preferred media player when several are open"
-msgstr "Reproductor multimedia preferido cuando hay varios abiertos"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgctxt "default media player"
-msgid "Auto"
-msgstr "Automático"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Service tuning"
-msgstr "Ajuste de servicios"
-
-#. TRANSLATORS: bars of a spectrum analyser, not the taskbar
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Visualiser bars"
-msgstr "Barras del visualizador"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Number of bars in the audio visualisers"
-msgstr "Número de barras en los visualizadores de audio"
-
-#: modules/nexus/pages/ServicesPage.qml
-#, qt-format
-msgid "Monitoring: %1"
-msgstr "Monitorizando: %1"
-
-#: modules/nexus/pages/ServicesPage.qml
-msgid "Override for GPU type"
-msgstr "Forzar tipo de GPU"
-
 #: modules/nexus/pages/ShellPage.qml
 #: plugin/src/Sylphrena/Config/activitiesconfig.hpp
 msgid "Home"
@@ -3816,11 +3829,6 @@ msgstr "Lectura"
 msgid "Code"
 msgstr "Código"
 
-#: modules/nexus/pages/apps/AppInfo.qml
-#: modules/nexus/pages/ShellPage.qml services/Keybinds.qml
-msgid "Terminal"
-msgstr "Terminal"
-
 #: modules/nexus/pages/ShellPage.qml
 msgid "Design"
 msgstr "Diseño"
@@ -3828,10 +3836,6 @@ msgstr "Diseño"
 #: modules/nexus/pages/ShellPage.qml
 msgid "Art"
 msgstr "Arte"
-
-#: modules/nexus/pages/ShellPage.qml
-msgid "Music"
-msgstr "Música"
 
 #: modules/nexus/pages/ShellPage.qml
 msgid "Movies"
@@ -3930,14 +3934,6 @@ msgid "Group workspaces into activities and give each one its own wallpaper and 
 msgstr "Agrupa escritorios en actividades y dale a cada una su fondo y colores. Los campos vacíos heredan de Principal."
 
 #: modules/nexus/pages/ShellPage.qml
-msgid "Enable activities"
-msgstr "Activar actividades"
-
-#: modules/nexus/pages/ShellPage.qml
-msgid "Show activity pills on the bar and use activity shortcuts"
-msgstr "Mostrar pastillas de actividad en la barra y usar atajos de actividad"
-
-#: modules/nexus/pages/ShellPage.qml
 msgid "Show app icons on workspaces"
 msgstr "Mostrar iconos de apps en los escritorios"
 
@@ -4028,6 +4024,11 @@ msgid "Activity icon"
 msgstr "Icono de actividad"
 
 #: modules/nexus/pages/ShellPage.qml
+msgctxt "button"
+msgid "Select"
+msgstr "Seleccionar"
+
+#: modules/nexus/pages/ShellPage.qml
 msgid "Search icons"
 msgstr "Buscar iconos"
 
@@ -4092,20 +4093,8 @@ msgid "Installed apps"
 msgstr "Apps instaladas"
 
 #: modules/nexus/pages/ShellPage.qml
-msgid "Search apps"
-msgstr "Buscar apps"
-
-#: modules/nexus/pages/ShellPage.qml
 msgid "Add activity"
 msgstr "Añadir actividad"
-
-#: modules/bar/popouts/ActivityMenu.qml
-msgid "Close all windows"
-msgstr "Cerrar todas las ventanas"
-
-#: modules/bar/popouts/ActivityMenu.qml
-msgid "Activity"
-msgstr "Actividad"
 
 #: modules/nexus/pages/ShellPage.qml
 msgid "New activity"
@@ -4125,6 +4114,10 @@ msgid "Enable"
 msgstr "Activar"
 
 #: modules/nexus/pages/UpdatesPage.qml
+msgid "Available"
+msgstr "Disponibles"
+
+#: modules/nexus/pages/UpdatesPage.qml
 msgid "Info"
 msgstr "Info"
 
@@ -4141,7 +4134,6 @@ msgid "Clear orphans"
 msgstr "Limpiar huérfanos"
 
 #: modules/nexus/pages/UpdatesPage.qml
-#, fuzzy
 msgid "Output"
 msgstr "Salida"
 
@@ -4154,24 +4146,12 @@ msgid "Sources"
 msgstr "Fuentes"
 
 #: modules/nexus/pages/UpdatesSettings.qml
-msgid "Arch repositories"
-msgstr "Repositorios de Arch"
-
-#: modules/nexus/pages/UpdatesSettings.qml
 msgid "Official packages via checkupdates"
 msgstr "Paquetes oficiales con checkupdates"
 
 #: modules/nexus/pages/UpdatesSettings.qml
-msgid "AUR"
-msgstr "AUR"
-
-#: modules/nexus/pages/UpdatesSettings.qml
 msgid "Arch User Repository via the selected wrapper"
 msgstr "Arch User Repository con el wrapper seleccionado"
-
-#: modules/nexus/pages/UpdatesSettings.qml
-msgid "Flatpak"
-msgstr "Flatpak"
 
 #: modules/nexus/pages/UpdatesSettings.qml
 msgid "Flatpak remotes"
@@ -4252,10 +4232,6 @@ msgid "How the wallpaper colours are interpreted."
 msgstr "Cómo se interpretan los colores del fondo de pantalla."
 
 #: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
-msgid "Browse"
-msgstr "Examinar"
-
-#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
 msgid "Select an image"
 msgstr "Selecciona una imagen"
 
@@ -4331,20 +4307,9 @@ msgstr "Gestión de energía normal"
 msgid "Active since %1"
 msgstr "Activo desde %1"
 
-#: modules/utilities/cards/Record.qml
-msgctxt "recorder state"
-msgid "Paused"
-msgstr "En pausa"
-
-#: modules/utilities/cards/Record.qml
-msgctxt "recorder state"
-msgid "Running..."
-msgstr "En ejecución..."
-
-#: modules/utilities/cards/Record.qml
-msgctxt "recorder state"
-msgid "Ready"
-msgstr "Listo"
+#: modules/utilities/cards/Record.qml modules/utilities/cards/Toggles.qml
+msgid "Record screen"
+msgstr "Grabar pantalla"
 
 #: modules/utilities/cards/Record.qml
 msgid "Record fullscreen"
@@ -4719,10 +4684,28 @@ msgstr "Binario · %1"
 msgid "Binary data"
 msgstr "Datos binarios"
 
+#: services/DashWidgets.qml
+msgid "Calendar"
+msgstr "Calendario"
+
+#: services/DashWidgets.qml
+msgid "Month view of the dashboard"
+msgstr "Vista mensual del panel"
+
 #: services/Displays.qml
 #, qt-format
 msgid "%1×%2 · %3 Hz"
 msgstr "%1×%2 · %3 Hz"
+
+#: services/Displays.qml
+#, qt-format
+msgid "%1×%2"
+msgstr "%1×%2"
+
+#: services/Displays.qml
+#, qt-format
+msgid "%1 Hz"
+msgstr "%1 Hz"
 
 #: services/Displays.qml
 msgid "Adaptive Sync stays on, including the desktop"
@@ -4740,14 +4723,46 @@ msgstr "Frecuencia fija; menos parpadeo con FreeSync inestable por HDMI"
 msgid "Could not read monitor list"
 msgstr "No se pudo leer la lista de monitores"
 
-#: services/Hydration.qml
-msgid "Time to drink water"
-msgstr "Hora de beber agua"
+#: services/Extensions.qml services/VPN.qml
+msgid "Unknown error"
+msgstr "Error desconocido"
 
-#: services/Hydration.qml
+#: services/Extensions.qml
+msgid "Extension not removed"
+msgstr "Extensión no eliminada"
+
+#: services/Extensions.qml
+msgid "Extension not installed"
+msgstr "Extensión no instalada"
+
+#: services/Extensions.qml
+msgid "Extension removed"
+msgstr "Extensión eliminada"
+
+#: services/Extensions.qml
+msgid "Extension updated"
+msgstr "Extensión actualizada"
+
+#: services/Extensions.qml
+msgid "Extension installed"
+msgstr "Extensión instalada"
+
+#: services/Extensions.qml services/Updates.qml
+msgid "Incorrect password"
+msgstr "Contraseña incorrecta"
+
+#: services/Extensions.qml services/Updates.qml
+msgid "Too many failed attempts. Wait a minute and try again."
+msgstr "Demasiados intentos fallidos. Espera un minuto y vuelve a intentarlo."
+
+#: services/Extensions.qml
 #, qt-format
-msgid "%1 / %2 ml — tap an amount to log it"
-msgstr "%1 / %2 ml — toca una cantidad para registrarla"
+msgid "Failed (code %1)"
+msgstr "Falló (código %1)"
+
+#: services/Extensions.qml
+msgid "Installation incomplete"
+msgstr "Instalación incompleta"
 
 #: services/Hypr.qml
 msgctxt "keyboard layout"
@@ -5119,67 +5134,6 @@ msgstr "Capturas de pantalla"
 msgid "Already used by “%1”"
 msgstr "Ya está en uso por «%1»"
 
-#: services/FortiVpn.qml
-msgctxt "vpn state"
-msgid "Disconnected"
-msgstr "Desconectado"
-
-#: services/FortiVpn.qml
-msgctxt "vpn state"
-msgid "Connecting…"
-msgstr "Conectando…"
-
-#: services/FortiVpn.qml
-msgctxt "vpn state"
-msgid "Disconnecting…"
-msgstr "Desconectando…"
-
-#: services/FortiVpn.qml
-msgid "Host is required"
-msgstr "El host es obligatorio"
-
-#: services/FortiVpn.qml
-msgid "Port must be a number"
-msgstr "El puerto debe ser un número"
-
-#: services/FortiVpn.qml
-msgid "Could not write VPN config"
-msgstr "No se pudo escribir la config de VPN"
-
-#: services/FortiVpn.qml
-#, qt-format
-msgid "Connected · %1"
-msgstr "Conectado · %1"
-
-#: services/FortiVpn.qml
-msgid "VPN dropped (reconnect after sleep)"
-msgstr ""
-
-#: services/FortiVpn.qml services/VPN.qml
-msgid "VPN connected"
-msgstr "VPN conectada"
-
-#: services/FortiVpn.qml
-msgid "Login failed (user / password / OTP / certificate)."
-msgstr "Error de acceso (usuario / contraseña / OTP / certificado)."
-
-#: services/FortiVpn.qml
-#, qt-format
-msgid "Could not start the VPN tunnel (code %1)."
-msgstr "No se pudo levantar el túnel VPN (código %1)."
-
-#: services/FortiVpn.qml
-msgid "Complement disabled"
-msgstr "Complemento desactivado"
-
-#: services/FortiVpn.qml services/VPN.qml
-msgid "VPN disconnected"
-msgstr "VPN desconectada"
-
-#: services/FortiVpn.qml
-msgid "Could not read VPN config"
-msgstr "No se pudo leer la config de VPN"
-
 #: services/Nmcli.qml
 msgid "Enterprise"
 msgstr "Empresarial"
@@ -5218,6 +5172,10 @@ msgctxt "abbreviated notification age, minutes"
 msgid "%1m"
 msgstr "%1 min"
 
+#: services/NotifData.qml
+msgid "Notification"
+msgstr "Notificación"
+
 #: services/Notifs.qml
 msgid "Do not disturb enabled"
 msgstr "No molestar activado"
@@ -5239,122 +5197,6 @@ msgstr "Las notificaciones emergentes están ahora activadas"
 msgctxt "track artist and title"
 msgid "%1 - %2"
 msgstr "%1 - %2"
-
-#: services/Steam.qml
-msgid "Disabled — Games tab is hidden"
-msgstr "Desactivado: la pestaña Juegos está oculta"
-
-#: services/Steam.qml
-msgid "Needs API key and Steam ID"
-msgstr "Necesita API key y Steam ID"
-
-#: services/Steam.qml
-msgid "Loading Steam data…"
-msgstr "Cargando datos de Steam…"
-
-#: services/Steam.qml
-#, qt-format
-msgid "Connected as %1"
-msgstr "Conectado como %1"
-
-#: services/Steam.qml
-msgid "Ready"
-msgstr "Listo"
-
-#: services/steam/SteamAchievements.qml
-msgid "Playtime tracked by Millennium"
-msgstr "Tiempo de juego registrado por Millennium"
-
-#: services/steam/SteamAchievements.qml
-msgid "Non-Steam game — no Steam achievements"
-msgstr "Juego no Steam — sin logros de Steam"
-
-#: services/steam/SteamAchievements.qml
-msgid "Steam achievements are private for this profile"
-msgstr "Los logros de Steam son privados en este perfil"
-
-#: services/steam/SteamAchievements.qml
-msgid "This game has no achievements"
-msgstr "Este juego no tiene logros"
-
-#: services/steam/SteamAchievements.qml services/steam/SteamLibrary.qml
-msgid "Unknown game"
-msgstr "Juego desconocido"
-
-#: services/steam/SteamApi.qml
-msgid "Invalid Steam API response"
-msgstr "Respuesta inválida de la API de Steam"
-
-#: services/steam/SteamApi.qml
-msgid "Steam request failed"
-msgstr "Falló la petición a Steam"
-
-#: services/steam/SteamApi.qml
-msgid "Could not resolve Steam vanity URL"
-msgstr "No se pudo resolver el vanity de Steam"
-
-#: services/steam/SteamFormat.qml
-msgid "No playtime"
-msgstr "Sin tiempo de juego"
-
-#: services/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 min"
-msgstr "%1 min"
-
-#: services/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 h %2 min"
-msgstr "%1 h %2 min"
-
-#: services/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 h"
-msgstr "%1 h"
-
-#: services/steam/SteamFormat.qml
-msgid "In-game"
-msgstr "En partida"
-
-#: services/steam/SteamFormat.qml
-msgid "Online"
-msgstr "En línea"
-
-#: services/steam/SteamFormat.qml
-msgid "Busy"
-msgstr "Ocupado"
-
-#: services/steam/SteamFormat.qml
-msgid "Away"
-msgstr "Ausente"
-
-#: services/steam/SteamFormat.qml
-msgid "Snooze"
-msgstr "Descansando"
-
-#: services/steam/SteamFormat.qml
-msgid "Looking to trade"
-msgstr "Buscando intercambio"
-
-#: services/steam/SteamFormat.qml
-msgid "Looking to play"
-msgstr "Buscando partida"
-
-#: services/steam/SteamFormat.qml
-msgid "Offline"
-msgstr "Desconectado"
-
-#: services/steam/SteamLibrary.qml
-msgid "Steam profile not found"
-msgstr "Perfil de Steam no encontrado"
-
-#: services/steam/SteamLibrary.qml
-msgid "Could not load friend status"
-msgstr "No se pudo cargar el estado de amigos"
-
-#: services/steam/SteamLibrary.qml
-msgid "Friends list is private"
-msgstr "La lista de amigos es privada"
 
 #: services/Timers.qml
 msgid "Timer finished"
@@ -5411,12 +5253,9 @@ msgid "Update cancelled."
 msgstr "Actualización cancelada."
 
 #: services/Updates.qml
-msgid "Too many failed attempts. Wait a minute and try again."
-msgstr ""
-
-#: services/Updates.qml
-msgid "Incorrect password"
-msgstr "Contraseña incorrecta"
+#, qt-format
+msgid "Authentication failed: %1"
+msgstr "No se pudo autenticar: %1"
 
 #: services/Updates.qml
 msgid "Authentication failed"
@@ -5489,30 +5328,36 @@ msgid "Update check timed out"
 msgstr "La comprobación de actualizaciones agotó el tiempo"
 
 #: services/Updates.qml
-#, fuzzy
 msgid "Authentication timed out."
-msgstr "Autenticación fallida"
+msgstr "La autenticación agotó el tiempo."
 
 #: services/Updates.qml
 msgid "Authentication timed out. Wait a minute if the account was locked, then try again."
-msgstr ""
+msgstr "La autenticación agotó el tiempo. Si la cuenta se bloqueó, espera un minuto y vuelve a intentarlo."
 
 #: services/Updates.qml
-#, fuzzy
 msgid "Update timed out."
-msgstr "La comprobación de actualizaciones agotó el tiempo"
+msgstr "La actualización agotó el tiempo."
 
 #: services/Updates.qml
 msgid "Timed out waiting for the package manager."
-msgstr ""
+msgstr "Se agotó el tiempo esperando al gestor de paquetes."
 
 #: services/VPN.qml
 msgid "VPN connection failed"
 msgstr "Error al conectar la VPN"
 
 #: services/VPN.qml
+msgid "Enable the extension of this provider in Nexus → Extensions"
+msgstr "Activa la extensión de este proveedor en Nexus → Extensiones"
+
+#: services/VPN.qml
 msgid "VPN disconnection failed"
 msgstr "Error al desconectar la VPN"
+
+#: services/VPN.qml
+msgid "Enter the code in the VPN icon of the bar"
+msgstr "Introduce el código en el icono VPN de la barra"
 
 #: services/VPN.qml
 msgid "Login required"
@@ -5539,9 +5384,17 @@ msgid "Unknown WARP status"
 msgstr "Estado de WARP desconocido"
 
 #: services/VPN.qml
+msgid "VPN connected"
+msgstr "VPN conectada"
+
+#: services/VPN.qml
 #, qt-format
 msgid "Connected to %1"
 msgstr "Conectado a %1"
+
+#: services/VPN.qml
+msgid "VPN disconnected"
+msgstr "VPN desconectada"
 
 #: services/VPN.qml
 #, qt-format
@@ -5557,10 +5410,6 @@ msgstr "Autenticación de VPN necesaria"
 msgctxt "vpn name and reason"
 msgid "%1: %2"
 msgstr "%1: %2"
-
-#: services/VPN.qml
-msgid "Unknown error"
-msgstr "Error desconocido"
 
 #: services/VPN.qml
 msgid "VPN error"
@@ -5684,6 +5533,34 @@ msgid "%n minute"
 msgid_plural "%n minutes"
 msgstr[0] "%n minuto"
 msgstr[1] "%n minutos"
+
+#: build/i18n/extensions/games/manifest.json.js
+msgid "Games (Steam)"
+msgstr "Juegos (Steam)"
+
+#: build/i18n/extensions/games/manifest.json.js
+msgid "Steam library, achievements and play time in a dashboard tab"
+msgstr "Biblioteca de Steam, logros y tiempo de juego en una pestaña del dashboard"
+
+#: build/i18n/extensions/hydration/manifest.json.js
+msgid "Water intake tracker with reminders"
+msgstr "Control de agua con recordatorios"
+
+#: build/i18n/extensions/hydration/manifest.json.js
+msgid "Off — also stops the reminders and the tracking"
+msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
+
+#: build/i18n/extensions/razer-mouse/manifest.json.js
+msgid "Razer mouse battery"
+msgstr "Batería del ratón Razer"
+
+#: build/i18n/extensions/razer-mouse/manifest.json.js
+msgid "Shows the mouse battery in the dashboard, in place of storage"
+msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
+
+#: build/i18n/extensions/tasks/manifest.json.js
+msgid "Checklist: create, complete and delete tasks"
+msgstr "Lista de tareas: crea, completa y elimina"
 
 #: plugin/src/Sylphrena/Config/rootnodes.cpp
 #, c-format, qt-plural-format
@@ -6062,6 +5939,336 @@ msgstr "Ajustes"
 msgid "Configure the shell"
 msgstr "Configura el shell"
 
+#~ msgid "Your password (sudo)"
+#~ msgstr "Tu contraseña (sudo)"
+
+#~ msgid "Install and enable extensions (VPN, games, …)"
+#~ msgstr "Instala y activa extensiones (VPN, juegos, …)"
+
+#~ msgid "A .zip package (installing again updates it)"
+#~ msgstr "Un paquete .zip (volver a instalar lo actualiza)"
+
+#, qt-format
+#~ msgid "%1 needs administrator rights to install"
+#~ msgstr "%1 necesita permisos de administrador para instalarse"
+
+#~ msgid "Complements"
+#~ msgstr "Complementos"
+
+#~ msgid "Hub for enabling Timers: Complements"
+#~ msgstr "Hub para activar Timers: Complementos"
+
+#~ msgid "Configure Timers in Complements"
+#~ msgstr "Configurar Timers en Complementos"
+
+#~ msgid "Complements owns the opt-in toggle; presets above stay on the clock"
+#~ msgstr "Complementos es dueño del interruptor; los presets de arriba siguen en el reloj"
+
+#~ msgid "Delete this extension and what it installed as administrator? Its settings are kept."
+#~ msgstr "¿Eliminar esta extensión y lo que instaló como administrador? Sus ajustes se conservan."
+
+#~ msgid "Remove its system components first (below)."
+#~ msgstr "Quita antes sus componentes del sistema (abajo)."
+
+#~ msgid "Removing system components…"
+#~ msgstr "Quitando los componentes del sistema…"
+
+#~ msgid "Installing system components…"
+#~ msgstr "Instalando los componentes del sistema…"
+
+#~ msgid "System components installed"
+#~ msgstr "Componentes del sistema instalados"
+
+#~ msgid "A newer version of its system components is available"
+#~ msgstr "Hay una versión nueva de sus componentes del sistema"
+
+#~ msgid "Needs system components (asks for your password once)"
+#~ msgstr "Necesita componentes del sistema (pide tu contraseña una vez)"
+
+#~ msgid "Checking system components…"
+#~ msgstr "Comprobando los componentes del sistema…"
+
+#~ msgid "Remove"
+#~ msgstr "Quitar"
+
+#~ msgid "Remove its system components first"
+#~ msgstr "Quita antes sus componentes del sistema"
+
+#~ msgid "VPN FortiClient"
+#~ msgstr "VPN FortiClient"
+
+#~ msgid "Enter your MFA OTP to connect"
+#~ msgstr "Introduce el OTP MFA para conectar"
+
+#~ msgid "6-digit OTP"
+#~ msgstr "OTP de 6 dígitos"
+
+#~ msgid "Host is required"
+#~ msgstr "El host es obligatorio"
+
+#~ msgid "Port must be a number"
+#~ msgstr "El puerto debe ser un número"
+
+#~ msgid "Certificate paths must be absolute"
+#~ msgstr "Las rutas de los certificados deben ser absolutas"
+
+#~ msgid "Invalid health check host"
+#~ msgstr "El host de comprobación no es válido"
+
+#~ msgid "DNS servers must be IPv4 addresses"
+#~ msgstr "Los servidores DNS deben ser direcciones IPv4"
+
+#~ msgid "Invalid DNS domain"
+#~ msgstr "Dominio DNS no válido"
+
+#~ msgid "Hosts entries are 'IP name', separated by commas"
+#~ msgstr "Las entradas de hosts son «IP nombre», separadas por comas"
+
+#~ msgid "Imported from ~/.config/openfortivpn/config. The password is stored only in ~/.config/sylphrena/vpn/ (readable only by you)."
+#~ msgstr "Importado de ~/.config/openfortivpn/config. La contraseña se guarda solo en ~/.config/sylphrena/vpn/ (solo tú puedes leerla)."
+
+#~ msgid "The password is stored only in ~/.config/sylphrena/vpn/ (readable only by you), never in shell.json."
+#~ msgstr "La contraseña se guarda solo en ~/.config/sylphrena/vpn/ (solo tú puedes leerla), nunca en shell.json."
+
+#~ msgctxt "vpn server hostname"
+#~ msgid "Host"
+#~ msgstr "Servidor"
+
+#~ msgctxt "vpn server port"
+#~ msgid "Port"
+#~ msgstr "Puerto"
+
+#~ msgctxt "vpn authentication realm"
+#~ msgid "Realm"
+#~ msgstr "Realm"
+
+#~ msgctxt "vpn username"
+#~ msgid "Username"
+#~ msgstr "Usuario"
+
+#~ msgctxt "vpn password"
+#~ msgid "Password"
+#~ msgstr "Contraseña"
+
+#~ msgid "Ask for a one-time code (OTP)"
+#~ msgstr "Pedir un código de un solo uso (OTP)"
+
+#~ msgid "Connecting opens the code dialog in the VPN icon of the bar"
+#~ msgstr "Al conectar se abre el diálogo del código en el icono VPN de la barra"
+
+#~ msgid "Allow legacy TLS"
+#~ msgstr "Permitir TLS antiguo"
+
+#~ msgid "Needed by some older FortiGate servers (seclevel-1)"
+#~ msgstr "Lo necesitan algunos servidores FortiGate antiguos (seclevel-1)"
+
+#~ msgid "Half-internet routes"
+#~ msgstr "Rutas de medio Internet"
+
+#~ msgid "Routes 0.0.0.0/1 and 128.0.0.0/1 instead of replacing the default route"
+#~ msgstr "Usa las rutas 0.0.0.0/1 y 128.0.0.0/1 en lugar de sustituir la ruta por defecto"
+
+#~ msgid "Certificate (optional)"
+#~ msgstr "Certificado (opcional)"
+
+#~ msgid "Client certificate (PEM path)"
+#~ msgstr "Certificado de cliente (ruta PEM)"
+
+#~ msgid "Client key (PEM path)"
+#~ msgstr "Clave de cliente (ruta PEM)"
+
+#~ msgid "Trusted server certificate (SHA-256)"
+#~ msgstr "Certificado de servidor de confianza (SHA-256)"
+
+#~ msgid "Only if the server certificate is not trusted by the system"
+#~ msgstr "Solo si el sistema no confía en el certificado del servidor"
+
+#~ msgid "Network (optional)"
+#~ msgstr "Red (opcional)"
+
+#~ msgid "Health check host"
+#~ msgstr "Host de comprobación"
+
+#~ msgid "A host inside the VPN that answers ping. If it stops answering (e.g. after suspend) the tunnel is torn down."
+#~ msgstr "Un host dentro de la VPN que responda al ping. Si deja de responder (p. ej. tras suspender), se cierra el túnel."
+
+#~ msgid "Comma separated. Applied with systemd-resolved; without it the server's DNS is used."
+#~ msgstr "Separados por comas. Se aplican con systemd-resolved; sin él se usan los DNS del servidor."
+
+#~ msgid "DNS domains"
+#~ msgstr "Dominios DNS"
+
+#~ msgid "Domains resolved through the VPN, e.g. ~example.com"
+#~ msgstr "Dominios que se resuelven por la VPN, p. ej. ~example.com"
+
+#~ msgid "Hosts entries"
+#~ msgstr "Entradas de /etc/hosts"
+
+#~ msgid "'IP name' pairs, comma separated. Added to /etc/hosts while connected."
+#~ msgstr "Pares «IP nombre» separados por comas. Se añaden a /etc/hosts mientras hay conexión."
+
+#~ msgctxt "vpn state"
+#~ msgid "Disconnected"
+#~ msgstr "Desconectado"
+
+#~ msgid "Complement disabled"
+#~ msgstr "Complemento desactivado"
+
+#~ msgid "The FortiClient helper is not installed: install the extension in Nexus → Complements"
+#~ msgstr "El ayudante de FortiClient no está instalado: instala la extensión en Nexus → Complementos"
+
+#~ msgid "No FortiClient connection: add one in Nexus → Network"
+#~ msgstr "No hay conexiones FortiClient: añade una en Nexus → Red"
+
+#~ msgctxt "vpn state"
+#~ msgid "Connecting…"
+#~ msgstr "Conectando…"
+
+#~ msgctxt "vpn state"
+#~ msgid "Disconnecting…"
+#~ msgstr "Desconectando…"
+
+#, qt-format
+#~ msgid "Connected · %1"
+#~ msgstr "Conectado · %1"
+
+#~ msgid "VPN dropped (reconnect after sleep)"
+#~ msgstr "Se cayó la VPN (vuelve a conectar tras la suspensión)"
+
+#~ msgid "Could not write VPN config"
+#~ msgstr "No se pudo escribir la config de VPN"
+
+#~ msgid "Login failed (user / password / OTP / certificate)."
+#~ msgstr "Error de acceso (usuario / contraseña / OTP / certificado)."
+
+#, qt-format
+#~ msgid "Could not start the VPN tunnel (code %1)."
+#~ msgstr "No se pudo levantar el túnel VPN (código %1)."
+
+#~ msgid "Connections: Nexus → Network → Add provider → FortiClient."
+#~ msgstr "Conexiones: Nexus → Red → Añadir proveedor → FortiClient."
+
+#~ msgid "FortiClient (openfortivpn) connections for the VPN of Nexus → Network"
+#~ msgstr "Conexiones FortiClient (openfortivpn) para la VPN de Nexus → Red"
+
+#~ msgid "Disabled — tunnel and related processes are stopped"
+#~ msgstr "Desactivado: túnel y procesos asociados detenidos"
+
+#~ msgid "FortiClient"
+#~ msgstr "FortiClient"
+
+#~ msgid "Installs openfortivpn if missing, the helper /usr/local/sbin/sylphrena-fortivpn and a sudoers rule that lets you run only that helper without a password"
+#~ msgstr "Instala openfortivpn si falta, el ayudante /usr/local/sbin/sylphrena-fortivpn y una regla de sudoers que te deja ejecutar solo ese ayudante sin contraseña"
+
+#, qt-format
+#~ msgctxt "selected file"
+#~ msgid "\"%1\" selected"
+#~ msgstr "\"%1\" seleccionado"
+
+#~ msgctxt "file filter"
+#~ msgid "Filter:"
+#~ msgstr "Filtro:"
+
+#~ msgctxt "file filter separator"
+#~ msgid ", "
+#~ msgstr ", "
+
+#, qt-format
+#~ msgctxt "file filter label and patterns"
+#~ msgid "%1 (%2)"
+#~ msgstr "%1 (%2)"
+
+#~ msgid "This folder is empty"
+#~ msgstr "Esta carpeta está vacía"
+
+#~ msgctxt "file dialog sidebar heading"
+#~ msgid "Files"
+#~ msgstr "Archivos"
+
+#~ msgid "VPN settings"
+#~ msgstr "Ajustes de VPN"
+
+#~ msgid "Stored in ~/.config/openfortivpn/config"
+#~ msgstr "Se guarda en ~/.config/openfortivpn/config"
+
+#~ msgid "Shell shortcuts, remapping and mouse focus"
+#~ msgstr "Atajos del shell, reasignación y foco del ratón"
+
+#~ msgid "Wi-Fi, ethernet, VPN (NetworkManager)"
+#~ msgstr "Wi-Fi, ethernet, VPN (NetworkManager)"
+
+#~ msgid "App volumes, sound devices"
+#~ msgstr "Volumen de aplicaciones, dispositivos de sonido"
+
+#~ msgid "Default apps, favourites, hidden apps"
+#~ msgstr "Aplicaciones predeterminadas, favoritas, ocultas"
+
+#~ msgid "UI language, weather location, display units"
+#~ msgstr "Idioma de la interfaz, ubicación del tiempo, unidades de medida"
+
+#~ msgid "Tuning"
+#~ msgstr "Ajuste fino"
+
+#~ msgid "Output modes, scale, adaptive sync (VRR)"
+#~ msgstr "Modos, escala y VRR (sync adaptativo) por salida"
+
+#~ msgid "FortiClient / openfortivpn status icon and connect flow"
+#~ msgstr "Icono de estado FortiClient / openfortivpn y flujo de conexión"
+
+#~ msgid "Replaces the dashboard calendar with a water intake tracker"
+#~ msgstr "Sustituye el calendario del dashboard por un seguidor de agua"
+
+#~ msgid "Disabled — calendar stays on the dashboard"
+#~ msgstr "Desactivado: el calendario permanece en el dashboard"
+
+#~ msgid "Preset 1"
+#~ msgstr "Preset 1"
+
+#~ msgid "Preset 2"
+#~ msgstr "Preset 2"
+
+#~ msgid "Preset 3"
+#~ msgstr "Preset 3"
+
+#~ msgid "Preset 4"
+#~ msgstr "Preset 4"
+
+#~ msgid "FortiClient VPN config: ~/.config/openfortivpn/config (popout gear). Scripts: ~/.local/share/sylphrena/vpn-forticlient/"
+#~ msgstr "Config VPN FortiClient: ~/.config/openfortivpn/config (engranaje del popout). Scripts: ~/.local/share/sylphrena/vpn-forticlient/"
+
+#~ msgid "Resolution & refresh rate"
+#~ msgstr "Resolución y frecuencia"
+
+#~ msgid "Visible while the complement is enabled — configure in Complements"
+#~ msgstr "Visible mientras el complemento esté activo — configúralo en Complementos"
+
+#~ msgid "Hidden — enable it in Complements"
+#~ msgstr "Oculto — actívalo en Complementos"
+
+#~ msgid "Notifications, toasts, timeouts"
+#~ msgstr "Notificaciones, avisos emergentes, tiempos de espera"
+
+#~ msgid "Enable activities"
+#~ msgstr "Activar actividades"
+
+#~ msgid "Show activity pills on the bar and use activity shortcuts"
+#~ msgstr "Mostrar pastillas de actividad en la barra y usar atajos de actividad"
+
+#~ msgctxt "recorder state"
+#~ msgid "Paused"
+#~ msgstr "En pausa"
+
+#~ msgctxt "recorder state"
+#~ msgid "Running..."
+#~ msgstr "En ejecución..."
+
+#~ msgctxt "recorder state"
+#~ msgid "Ready"
+#~ msgstr "Listo"
+
+#~ msgid "Could not read VPN config"
+#~ msgstr "No se pudo leer la config de VPN"
+
 #~ msgid "Appearance"
 #~ msgstr "Apariencia"
 
@@ -6168,7 +6375,6 @@ msgstr "Configura el shell"
 #~ msgid "Optional fork features (VPN FortiClient, …)"
 #~ msgstr "Funciones opcionales del fork (VPN FortiClient, …)"
 
-
 #~ msgid "Hydration settings"
 #~ msgstr "Ajustes de hidratación"
 
@@ -6189,4 +6395,3 @@ msgstr "Configura el shell"
 
 #~ msgid "Output configuration"
 #~ msgstr "Configuración de salidas"
-

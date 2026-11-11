@@ -7,7 +7,7 @@ import qs.components.controls
 import qs.services
 import qs.modules.nexus.common
 
-// Settings of the Games extension (Nexus → Complements): Steam API key, Steam ID, auto refresh.
+// Settings of the Games extension (Nexus → Extensions): Steam API key, Steam ID, auto refresh.
 ColumnLayout {
     id: root
 
