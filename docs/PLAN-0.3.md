@@ -77,6 +77,8 @@ Decisiones:
 Entregado: `services/Companions.qml`, `services/Welcome.qml`, `modules/welcome/WelcomeWindow.qml`, botón en Acerca de, fila de Things en Extensiones.
 
 ### Fase 1 · Things lee el hub
+Decisiones (2026-11-11): **sección propia «Sylphrena»** en la columna lateral de Things (no un filtro más junto a pacman/AUR/Flatpak) y **la lógica de instalar vive en la shell** (`scripts/ext.py install-hub …`), Things solo la llama (como un comando más de su cola `Operations`, con su `askpass`).
+Hecho en la shell: `ext.py install-hub`, `list --json`, `info`, `sudo -A` con `SUDO_ASKPASS`, y `inspect` con `requires`/`apiVersion`. Pendiente: el índice del hub con `requires`/`apiVersion`/`system`, y todo lo de Things (`HubCatalog` en C++, fuente `sylphrena` en `Operations`, vista QML, localizar `ext.py`).
 - Pestaña «Sylphrena» en Things (junto a pacman/AUR/Flatpak): lista del `index.json` (extensiones y,
   cuando haya, widgets), con descripción, versión, estado (instalada / actualizable) e icono.
 - Instalar / actualizar / quitar: lógica de `scripts/install-extension.py` (validación del zip: sin

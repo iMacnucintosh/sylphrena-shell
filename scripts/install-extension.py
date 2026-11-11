@@ -133,6 +133,8 @@ def inspect(zip_path: str, builtin_dir: str) -> dict:
         "version": manifest.get("version", ""),
         "system": bool(system.get("install")),
         "description": manifest.get("description", "") if isinstance(manifest.get("description"), str) else "",
+        "apiVersion": manifest.get("apiVersion", 1) if isinstance(manifest.get("apiVersion", 1), int) else 1,
+        "requires": (manifest.get("requires") or {}).get("sylphrena", "") if isinstance(manifest.get("requires"), dict) else "",
         "i18n": i18n,
     }
 
