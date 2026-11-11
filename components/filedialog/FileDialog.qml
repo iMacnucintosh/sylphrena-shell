@@ -93,9 +93,12 @@ Item {
         id: pickProc
 
         command: {
-            const bin = `${Paths.home}/.local/bin/seeker`;
+            // Seeker from ~/.local/bin (a build from source) or, failing that, from the PATH (the package)
             const args = [
-                bin,
+                "sh",
+                "-c",
+                'if [ -x "$HOME/.local/bin/seeker" ]; then exec "$HOME/.local/bin/seeker" "$@"; else exec seeker "$@"; fi',
+                "sh",
                 "--pick",
                 `--pick-mode=${loader.mode}`,
                 `--pick-result=${loader.resultPath}`,
