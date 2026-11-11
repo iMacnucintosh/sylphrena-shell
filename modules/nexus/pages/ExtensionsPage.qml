@@ -6,10 +6,11 @@ import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
 import qs.components.controls
-import qs.components.filedialog
 import qs.services
 import qs.modules.nexus.common
 
+// The extensions installed for the shell: turn them on and off, configure them. Finding, installing,
+// updating and removing them is done in Things (the row at the top opens it).
 PageBase {
     id: root
 
@@ -21,19 +22,15 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // ---- Install from a zip (into ~/.local/share/sylphrena/extensions) ------
+        // ---- Find more in Things (the app that manages the catalog) ----------------------
         ConnectedRect {
-            id: installRow
-
-            readonly property bool busy: Extensions.zipBusy || zipPicker.busy || Extensions.systemBusyId !== ""
-
             Layout.fillWidth: true
             first: true
-            last: !Extensions.zipPending
-            implicitHeight: installLayout.implicitHeight + Tokens.padding.medium * 2
+            last: true
+            implicitHeight: thingsRow.implicitHeight + Tokens.padding.medium * 2
 
             RowLayout {
-                id: installLayout
+                id: thingsRow
 
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -43,7 +40,7 @@ PageBase {
 
                 MaterialIcon {
                     Layout.alignment: Qt.AlignVCenter
-                    text: installRow.busy ? "hourglass_top" : "upload_file"
+                    text: Companions.find("things").icon
                     color: Colours.palette.m3onSurfaceVariant
                     fontStyle: Tokens.font.icon.medium
                     fill: 1
@@ -55,19 +52,17 @@ PageBase {
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: installRow.busy ? Tr.tr("Installing…") : Tr.tr("Install from zip")
+                        text: Tr.tr("Find more in Things")
                         font: Tokens.font.body.small
                         elide: Text.ElideRight
                     }
 
-                    // Only when something went wrong
                     StyledText {
                         Layout.fillWidth: true
-                        visible: Extensions.zipError.length > 0
-                        text: Extensions.zipError
-                        color: Colours.palette.m3error
+                        visible: Companions.checked && !Companions.isInstalled("things")
+                        text: Tr.tr("Things is not installed")
+                        color: Colours.palette.m3outline
                         font: Tokens.font.label.small
-                        wrapMode: Text.WordWrap
                     }
                 }
 
@@ -76,110 +71,20 @@ PageBase {
                     isRound: true
                     horizontalPadding: Tokens.padding.large
                     verticalPadding: Tokens.padding.small
-                    disabled: installRow.busy || !!Extensions.zipPending
-                    icon: "folder_open"
-                    text: Tr.tr("Browse")
-                    onClicked: zipPicker.open()
+                    disabled: !Companions.isInstalled("things")
+                    icon: "open_in_new"
+                    text: Tr.tr("Open Things")
+                    onClicked: Companions.launch("things")
                 }
             }
         }
 
-        // The extension in the zip installs something as administrator: password first, or nothing
-        ConnectedRect {
-            Layout.fillWidth: true
-            visible: !!Extensions.zipPending
-            last: true
-            implicitHeight: pendingCol.implicitHeight + Tokens.padding.medium * 2
-
-            ColumnLayout {
-                id: pendingCol
-
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.margins: Tokens.padding.medium
-                anchors.leftMargin: Tokens.padding.largeIncreased
-                anchors.rightMargin: Tokens.padding.largeIncreased
-                spacing: Tokens.spacing.medium
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: Tokens.spacing.small
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 0
-
-                        StyledText {
-                            Layout.fillWidth: true
-                            // TRANSLATORS: %1 = extension name
-                            text: Tr.tr("Install %1?").arg(Extensions.zipPending ? Tr.tr(Extensions.zipPending.name) : "")
-                            font: Tokens.font.body.small
-                            elide: Text.ElideRight
-                        }
-
-                        StyledText {
-                            Layout.fillWidth: true
-                            visible: text.length > 0
-                            text: Extensions.zipPending?.description ? Tr.tr(Extensions.zipPending.description) : ""
-                            color: Colours.palette.m3outline
-                            font: Tokens.font.label.small
-                            wrapMode: Text.WordWrap
-                        }
-                    }
-
-                    TextButton {
-                        id: cancelBtn
-
-                        Layout.alignment: Qt.AlignVCenter
-                        isRound: true
-                        type: TextButton.Tonal
-                        horizontalPadding: Tokens.padding.large
-                        verticalPadding: Tokens.padding.small
-                        text: Tr.trCtx("Cancel", "button")
-                        onClicked: {
-                            zipPass.text = "";
-                            Extensions.cancelZip();
-                        }
-                    }
-
-                    TextButton {
-                        id: installBtn
-
-                        Layout.alignment: Qt.AlignVCenter
-                        isRound: true
-                        horizontalPadding: Tokens.padding.large
-                        verticalPadding: Tokens.padding.small
-                        disabled: zipPass.text.length === 0 || Extensions.zipBusy
-                        text: Tr.tr("Install")
-                        onClicked: {
-                            if (zipPass.text.length === 0)
-                                return;
-                            Extensions.confirmZip(zipPass.text);
-                            zipPass.text = "";
-                        }
-                    }
-                }
-
-                StyledTextField {
-                    id: zipPass
-
-                    Layout.fillWidth: true
-                    placeholderText: Tr.tr("Password")
-                    leadingIcon: "key"
-                    echoMode: TextInput.Password
-                    onAccepted: installBtn.clicked()
-                    Keys.onEscapePressed: cancelBtn.clicked()
-                }
-            }
-        }
-
-        // ---- Installed ---------------------------------------------------------
+        // ---- Installed ---------------------------------------------------------------------
         SectionHeader {
             text: Tr.tr("Installed")
         }
 
-        // Optional extensions of type "addon" (see services/Extensions.qml)
+        // Extensions of type "addon" (see services/Extensions.qml)
         Repeater {
             id: addons
 
@@ -195,13 +100,14 @@ PageBase {
             }
         }
 
-        FileDialog {
-            id: zipPicker
-
-            title: Tr.tr("Select an extension package")
-            filterLabel: Tr.tr("Extension packages (.zip)")
-            filters: ["zip"]
-            onAccepted: path => Extensions.installZip(path)
+        StyledText {
+            Layout.fillWidth: true
+            Layout.topMargin: Tokens.spacing.small
+            Layout.leftMargin: Tokens.padding.small
+            visible: addons.count === 0
+            text: Tr.tr("No extensions installed yet.")
+            color: Colours.palette.m3outline
+            font: Tokens.font.body.small
         }
     }
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:30+0100\n"
+"POT-Creation-Date: 2026-11-11 15:36+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -90,455 +90,9 @@ msgstr "Diseño compacto desactivado"
 msgid "Hyprland settings restored"
 msgstr "Ajustes de Hyprland restaurados"
 
-#: docs/examples/extension-spike/Widget.qml extensions/tasks/Widget.qml
-#: build/i18n/extensions/tasks/manifest.json.js
+#: docs/examples/extension-spike/Widget.qml
 msgid "Tasks"
 msgstr "Tareas"
-
-#. TRANSLATORS: %1 = a number
-#: extensions/games/games/AchievementList.qml
-#: modules/nexus/pages/DisplayPage.qml utils/Strings.qml
-#, qt-format
-msgid "%1%"
-msgstr "%1%"
-
-#: extensions/games/games/AchievementList.qml
-#: extensions/games/games/FocusHero.qml extensions/games/Tab.qml
-msgid "Achievements"
-msgstr "Logros"
-
-#: extensions/games/games/AchievementList.qml
-#, qt-format
-msgid "%1 / %2"
-msgstr "%1 / %2"
-
-#: extensions/games/games/AchievementList.qml
-#, qt-format
-msgid "Locked · %1"
-msgstr "Bloqueados · %1"
-
-#: extensions/games/games/ActivityCard.qml
-#, qt-format
-msgid "Activity in %1"
-msgstr "Actividad en %1"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Sessions"
-msgstr "Sesiones"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Total"
-msgstr "Total"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Longest"
-msgstr "Más larga"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Less"
-msgstr "Menos"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "More"
-msgstr "Más"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Dots mark achievement days. Playtime is recorded from now on."
-msgstr "Los puntos marcan días con logros. El tiempo de juego se registra a partir de ahora."
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Playtime is recorded while the shell is running."
-msgstr "El tiempo de juego se registra mientras el shell está en marcha."
-
-#: extensions/games/games/FocusHero.qml
-msgid "Playing now"
-msgstr "Jugando ahora"
-
-#: extensions/games/games/FocusHero.qml
-msgid "Non-Steam"
-msgstr "No Steam"
-
-#: extensions/games/games/FocusHero.qml
-msgid "Played recently"
-msgstr "Jugado recientemente"
-
-#: extensions/games/games/FocusHero.qml
-#, qt-format
-msgid "Last played %1"
-msgstr "Última partida: %1"
-
-#: extensions/games/games/FocusHero.qml
-msgid "From your library"
-msgstr "De tu biblioteca"
-
-#: extensions/games/games/FocusHero.qml
-msgid "No recently played games"
-msgstr "Sin juegos recientes"
-
-#: extensions/games/games/FocusHero.qml
-#, qt-format
-msgid "%1 in 2 weeks"
-msgstr "%1 en 2 semanas"
-
-#: extensions/games/games/FocusHero.qml
-#, qt-format
-msgid "%1 of %2 achievements"
-msgstr "%1 de %2 logros"
-
-#: extensions/games/games/FocusHero.qml extensions/games/Tab.qml
-msgid "Loading…"
-msgstr "Cargando…"
-
-#: extensions/games/games/FocusHero.qml
-msgid "Perfect!"
-msgstr "¡Perfecto!"
-
-#: extensions/games/games/ProfileHeader.qml
-#, qt-format
-msgid "Playing %1"
-msgstr "Jugando a %1"
-
-#: extensions/games/games/ProfileHeader.qml
-msgid "Level"
-msgstr "Nivel"
-
-#: extensions/games/games/SessionList.qml
-msgid "Recent sessions"
-msgstr "Sesiones recientes"
-
-#: extensions/games/games/SessionList.qml
-msgid "No sessions recorded yet"
-msgstr "Aún no hay sesiones registradas"
-
-#: extensions/games/games/SessionList.qml
-msgid "Install Non-Steam Playtimes (Millennium) to track sessions"
-msgstr "Instala Non-Steam Playtimes (Millennium) para registrar sesiones"
-
-#: extensions/games/games/SessionList.qml services/NotifData.qml
-msgid "now"
-msgstr "ahora"
-
-#: extensions/games/Service.qml
-msgid "Disabled — Games tab is hidden"
-msgstr "Desactivado: la pestaña Juegos está oculta"
-
-#: extensions/games/Service.qml
-msgid "Needs API key and Steam ID"
-msgstr "Necesita API key y Steam ID"
-
-#: extensions/games/Service.qml
-msgid "Loading Steam data…"
-msgstr "Cargando datos de Steam…"
-
-#: extensions/games/Service.qml
-#, qt-format
-msgid "Connected as %1"
-msgstr "Conectado como %1"
-
-#: extensions/games/Service.qml
-msgid "Ready"
-msgstr "Listo"
-
-#: extensions/games/Settings.qml
-msgid "Steam API key"
-msgstr "API key de Steam"
-
-#: extensions/games/Settings.qml
-msgid "From steamcommunity.com/dev/apikey"
-msgstr "En steamcommunity.com/dev/apikey"
-
-#: extensions/games/Settings.qml
-msgid "API key"
-msgstr "API key"
-
-#: extensions/games/Settings.qml
-msgid "Steam ID"
-msgstr "Steam ID"
-
-#: extensions/games/Settings.qml
-msgid "SteamID64, vanity name, or profile URL"
-msgstr "SteamID64, vanity o URL de perfil"
-
-#: extensions/games/Settings.qml
-msgid "Steam ID or vanity"
-msgstr "Steam ID o vanity"
-
-#: extensions/games/Settings.qml
-msgid "Auto refresh"
-msgstr "Actualización automática"
-
-#: extensions/games/Settings.qml
-msgid "Minutes between automatic Steam updates"
-msgstr "Minutos entre actualizaciones automáticas de Steam"
-
-#: extensions/games/Settings.qml
-msgid "Refresh now"
-msgstr "Actualizar ahora"
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "Playtime tracked by Millennium"
-msgstr "Tiempo de juego registrado por Millennium"
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "Non-Steam game — no Steam achievements"
-msgstr "Juego no Steam — sin logros de Steam"
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "Steam achievements are private for this profile"
-msgstr "Los logros de Steam son privados en este perfil"
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "This game has no achievements"
-msgstr "Este juego no tiene logros"
-
-#: extensions/games/steam/SteamAchievements.qml
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Unknown game"
-msgstr "Juego desconocido"
-
-#: extensions/games/steam/SteamApi.qml
-msgid "Invalid Steam API response"
-msgstr "Respuesta inválida de la API de Steam"
-
-#: extensions/games/steam/SteamApi.qml
-msgid "Steam request failed"
-msgstr "Falló la petición a Steam"
-
-#: extensions/games/steam/SteamApi.qml
-msgid "Could not resolve Steam vanity URL"
-msgstr "No se pudo resolver el vanity de Steam"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "No playtime"
-msgstr "Sin tiempo de juego"
-
-#: extensions/games/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 min"
-msgstr "%1 min"
-
-#: extensions/games/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 h %2 min"
-msgstr "%1 h %2 min"
-
-#: extensions/games/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 h"
-msgstr "%1 h"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "In-game"
-msgstr "En partida"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Online"
-msgstr "En línea"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Busy"
-msgstr "Ocupado"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Away"
-msgstr "Ausente"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Snooze"
-msgstr "Descansando"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Looking to trade"
-msgstr "Buscando intercambio"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Looking to play"
-msgstr "Buscando partida"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Offline"
-msgstr "Desconectado"
-
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Steam profile not found"
-msgstr "Perfil de Steam no encontrado"
-
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Could not load friend status"
-msgstr "No se pudo cargar el estado de amigos"
-
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Friends list is private"
-msgstr "La lista de amigos es privada"
-
-#: extensions/games/Tab.qml
-msgid "Configure Steam"
-msgstr "Configura Steam"
-
-#: extensions/games/Tab.qml
-msgid "Could not load Steam data"
-msgstr "No se pudieron cargar los datos de Steam"
-
-#: extensions/games/Tab.qml
-msgid "Add your API key and Steam ID in Nexus → Extensions."
-msgstr "Añade tu API key y Steam ID en Nexus → Extensiones."
-
-#: extensions/games/Tab.qml modules/nexus/pages/ShellPage.qml
-#: build/i18n/extensions/games/manifest.json.js
-#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
-msgid "Games"
-msgstr "Juegos"
-
-#: extensions/games/Tab.qml
-msgid "in your library"
-msgstr "en tu biblioteca"
-
-#: extensions/games/Tab.qml
-msgid "Hours"
-msgstr "Horas"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "+%1 in 2 weeks"
-msgstr "+%1 en 2 semanas"
-
-#: extensions/games/Tab.qml
-msgid "played in total"
-msgstr "jugadas en total"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "Top: %1"
-msgstr "Top: %1"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "%1 / %2 unlocked"
-msgstr "%1 de %2"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "%1 perfect games"
-msgstr "Al 100 %: %1"
-
-#: extensions/games/Tab.qml
-msgid "Friends"
-msgstr "Amigos"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "online · %1 in game"
-msgstr "en línea · %1 jugando"
-
-#: extensions/games/Tab.qml
-msgid "Private"
-msgstr "Privado"
-
-#: extensions/games/Tab.qml
-msgid "No achievements unlocked yet"
-msgstr "Aún no has desbloqueado logros"
-
-#: extensions/hydration/Service.qml
-#, qt-format
-msgid "%1 ml · reminder every %2 min"
-msgstr "%1 ml · recordatorio cada %2 min"
-
-#: extensions/hydration/Service.qml
-msgid "Time to drink water"
-msgstr "Hora de beber agua"
-
-#: extensions/hydration/Service.qml
-#, qt-format
-msgid "%1 / %2 ml — tap an amount to log it"
-msgstr "%1 / %2 ml — toca una cantidad para registrarla"
-
-#: extensions/hydration/Service.qml
-#: build/i18n/extensions/hydration/manifest.json.js
-msgid "Hydration"
-msgstr "Hidratación"
-
-#: extensions/hydration/Settings.qml
-msgid "Daily goal"
-msgstr "Meta diaria"
-
-#: extensions/hydration/Settings.qml
-msgid "Target water intake per day (ml)"
-msgstr "Cantidad de agua objetivo al día (ml)"
-
-#: extensions/hydration/Settings.qml
-msgid "Reminder interval"
-msgstr "Intervalo de recordatorio"
-
-#: extensions/hydration/Settings.qml
-msgid "Minutes without a sip before a reminder"
-msgstr "Minutos sin un trago antes del recordatorio"
-
-#. TRANSLATORS: %1 = preset index (1-based)
-#: extensions/hydration/Settings.qml
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-#, qt-format
-msgid "Preset %1"
-msgstr "Preajuste %1"
-
-#: extensions/hydration/Settings.qml
-msgid "Quick-add button amount (ml)"
-msgstr "Cantidad del botón de suma rápida (ml)"
-
-#: extensions/hydration/Widget.qml
-#, qt-format
-msgid "%1 / %2 ml"
-msgstr "%1 / %2 ml"
-
-#: extensions/razer-mouse/Service.qml
-#, qt-format
-msgid "Basilisk V4 Pro · %1 % · charging"
-msgstr "Basilisk V4 Pro · %1 % · cargando"
-
-#: extensions/razer-mouse/Service.qml
-#, qt-format
-msgid "Basilisk V4 Pro · %1 %"
-msgstr "Basilisk V4 Pro · %1 %"
-
-#: extensions/razer-mouse/Service.qml
-msgid "Mouse not found — needs synapsex-cli"
-msgstr "Ratón no encontrado: necesita synapsex-cli"
-
-#: extensions/razer-mouse/Service.qml
-msgid "Mouse battery low"
-msgstr "Batería del ratón baja"
-
-#: extensions/razer-mouse/Service.qml
-#, qt-format
-msgid "Razer Basilisk V4 Pro: %1 % left"
-msgstr "Razer Basilisk V4 Pro: queda un %1 %"
-
-#: extensions/razer-mouse/Service.qml
-msgid "Mouse"
-msgstr "Ratón"
-
-#: extensions/tasks/Widget.qml
-#, qt-plural-format
-msgid "%n pending"
-msgid_plural "%n pending"
-msgstr[0] "%n pendiente"
-msgstr[1] "%n pendientes"
-
-#: extensions/tasks/Widget.qml
-msgid "New task"
-msgstr "Nueva tarea"
-
-#: extensions/tasks/Widget.qml
-msgid "Nothing to do"
-msgstr "Nada pendiente"
-
-#: extensions/tasks/Widget.qml
-msgid "All done"
-msgstr "Todo listo"
-
-#: extensions/tasks/Widget.qml
-#, qt-format
-msgid "Completed (%1)"
-msgstr "Completadas (%1)"
 
 #: modules/activities/OverviewContent.qml services/Keybinds.qml
 msgid "Activities overview"
@@ -843,8 +397,6 @@ msgstr "Introduce tu contraseña para actualizar el sistema en segundo plano."
 
 #: modules/bar/popouts/UpdatesPassword.qml
 #: modules/bar/popouts/WirelessPassword.qml
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
 msgid "Password"
@@ -853,8 +405,6 @@ msgstr "Contraseña"
 #: modules/bar/popouts/UpdatesPassword.qml
 #: modules/bar/popouts/WirelessPassword.qml
 #: modules/nexus/common/DialogRowButton.qml
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
@@ -947,7 +497,7 @@ msgstr "El portapapeles está vacío"
 
 #: modules/dashboard/Content.qml modules/nexus/pages/panels/DashboardPanel.qml
 #: modules/nexus/pages/PanelsPage.qml modules/nexus/pages/ShellPage.qml
-#: services/Keybinds.qml
+#: modules/welcome/WelcomeWindow.qml services/Keybinds.qml
 msgid "Dashboard"
 msgstr "Panel"
 
@@ -1765,34 +1315,13 @@ msgid "Primary DNS"
 msgstr "DNS principal"
 
 #: modules/nexus/common/ExtensionCard.qml
-msgid "Removing…"
-msgstr "Eliminando…"
+msgid "Its system components are missing: install the extension again from Things."
+msgstr "Faltan sus componentes del sistema: vuelve a instalar la extensión desde Things."
 
 #: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/ExtensionsPage.qml
-msgid "Installing…"
-msgstr "Instalando…"
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Installation incomplete: it needs your password to finish"
-msgstr "Instalación incompleta: necesita tu contraseña para terminar"
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Complete"
-msgstr "Completar"
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Delete this extension?"
-msgstr "¿Eliminar esta extensión?"
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Finish the installation?"
-msgstr "¿Terminar la instalación?"
-
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/network/AddVpnPage.qml
-msgid "Delete"
-msgstr "Eliminar"
+msgid "Open Things"
+msgstr "Abrir Things"
 
 #: modules/nexus/common/KeybindRow.qml
 msgid "Press a key…"
@@ -1873,7 +1402,7 @@ msgid "About"
 msgstr "Acerca de"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/ShellPage.qml
-#: services/Keybinds.qml
+#: modules/welcome/WelcomeWindow.qml services/Keybinds.qml
 msgid "Activities"
 msgstr "Actividades"
 
@@ -1890,6 +1419,7 @@ msgid "Dashboard, taskbar, launcher, sidebar"
 msgstr "Panel, barra de tareas, lanzador, barra lateral"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/ExtensionsPage.qml
+#: modules/welcome/WelcomeWindow.qml
 msgid "Extensions"
 msgstr "Extensiones"
 
@@ -1959,6 +1489,10 @@ msgstr "Información del sistema"
 #: modules/nexus/PageRegistry.qml
 msgid "Versions, hardware, software"
 msgstr "Versiones, hardware, software"
+
+#: modules/nexus/pages/AboutPage.qml
+msgid "Welcome guide"
+msgstr "Guía de bienvenida"
 
 #: modules/nexus/pages/AboutPage.qml
 msgid "Hostname"
@@ -2406,6 +1940,12 @@ msgstr "Frecuencia de actualización"
 msgid "Scale"
 msgstr "Escala"
 
+#. TRANSLATORS: %1 = a number
+#: modules/nexus/pages/DisplayPage.qml utils/Strings.qml
+#, qt-format
+msgid "%1%"
+msgstr "%1%"
+
 #: modules/nexus/pages/DisplayPage.qml
 msgid "Adaptive Sync"
 msgstr "Sincronización adaptativa"
@@ -2445,35 +1985,20 @@ msgid "Session toggle for zero gaps/rounding lives in Panels → Utilities"
 msgstr "El interruptor de sesión sin gaps/redondeo vive en Paneles → Utilities"
 
 #: modules/nexus/pages/ExtensionsPage.qml
-msgid "Install from zip"
-msgstr "Instalar desde zip"
+msgid "Find more in Things"
+msgstr "Buscar más en Things"
 
 #: modules/nexus/pages/ExtensionsPage.qml
-#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
-msgid "Browse"
-msgstr "Examinar"
-
-#. TRANSLATORS: %1 = extension name
-#: modules/nexus/pages/ExtensionsPage.qml
-#, qt-format
-msgid "Install %1?"
-msgstr "¿Instalar %1?"
-
-#: modules/nexus/pages/ExtensionsPage.qml
-msgid "Install"
-msgstr "Instalar"
+msgid "Things is not installed"
+msgstr "Things no está instalado"
 
 #: modules/nexus/pages/ExtensionsPage.qml
 msgid "Installed"
 msgstr "Instaladas"
 
 #: modules/nexus/pages/ExtensionsPage.qml
-msgid "Select an extension package"
-msgstr "Elige un paquete de extensión"
-
-#: modules/nexus/pages/ExtensionsPage.qml
-msgid "Extension packages (.zip)"
-msgstr "Paquetes de extensión (.zip)"
+msgid "No extensions installed yet."
+msgstr "Aún no hay extensiones instaladas."
 
 #: modules/nexus/pages/KeybindsPage.qml
 msgid "Mouse focus"
@@ -2752,6 +2277,10 @@ msgstr "Déjalo vacío para usar el valor integrado predeterminado"
 #: modules/nexus/pages/network/AddVpnPage.qml
 msgid "Disconnect command"
 msgstr "Comando de desconexión"
+
+#: modules/nexus/pages/network/AddVpnPage.qml
+msgid "Delete"
+msgstr "Eliminar"
 
 #: modules/nexus/pages/network/AddVpnPage.qml
 msgctxt "button"
@@ -3327,6 +2856,12 @@ msgstr "Temporizadores rápidos"
 msgid "Disabled — active timers are cleared"
 msgstr "Desactivado: se cancelan los temporizadores activos"
 
+#. TRANSLATORS: %1 = preset index (1-based)
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Preset %1"
+msgstr "Preajuste %1"
+
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Quick timer button duration (min)"
 msgstr "Duración del botón de temporizador rápido (min)"
@@ -3814,6 +3349,11 @@ msgid "Work outline"
 msgstr "Trabajo (contorno)"
 
 #: modules/nexus/pages/ShellPage.qml
+#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
+msgid "Games"
+msgstr "Juegos"
+
+#: modules/nexus/pages/ShellPage.qml
 msgid "Controller"
 msgstr "Mando"
 
@@ -4232,6 +3772,10 @@ msgid "How the wallpaper colours are interpreted."
 msgstr "Cómo se interpretan los colores del fondo de pantalla."
 
 #: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
+msgid "Browse"
+msgstr "Examinar"
+
+#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
 msgid "Select an image"
 msgstr "Selecciona una imagen"
 
@@ -4375,6 +3919,126 @@ msgstr "La grabación '%1' se eliminará permanentemente."
 msgctxt "button"
 msgid "Delete"
 msgstr "Eliminar"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Welcome to Sylphrena"
+msgstr "Te damos la bienvenida a Sylphrena"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Skip"
+msgstr "Omitir"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Back"
+msgstr "Atrás"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Next"
+msgstr "Siguiente"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Finish"
+msgstr "Terminar"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "A Material You desktop shell for Hyprland, made to be yours: every look, shortcut and widget can be changed, and what you do not need can be left out."
+msgstr "Una shell de escritorio Material You para Hyprland, pensada para que sea tuya: se puede cambiar el aspecto, los atajos y los widgets, y dejar fuera lo que no necesites."
+
+#. TRANSLATORS: %1 = the author's name on GitHub
+#: modules/welcome/WelcomeWindow.qml
+#, qt-format
+msgid "Made by %1"
+msgstr "Hecho por %1"
+
+#. TRANSLATORS: %1 = the name of the original project, %2 = its author
+#: modules/welcome/WelcomeWindow.qml
+#, qt-format
+msgid "A fork of %1 by %2"
+msgstr "Un fork de %1, de %2"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "What Sylphrena gives you"
+msgstr "Qué te ofrece Sylphrena"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "A quick look. Everything is in Nexus, the settings window."
+msgstr "Un vistazo rápido. Todo está en Nexus, la ventana de ajustes."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "A look for each part of your day: wallpaper, colours and the apps pinned to its desktops."
+msgstr "Un aspecto para cada parte de tu día: fondo, colores y las apps ancladas a sus escritorios."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Every setting in one window, with search."
+msgstr "Todos los ajustes en una sola ventana, con búsqueda."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Weather, music, performance and your widgets at a glance."
+msgstr "El tiempo, la música, el rendimiento y tus widgets de un vistazo."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Colours that follow your wallpaper, in the shell and in your apps."
+msgstr "Colores que siguen a tu fondo de pantalla, en la shell y en tus aplicaciones."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Add only what you need: widgets, VPN, games and more. Or build your own."
+msgstr "Añade solo lo que necesites: widgets, VPN, juegos y más. O crea las tuyas."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Lock and login"
+msgstr "Bloqueo e inicio de sesión"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "A lock screen and a login screen that match the shell."
+msgstr "Una pantalla de bloqueo y otra de inicio de sesión que combinan con la shell."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Apps made for Sylphrena"
+msgstr "Aplicaciones hechas para Sylphrena"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "They come with Sylphrena and follow its theme."
+msgstr "Vienen con Sylphrena y siguen su tema."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Open"
+msgstr "Abrir"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Not installed"
+msgstr "No instalada"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "kitty comes preinstalled, but you can use any terminal you like."
+msgstr "kitty viene preinstalada, pero puedes usar la terminal que más te guste."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Choose terminal"
+msgstr "Elegir terminal"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "You are all set"
+msgstr "Todo listo"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Open Nexus whenever you want to change something. This guide is in Nexus → About."
+msgstr "Abre Nexus cuando quieras cambiar algo. Esta guía está en Nexus → Acerca de."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Make it yours: create your own extensions"
+msgstr "Hazla tuya: crea tus propias extensiones"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "An extension is a folder with a manifest and a few QML files. Build one for yourself, and share it in the Sylphrena Hub for others to install."
+msgstr "Una extensión es una carpeta con un manifiesto y unos pocos ficheros QML. Crea una para ti y compártela en el Sylphrena Hub para que otros la instalen."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Sylphrena Hub"
+msgstr "Sylphrena Hub"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Open Nexus"
+msgstr "Abrir Nexus"
 
 #: modules/windowinfo/Buttons.qml
 msgid "Move to workspace"
@@ -4684,6 +4348,18 @@ msgstr "Binario · %1"
 msgid "Binary data"
 msgstr "Datos binarios"
 
+#: services/Companions.qml
+msgid "Material You file manager, in tune with the shell's theme"
+msgstr "Explorador de archivos Material You, en sintonía con el tema de la shell"
+
+#: services/Companions.qml
+msgid "Package manager: pacman, AUR and Flatpak in one list"
+msgstr "Gestor de paquetes: pacman, AUR y Flatpak en una sola lista"
+
+#: services/Companions.qml
+msgid "Fast terminal: Sylphrena changes its colours live with your theme"
+msgstr "Terminal rápida: Sylphrena le cambia los colores en vivo con tu tema"
+
 #: services/DashWidgets.qml
 msgid "Calendar"
 msgstr "Calendario"
@@ -4723,46 +4399,15 @@ msgstr "Frecuencia fija; menos parpadeo con FreeSync inestable por HDMI"
 msgid "Could not read monitor list"
 msgstr "No se pudo leer la lista de monitores"
 
-#: services/Extensions.qml services/VPN.qml
-msgid "Unknown error"
-msgstr "Error desconocido"
-
 #: services/Extensions.qml
-msgid "Extension not removed"
-msgstr "Extensión no eliminada"
-
-#: services/Extensions.qml
-msgid "Extension not installed"
-msgstr "Extensión no instalada"
-
-#: services/Extensions.qml
-msgid "Extension removed"
-msgstr "Extensión eliminada"
-
-#: services/Extensions.qml
-msgid "Extension updated"
-msgstr "Extensión actualizada"
-
-#: services/Extensions.qml
-msgid "Extension installed"
-msgstr "Extensión instalada"
-
-#: services/Extensions.qml services/Updates.qml
-msgid "Incorrect password"
-msgstr "Contraseña incorrecta"
-
-#: services/Extensions.qml services/Updates.qml
-msgid "Too many failed attempts. Wait a minute and try again."
-msgstr "Demasiados intentos fallidos. Espera un minuto y vuelve a intentarlo."
+#, qt-format
+msgid "Needs a newer Sylphrena (extension API %1)"
+msgstr "Necesita una versión más nueva de Sylphrena (API de extensiones %1)"
 
 #: services/Extensions.qml
 #, qt-format
-msgid "Failed (code %1)"
-msgstr "Falló (código %1)"
-
-#: services/Extensions.qml
-msgid "Installation incomplete"
-msgstr "Instalación incompleta"
+msgid "Needs Sylphrena %1"
+msgstr "Necesita Sylphrena %1"
 
 #: services/Hypr.qml
 msgctxt "keyboard layout"
@@ -5134,6 +4779,14 @@ msgstr "Capturas de pantalla"
 msgid "Already used by “%1”"
 msgstr "Ya está en uso por «%1»"
 
+#: services/KittySetup.qml
+msgid "kitty now follows your colours"
+msgstr "kitty ahora sigue tus colores"
+
+#: services/KittySetup.qml
+msgid "Sylphrena added a block to your kitty.conf (a backup is next to it). Remove the block to disconnect it."
+msgstr "Sylphrena ha añadido un bloque a tu kitty.conf (hay una copia de seguridad al lado). Quita el bloque para desconectarlo."
+
 #: services/Nmcli.qml
 msgid "Enterprise"
 msgstr "Empresarial"
@@ -5153,6 +4806,10 @@ msgstr "%1 Gbps"
 #, qt-format
 msgid "%1 Mbps"
 msgstr "%1 Mbps"
+
+#: services/NotifData.qml
+msgid "now"
+msgstr "ahora"
 
 #: services/NotifData.qml
 #, qt-format
@@ -5251,6 +4908,14 @@ msgstr "Actualizando el sistema…"
 #: services/Updates.qml
 msgid "Update cancelled."
 msgstr "Actualización cancelada."
+
+#: services/Updates.qml
+msgid "Too many failed attempts. Wait a minute and try again."
+msgstr "Demasiados intentos fallidos. Espera un minuto y vuelve a intentarlo."
+
+#: services/Updates.qml
+msgid "Incorrect password"
+msgstr "Contraseña incorrecta"
 
 #: services/Updates.qml
 #, qt-format
@@ -5412,6 +5077,10 @@ msgid "%1: %2"
 msgstr "%1: %2"
 
 #: services/VPN.qml
+msgid "Unknown error"
+msgstr "Error desconocido"
+
+#: services/VPN.qml
 msgid "VPN error"
 msgstr "Error de VPN"
 
@@ -5533,34 +5202,6 @@ msgid "%n minute"
 msgid_plural "%n minutes"
 msgstr[0] "%n minuto"
 msgstr[1] "%n minutos"
-
-#: build/i18n/extensions/games/manifest.json.js
-msgid "Games (Steam)"
-msgstr "Juegos (Steam)"
-
-#: build/i18n/extensions/games/manifest.json.js
-msgid "Steam library, achievements and play time in a dashboard tab"
-msgstr "Biblioteca de Steam, logros y tiempo de juego en una pestaña del dashboard"
-
-#: build/i18n/extensions/hydration/manifest.json.js
-msgid "Water intake tracker with reminders"
-msgstr "Control de agua con recordatorios"
-
-#: build/i18n/extensions/hydration/manifest.json.js
-msgid "Off — also stops the reminders and the tracking"
-msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
-
-#: build/i18n/extensions/razer-mouse/manifest.json.js
-msgid "Razer mouse battery"
-msgstr "Batería del ratón Razer"
-
-#: build/i18n/extensions/razer-mouse/manifest.json.js
-msgid "Shows the mouse battery in the dashboard, in place of storage"
-msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
-
-#: build/i18n/extensions/tasks/manifest.json.js
-msgid "Checklist: create, complete and delete tasks"
-msgstr "Lista de tareas: crea, completa y elimina"
 
 #: plugin/src/Sylphrena/Config/rootnodes.cpp
 #, c-format, qt-plural-format
@@ -5939,6 +5580,425 @@ msgstr "Ajustes"
 msgid "Configure the shell"
 msgstr "Configura el shell"
 
+#~ msgid "Achievements"
+#~ msgstr "Logros"
+
+#, qt-format
+#~ msgid "%1 / %2"
+#~ msgstr "%1 / %2"
+
+#, qt-format
+#~ msgid "Locked · %1"
+#~ msgstr "Bloqueados · %1"
+
+#, qt-format
+#~ msgid "Activity in %1"
+#~ msgstr "Actividad en %1"
+
+#~ msgid "Sessions"
+#~ msgstr "Sesiones"
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgid "Longest"
+#~ msgstr "Más larga"
+
+#~ msgid "Less"
+#~ msgstr "Menos"
+
+#~ msgid "More"
+#~ msgstr "Más"
+
+#~ msgid "Dots mark achievement days. Playtime is recorded from now on."
+#~ msgstr "Los puntos marcan días con logros. El tiempo de juego se registra a partir de ahora."
+
+#~ msgid "Playtime is recorded while the shell is running."
+#~ msgstr "El tiempo de juego se registra mientras el shell está en marcha."
+
+#~ msgid "Playing now"
+#~ msgstr "Jugando ahora"
+
+#~ msgid "Non-Steam"
+#~ msgstr "No Steam"
+
+#~ msgid "Played recently"
+#~ msgstr "Jugado recientemente"
+
+#, qt-format
+#~ msgid "Last played %1"
+#~ msgstr "Última partida: %1"
+
+#~ msgid "From your library"
+#~ msgstr "De tu biblioteca"
+
+#~ msgid "No recently played games"
+#~ msgstr "Sin juegos recientes"
+
+#, qt-format
+#~ msgid "%1 in 2 weeks"
+#~ msgstr "%1 en 2 semanas"
+
+#, qt-format
+#~ msgid "%1 of %2 achievements"
+#~ msgstr "%1 de %2 logros"
+
+#~ msgid "Loading…"
+#~ msgstr "Cargando…"
+
+#~ msgid "Perfect!"
+#~ msgstr "¡Perfecto!"
+
+#, qt-format
+#~ msgid "Playing %1"
+#~ msgstr "Jugando a %1"
+
+#~ msgid "Level"
+#~ msgstr "Nivel"
+
+#~ msgid "Recent sessions"
+#~ msgstr "Sesiones recientes"
+
+#~ msgid "No sessions recorded yet"
+#~ msgstr "Aún no hay sesiones registradas"
+
+#~ msgid "Install Non-Steam Playtimes (Millennium) to track sessions"
+#~ msgstr "Instala Non-Steam Playtimes (Millennium) para registrar sesiones"
+
+#~ msgid "Disabled — Games tab is hidden"
+#~ msgstr "Desactivado: la pestaña Juegos está oculta"
+
+#~ msgid "Needs API key and Steam ID"
+#~ msgstr "Necesita API key y Steam ID"
+
+#~ msgid "Loading Steam data…"
+#~ msgstr "Cargando datos de Steam…"
+
+#, qt-format
+#~ msgid "Connected as %1"
+#~ msgstr "Conectado como %1"
+
+#~ msgid "Ready"
+#~ msgstr "Listo"
+
+#~ msgid "Steam API key"
+#~ msgstr "API key de Steam"
+
+#~ msgid "From steamcommunity.com/dev/apikey"
+#~ msgstr "En steamcommunity.com/dev/apikey"
+
+#~ msgid "API key"
+#~ msgstr "API key"
+
+#~ msgid "Steam ID"
+#~ msgstr "Steam ID"
+
+#~ msgid "SteamID64, vanity name, or profile URL"
+#~ msgstr "SteamID64, vanity o URL de perfil"
+
+#~ msgid "Steam ID or vanity"
+#~ msgstr "Steam ID o vanity"
+
+#~ msgid "Auto refresh"
+#~ msgstr "Actualización automática"
+
+#~ msgid "Minutes between automatic Steam updates"
+#~ msgstr "Minutos entre actualizaciones automáticas de Steam"
+
+#~ msgid "Refresh now"
+#~ msgstr "Actualizar ahora"
+
+#~ msgid "Playtime tracked by Millennium"
+#~ msgstr "Tiempo de juego registrado por Millennium"
+
+#~ msgid "Non-Steam game — no Steam achievements"
+#~ msgstr "Juego no Steam — sin logros de Steam"
+
+#~ msgid "Steam achievements are private for this profile"
+#~ msgstr "Los logros de Steam son privados en este perfil"
+
+#~ msgid "This game has no achievements"
+#~ msgstr "Este juego no tiene logros"
+
+#~ msgid "Unknown game"
+#~ msgstr "Juego desconocido"
+
+#~ msgid "Invalid Steam API response"
+#~ msgstr "Respuesta inválida de la API de Steam"
+
+#~ msgid "Steam request failed"
+#~ msgstr "Falló la petición a Steam"
+
+#~ msgid "Could not resolve Steam vanity URL"
+#~ msgstr "No se pudo resolver el vanity de Steam"
+
+#~ msgid "No playtime"
+#~ msgstr "Sin tiempo de juego"
+
+#, qt-format
+#~ msgid "%1 min"
+#~ msgstr "%1 min"
+
+#, qt-format
+#~ msgid "%1 h %2 min"
+#~ msgstr "%1 h %2 min"
+
+#, qt-format
+#~ msgid "%1 h"
+#~ msgstr "%1 h"
+
+#~ msgid "In-game"
+#~ msgstr "En partida"
+
+#~ msgid "Online"
+#~ msgstr "En línea"
+
+#~ msgid "Busy"
+#~ msgstr "Ocupado"
+
+#~ msgid "Away"
+#~ msgstr "Ausente"
+
+#~ msgid "Snooze"
+#~ msgstr "Descansando"
+
+#~ msgid "Looking to trade"
+#~ msgstr "Buscando intercambio"
+
+#~ msgid "Looking to play"
+#~ msgstr "Buscando partida"
+
+#~ msgid "Offline"
+#~ msgstr "Desconectado"
+
+#~ msgid "Steam profile not found"
+#~ msgstr "Perfil de Steam no encontrado"
+
+#~ msgid "Could not load friend status"
+#~ msgstr "No se pudo cargar el estado de amigos"
+
+#~ msgid "Friends list is private"
+#~ msgstr "La lista de amigos es privada"
+
+#~ msgid "Configure Steam"
+#~ msgstr "Configura Steam"
+
+#~ msgid "Could not load Steam data"
+#~ msgstr "No se pudieron cargar los datos de Steam"
+
+#~ msgid "Add your API key and Steam ID in Nexus → Extensions."
+#~ msgstr "Añade tu API key y Steam ID en Nexus → Extensiones."
+
+#~ msgid "in your library"
+#~ msgstr "en tu biblioteca"
+
+#~ msgid "Hours"
+#~ msgstr "Horas"
+
+#, qt-format
+#~ msgid "+%1 in 2 weeks"
+#~ msgstr "+%1 en 2 semanas"
+
+#~ msgid "played in total"
+#~ msgstr "jugadas en total"
+
+#, qt-format
+#~ msgid "Top: %1"
+#~ msgstr "Top: %1"
+
+#, qt-format
+#~ msgid "%1 / %2 unlocked"
+#~ msgstr "%1 de %2"
+
+#, qt-format
+#~ msgid "%1 perfect games"
+#~ msgstr "Al 100 %: %1"
+
+#~ msgid "Friends"
+#~ msgstr "Amigos"
+
+#, qt-format
+#~ msgid "online · %1 in game"
+#~ msgstr "en línea · %1 jugando"
+
+#~ msgid "Private"
+#~ msgstr "Privado"
+
+#~ msgid "No achievements unlocked yet"
+#~ msgstr "Aún no has desbloqueado logros"
+
+#, qt-format
+#~ msgid "%1 ml · reminder every %2 min"
+#~ msgstr "%1 ml · recordatorio cada %2 min"
+
+#~ msgid "Time to drink water"
+#~ msgstr "Hora de beber agua"
+
+#, qt-format
+#~ msgid "%1 / %2 ml — tap an amount to log it"
+#~ msgstr "%1 / %2 ml — toca una cantidad para registrarla"
+
+#~ msgid "Hydration"
+#~ msgstr "Hidratación"
+
+#~ msgid "Daily goal"
+#~ msgstr "Meta diaria"
+
+#~ msgid "Target water intake per day (ml)"
+#~ msgstr "Cantidad de agua objetivo al día (ml)"
+
+#~ msgid "Reminder interval"
+#~ msgstr "Intervalo de recordatorio"
+
+#~ msgid "Minutes without a sip before a reminder"
+#~ msgstr "Minutos sin un trago antes del recordatorio"
+
+#~ msgid "Quick-add button amount (ml)"
+#~ msgstr "Cantidad del botón de suma rápida (ml)"
+
+#, qt-format
+#~ msgid "%1 / %2 ml"
+#~ msgstr "%1 / %2 ml"
+
+#, qt-plural-format
+#~ msgid "%n pending"
+#~ msgid_plural "%n pending"
+#~ msgstr[0] "%n pendiente"
+#~ msgstr[1] "%n pendientes"
+
+#~ msgid "New task"
+#~ msgstr "Nueva tarea"
+
+#~ msgid "Nothing to do"
+#~ msgstr "Nada pendiente"
+
+#~ msgid "All done"
+#~ msgstr "Todo listo"
+
+#, qt-format
+#~ msgid "Completed (%1)"
+#~ msgstr "Completadas (%1)"
+
+#~ msgid "Games (Steam)"
+#~ msgstr "Juegos (Steam)"
+
+#~ msgid "Steam library, achievements and play time in a dashboard tab"
+#~ msgstr "Biblioteca de Steam, logros y tiempo de juego en una pestaña del dashboard"
+
+#~ msgid "Water intake tracker with reminders"
+#~ msgstr "Control de agua con recordatorios"
+
+#~ msgid "Off — also stops the reminders and the tracking"
+#~ msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
+
+#~ msgid "Checklist: create, complete and delete tasks"
+#~ msgstr "Lista de tareas: crea, completa y elimina"
+
+#~ msgid "Removing…"
+#~ msgstr "Eliminando…"
+
+#~ msgid "Installing…"
+#~ msgstr "Instalando…"
+
+#~ msgid "Installation incomplete: it needs your password to finish"
+#~ msgstr "Instalación incompleta: necesita tu contraseña para terminar"
+
+#~ msgid "Complete"
+#~ msgstr "Completar"
+
+#~ msgid "Delete this extension?"
+#~ msgstr "¿Eliminar esta extensión?"
+
+#~ msgid "Finish the installation?"
+#~ msgstr "¿Terminar la instalación?"
+
+#~ msgid "Install from zip"
+#~ msgstr "Instalar desde zip"
+
+#, qt-format
+#~ msgid "Install %1?"
+#~ msgstr "¿Instalar %1?"
+
+#~ msgid "Install"
+#~ msgstr "Instalar"
+
+#~ msgid "Select an extension package"
+#~ msgstr "Elige un paquete de extensión"
+
+#~ msgid "Extension packages (.zip)"
+#~ msgstr "Paquetes de extensión (.zip)"
+
+#~ msgid "Extension not removed"
+#~ msgstr "Extensión no eliminada"
+
+#~ msgid "Extension not installed"
+#~ msgstr "Extensión no instalada"
+
+#~ msgid "Extension removed"
+#~ msgstr "Extensión eliminada"
+
+#~ msgid "Extension updated"
+#~ msgstr "Extensión actualizada"
+
+#, qt-format
+#~ msgid "Failed (code %1)"
+#~ msgstr "Falló (código %1)"
+
+#~ msgid "Installation incomplete"
+#~ msgstr "Instalación incompleta"
+
+#~ msgid "They follow the shell's theme. You can add them now or later."
+#~ msgstr "Siguen el tema de la shell. Puedes añadirlas ahora o más adelante."
+
+#~ msgctxt "an app is installed"
+#~ msgid "Installed"
+#~ msgstr "Instalada"
+
+#~ msgid "Downloading…"
+#~ msgstr "Descargando…"
+
+#~ msgid "Installing what it needs…"
+#~ msgstr "Instalando lo que necesita…"
+
+#~ msgid "Building… this takes a minute"
+#~ msgstr "Compilando… tarda un minuto"
+
+#~ msgid "Working…"
+#~ msgstr "Trabajando…"
+
+#~ msgid "It is installed as a system package, so it needs your password."
+#~ msgstr "Se instala como un paquete del sistema, así que necesita tu contraseña."
+
+#~ msgid "What Sylphrena is and what it offers"
+#~ msgstr "Qué es Sylphrena y qué ofrece"
+
+#, qt-format
+#~ msgid "Basilisk V4 Pro · %1 % · charging"
+#~ msgstr "Basilisk V4 Pro · %1 % · cargando"
+
+#, qt-format
+#~ msgid "Basilisk V4 Pro · %1 %"
+#~ msgstr "Basilisk V4 Pro · %1 %"
+
+#~ msgid "Mouse not found — needs synapsex-cli"
+#~ msgstr "Ratón no encontrado: necesita synapsex-cli"
+
+#~ msgid "Mouse battery low"
+#~ msgstr "Batería del ratón baja"
+
+#, qt-format
+#~ msgid "Razer Basilisk V4 Pro: %1 % left"
+#~ msgstr "Razer Basilisk V4 Pro: queda un %1 %"
+
+#~ msgid "Mouse"
+#~ msgstr "Ratón"
+
+#~ msgid "Razer mouse battery"
+#~ msgstr "Batería del ratón Razer"
+
+#~ msgid "Shows the mouse battery in the dashboard, in place of storage"
+#~ msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
+
 #~ msgid "Your password (sudo)"
 #~ msgstr "Tu contraseña (sudo)"
 
@@ -5972,9 +6032,6 @@ msgstr "Configura el shell"
 
 #~ msgid "Removing system components…"
 #~ msgstr "Quitando los componentes del sistema…"
-
-#~ msgid "Installing system components…"
-#~ msgstr "Instalando los componentes del sistema…"
 
 #~ msgid "System components installed"
 #~ msgstr "Componentes del sistema instalados"
@@ -6284,9 +6341,6 @@ msgstr "Configura el shell"
 
 #~ msgid "Integrations"
 #~ msgstr "Integraciones"
-
-#~ msgid "Open in Nexus"
-#~ msgstr "Abrir en Nexus"
 
 #~ msgid "Activities, wallpaper and colours"
 #~ msgstr "Actividades, fondo de pantalla y colores"

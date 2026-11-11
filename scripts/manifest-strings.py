@@ -21,6 +21,10 @@ def strings(m: dict) -> list[str]:
         for item in c.get(key) or []:
             out += [item.get(f) for f in fields]
     out.append((c.get("vpnProviderType") or {}).get("name"))
+    # Programs it needs / can use: shown by Things before installing
+    req = m.get("requires") or {}
+    for key in ("apps", "optional"):
+        out += [x for x in req.get(key) or []]
     seen = []
     for s in out:
         if isinstance(s, str) and s and s not in seen:

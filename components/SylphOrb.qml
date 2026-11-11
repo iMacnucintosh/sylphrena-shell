@@ -26,7 +26,7 @@ Item {
     readonly property int orbitMs: 28000
     // Glyph ink is ~85% of the em. This fraction fills the cookie without
     // kissing the pinched sides.
-    readonly property int iconPx: Math.max(32, Math.round(orbSize * 0.45))
+    readonly property int iconPx: Math.max(12, Math.round(orbSize * 0.45))
 
     // Shapes that still read well with a centered glyph (Material You expressive set).
     readonly property list<int> morphShapes: [

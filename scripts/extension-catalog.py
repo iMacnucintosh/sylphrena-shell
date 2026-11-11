@@ -25,22 +25,33 @@ def unquote(s: str) -> str:
 
 
 def parse_po(text: str) -> list[tuple[str, str, str]]:
-    """[(context, msgid, msgstr)] of the active (non-obsolete) entries; multi-line strings joined."""
+    """[(context, msgid, msgstr)] of the active (non-obsolete) entries; multi-line strings joined.
+    For a plural entry msgstr is the list of its forms (msgstr[0], msgstr[1], …)."""
     out = []
     ctx = mid = mstr = None
+    forms = None
     field = None
 
     def flush():
         if mid is not None:
-            out.append((ctx or "", mid, mstr or ""))
+            out.append((ctx or "", mid, forms if forms is not None else (mstr or "")))
 
     for raw in text.splitlines() + [""]:
         line = raw.strip()
         if not line:
             flush()
-            ctx = mid = mstr = field = None
+            ctx = mid = mstr = field = forms = None
             continue
         if line.startswith("#"):
+            continue
+        mp = re.match(r'^msgstr\[(\d+)\]\s+(".*")$', line)
+        if mp:
+            forms = forms or []
+            forms.append(unquote(mp.group(2)))
+            field = "form"
+            continue
+        if re.match(r'^msgid_plural\s', line):
+            field = "plural"
             continue
         m = re.match(r'^(msgctxt|msgid|msgstr)\s+(".*")$', line)
         if m:
@@ -59,6 +70,8 @@ def parse_po(text: str) -> list[tuple[str, str, str]]:
                 mid += val
             elif field == "msgstr":
                 mstr += val
+            elif field == "form":
+                forms[-1] += val
     return out
 
 
@@ -79,7 +92,7 @@ def main() -> None:
         subprocess.run(["xgettext", "-L", "JavaScript", "-o", str(pot), "--from-code=UTF-8", "--no-wrap", "-k", *KEYWORDS, *sources], check=True)
         wanted = [(c, m) for c, m, _ in parse_po(pot.read_text()) if m]
 
-    translations = {(c, m): s for c, m, s in parse_po(po.read_text()) if m and s}
+    translations = {(c, m): s for c, m, s in parse_po(po.read_text()) if m and s and (isinstance(s, str) or all(s))}
     out = ext / "i18n" / f"{lang}.json"
     try:
         existing = json.loads(out.read_text())

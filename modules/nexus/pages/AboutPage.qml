@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
@@ -164,6 +165,21 @@ PageBase {
             first: true
             last: true
             implicitHeight: hero.implicitHeight + Tokens.padding.extraLarge * 2
+
+            // The welcome assistant again
+            IconButton {
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: Tokens.padding.large
+                z: 3
+                type: IconButton.Tonal
+                isRound: true
+                icon: "auto_fix_high"
+                onClicked: Welcome.show()
+
+                ToolTip.visible: hovered
+                ToolTip.text: Tr.tr("Welcome guide")
+            }
 
             ColumnLayout {
                 id: hero
