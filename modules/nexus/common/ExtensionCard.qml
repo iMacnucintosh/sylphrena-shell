@@ -32,6 +32,9 @@ ConnectedRect {
     readonly property string systemError: Extensions.systemErrorId === manifest.id ? Extensions.systemError : ""
     // "install" | "uninstall" while the password field is shown
     property string pendingAction: ""
+    // Installed by the user (from a zip): it can be removed from here
+    readonly property bool removable: Extensions.isUserInstalled(manifest.id)
+    property bool confirmRemove: false
 
     function confirmSystem(): void {
         if (passField.text.length === 0)
@@ -102,6 +105,16 @@ ConnectedRect {
                 onClicked: root.settingsOpen = !root.settingsOpen
             }
 
+            IconButton {
+                visible: root.removable && !root.confirmRemove
+                isRound: true
+                type: IconButton.Text
+                icon: "delete"
+                padding: Tokens.padding.small
+                Layout.alignment: Qt.AlignVCenter
+                onClicked: root.confirmRemove = true
+            }
+
             StyledSwitch {
                 Layout.alignment: Qt.AlignVCenter
                 // Installing comes first; turning it off is always possible
@@ -110,6 +123,43 @@ ConnectedRect {
                 onToggled: {
                     Extensions.setEnabled(root.manifest.id, checked);
                     root.settingsOpen = checked && !!root.manifest.contributes?.settings;
+                }
+            }
+        }
+
+        // ---- Remove (extensions installed by the user) ---------------------------
+        RowLayout {
+            Layout.fillWidth: true
+            visible: root.confirmRemove
+            spacing: Tokens.spacing.small
+
+            StyledText {
+                Layout.fillWidth: true
+                text: root.hasSystem && ["installed", "outdated"].includes(root.systemState) ? Tr.tr("Remove its system components first (below).") : Tr.tr("Remove this extension? Its settings are kept.")
+                font: Tokens.font.label.medium
+                wrapMode: Text.WordWrap
+            }
+
+            TextButton {
+                isRound: true
+                type: TextButton.Tonal
+                horizontalPadding: Tokens.padding.large
+                verticalPadding: Tokens.padding.small
+                text: Tr.trCtx("Cancel", "button")
+                onClicked: root.confirmRemove = false
+            }
+
+            TextButton {
+                isRound: true
+                horizontalPadding: Tokens.padding.large
+                verticalPadding: Tokens.padding.small
+                disabled: Extensions.zipBusy || (root.hasSystem && ["installed", "outdated"].includes(root.systemState))
+                inactiveColour: Colours.palette.m3error
+                inactiveOnColour: Colours.palette.m3onError
+                text: Tr.tr("Delete")
+                onClicked: {
+                    root.confirmRemove = false;
+                    Extensions.removeExtension(root.manifest.id);
                 }
             }
         }

@@ -4,6 +4,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Sylphrena
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
@@ -16,7 +17,9 @@ Singleton {
     id: root
 
     // Shipped with the shell, then the user's own folder (the first folder that claims an id wins)
-    readonly property list<string> dirs: [Quickshell.shellPath("extensions"), `${Paths.data}/extensions`]
+    readonly property list<string> dirs: [Quickshell.shellPath("extensions"), root.userDir]
+    // Where extensions installed from a zip live (Nexus → Complements → Install from zip)
+    readonly property string userDir: `${Paths.data}/extensions`
 
     readonly property var enabledIds: Array.from(GlobalConfig.extensions.enabled ?? [])
 
@@ -25,6 +28,49 @@ Singleton {
     // Enabled extensions that are loaded: [{ id, dir, manifest, config, service, error }]
     property var loaded: []
     property bool ready: false
+
+    // ── Installed from a zip ───────────────────────────────────────────────────
+    property bool zipBusy: false
+    property string zipError: ""
+
+    // Installed by the user (zip or by hand), as opposed to shipped with the shell: can be removed
+    function isUserInstalled(id: string): bool {
+        const d = discovered.find(x => x.manifest.id === id);
+        return !!d && d.dir.startsWith(`${root.userDir}/`);
+    }
+
+    // Look for extensions again (after installing or removing one)
+    function rescan(): void {
+        if (listProc.running)
+            listProc.running = false;
+        listProc.running = true;
+    }
+
+    function installZip(path: string): void {
+        if (zipProc.running)
+            return;
+        root.zipBusy = true;
+        root.zipError = "";
+        zipProc.command = ["python3", Quickshell.shellPath("scripts/install-extension.py"), "install", path, root.userDir, Quickshell.shellPath("extensions")];
+        zipProc.running = true;
+    }
+
+    // Remove an extension installed by the user. Its system pieces must be removed first (they need
+    // the password); its config and state are kept, like when it is disabled.
+    function removeExtension(id: string): void {
+        if (zipProc.running || !root.isUserInstalled(id))
+            return;
+        if (root.hasSystem(discovered.find(x => x.manifest.id === id)?.manifest) && ["installed", "outdated"].includes(systemState[id])) {
+            root.zipError = Tr.tr("Remove its system components first");
+            return;
+        }
+        if (root.isEnabled(id))
+            root.setEnabled(id, false);
+        root.zipBusy = true;
+        root.zipError = "";
+        zipProc.command = ["python3", Quickshell.shellPath("scripts/install-extension.py"), "remove", id, root.userDir];
+        zipProc.running = true;
+    }
 
     // ── System pieces (manifest `system`: { install, uninstall, check, description }) ──────────
     // Some extensions need something as root (a helper, a sudoers rule, a package). They declare
@@ -289,6 +335,12 @@ Singleton {
     }
 
     onDiscoveredChanged: {
+        // Catalogs the extensions ship (i18n/<lang>.json), for Tr when the shell has no translation
+        const cats = {};
+        for (const d of discovered)
+            if (d.i18n && Object.keys(d.i18n).length > 0)
+                cats[d.manifest.id] = d.i18n;
+        Tr.extraCatalogs = cats;
         sync();
         checkSystem();
     }
@@ -308,6 +360,8 @@ Singleton {
     }
 
     Process {
+        id: listProc
+
         running: true
         command: ["python3", Quickshell.shellPath("scripts/list-extensions.py"), ...root.dirs]
         stdinEnabled: false
@@ -319,6 +373,40 @@ Singleton {
                     console.warn(`Extensions: bad listing: ${e}`);
                 }
                 root.ready = true;
+            }
+        }
+    }
+
+    Process {
+        id: zipProc
+
+        stdinEnabled: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                root.zipBusy = false;
+                let r = null;
+                try {
+                    r = JSON.parse(text);
+                } catch (e) {
+                    r = { ok: false, error: text.trim() || `${e}` };
+                }
+                if (!r.ok) {
+                    root.zipError = r.error ?? Tr.tr("Unknown error");
+                    Toaster.toast(Tr.tr("Extension not installed"), root.zipError, "extension_off", Toast.Error);
+                    return;
+                }
+                if (r.name === undefined) {
+                    Toaster.toast(Tr.tr("Extension removed"), r.id, "extension_off");
+                    root.rescan();
+                    return;
+                }
+                const name = Tr.tr(r.name);
+                Toaster.toast(r.updated ? Tr.tr("Extension updated") : Tr.tr("Extension installed"), `${name} ${r.version ?? ""}`.trim(), "extension");
+                // A loaded extension keeps its old code until QML is reloaded (the engine caches it)
+                if (r.updated && root.isEnabled(r.id))
+                    Qt.callLater(() => Quickshell.reload(true));
+                else
+                    root.rescan();
             }
         }
     }
