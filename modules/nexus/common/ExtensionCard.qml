@@ -90,18 +90,15 @@ ConnectedRect {
                     elide: Text.ElideRight
                 }
 
+                // What the extension is: always the manifest description. Its live state is the
+                // extension's own business (it shows it wherever it wants).
                 StyledText {
                     Layout.fillWidth: true
-                    text: {
-                        const desc = root.manifest.description ? Tr.tr(root.manifest.description) : "";
-                        if (!root.active)
-                            return root.manifest.offNote ? Tr.tr(root.manifest.offNote) : desc;
-                        return root.service?.statusText || desc;
-                    }
+                    visible: text.length > 0
+                    text: root.manifest.description ? Tr.tr(root.manifest.description) : ""
                     color: Colours.palette.m3outline
                     font: Tokens.font.label.small
-                    elide: Text.ElideRight
-                    wrapMode: Text.NoWrap
+                    wrapMode: Text.WordWrap
                 }
             }
 
