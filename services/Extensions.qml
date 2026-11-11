@@ -112,9 +112,39 @@ Singleton {
     }
 
     function _removeFiles(id: string): void {
+        // Its VPN connections go with it (disabling instead keeps them, shown as "extension disabled")
+        root._dropConnections(id);
         if (root.isEnabled(id))
             root.setEnabled(id, false);
         root._runZip("remove", [id, root.userDir]);
+    }
+
+    // Delete the VPN connections of the provider type of an extension that is being removed: each one
+    // is first handed to the extension (`forget(id, options)`: its files, its certificate copies), which
+    // is loaded for a moment if it was disabled. Settings of the extension itself are kept.
+    function _dropConnections(id: string): void {
+        const typeId = `ext:${id}`;
+        const list = GlobalConfig.utilities.vpn.provider;
+        const mine = list.values.filter(p => p.type === typeId).map(p => ({
+                    id: p.id,
+                    options: JSON.parse(JSON.stringify(p.options ?? {}))
+                }));
+        if (mine.length === 0)
+            return;
+        let entry = loaded.find(e => e.id === id);
+        let temporary = false;
+        if (!entry?.service) {
+            const d = discovered.find(x => x.manifest.id === id);
+            entry = d ? root.create(d) : null;
+            temporary = !!entry;
+        }
+        for (const c of mine)
+            entry?.service?.forget?.(c.id, c.options);
+        for (let i = list.values.length - 1; i >= 0; i--)
+            if (list.values[i].type === typeId)
+                list.remove(i);
+        if (temporary)
+            Qt.callLater(() => root.destroyEntry(entry));
     }
 
     // ── System pieces (manifest `system`: { install, uninstall, check, description }) ──────────
