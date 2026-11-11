@@ -68,7 +68,7 @@ Entregado:
 ### Fase B · Cerrar la base: asistente de bienvenida y enlace a Things — HECHA (2026-11-11)
 Orden decidido por el usuario: antes de centrarse en Things, dejar bien cerrado el sistema base.
 Decisiones:
-- **Ventana propia** de 4 pasos que sale sola la primera vez y se reabre desde Nexus → Acerca de.
+- **Ventana propia** de 4 pasos que sale sola la primera vez y se reabre con un botón de varita en la tarjeta de Sylphrena de Nexus → Acerca de.
 - **Visual:** el orbe y tarjetas Material You; **capturas reales a futuro**.
 - **Autoría:** alias de GitHub (`iMacnucintosh`) con enlace + crédito a `caelestia-shell` (soramane). Sin nombre real ni correo.
 - **Instalar Seeker (y Things luego):** `packaging/PKGBUILD` en el repo de cada app + `makepkg`/`pacman -U` desde la shell (`scripts/install-companion.sh`), contraseña por stdin en RAM.

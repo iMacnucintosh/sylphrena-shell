@@ -147,7 +147,7 @@ La extensión `vpn-forticlient` (tipo de proveedor FortiClient para la VPN de Ne
 
 ## Asistente de bienvenida
 
-Una ventana propia, **flotante y de tamaño fijo** (960×720, centrada: Hyprland flota las ventanas de tamaño fijo, sin reglas), con cuatro pasos que sale **sola la primera vez** que arranca la shell (a los 4 s) y se puede volver a abrir desde **Nexus → Acerca de → Guía de bienvenida**:
+Una ventana propia, **flotante y de tamaño fijo** (960×720, centrada: Hyprland flota las ventanas de tamaño fijo, sin reglas), con cuatro pasos que sale **sola la primera vez** que arranca la shell (a los 4 s) y se puede volver a abrir con el **botón de varita** de la tarjeta de Sylphrena en **Nexus → Acerca de** (abajo a la derecha; tooltip «Guía de bienvenida»):
 
 1. **Qué es Sylphrena:** el orbe, una frase, quién la hace (**iMacnucintosh**, con enlace a GitHub) y el crédito al proyecto original (**caelestia-shell**, de soramane).
 2. **Qué te ofrece:** tarjetas con Actividades, Nexus, el panel, Material You, Extensiones y bloqueo/inicio de sesión.

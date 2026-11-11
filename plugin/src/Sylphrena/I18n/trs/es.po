@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 14:10+0100\n"
+"POT-Creation-Date: 2026-11-11 14:24+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1935,6 +1935,10 @@ msgid "Versions, hardware, software"
 msgstr "Versiones, hardware, software"
 
 #: modules/nexus/pages/AboutPage.qml
+msgid "Welcome guide"
+msgstr "Guía de bienvenida"
+
+#: modules/nexus/pages/AboutPage.qml
 msgid "Hostname"
 msgstr "Nombre del equipo"
 
@@ -1998,14 +2002,6 @@ msgstr "Shell"
 msgctxt "the sylphrena command line tool"
 msgid "CLI"
 msgstr "CLI"
-
-#: modules/nexus/pages/AboutPage.qml
-msgid "Welcome guide"
-msgstr "Guía de bienvenida"
-
-#: modules/nexus/pages/AboutPage.qml
-msgid "What Sylphrena is and what it offers"
-msgstr "Qué es Sylphrena y qué ofrece"
 
 #: modules/nexus/pages/apps/AllApps.qml modules/nexus/pages/AppsPage.qml
 msgid "All apps"
@@ -6075,6 +6071,9 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "What Sylphrena is and what it offers"
+#~ msgstr "Qué es Sylphrena y qué ofrece"
 
 #, qt-format
 #~ msgid "Basilisk V4 Pro · %1 % · charging"

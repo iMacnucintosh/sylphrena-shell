@@ -10,7 +10,7 @@ import qs.modules.welcome
 
 // The welcome assistant: a window that introduces Sylphrena and offers its companion apps. It opens
 // by itself the first time the shell runs (until it is finished or skipped) and can be opened again
-// from Nexus → About, or with `qs -c sylphrena ipc call welcome open`.
+// from the wand button of the Sylphrena card in Nexus → About, or with `qs -c sylphrena ipc call welcome open`.
 Singleton {
     id: root
 

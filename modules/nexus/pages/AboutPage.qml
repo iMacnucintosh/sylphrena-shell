@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
@@ -164,6 +165,21 @@ PageBase {
             first: true
             last: true
             implicitHeight: hero.implicitHeight + Tokens.padding.extraLarge * 2
+
+            // The welcome assistant again
+            IconButton {
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: Tokens.padding.large
+                z: 3
+                type: IconButton.Tonal
+                isRound: true
+                icon: "auto_fix_high"
+                onClicked: Welcome.show()
+
+                ToolTip.visible: hovered
+                ToolTip.text: Tr.tr("Welcome guide")
+            }
 
             ColumnLayout {
                 id: hero
@@ -456,18 +472,6 @@ PageBase {
             icon: "tune"
             label: "Qt"
             value: CUtils.qtVersion || "…"
-        }
-
-        // The welcome assistant again
-        RowButton {
-            Layout.topMargin: Tokens.spacing.large
-            first: true
-            last: true
-            icon: "waving_hand"
-            text: Tr.tr("Welcome guide")
-            subtext: Tr.tr("What Sylphrena is and what it offers")
-            trailingIcon: "chevron_right"
-            onClicked: Welcome.show()
         }
     }
 }
