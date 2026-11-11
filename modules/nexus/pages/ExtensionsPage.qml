@@ -165,7 +165,7 @@ PageBase {
                     id: zipPass
 
                     Layout.fillWidth: true
-                    placeholderText: Tr.tr("Your password (sudo)")
+                    placeholderText: Tr.tr("Password")
                     leadingIcon: "key"
                     echoMode: TextInput.Password
                     onAccepted: installBtn.clicked()

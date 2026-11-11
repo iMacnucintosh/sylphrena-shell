@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:18+0100\n"
+"POT-Creation-Date: 2026-11-11 11:28+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -843,6 +843,8 @@ msgstr "Introduce tu contraseña para actualizar el sistema en segundo plano."
 
 #: modules/bar/popouts/UpdatesPassword.qml
 #: modules/bar/popouts/WirelessPassword.qml
+#: modules/nexus/common/ExtensionCard.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
 msgid "Password"
@@ -1791,11 +1793,6 @@ msgstr "¿Terminar la instalación?"
 #: modules/nexus/pages/network/AddVpnPage.qml
 msgid "Delete"
 msgstr "Eliminar"
-
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ExtensionsPage.qml
-msgid "Your password (sudo)"
-msgstr "Tu contraseña (sudo)"
 
 #: modules/nexus/common/KeybindRow.qml
 msgid "Press a key…"
@@ -5941,6 +5938,9 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "Your password (sudo)"
+#~ msgstr "Tu contraseña (sudo)"
 
 #~ msgid "Install and enable extensions (VPN, games, …)"
 #~ msgstr "Instala y activa extensiones (VPN, juegos, …)"
