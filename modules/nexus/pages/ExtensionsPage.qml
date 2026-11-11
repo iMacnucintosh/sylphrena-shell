@@ -181,6 +181,8 @@ PageBase {
 
         // Optional extensions of type "addon" (see services/Extensions.qml)
         Repeater {
+            id: addons
+
             model: Extensions.discovered.filter(d => d.manifest.type === "addon")
 
             delegate: ExtensionCard {
@@ -189,6 +191,7 @@ PageBase {
 
                 item: modelData
                 first: index === 0
+                last: index === addons.count - 1
             }
         }
 
