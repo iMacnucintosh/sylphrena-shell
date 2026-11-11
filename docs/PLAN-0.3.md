@@ -3,7 +3,7 @@
 Documento de trabajo. Léelo junto con [AGENTS.md](../AGENTS.md). Si algo choca con el código,
 **para y pregunta al usuario**; no improvises un rediseño.
 
-Estado: **por empezar** (2026-11-11). La 0.2.0 está publicada (`v0.2.0`, PR #34). La rama de trabajo
+Estado: **fase 0 hecha (2026-11-11)**; fase 1 por empezar. La 0.2.0 está publicada (`v0.2.0`, PR #34). La rama de trabajo
 es `dev/0.3` y sigue el mismo flujo: cada fase en una rama `feature/*` que sale de `dev/0.3` y se
 fusiona en ella; `main` no se toca hasta cerrar la 0.3 (PR `dev/0.3` → `main` y tag `v0.3.0`).
 
@@ -51,13 +51,19 @@ de contraseña y la gestión de piezas de sistema.
 
 ## 3. Fases
 
-### Fase 0 · Decisiones y contrato
-- Definir `requires` (p. ej. `{ "sylphrena": ">=0.3.0" }`) y `apiVersion` en el manifiesto y en `index.json`.
-- Decidir el modelo de confianza (sha256 + confirmación; ¿firma del índice ya o después?).
-- Decidir qué extensiones de serie siguen **dentro** de la shell (`extensions/`) y cuáles pasan al hub
-  (hoy: Tareas, Hidratación y Juegos viven en el repo de la shell).
-- Añadir a la shell el comando IPC `extensions rescan` (hoy solo existe `status`) y `sylph ext install/remove/list`.
-- Entregable: este documento actualizado y el contrato escrito en AGENTS.md.
+### Fase 0 · Decisiones y contrato — HECHA (2026-11-11)
+Decisiones del usuario:
+- **Confianza:** `sha256` + confirmación al instalar; **índice sin firmar** por ahora (revisable más adelante).
+- **Extensiones de serie (Tareas, Hidratación, Juegos): pasan TODAS al hub.** La shell se queda sin extensiones propias. Ver fase 4 para el orden y los riesgos.
+- **Alcance del catálogo:** solo extensiones y widgets (`kind` en el índice; temas y fondos fuera de la 0.3).
+- **Extensiones instaladas a mano:** se muestran como «local» y se respetan.
+
+Entregado:
+- Contrato escrito en `AGENTS.md` («Contrato con Things»): carpeta, manifiesto (`apiVersion`, `requires.sylphrena`), recibo `.source.json`, orden de instalar/eliminar, IPC y confianza.
+- Shell: comprobación de `apiVersion` / `requires` al cargar (incompatible = listada, no cargada, con motivo), recibo de origen en `list-extensions.py`, y IPC `extensions list | rescan | enable | disable | prepareRemoval`.
+- `scripts/ext.py` (instalar / quitar / listar / activar desde terminal; `sylph ext` lo llamará: el CLI vive en otro repo, aún sin tocar).
+- Corregido de paso: el plugin instalado decía `0.1.0` (caché de CMake con `-DVERSION`); ahora toma el último tag.
+- Pendiente de la fase 0 en el **hub** (se hace en la fase 4): que `build.py` copie `requires` / `apiVersion` del manifiesto al `index.json` y los valide.
 
 ### Fase 1 · Things lee el hub
 - Pestaña «Sylphrena» en Things (junto a pacman/AUR/Flatpak): lista del `index.json` (extensiones y,
@@ -79,16 +85,20 @@ de contraseña y la gestión de piezas de sistema.
 - Things como dependencia del paquete de Sylphrena (AUR); sigue siendo opcional en el código.
 - `scripts/install-system.sh` y el instalador de Things se coordinan (un solo sitio que instale lo de root).
 
-### Fase 4 · El hub crece
-- `scripts/build.py --check` en CI del hub; `requires` validado.
-- Migrar al hub las extensiones de serie que se decida (fase 0) y añadir widgets.
-- Documentar cómo publicar (ya está en el README del hub).
+### Fase 4 · El hub crece (y la shell se queda sin extensiones propias)
+- `scripts/build.py --check` en CI del hub; `requires` y `apiVersion` copiados del manifiesto al índice y validados.
+- **Migrar al hub Tareas, Hidratación y Juegos.** Orden: publicarlas en el hub **antes** de quitarlas de `extensions/` de la shell, y quitarlas solo cuando Things pueda instalarlas (fase 1). Antes de cada una:
+  - comprobar de qué depende del plugin y de `qs.*` (Hidratación lleva un shader; Juegos scripts Python y varias capas) y que funcione desde `~/.local/share/sylphrena/extensions/`;
+  - su `i18n/es.json` (`scripts/extension-catalog.py`): hoy sus cadenas viven en el `es.po` de la shell y dejarían de estar;
+  - sus ajustes y su estado (`~/.config/sylphrena/extensions/<id>.json`, `~/.local/state/sylphrena/…`) **no se tocan**: los ids no cambian, así que el usuario que ya las usa no pierde datos;
+  - el usuario actual (Manu) las reinstala desde Things o con `scripts/ext.py install`.
+- La shell sigue aceptando una carpeta `extensions/` propia (para desarrollar), aunque vacía.
+- Añadir widgets al hub y documentar cómo publicar (ya está en el README del hub).
 
 ## 4. Preguntas abiertas
-- ¿Firma del índice en la 0.3 o más adelante?
-- ¿Se quedan Tareas / Hidratación / Juegos en el repo de la shell o pasan al hub?
-- ¿Things instala también temas, fondos y esquemas del hub (más allá de extensiones y widgets)?
-- ¿Qué pasa con las extensiones instaladas a mano en `~/.local/share/sylphrena/extensions/` sin pasar por el catálogo (se muestran como «local»)?
+- **Primer arranque sin extensiones:** con Tareas, Hidratación y Juegos fuera de la shell, una instalación nueva no tiene nada que activar hasta abrir Things. ¿Basta con el botón «Buscar más en Things» en Nexus → Extensiones, o conviene una pista en el dashboard («Activa widgets»)?
+- **Firma del índice** (decidido no hacerla ahora): ¿en qué versión se revisa?
+- **Qué pasa con una extensión del hub que se quita del catálogo** (retirada): ¿Things avisa en «instaladas» o la ignora?
 
 ## 5. Pendiente heredado de la 0.2
 - Tests pytest ligeros (parser VDF, merge de sesiones Millennium, residual delta/sesión).
