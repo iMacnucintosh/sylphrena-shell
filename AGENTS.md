@@ -128,7 +128,7 @@ Things (gestor de paquetes) instala, actualiza y elimina extensiones; la shell l
 - **Listado para Things:** `ext.py list --json` (id, nombre, versión, `local`, `source`, `enabled`, `error`) y `ext.py info` (`running`, `shellVersion`, `apiVersion`).
 - **IPC** (`qs -c sylphrena ipc call extensions …`): `status`, `list` (id, nombre, versión, `local`, `source`, `enabled`, `error`), `tools` (carpeta de scripts de la shell: ahí está `ext.py`; así Things lo encuentra), `rescan`, `enable <id>` (→ `ok` | `pending` —aún no listada o comprobando sus piezas de sistema: se activa en cuanto pueda— | `incompatible`), `reload` (recarga la shell tras actualizar una extensión cargada), `disable <id>`, `prepareRemoval <id>`.
 - **Confianza (decidido en la 0.3):** `sha256` + confirmación; el índice **no** se firma todavía (revisable). `index.json` lleva `kind` (`extension` y `widget`; temas y fondos fuera de la 0.3), y por elemento `version`, `requires`, `apiVersion`, `zip`, `sha256`.
-- **Sin Things:** `scripts/ext.py list | install <zip> | remove <id> | enable | disable | rescan` hace lo mismo desde una terminal (`sylph ext` lo llamará). Si la shell no corre, instala/quita los ficheros y ya los verá al arrancar.
+- **Sin Things:** `scripts/ext.py list | install <zip> | remove <id> | enable | disable | rescan` hace lo mismo desde una terminal (`sylph ext …`, del repo sylphrena-cli, lo ejecuta; `ext.py inspect <zip>` dice qué instalaría un zip sin instalarlo —lo usa «Instalar desde zip» de Things—). Si la shell no corre, instala/quita los ficheros y ya los verá al arrancar.
 
 ## 6. Trampas / aprendizajes
 

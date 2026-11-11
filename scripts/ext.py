@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Manage Sylphrena extensions: from a terminal, and what Things calls (`sylph ext` will wrap it).
+"""Manage Sylphrena extensions: from a terminal, and what Things calls (`sylph ext …` runs it).
 The shell owns the extension contract, so this is the one implementation of installing and removing
 (see AGENTS.md, «Contrato con Things»).
 
   ext.py list [--json]       the extensions found (JSON: id, name, version, local, source, enabled, error)
   ext.py info                {"running", "shellVersion", "apiVersion"} of the shell that is running
+  ext.py inspect <zip>       what a local zip would install, without installing: JSON {ok, id, name, version,
+                             description, system, requires, incompatible} (what Things shows before asking)
   ext.py install <zip>       a local zip: unpack (checked), install its system pieces if it has them
                              (sudo), enable it. It stays "local" (no hub receipt)
   ext.py install-hub <id> --url <zip url> --sha256 <hex> --version <v>
@@ -200,6 +202,15 @@ def finish_install(ext_id: str, receipt: dict | None, reload: bool = False) -> i
     return 0
 
 
+def cmd_inspect(zip_path: str) -> int:
+    info = installer("inspect", zip_path, str(BUILTIN))
+    if info.get("ok"):
+        info.pop("i18n", None)
+        info["incompatible"] = incompatibility(info, shell_info())
+    print(json.dumps(info))
+    return 0 if info.get("ok") else 1
+
+
 def cmd_install(zip_path: str) -> int:
     info = installer("inspect", zip_path, str(BUILTIN))
     if not info.get("ok"):
@@ -344,6 +355,8 @@ def main() -> int:
         return cmd_list(a[1:] == ["--json"])
     if a == ["info"]:
         return cmd_info()
+    if a[:1] == ["inspect"] and len(a) == 2:
+        return cmd_inspect(a[1])
     if a[:1] == ["install"] and len(a) == 2:
         return cmd_install(a[1])
     if a[:1] == ["install-hub"]:
