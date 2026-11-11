@@ -636,6 +636,83 @@ Singleton {
         root.apply();
     }
 
+    // ── Export / import of the current shortcuts ────────────────────────────────────────────────
+    // The file is {"format": "sylphrena-keybinds", "version": 1, "binds": {<action id>: <bind>}}: the same
+    // overrides keybinds.json keeps (what differs from the defaults; "" = unbound).
+    readonly property string exportName: "sylphrena-keybinds.json"
+    // Result of the last export / import, for the page: {ok, text}
+    property var ioResult: null
+
+    function exportTo(folder: string): void {
+        const dir = folder.startsWith("file://") ? decodeURIComponent(folder.slice(7)) : folder;
+        const path = `${dir.replace(/\/+$/, "")}/${root.exportName}`;
+        exportFile.path = path;
+        exportFile.setText(JSON.stringify({
+                format: "sylphrena-keybinds",
+                version: 1,
+                binds: root.overrides
+            }, null, 4) + "\n");
+        // Paths.shortenHome keeps the message short
+        root.ioResult = {
+            ok: true,
+            text: Tr.tr("Exported to %1").arg(Paths.shortenHome(path))
+        };
+    }
+
+    function importFrom(path: string): void {
+        importFile.path = "";
+        importFile.path = path;
+    }
+
+    // Validates an imported document; returns {binds, applied, ignored} or null if it is not a keybinds file
+    function parseImport(raw: string): var {
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch (e) {
+            return null;
+        }
+        if (!data || typeof data !== "object" || typeof data.binds !== "object" || data.binds === null || Array.isArray(data.binds))
+            return null;
+        if (data.format !== undefined && data.format !== "sylphrena-keybinds")
+            return null;
+        const binds = {};
+        let ignored = 0;
+        for (const id of Object.keys(data.binds)) {
+            const action = root.catalog.find(a => a.id === id);
+            const value = data.binds[id];
+            if (!action || typeof value !== "string" || value.length > 80) {
+                ignored++;
+                continue;
+            }
+            const bind = value.trim();
+            if (bind && root.normalizeBind(bind) === root.normalizeBind(action.defaultBind))
+                continue; // same as the default: nothing to store
+            binds[id] = bind;
+        }
+        // Two actions on the same shortcut would fight in Hyprland: keep the first and unbind the rest
+        const seen = {};
+        for (const action of root.catalog) {
+            const bind = action.id in binds ? binds[action.id] : action.defaultBind;
+            const norm = root.normalizeBind(bind);
+            if (!norm)
+                continue;
+            if (norm in seen) {
+                if (action.id in binds) {
+                    binds[action.id] = "";
+                    ignored++;
+                }
+                continue;
+            }
+            seen[norm] = action.id;
+        }
+        return {
+            binds: binds,
+            applied: Object.keys(binds).length,
+            ignored: ignored
+        };
+    }
+
     function persist(): void {
         storage.setText(JSON.stringify({
                 binds: root.overrides
@@ -873,6 +950,44 @@ Singleton {
                     root.apply();
                 });
             }
+        }
+    }
+
+    FileView {
+        id: exportFile
+
+        printErrors: false
+        onSaveFailed: root.ioResult = {
+            ok: false,
+            text: Tr.tr("Could not write the file")
+        }
+    }
+
+    FileView {
+        id: importFile
+
+        printErrors: false
+        onLoaded: {
+            const r = root.parseImport(text());
+            if (!r) {
+                root.ioResult = {
+                    ok: false,
+                    text: Tr.tr("That is not a Sylphrena shortcuts file")
+                };
+                return;
+            }
+            root.overrides = r.binds;
+            root.conflictWarning = "";
+            root.persist();
+            root.apply();
+            root.ioResult = {
+                ok: true,
+                text: r.ignored > 0 ? Tr.trN("Imported %n custom shortcut (%1 ignored)", "Imported %n custom shortcuts (%1 ignored)", r.applied).arg(r.ignored) : Tr.trN("Imported %n custom shortcut", "Imported %n custom shortcuts", r.applied)
+            };
+        }
+        onLoadFailed: root.ioResult = {
+            ok: false,
+            text: Tr.tr("Could not read the file")
         }
     }
 

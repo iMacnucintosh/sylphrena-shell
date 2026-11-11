@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 15:36+0100\n"
+"POT-Creation-Date: 2026-11-11 16:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2016,7 +2016,27 @@ msgid "Click a shortcut, then press a key or mouse button. Esc cancels."
 msgstr ""
 
 #: modules/nexus/pages/KeybindsPage.qml
+msgid "Export"
+msgstr ""
+
+#: modules/nexus/pages/KeybindsPage.qml
+msgid "Import"
+msgstr ""
+
+#: modules/nexus/pages/KeybindsPage.qml
 msgid "Reset all"
+msgstr ""
+
+#: modules/nexus/pages/KeybindsPage.qml
+msgid "Choose where to save your shortcuts"
+msgstr ""
+
+#: modules/nexus/pages/KeybindsPage.qml
+msgid "Choose a shortcuts file"
+msgstr ""
+
+#: modules/nexus/pages/KeybindsPage.qml
+msgid "Shortcuts (JSON)"
 msgstr ""
 
 #: modules/nexus/pages/KeybindsPage.qml
@@ -4776,6 +4796,37 @@ msgstr ""
 #: services/Keybinds.qml
 #, qt-format
 msgid "Already used by “%1”"
+msgstr ""
+
+#: services/Keybinds.qml
+#, qt-format
+msgid "Exported to %1"
+msgstr ""
+
+#: services/Keybinds.qml
+msgid "Could not write the file"
+msgstr ""
+
+#: services/Keybinds.qml
+msgid "That is not a Sylphrena shortcuts file"
+msgstr ""
+
+#: services/Keybinds.qml
+#, qt-format, qt-plural-format
+msgid "Imported %n custom shortcut (%1 ignored)"
+msgid_plural "Imported %n custom shortcuts (%1 ignored)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: services/Keybinds.qml
+#, qt-plural-format
+msgid "Imported %n custom shortcut"
+msgid_plural "Imported %n custom shortcuts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: services/Keybinds.qml
+msgid "Could not read the file"
 msgstr ""
 
 #: services/KittySetup.qml
