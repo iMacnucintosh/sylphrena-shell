@@ -3,6 +3,9 @@
 # Used for stop/pause so the final file lands in the same folder as start.
 set -euo pipefail
 
+# The compositor PATH has no ~/.local/bin, where the user-local `sylph` CLI lives.
+export PATH="$HOME/.local/bin:$PATH"
+
 videos_dir="${XDG_VIDEOS_DIR:-}"
 if [[ -z "$videos_dir" && -f "${XDG_CONFIG_HOME:-$HOME/.config}/user-dirs.dirs" ]]; then
     # shellcheck disable=SC1090

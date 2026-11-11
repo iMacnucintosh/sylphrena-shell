@@ -4,6 +4,9 @@
 # which races when a UI click is delivered twice (menu item + SplitButton underneath).
 set -euo pipefail
 
+# The compositor PATH has no ~/.local/bin, where the user-local `sylph` CLI lives.
+export PATH="$HOME/.local/bin:$PATH"
+
 # Prefer XDG Videos (e.g. ~/Vídeos); fall back to the Spanish folder name.
 videos_dir="${XDG_VIDEOS_DIR:-}"
 if [[ -z "$videos_dir" && -f "${XDG_CONFIG_HOME:-$HOME/.config}/user-dirs.dirs" ]]; then
