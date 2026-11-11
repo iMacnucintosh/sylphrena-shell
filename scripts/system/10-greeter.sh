@@ -9,16 +9,20 @@ step_main() {
   old_dir="/etc/greetd/sylphrena"
   qs_dst="$greeter_dir/qs"
 
-  if [[ -d "$old_dir" && ! -L "$old_dir" && ! -e "$greeter_dir" ]]; then
-    echo "Moving $old_dir → $greeter_dir"
-    mv "$old_dir" "$greeter_dir"
-  fi
-  if [[ -e "$greeter_dir" && -e "$old_dir" && ! -L "$old_dir" && ! -L "$greeter_dir" ]]; then
-    echo "Both $old_dir and $greeter_dir are real directories. Not merging." >&2
-    exit 1
+  # Migration from an older directory name. Since the rename both names are the same path: then
+  # there is nothing to move nor to link (comparing the dir with itself reported a false conflict).
+  if [[ "$old_dir" != "$greeter_dir" ]]; then
+    if [[ -d "$old_dir" && ! -L "$old_dir" && ! -e "$greeter_dir" ]]; then
+      echo "Moving $old_dir → $greeter_dir"
+      mv "$old_dir" "$greeter_dir"
+    fi
+    if [[ -e "$greeter_dir" && -e "$old_dir" && ! -L "$old_dir" && ! -L "$greeter_dir" ]]; then
+      echo "Both $old_dir and $greeter_dir are real directories. Not merging." >&2
+      exit 1
+    fi
   fi
   mkdir -p "$greeter_dir"
-  if [[ ! -e "$old_dir" ]]; then
+  if [[ "$old_dir" != "$greeter_dir" && ! -e "$old_dir" ]]; then
     ln -s "$(basename "$greeter_dir")" "$old_dir"
   fi
 
