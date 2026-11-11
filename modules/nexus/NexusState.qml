@@ -15,6 +15,8 @@ QtObject {
     property BluetoothDevice selectedBtDevice
     property DesktopEntry selectedApp
     property int editingVpnIndex: -1
+    // Provider type preselected when adding a VPN provider ("" = commands)
+    property string newVpnType: ""
     property string selectedNetworkSsid
     property string selectedEthernetInterface
     property bool networkDetailsFromSaved

@@ -363,6 +363,7 @@ PageBase {
             text: Tr.tr("Add provider")
             onClicked: {
                 root.nState.editingVpnIndex = -1;
+                root.nState.newVpnType = "";
                 root.nState.openSubPage(4); // Add/edit provider sub-page
             }
         }
