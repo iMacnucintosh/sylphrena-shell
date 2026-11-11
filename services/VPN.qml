@@ -232,7 +232,7 @@ Singleton {
         }
         if (root.externalPending) {
             if (GlobalConfig.utilities.toasts.vpnChanged)
-                Toaster.toast(Tr.tr("VPN connection failed"), Tr.tr("Enable the extension of this provider in Nexus → Complements"), "vpn_key_alert");
+                Toaster.toast(Tr.tr("VPN connection failed"), Tr.tr("Enable the extension of this provider in Nexus → Extensions"), "vpn_key_alert");
             return;
         }
         if (status.state === "needs-auth" && status.authUrl) {

@@ -197,7 +197,7 @@ PageBase {
                 Layout.fillWidth: true
                 Layout.leftMargin: Tokens.padding.small
                 visible: !root.extEntry
-                text: Tr.tr("This provider type comes from an extension that is disabled. Enable it in Nexus → Complements to edit the connection.")
+                text: Tr.tr("This provider type comes from an extension that is disabled. Enable it in Nexus → Extensions to edit the connection.")
                 color: Colours.palette.m3error
                 font: Tokens.font.body.small
                 wrapMode: Text.WordWrap

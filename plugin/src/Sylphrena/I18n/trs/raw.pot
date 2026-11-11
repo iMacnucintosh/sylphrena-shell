@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:10+0100\n"
+"POT-Creation-Date: 2026-11-11 11:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -381,7 +381,7 @@ msgid "Could not load Steam data"
 msgstr ""
 
 #: extensions/games/Tab.qml
-msgid "Add your API key and Steam ID in Nexus → Complements."
+msgid "Add your API key and Steam ID in Nexus → Extensions."
 msgstr ""
 
 #: extensions/games/Tab.qml modules/nexus/pages/ShellPage.qml
@@ -853,7 +853,7 @@ msgstr ""
 #: modules/bar/popouts/WirelessPassword.qml
 #: modules/nexus/common/DialogRowButton.qml
 #: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
@@ -1766,7 +1766,7 @@ msgid "Removing…"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Installing…"
 msgstr ""
 
@@ -1792,7 +1792,7 @@ msgid "Delete"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Your password (sudo)"
 msgstr ""
 
@@ -1891,12 +1891,12 @@ msgstr ""
 msgid "Dashboard, taskbar, launcher, sidebar"
 msgstr ""
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/ComplementsPage.qml
-msgid "Complements"
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/ExtensionsPage.qml
+msgid "Extensions"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Optional extensions (VPN, games, mouse battery, …)"
+msgid "Install and enable extensions (VPN, games, …)"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
@@ -2387,36 +2387,6 @@ msgstr ""
 msgid "Allow nearby devices to pair with this one"
 msgstr ""
 
-#: modules/nexus/pages/ComplementsPage.qml modules/nexus/pages/UpdatesPage.qml
-msgid "Available"
-msgstr ""
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Extensions are .zip packages with a manifest.json. Installing one again updates it."
-msgstr ""
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Install from zip"
-msgstr ""
-
-#. TRANSLATORS: %1 = extension name
-#: modules/nexus/pages/ComplementsPage.qml
-#, qt-format
-msgid "%1 needs administrator rights to install"
-msgstr ""
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Install"
-msgstr ""
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Select an extension package"
-msgstr ""
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Extension packages (.zip)"
-msgstr ""
-
 #: modules/nexus/pages/DisplayPage.qml
 msgctxt "monitor settings"
 msgid "Display"
@@ -2474,6 +2444,36 @@ msgstr ""
 
 #: modules/nexus/pages/DisplayPage.qml
 msgid "Session toggle for zero gaps/rounding lives in Panels → Utilities"
+msgstr ""
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Install from zip"
+msgstr ""
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "A .zip package (installing again updates it)"
+msgstr ""
+
+#. TRANSLATORS: %1 = extension name
+#: modules/nexus/pages/ExtensionsPage.qml
+#, qt-format
+msgid "Install %1?"
+msgstr ""
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Install"
+msgstr ""
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Installed"
+msgstr ""
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Select an extension package"
+msgstr ""
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Extension packages (.zip)"
 msgstr ""
 
 #: modules/nexus/pages/KeybindsPage.qml
@@ -2693,7 +2693,7 @@ msgid "Commands"
 msgstr ""
 
 #: modules/nexus/pages/network/AddVpnPage.qml
-msgid "This provider type comes from an extension that is disabled. Enable it in Nexus → Complements to edit the connection."
+msgid "This provider type comes from an extension that is disabled. Enable it in Nexus → Extensions to edit the connection."
 msgstr ""
 
 #: modules/nexus/pages/network/AddVpnPage.qml
@@ -3330,18 +3330,6 @@ msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Quick timer button duration (min)"
-msgstr ""
-
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Hub for enabling Timers: Complements"
-msgstr ""
-
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Configure Timers in Complements"
-msgstr ""
-
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Complements owns the opt-in toggle; presets above stay on the clock"
 msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
@@ -4124,6 +4112,10 @@ msgstr ""
 #: modules/nexus/pages/UpdatesPage.qml
 msgctxt "button"
 msgid "Enable"
+msgstr ""
+
+#: modules/nexus/pages/UpdatesPage.qml
+msgid "Available"
 msgstr ""
 
 #: modules/nexus/pages/UpdatesPage.qml
@@ -5361,7 +5353,7 @@ msgid "VPN connection failed"
 msgstr ""
 
 #: services/VPN.qml
-msgid "Enable the extension of this provider in Nexus → Complements"
+msgid "Enable the extension of this provider in Nexus → Extensions"
 msgstr ""
 
 #: services/VPN.qml

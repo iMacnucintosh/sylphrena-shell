@@ -3,7 +3,7 @@
 #
 # Asks for root once (re-exec via sudo) and runs every step in
 # scripts/system/NN-name.sh. A step is a file that defines step_main.
-# (Root pieces of extensions are not here: each one installs its own from Nexus → Complements,
+# (Root pieces of extensions are not here: each one installs its own from Nexus → Extensions,
 # manifest `system`.) Drop a new file there to add another privileged install; the next run
 # of this script picks it up. User-owned refresh (theme, wallpaper) stays
 # outside sudo: the greeter dir is chowned back to the invoking user.

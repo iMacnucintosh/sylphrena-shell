@@ -18,7 +18,7 @@ Singleton {
 
     // Shipped with the shell, then the user's own folder (the first folder that claims an id wins)
     readonly property list<string> dirs: [Quickshell.shellPath("extensions"), root.userDir]
-    // Where extensions installed from a zip live (Nexus → Complements → Install from zip)
+    // Where extensions installed from a zip live (Nexus → Extensions → Install from zip)
     readonly property string userDir: `${Paths.data}/extensions`
 
     readonly property var enabledIds: Array.from(GlobalConfig.extensions.enabled ?? [])
@@ -119,7 +119,7 @@ Singleton {
 
     // ── System pieces (manifest `system`: { install, uninstall, check, description }) ──────────
     // Some extensions need something as root (a helper, a sudoers rule, a package). They declare
-    // shell scripts for it; installing asks for the password once, in Nexus → Complements, and is
+    // shell scripts for it; installing asks for the password once, in Nexus → Extensions, and is
     // separate from enabling: an extension with `system` can only be enabled once installed.
     // id -> "installed" | "outdated" | "missing" (only extensions that declare `system`)
     property var systemState: ({})

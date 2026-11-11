@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:10+0100\n"
+"POT-Creation-Date: 2026-11-11 11:14+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -380,8 +380,8 @@ msgid "Could not load Steam data"
 msgstr "No se pudieron cargar los datos de Steam"
 
 #: extensions/games/Tab.qml
-msgid "Add your API key and Steam ID in Nexus → Complements."
-msgstr "Añade tu API key y Steam ID en Nexus → Complementos."
+msgid "Add your API key and Steam ID in Nexus → Extensions."
+msgstr "Añade tu API key y Steam ID en Nexus → Extensiones."
 
 #: extensions/games/Tab.qml modules/nexus/pages/ShellPage.qml
 #: build/i18n/extensions/games/manifest.json.js
@@ -852,7 +852,7 @@ msgstr "Contraseña"
 #: modules/bar/popouts/WirelessPassword.qml
 #: modules/nexus/common/DialogRowButton.qml
 #: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
@@ -1767,7 +1767,7 @@ msgid "Removing…"
 msgstr "Eliminando…"
 
 #: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Installing…"
 msgstr "Instalando…"
 
@@ -1793,7 +1793,7 @@ msgid "Delete"
 msgstr "Eliminar"
 
 #: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ComplementsPage.qml
+#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Your password (sudo)"
 msgstr "Tu contraseña (sudo)"
 
@@ -1892,13 +1892,13 @@ msgstr "Paneles"
 msgid "Dashboard, taskbar, launcher, sidebar"
 msgstr "Panel, barra de tareas, lanzador, barra lateral"
 
-#: modules/nexus/PageRegistry.qml modules/nexus/pages/ComplementsPage.qml
-msgid "Complements"
-msgstr "Complementos"
+#: modules/nexus/PageRegistry.qml modules/nexus/pages/ExtensionsPage.qml
+msgid "Extensions"
+msgstr "Extensiones"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Optional extensions (VPN, games, mouse battery, …)"
-msgstr "Extensiones opcionales (VPN, juegos, batería del ratón, …)"
+msgid "Install and enable extensions (VPN, games, …)"
+msgstr "Instala y activa extensiones (VPN, juegos, …)"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/KeybindsPage.qml
 msgid "Keyboard & mouse"
@@ -2388,36 +2388,6 @@ msgstr "Emparejable"
 msgid "Allow nearby devices to pair with this one"
 msgstr "Permitir que los dispositivos cercanos se emparejen con este"
 
-#: modules/nexus/pages/ComplementsPage.qml modules/nexus/pages/UpdatesPage.qml
-msgid "Available"
-msgstr "Disponibles"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Extensions are .zip packages with a manifest.json. Installing one again updates it."
-msgstr "Las extensiones son paquetes .zip con un manifest.json. Volver a instalar una la actualiza."
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Install from zip"
-msgstr "Instalar desde zip"
-
-#. TRANSLATORS: %1 = extension name
-#: modules/nexus/pages/ComplementsPage.qml
-#, qt-format
-msgid "%1 needs administrator rights to install"
-msgstr "%1 necesita permisos de administrador para instalarse"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Install"
-msgstr "Instalar"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Select an extension package"
-msgstr "Elige un paquete de extensión"
-
-#: modules/nexus/pages/ComplementsPage.qml
-msgid "Extension packages (.zip)"
-msgstr "Paquetes de extensión (.zip)"
-
 #: modules/nexus/pages/DisplayPage.qml
 msgctxt "monitor settings"
 msgid "Display"
@@ -2476,6 +2446,36 @@ msgstr "Diseño compacto"
 #: modules/nexus/pages/DisplayPage.qml
 msgid "Session toggle for zero gaps/rounding lives in Panels → Utilities"
 msgstr "El interruptor de sesión sin gaps/redondeo vive en Paneles → Utilities"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Install from zip"
+msgstr "Instalar desde zip"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "A .zip package (installing again updates it)"
+msgstr "Un paquete .zip (volver a instalar lo actualiza)"
+
+#. TRANSLATORS: %1 = extension name
+#: modules/nexus/pages/ExtensionsPage.qml
+#, qt-format
+msgid "Install %1?"
+msgstr "¿Instalar %1?"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Install"
+msgstr "Instalar"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Installed"
+msgstr "Instaladas"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Select an extension package"
+msgstr "Elige un paquete de extensión"
+
+#: modules/nexus/pages/ExtensionsPage.qml
+msgid "Extension packages (.zip)"
+msgstr "Paquetes de extensión (.zip)"
 
 #: modules/nexus/pages/KeybindsPage.qml
 msgid "Mouse focus"
@@ -2694,8 +2694,8 @@ msgid "Commands"
 msgstr "Comandos"
 
 #: modules/nexus/pages/network/AddVpnPage.qml
-msgid "This provider type comes from an extension that is disabled. Enable it in Nexus → Complements to edit the connection."
-msgstr "Este tipo de proveedor es de una extensión desactivada. Actívala en Nexus → Complementos para editar la conexión."
+msgid "This provider type comes from an extension that is disabled. Enable it in Nexus → Extensions to edit the connection."
+msgstr "Este tipo de proveedor es de una extensión desactivada. Actívala en Nexus → Extensiones para editar la conexión."
 
 #: modules/nexus/pages/network/AddVpnPage.qml
 msgid "Connection name"
@@ -3332,18 +3332,6 @@ msgstr "Desactivado: se cancelan los temporizadores activos"
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Quick timer button duration (min)"
 msgstr "Duración del botón de temporizador rápido (min)"
-
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Hub for enabling Timers: Complements"
-msgstr "Hub para activar Timers: Complementos"
-
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Configure Timers in Complements"
-msgstr "Configurar Timers en Complementos"
-
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-msgid "Complements owns the opt-in toggle; presets above stay on the clock"
-msgstr "Complementos es dueño del interruptor; los presets de arriba siguen en el reloj"
 
 #: modules/nexus/pages/panels/taskbar/BarStatusIcons.qml
 msgid "Lock keys"
@@ -4126,6 +4114,10 @@ msgstr "Actualizar paquetes sueltos está bloqueado por defecto por el alto ries
 msgctxt "button"
 msgid "Enable"
 msgstr "Activar"
+
+#: modules/nexus/pages/UpdatesPage.qml
+msgid "Available"
+msgstr "Disponibles"
 
 #: modules/nexus/pages/UpdatesPage.qml
 msgid "Info"
@@ -5362,8 +5354,8 @@ msgid "VPN connection failed"
 msgstr "Error al conectar la VPN"
 
 #: services/VPN.qml
-msgid "Enable the extension of this provider in Nexus → Complements"
-msgstr "Activa la extensión de este proveedor en Nexus → Complementos"
+msgid "Enable the extension of this provider in Nexus → Extensions"
+msgstr "Activa la extensión de este proveedor en Nexus → Extensiones"
 
 #: services/VPN.qml
 msgid "VPN disconnection failed"
@@ -5952,6 +5944,22 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#, qt-format
+#~ msgid "%1 needs administrator rights to install"
+#~ msgstr "%1 necesita permisos de administrador para instalarse"
+
+#~ msgid "Complements"
+#~ msgstr "Complementos"
+
+#~ msgid "Hub for enabling Timers: Complements"
+#~ msgstr "Hub para activar Timers: Complementos"
+
+#~ msgid "Configure Timers in Complements"
+#~ msgstr "Configurar Timers en Complementos"
+
+#~ msgid "Complements owns the opt-in toggle; presets above stay on the clock"
+#~ msgstr "Complementos es dueño del interruptor; los presets de arriba siguen en el reloj"
 
 #~ msgid "Delete this extension and what it installed as administrator? Its settings are kept."
 #~ msgstr "¿Eliminar esta extensión y lo que instaló como administrador? Sus ajustes se conservan."

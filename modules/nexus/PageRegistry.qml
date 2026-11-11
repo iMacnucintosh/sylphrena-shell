@@ -49,10 +49,10 @@ QtObject {
             category: "appearance"
         },
         {
-            id: "complements",
-            label: Tr.tr("Complements"),
+            id: "extensions",
+            label: Tr.tr("Extensions"),
             icon: "extension",
-            description: Tr.tr("Optional extensions (VPN, games, mouse battery, …)"),
+            description: Tr.tr("Install and enable extensions (VPN, games, …)"),
             category: "appearance"
         },
 

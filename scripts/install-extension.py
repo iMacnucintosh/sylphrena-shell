@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install or remove an extension in the user's extension folder (Nexus → Complements).
+"""Install or remove an extension in the user's extension folder (Nexus → Extensions).
 
   install-extension.py inspect <zip> <builtin_dir>
   install-extension.py install <zip> <user_dir> <builtin_dir>
