@@ -183,6 +183,7 @@ Singleton {
                     displayName: Tr.tr(t.name ?? e.manifest.name),
                     icon: t.icon ?? e.manifest.icon ?? "vpn_key",
                     editor: t.editor ?? "",
+                    importer: t.importer ?? "",
                     ext: e,
                     service: e.service
                 });
@@ -307,6 +308,14 @@ Singleton {
         const t = vpnProviderTypes.find(x => x.id === typeId);
         const c = t?.editor ? root.component(t.ext, t.editor) : null;
         return c ? { id: `${t.ext.id}/vpnEditor`, ext: t.ext, component: c } : null;
+    }
+
+    // The import row (manifest `vpnProviderType.importer`) of a VPN provider type, shown first in the
+    // Add provider page: fills connections from a file. As an entry for ExtensionSlot (or null)
+    function vpnImporterEntry(typeId: string): var {
+        const t = vpnProviderTypes.find(x => x.id === typeId);
+        const c = t?.importer ? root.component(t.ext, t.importer) : null;
+        return c ? { id: `${t.ext.id}/vpnImporter`, ext: t.ext, component: c } : null;
     }
 
     function service(id: string): var {

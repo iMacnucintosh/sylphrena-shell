@@ -25,6 +25,8 @@ PageBase {
     property string selectedType: ""
     readonly property var typeEntry: selectedType ? (VPN.providerTypes.find(t => t.id === selectedType) ?? null) : null
     readonly property var extEntry: typeEntry ? Extensions.vpnEditorEntry(selectedType) : null
+    // Import row of the type (new providers only): fill connections from a file
+    readonly property var importEntry: typeEntry && !editing ? Extensions.vpnImporterEntry(selectedType) : null
     // Choosing the type only makes sense for a new provider
     readonly property bool showTypes: !editing && VPN.providerTypes.length > 0
     property string formError: ""
@@ -193,6 +195,15 @@ PageBase {
             visible: root.selectedType !== ""
             spacing: Tokens.spacing.large
 
+            ExtensionSlot {
+                Layout.fillWidth: true
+                visible: !!root.importEntry
+                entry: root.importEntry
+                props: ({
+                        close: () => root.nState.closeSubPage()
+                    })
+            }
+
             StyledText {
                 Layout.fillWidth: true
                 Layout.leftMargin: Tokens.padding.small
@@ -341,11 +352,13 @@ PageBase {
                 onClicked: {
                     const id = root.existing.id;
                     const t = VPN.typeOf(root.existing);
+                    // Kept before the provider goes away (what the extension may need to clean up)
+                    const options = JSON.parse(JSON.stringify(root.existing.options ?? {}));
                     if (id === VPN.selectedProvider && VPN.connected)
                         VPN.disconnect();
                     VPN.deleteProvider(root.editIndex);
                     // The extension drops what it keeps for the connection (its secrets file, …)
-                    t?.service?.forget?.(id);
+                    t?.service?.forget?.(id, options);
                     root.nState.closeSubPage();
                 }
             }
