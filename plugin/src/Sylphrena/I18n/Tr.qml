@@ -28,6 +28,25 @@ TranslatorInternal {
         return translated !== text ? translated : (_extra(text, context) || translated);
     }
 
+    // Plural of an extension's catalog: the value is the list of forms (two for the languages we ship:
+    // singular when n is 1, plural otherwise). Used only if the shell's catalog left it untranslated.
+    function _withExtraN(translated: string, text: string, plural: string, n: int, context: string): string {
+        if (translated !== text && translated !== plural)
+            return translated;
+        const key = context ? `${context}\u0004${text}` : text;
+        const name = locale.name;
+        const langs = [language, name, name.split("_")[0]].filter(l => !!l);
+        for (const id in extraCatalogs) {
+            const byLang = extraCatalogs[id] ?? {};
+            for (const l of langs) {
+                const t = byLang[l]?.[key];
+                if (Array.isArray(t) && t.length > 0)
+                    return t[Math.min(n === 1 ? 0 : 1, t.length - 1)] ?? translated;
+            }
+        }
+        return translated;
+    }
+
     function formatDateTime(date: date, fmt: var): string {
         return date.toLocaleString(locale, fmt);
     }
@@ -44,12 +63,12 @@ TranslatorInternal {
 
     function trN(text: string, plural: string, n: int): string {
         CUtils.dependency(__trsChanged);
-        return _trN(text, plural, n, "");
+        return _withExtraN(_trN(text, plural, n, ""), text, plural, n, "");
     }
 
     function trCtxN(text: string, plural: string, n: int, context: string): string {
         CUtils.dependency(__trsChanged);
-        return _trN(text, plural, n, context);
+        return _withExtraN(_trN(text, plural, n, context), text, plural, n, context);
     }
 
     function trMarked(text: string): string {

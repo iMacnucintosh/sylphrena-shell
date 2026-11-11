@@ -11,6 +11,8 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 - **Empaquetado (fase 3):** kitty se conecta solo a los colores de la shell (`setup-kitty.py`: bloque marcado en `kitty.conf` con copia, plantilla y script de recarga incluidos en el repo: `assets/kitty/`, `scripts/kitty-reload-colours.sh`); `PKGBUILD` de Things (rama `feature/pkgbuild` de su repo) y borrador de `packaging/PKGBUILD` de la shell con las dependencias duras (`qt6ct`, `cliphist`, `wl-clipboard`, `wtype`, fuentes, y Things, Seeker y kitty) y recomendadas (Papirus, `adw-gtk-theme`); `cmake --install` del módulo `shell` ahora instala también `scripts/`, `extensions/` y `greeter/`.
 
+- **Tareas, Hidratación y Juegos pasan al hub** (mismos ids: ajustes y datos intactos); se instalan con Things o `ext.py`. Sus cadenas viajan en su `i18n/es.json` (con plurales) y se quitan del `es.po` de la shell.
+
 ## 0.2.0 (2026-11-11)
 
 ### Extensiones

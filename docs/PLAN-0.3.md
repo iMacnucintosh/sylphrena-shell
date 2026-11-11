@@ -102,7 +102,8 @@ Pendiente para cerrar la fase (depende del usuario): publicar en el hub la relea
 - Dependencias duras del paquete (no sugerencias): `qt6ct`, `cliphist`, `wl-clipboard`, `wtype`, fuentes; recomendadas: Papirus y `adw-gtk-theme`.
 - `scripts/install-system.sh` y el instalador de Things se coordinan (un solo sitio que instale lo de root).
 
-### Fase 4 · El hub crece (y la shell se queda sin extensiones propias)
+### Fase 4 · El hub crece (y la shell se queda sin extensiones propias) — Tareas, Hidratación y Juegos MIGRADAS en local (2026-11-11)
+- **Hecho:** las tres están en la rama local `feature/tasks-hydration-games` del hub (`requires >=0.2.0`, `i18n/es.json`, zips) y se quitaron de `extensions/` de la shell; instaladas con `ext.py` desde los zips locales, cargan sin errores y conservan sus datos. `extension-catalog.py` y `Tr.trN` soportan plurales. **Falta publicar** las releases `tasks|hydration|games-0.1.0` y el índice (usuario), `build.py --check` en CI y añadir widgets nuevos.
 - `scripts/build.py --check` en CI del hub; `requires` y `apiVersion` copiados del manifiesto al índice y validados.
 - **Migrar al hub Tareas, Hidratación y Juegos.** Orden: publicarlas en el hub **antes** de quitarlas de `extensions/` de la shell, y quitarlas solo cuando Things pueda instalarlas (fase 1). Antes de cada una:
   - comprobar de qué depende del plugin y de `qs.*` (Hidratación lleva un shader; Juegos scripts Python y varias capas) y que funcione desde `~/.local/share/sylphrena/extensions/`;

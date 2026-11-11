@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 15:29+0100\n"
+"POT-Creation-Date: 2026-11-11 15:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,427 +91,8 @@ msgstr ""
 msgid "Hyprland settings restored"
 msgstr ""
 
-#: docs/examples/extension-spike/Widget.qml extensions/tasks/Widget.qml
-#: build/i18n/extensions/tasks/manifest.json.js
+#: docs/examples/extension-spike/Widget.qml
 msgid "Tasks"
-msgstr ""
-
-#. TRANSLATORS: %1 = a number
-#: extensions/games/games/AchievementList.qml
-#: modules/nexus/pages/DisplayPage.qml utils/Strings.qml
-#, qt-format
-msgid "%1%"
-msgstr ""
-
-#: extensions/games/games/AchievementList.qml
-#: extensions/games/games/FocusHero.qml extensions/games/Tab.qml
-msgid "Achievements"
-msgstr ""
-
-#: extensions/games/games/AchievementList.qml
-#, qt-format
-msgid "%1 / %2"
-msgstr ""
-
-#: extensions/games/games/AchievementList.qml
-#, qt-format
-msgid "Locked · %1"
-msgstr ""
-
-#: extensions/games/games/ActivityCard.qml
-#, qt-format
-msgid "Activity in %1"
-msgstr ""
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Sessions"
-msgstr ""
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Total"
-msgstr ""
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Longest"
-msgstr ""
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Less"
-msgstr ""
-
-#: extensions/games/games/ActivityCard.qml
-msgid "More"
-msgstr ""
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Dots mark achievement days. Playtime is recorded from now on."
-msgstr ""
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Playtime is recorded while the shell is running."
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml
-msgid "Playing now"
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml
-msgid "Non-Steam"
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml
-msgid "Played recently"
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml
-#, qt-format
-msgid "Last played %1"
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml
-msgid "From your library"
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml
-msgid "No recently played games"
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml
-#, qt-format
-msgid "%1 in 2 weeks"
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml
-#, qt-format
-msgid "%1 of %2 achievements"
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml extensions/games/Tab.qml
-msgid "Loading…"
-msgstr ""
-
-#: extensions/games/games/FocusHero.qml
-msgid "Perfect!"
-msgstr ""
-
-#: extensions/games/games/ProfileHeader.qml
-#, qt-format
-msgid "Playing %1"
-msgstr ""
-
-#: extensions/games/games/ProfileHeader.qml
-msgid "Level"
-msgstr ""
-
-#: extensions/games/games/SessionList.qml
-msgid "Recent sessions"
-msgstr ""
-
-#: extensions/games/games/SessionList.qml
-msgid "No sessions recorded yet"
-msgstr ""
-
-#: extensions/games/games/SessionList.qml
-msgid "Install Non-Steam Playtimes (Millennium) to track sessions"
-msgstr ""
-
-#: extensions/games/games/SessionList.qml services/NotifData.qml
-msgid "now"
-msgstr ""
-
-#: extensions/games/Service.qml
-msgid "Disabled — Games tab is hidden"
-msgstr ""
-
-#: extensions/games/Service.qml
-msgid "Needs API key and Steam ID"
-msgstr ""
-
-#: extensions/games/Service.qml
-msgid "Loading Steam data…"
-msgstr ""
-
-#: extensions/games/Service.qml
-#, qt-format
-msgid "Connected as %1"
-msgstr ""
-
-#: extensions/games/Service.qml
-msgid "Ready"
-msgstr ""
-
-#: extensions/games/Settings.qml
-msgid "Steam API key"
-msgstr ""
-
-#: extensions/games/Settings.qml
-msgid "From steamcommunity.com/dev/apikey"
-msgstr ""
-
-#: extensions/games/Settings.qml
-msgid "API key"
-msgstr ""
-
-#: extensions/games/Settings.qml
-msgid "Steam ID"
-msgstr ""
-
-#: extensions/games/Settings.qml
-msgid "SteamID64, vanity name, or profile URL"
-msgstr ""
-
-#: extensions/games/Settings.qml
-msgid "Steam ID or vanity"
-msgstr ""
-
-#: extensions/games/Settings.qml
-msgid "Auto refresh"
-msgstr ""
-
-#: extensions/games/Settings.qml
-msgid "Minutes between automatic Steam updates"
-msgstr ""
-
-#: extensions/games/Settings.qml
-msgid "Refresh now"
-msgstr ""
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "Playtime tracked by Millennium"
-msgstr ""
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "Non-Steam game — no Steam achievements"
-msgstr ""
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "Steam achievements are private for this profile"
-msgstr ""
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "This game has no achievements"
-msgstr ""
-
-#: extensions/games/steam/SteamAchievements.qml
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Unknown game"
-msgstr ""
-
-#: extensions/games/steam/SteamApi.qml
-msgid "Invalid Steam API response"
-msgstr ""
-
-#: extensions/games/steam/SteamApi.qml
-msgid "Steam request failed"
-msgstr ""
-
-#: extensions/games/steam/SteamApi.qml
-msgid "Could not resolve Steam vanity URL"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "No playtime"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 min"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 h %2 min"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 h"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "In-game"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Online"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Busy"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Away"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Snooze"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Looking to trade"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Looking to play"
-msgstr ""
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Offline"
-msgstr ""
-
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Steam profile not found"
-msgstr ""
-
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Could not load friend status"
-msgstr ""
-
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Friends list is private"
-msgstr ""
-
-#: extensions/games/Tab.qml
-msgid "Configure Steam"
-msgstr ""
-
-#: extensions/games/Tab.qml
-msgid "Could not load Steam data"
-msgstr ""
-
-#: extensions/games/Tab.qml
-msgid "Add your API key and Steam ID in Nexus → Extensions."
-msgstr ""
-
-#: extensions/games/Tab.qml modules/nexus/pages/ShellPage.qml
-#: build/i18n/extensions/games/manifest.json.js
-#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
-msgid "Games"
-msgstr ""
-
-#: extensions/games/Tab.qml
-msgid "in your library"
-msgstr ""
-
-#: extensions/games/Tab.qml
-msgid "Hours"
-msgstr ""
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "+%1 in 2 weeks"
-msgstr ""
-
-#: extensions/games/Tab.qml
-msgid "played in total"
-msgstr ""
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "Top: %1"
-msgstr ""
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "%1 / %2 unlocked"
-msgstr ""
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "%1 perfect games"
-msgstr ""
-
-#: extensions/games/Tab.qml
-msgid "Friends"
-msgstr ""
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "online · %1 in game"
-msgstr ""
-
-#: extensions/games/Tab.qml
-msgid "Private"
-msgstr ""
-
-#: extensions/games/Tab.qml
-msgid "No achievements unlocked yet"
-msgstr ""
-
-#: extensions/hydration/Service.qml
-#, qt-format
-msgid "%1 ml · reminder every %2 min"
-msgstr ""
-
-#: extensions/hydration/Service.qml
-msgid "Time to drink water"
-msgstr ""
-
-#: extensions/hydration/Service.qml
-#, qt-format
-msgid "%1 / %2 ml — tap an amount to log it"
-msgstr ""
-
-#: extensions/hydration/Service.qml
-#: build/i18n/extensions/hydration/manifest.json.js
-msgid "Hydration"
-msgstr ""
-
-#: extensions/hydration/Settings.qml
-msgid "Daily goal"
-msgstr ""
-
-#: extensions/hydration/Settings.qml
-msgid "Target water intake per day (ml)"
-msgstr ""
-
-#: extensions/hydration/Settings.qml
-msgid "Reminder interval"
-msgstr ""
-
-#: extensions/hydration/Settings.qml
-msgid "Minutes without a sip before a reminder"
-msgstr ""
-
-#. TRANSLATORS: %1 = preset index (1-based)
-#: extensions/hydration/Settings.qml
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-#, qt-format
-msgid "Preset %1"
-msgstr ""
-
-#: extensions/hydration/Settings.qml
-msgid "Quick-add button amount (ml)"
-msgstr ""
-
-#: extensions/hydration/Widget.qml
-#, qt-format
-msgid "%1 / %2 ml"
-msgstr ""
-
-#: extensions/tasks/Widget.qml
-#, qt-plural-format
-msgid "%n pending"
-msgid_plural "%n pending"
-msgstr[0] ""
-msgstr[1] ""
-
-#: extensions/tasks/Widget.qml
-msgid "New task"
-msgstr ""
-
-#: extensions/tasks/Widget.qml
-msgid "Nothing to do"
-msgstr ""
-
-#: extensions/tasks/Widget.qml
-msgid "All done"
-msgstr ""
-
-#: extensions/tasks/Widget.qml
-#, qt-format
-msgid "Completed (%1)"
 msgstr ""
 
 #: modules/activities/OverviewContent.qml services/Keybinds.qml
@@ -2358,6 +1939,12 @@ msgstr ""
 msgid "Scale"
 msgstr ""
 
+#. TRANSLATORS: %1 = a number
+#: modules/nexus/pages/DisplayPage.qml utils/Strings.qml
+#, qt-format
+msgid "%1%"
+msgstr ""
+
 #: modules/nexus/pages/DisplayPage.qml
 msgid "Adaptive Sync"
 msgstr ""
@@ -3268,6 +2855,12 @@ msgstr ""
 msgid "Disabled — active timers are cleared"
 msgstr ""
 
+#. TRANSLATORS: %1 = preset index (1-based)
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Preset %1"
+msgstr ""
+
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Quick timer button duration (min)"
 msgstr ""
@@ -3752,6 +3345,11 @@ msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
 msgid "Work outline"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
+msgid "Games"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
@@ -5209,6 +4807,10 @@ msgid "%1 Mbps"
 msgstr ""
 
 #: services/NotifData.qml
+msgid "now"
+msgstr ""
+
+#: services/NotifData.qml
 #, qt-format
 msgctxt "abbreviated notification age, days"
 msgid "%1d"
@@ -5599,26 +5201,6 @@ msgid "%n minute"
 msgid_plural "%n minutes"
 msgstr[0] ""
 msgstr[1] ""
-
-#: build/i18n/extensions/games/manifest.json.js
-msgid "Games (Steam)"
-msgstr ""
-
-#: build/i18n/extensions/games/manifest.json.js
-msgid "Steam library, achievements and play time in a dashboard tab"
-msgstr ""
-
-#: build/i18n/extensions/hydration/manifest.json.js
-msgid "Water intake tracker with reminders"
-msgstr ""
-
-#: build/i18n/extensions/hydration/manifest.json.js
-msgid "Off — also stops the reminders and the tracking"
-msgstr ""
-
-#: build/i18n/extensions/tasks/manifest.json.js
-msgid "Checklist: create, complete and delete tasks"
-msgstr ""
 
 #: plugin/src/Sylphrena/Config/rootnodes.cpp
 #, qt-plural-format, c-format

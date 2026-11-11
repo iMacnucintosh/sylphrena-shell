@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 15:29+0100\n"
+"POT-Creation-Date: 2026-11-11 15:36+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -90,428 +90,9 @@ msgstr "Diseño compacto desactivado"
 msgid "Hyprland settings restored"
 msgstr "Ajustes de Hyprland restaurados"
 
-#: docs/examples/extension-spike/Widget.qml extensions/tasks/Widget.qml
-#: build/i18n/extensions/tasks/manifest.json.js
+#: docs/examples/extension-spike/Widget.qml
 msgid "Tasks"
 msgstr "Tareas"
-
-#. TRANSLATORS: %1 = a number
-#: extensions/games/games/AchievementList.qml
-#: modules/nexus/pages/DisplayPage.qml utils/Strings.qml
-#, qt-format
-msgid "%1%"
-msgstr "%1%"
-
-#: extensions/games/games/AchievementList.qml
-#: extensions/games/games/FocusHero.qml extensions/games/Tab.qml
-msgid "Achievements"
-msgstr "Logros"
-
-#: extensions/games/games/AchievementList.qml
-#, qt-format
-msgid "%1 / %2"
-msgstr "%1 / %2"
-
-#: extensions/games/games/AchievementList.qml
-#, qt-format
-msgid "Locked · %1"
-msgstr "Bloqueados · %1"
-
-#: extensions/games/games/ActivityCard.qml
-#, qt-format
-msgid "Activity in %1"
-msgstr "Actividad en %1"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Sessions"
-msgstr "Sesiones"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Total"
-msgstr "Total"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Longest"
-msgstr "Más larga"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Less"
-msgstr "Menos"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "More"
-msgstr "Más"
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Dots mark achievement days. Playtime is recorded from now on."
-msgstr "Los puntos marcan días con logros. El tiempo de juego se registra a partir de ahora."
-
-#: extensions/games/games/ActivityCard.qml
-msgid "Playtime is recorded while the shell is running."
-msgstr "El tiempo de juego se registra mientras el shell está en marcha."
-
-#: extensions/games/games/FocusHero.qml
-msgid "Playing now"
-msgstr "Jugando ahora"
-
-#: extensions/games/games/FocusHero.qml
-msgid "Non-Steam"
-msgstr "No Steam"
-
-#: extensions/games/games/FocusHero.qml
-msgid "Played recently"
-msgstr "Jugado recientemente"
-
-#: extensions/games/games/FocusHero.qml
-#, qt-format
-msgid "Last played %1"
-msgstr "Última partida: %1"
-
-#: extensions/games/games/FocusHero.qml
-msgid "From your library"
-msgstr "De tu biblioteca"
-
-#: extensions/games/games/FocusHero.qml
-msgid "No recently played games"
-msgstr "Sin juegos recientes"
-
-#: extensions/games/games/FocusHero.qml
-#, qt-format
-msgid "%1 in 2 weeks"
-msgstr "%1 en 2 semanas"
-
-#: extensions/games/games/FocusHero.qml
-#, qt-format
-msgid "%1 of %2 achievements"
-msgstr "%1 de %2 logros"
-
-#: extensions/games/games/FocusHero.qml extensions/games/Tab.qml
-msgid "Loading…"
-msgstr "Cargando…"
-
-#: extensions/games/games/FocusHero.qml
-msgid "Perfect!"
-msgstr "¡Perfecto!"
-
-#: extensions/games/games/ProfileHeader.qml
-#, qt-format
-msgid "Playing %1"
-msgstr "Jugando a %1"
-
-#: extensions/games/games/ProfileHeader.qml
-msgid "Level"
-msgstr "Nivel"
-
-#: extensions/games/games/SessionList.qml
-msgid "Recent sessions"
-msgstr "Sesiones recientes"
-
-#: extensions/games/games/SessionList.qml
-msgid "No sessions recorded yet"
-msgstr "Aún no hay sesiones registradas"
-
-#: extensions/games/games/SessionList.qml
-msgid "Install Non-Steam Playtimes (Millennium) to track sessions"
-msgstr "Instala Non-Steam Playtimes (Millennium) para registrar sesiones"
-
-#: extensions/games/games/SessionList.qml services/NotifData.qml
-msgid "now"
-msgstr "ahora"
-
-#: extensions/games/Service.qml
-msgid "Disabled — Games tab is hidden"
-msgstr "Desactivado: la pestaña Juegos está oculta"
-
-#: extensions/games/Service.qml
-msgid "Needs API key and Steam ID"
-msgstr "Necesita API key y Steam ID"
-
-#: extensions/games/Service.qml
-msgid "Loading Steam data…"
-msgstr "Cargando datos de Steam…"
-
-#: extensions/games/Service.qml
-#, qt-format
-msgid "Connected as %1"
-msgstr "Conectado como %1"
-
-#: extensions/games/Service.qml
-msgid "Ready"
-msgstr "Listo"
-
-#: extensions/games/Settings.qml
-msgid "Steam API key"
-msgstr "API key de Steam"
-
-#: extensions/games/Settings.qml
-msgid "From steamcommunity.com/dev/apikey"
-msgstr "En steamcommunity.com/dev/apikey"
-
-#: extensions/games/Settings.qml
-msgid "API key"
-msgstr "API key"
-
-#: extensions/games/Settings.qml
-msgid "Steam ID"
-msgstr "Steam ID"
-
-#: extensions/games/Settings.qml
-msgid "SteamID64, vanity name, or profile URL"
-msgstr "SteamID64, vanity o URL de perfil"
-
-#: extensions/games/Settings.qml
-msgid "Steam ID or vanity"
-msgstr "Steam ID o vanity"
-
-#: extensions/games/Settings.qml
-msgid "Auto refresh"
-msgstr "Actualización automática"
-
-#: extensions/games/Settings.qml
-msgid "Minutes between automatic Steam updates"
-msgstr "Minutos entre actualizaciones automáticas de Steam"
-
-#: extensions/games/Settings.qml
-msgid "Refresh now"
-msgstr "Actualizar ahora"
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "Playtime tracked by Millennium"
-msgstr "Tiempo de juego registrado por Millennium"
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "Non-Steam game — no Steam achievements"
-msgstr "Juego no Steam — sin logros de Steam"
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "Steam achievements are private for this profile"
-msgstr "Los logros de Steam son privados en este perfil"
-
-#: extensions/games/steam/SteamAchievements.qml
-msgid "This game has no achievements"
-msgstr "Este juego no tiene logros"
-
-#: extensions/games/steam/SteamAchievements.qml
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Unknown game"
-msgstr "Juego desconocido"
-
-#: extensions/games/steam/SteamApi.qml
-msgid "Invalid Steam API response"
-msgstr "Respuesta inválida de la API de Steam"
-
-#: extensions/games/steam/SteamApi.qml
-msgid "Steam request failed"
-msgstr "Falló la petición a Steam"
-
-#: extensions/games/steam/SteamApi.qml
-msgid "Could not resolve Steam vanity URL"
-msgstr "No se pudo resolver el vanity de Steam"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "No playtime"
-msgstr "Sin tiempo de juego"
-
-#: extensions/games/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 min"
-msgstr "%1 min"
-
-#: extensions/games/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 h %2 min"
-msgstr "%1 h %2 min"
-
-#: extensions/games/steam/SteamFormat.qml
-#, qt-format
-msgid "%1 h"
-msgstr "%1 h"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "In-game"
-msgstr "En partida"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Online"
-msgstr "En línea"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Busy"
-msgstr "Ocupado"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Away"
-msgstr "Ausente"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Snooze"
-msgstr "Descansando"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Looking to trade"
-msgstr "Buscando intercambio"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Looking to play"
-msgstr "Buscando partida"
-
-#: extensions/games/steam/SteamFormat.qml
-msgid "Offline"
-msgstr "Desconectado"
-
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Steam profile not found"
-msgstr "Perfil de Steam no encontrado"
-
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Could not load friend status"
-msgstr "No se pudo cargar el estado de amigos"
-
-#: extensions/games/steam/SteamLibrary.qml
-msgid "Friends list is private"
-msgstr "La lista de amigos es privada"
-
-#: extensions/games/Tab.qml
-msgid "Configure Steam"
-msgstr "Configura Steam"
-
-#: extensions/games/Tab.qml
-msgid "Could not load Steam data"
-msgstr "No se pudieron cargar los datos de Steam"
-
-#: extensions/games/Tab.qml
-msgid "Add your API key and Steam ID in Nexus → Extensions."
-msgstr "Añade tu API key y Steam ID en Nexus → Extensiones."
-
-#: extensions/games/Tab.qml modules/nexus/pages/ShellPage.qml
-#: build/i18n/extensions/games/manifest.json.js
-#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
-msgid "Games"
-msgstr "Juegos"
-
-#: extensions/games/Tab.qml
-msgid "in your library"
-msgstr "en tu biblioteca"
-
-#: extensions/games/Tab.qml
-msgid "Hours"
-msgstr "Horas"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "+%1 in 2 weeks"
-msgstr "+%1 en 2 semanas"
-
-#: extensions/games/Tab.qml
-msgid "played in total"
-msgstr "jugadas en total"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "Top: %1"
-msgstr "Top: %1"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "%1 / %2 unlocked"
-msgstr "%1 de %2"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "%1 perfect games"
-msgstr "Al 100 %: %1"
-
-#: extensions/games/Tab.qml
-msgid "Friends"
-msgstr "Amigos"
-
-#: extensions/games/Tab.qml
-#, qt-format
-msgid "online · %1 in game"
-msgstr "en línea · %1 jugando"
-
-#: extensions/games/Tab.qml
-msgid "Private"
-msgstr "Privado"
-
-#: extensions/games/Tab.qml
-msgid "No achievements unlocked yet"
-msgstr "Aún no has desbloqueado logros"
-
-#: extensions/hydration/Service.qml
-#, qt-format
-msgid "%1 ml · reminder every %2 min"
-msgstr "%1 ml · recordatorio cada %2 min"
-
-#: extensions/hydration/Service.qml
-msgid "Time to drink water"
-msgstr "Hora de beber agua"
-
-#: extensions/hydration/Service.qml
-#, qt-format
-msgid "%1 / %2 ml — tap an amount to log it"
-msgstr "%1 / %2 ml — toca una cantidad para registrarla"
-
-#: extensions/hydration/Service.qml
-#: build/i18n/extensions/hydration/manifest.json.js
-msgid "Hydration"
-msgstr "Hidratación"
-
-#: extensions/hydration/Settings.qml
-msgid "Daily goal"
-msgstr "Meta diaria"
-
-#: extensions/hydration/Settings.qml
-msgid "Target water intake per day (ml)"
-msgstr "Cantidad de agua objetivo al día (ml)"
-
-#: extensions/hydration/Settings.qml
-msgid "Reminder interval"
-msgstr "Intervalo de recordatorio"
-
-#: extensions/hydration/Settings.qml
-msgid "Minutes without a sip before a reminder"
-msgstr "Minutos sin un trago antes del recordatorio"
-
-#. TRANSLATORS: %1 = preset index (1-based)
-#: extensions/hydration/Settings.qml
-#: modules/nexus/pages/panels/taskbar/BarClock.qml
-#, qt-format
-msgid "Preset %1"
-msgstr "Preajuste %1"
-
-#: extensions/hydration/Settings.qml
-msgid "Quick-add button amount (ml)"
-msgstr "Cantidad del botón de suma rápida (ml)"
-
-#: extensions/hydration/Widget.qml
-#, qt-format
-msgid "%1 / %2 ml"
-msgstr "%1 / %2 ml"
-
-#: extensions/tasks/Widget.qml
-#, qt-plural-format
-msgid "%n pending"
-msgid_plural "%n pending"
-msgstr[0] "%n pendiente"
-msgstr[1] "%n pendientes"
-
-#: extensions/tasks/Widget.qml
-msgid "New task"
-msgstr "Nueva tarea"
-
-#: extensions/tasks/Widget.qml
-msgid "Nothing to do"
-msgstr "Nada pendiente"
-
-#: extensions/tasks/Widget.qml
-msgid "All done"
-msgstr "Todo listo"
-
-#: extensions/tasks/Widget.qml
-#, qt-format
-msgid "Completed (%1)"
-msgstr "Completadas (%1)"
 
 #: modules/activities/OverviewContent.qml services/Keybinds.qml
 msgid "Activities overview"
@@ -2359,6 +1940,12 @@ msgstr "Frecuencia de actualización"
 msgid "Scale"
 msgstr "Escala"
 
+#. TRANSLATORS: %1 = a number
+#: modules/nexus/pages/DisplayPage.qml utils/Strings.qml
+#, qt-format
+msgid "%1%"
+msgstr "%1%"
+
 #: modules/nexus/pages/DisplayPage.qml
 msgid "Adaptive Sync"
 msgstr "Sincronización adaptativa"
@@ -3269,6 +2856,12 @@ msgstr "Temporizadores rápidos"
 msgid "Disabled — active timers are cleared"
 msgstr "Desactivado: se cancelan los temporizadores activos"
 
+#. TRANSLATORS: %1 = preset index (1-based)
+#: modules/nexus/pages/panels/taskbar/BarClock.qml
+#, qt-format
+msgid "Preset %1"
+msgstr "Preajuste %1"
+
 #: modules/nexus/pages/panels/taskbar/BarClock.qml
 msgid "Quick timer button duration (min)"
 msgstr "Duración del botón de temporizador rápido (min)"
@@ -3754,6 +3347,11 @@ msgstr "Trabajo"
 #: modules/nexus/pages/ShellPage.qml
 msgid "Work outline"
 msgstr "Trabajo (contorno)"
+
+#: modules/nexus/pages/ShellPage.qml
+#: plugin/src/Sylphrena/Config/activitiesconfig.hpp
+msgid "Games"
+msgstr "Juegos"
 
 #: modules/nexus/pages/ShellPage.qml
 msgid "Controller"
@@ -5210,6 +4808,10 @@ msgid "%1 Mbps"
 msgstr "%1 Mbps"
 
 #: services/NotifData.qml
+msgid "now"
+msgstr "ahora"
+
+#: services/NotifData.qml
 #, qt-format
 msgctxt "abbreviated notification age, days"
 msgid "%1d"
@@ -5601,26 +5203,6 @@ msgid_plural "%n minutes"
 msgstr[0] "%n minuto"
 msgstr[1] "%n minutos"
 
-#: build/i18n/extensions/games/manifest.json.js
-msgid "Games (Steam)"
-msgstr "Juegos (Steam)"
-
-#: build/i18n/extensions/games/manifest.json.js
-msgid "Steam library, achievements and play time in a dashboard tab"
-msgstr "Biblioteca de Steam, logros y tiempo de juego en una pestaña del dashboard"
-
-#: build/i18n/extensions/hydration/manifest.json.js
-msgid "Water intake tracker with reminders"
-msgstr "Control de agua con recordatorios"
-
-#: build/i18n/extensions/hydration/manifest.json.js
-msgid "Off — also stops the reminders and the tracking"
-msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
-
-#: build/i18n/extensions/tasks/manifest.json.js
-msgid "Checklist: create, complete and delete tasks"
-msgstr "Lista de tareas: crea, completa y elimina"
-
 #: plugin/src/Sylphrena/Config/rootnodes.cpp
 #, c-format, qt-plural-format
 msgid "Config loaded with %n issue."
@@ -5997,6 +5579,320 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "Achievements"
+#~ msgstr "Logros"
+
+#, qt-format
+#~ msgid "%1 / %2"
+#~ msgstr "%1 / %2"
+
+#, qt-format
+#~ msgid "Locked · %1"
+#~ msgstr "Bloqueados · %1"
+
+#, qt-format
+#~ msgid "Activity in %1"
+#~ msgstr "Actividad en %1"
+
+#~ msgid "Sessions"
+#~ msgstr "Sesiones"
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgid "Longest"
+#~ msgstr "Más larga"
+
+#~ msgid "Less"
+#~ msgstr "Menos"
+
+#~ msgid "More"
+#~ msgstr "Más"
+
+#~ msgid "Dots mark achievement days. Playtime is recorded from now on."
+#~ msgstr "Los puntos marcan días con logros. El tiempo de juego se registra a partir de ahora."
+
+#~ msgid "Playtime is recorded while the shell is running."
+#~ msgstr "El tiempo de juego se registra mientras el shell está en marcha."
+
+#~ msgid "Playing now"
+#~ msgstr "Jugando ahora"
+
+#~ msgid "Non-Steam"
+#~ msgstr "No Steam"
+
+#~ msgid "Played recently"
+#~ msgstr "Jugado recientemente"
+
+#, qt-format
+#~ msgid "Last played %1"
+#~ msgstr "Última partida: %1"
+
+#~ msgid "From your library"
+#~ msgstr "De tu biblioteca"
+
+#~ msgid "No recently played games"
+#~ msgstr "Sin juegos recientes"
+
+#, qt-format
+#~ msgid "%1 in 2 weeks"
+#~ msgstr "%1 en 2 semanas"
+
+#, qt-format
+#~ msgid "%1 of %2 achievements"
+#~ msgstr "%1 de %2 logros"
+
+#~ msgid "Loading…"
+#~ msgstr "Cargando…"
+
+#~ msgid "Perfect!"
+#~ msgstr "¡Perfecto!"
+
+#, qt-format
+#~ msgid "Playing %1"
+#~ msgstr "Jugando a %1"
+
+#~ msgid "Level"
+#~ msgstr "Nivel"
+
+#~ msgid "Recent sessions"
+#~ msgstr "Sesiones recientes"
+
+#~ msgid "No sessions recorded yet"
+#~ msgstr "Aún no hay sesiones registradas"
+
+#~ msgid "Install Non-Steam Playtimes (Millennium) to track sessions"
+#~ msgstr "Instala Non-Steam Playtimes (Millennium) para registrar sesiones"
+
+#~ msgid "Disabled — Games tab is hidden"
+#~ msgstr "Desactivado: la pestaña Juegos está oculta"
+
+#~ msgid "Needs API key and Steam ID"
+#~ msgstr "Necesita API key y Steam ID"
+
+#~ msgid "Loading Steam data…"
+#~ msgstr "Cargando datos de Steam…"
+
+#, qt-format
+#~ msgid "Connected as %1"
+#~ msgstr "Conectado como %1"
+
+#~ msgid "Ready"
+#~ msgstr "Listo"
+
+#~ msgid "Steam API key"
+#~ msgstr "API key de Steam"
+
+#~ msgid "From steamcommunity.com/dev/apikey"
+#~ msgstr "En steamcommunity.com/dev/apikey"
+
+#~ msgid "API key"
+#~ msgstr "API key"
+
+#~ msgid "Steam ID"
+#~ msgstr "Steam ID"
+
+#~ msgid "SteamID64, vanity name, or profile URL"
+#~ msgstr "SteamID64, vanity o URL de perfil"
+
+#~ msgid "Steam ID or vanity"
+#~ msgstr "Steam ID o vanity"
+
+#~ msgid "Auto refresh"
+#~ msgstr "Actualización automática"
+
+#~ msgid "Minutes between automatic Steam updates"
+#~ msgstr "Minutos entre actualizaciones automáticas de Steam"
+
+#~ msgid "Refresh now"
+#~ msgstr "Actualizar ahora"
+
+#~ msgid "Playtime tracked by Millennium"
+#~ msgstr "Tiempo de juego registrado por Millennium"
+
+#~ msgid "Non-Steam game — no Steam achievements"
+#~ msgstr "Juego no Steam — sin logros de Steam"
+
+#~ msgid "Steam achievements are private for this profile"
+#~ msgstr "Los logros de Steam son privados en este perfil"
+
+#~ msgid "This game has no achievements"
+#~ msgstr "Este juego no tiene logros"
+
+#~ msgid "Unknown game"
+#~ msgstr "Juego desconocido"
+
+#~ msgid "Invalid Steam API response"
+#~ msgstr "Respuesta inválida de la API de Steam"
+
+#~ msgid "Steam request failed"
+#~ msgstr "Falló la petición a Steam"
+
+#~ msgid "Could not resolve Steam vanity URL"
+#~ msgstr "No se pudo resolver el vanity de Steam"
+
+#~ msgid "No playtime"
+#~ msgstr "Sin tiempo de juego"
+
+#, qt-format
+#~ msgid "%1 min"
+#~ msgstr "%1 min"
+
+#, qt-format
+#~ msgid "%1 h %2 min"
+#~ msgstr "%1 h %2 min"
+
+#, qt-format
+#~ msgid "%1 h"
+#~ msgstr "%1 h"
+
+#~ msgid "In-game"
+#~ msgstr "En partida"
+
+#~ msgid "Online"
+#~ msgstr "En línea"
+
+#~ msgid "Busy"
+#~ msgstr "Ocupado"
+
+#~ msgid "Away"
+#~ msgstr "Ausente"
+
+#~ msgid "Snooze"
+#~ msgstr "Descansando"
+
+#~ msgid "Looking to trade"
+#~ msgstr "Buscando intercambio"
+
+#~ msgid "Looking to play"
+#~ msgstr "Buscando partida"
+
+#~ msgid "Offline"
+#~ msgstr "Desconectado"
+
+#~ msgid "Steam profile not found"
+#~ msgstr "Perfil de Steam no encontrado"
+
+#~ msgid "Could not load friend status"
+#~ msgstr "No se pudo cargar el estado de amigos"
+
+#~ msgid "Friends list is private"
+#~ msgstr "La lista de amigos es privada"
+
+#~ msgid "Configure Steam"
+#~ msgstr "Configura Steam"
+
+#~ msgid "Could not load Steam data"
+#~ msgstr "No se pudieron cargar los datos de Steam"
+
+#~ msgid "Add your API key and Steam ID in Nexus → Extensions."
+#~ msgstr "Añade tu API key y Steam ID en Nexus → Extensiones."
+
+#~ msgid "in your library"
+#~ msgstr "en tu biblioteca"
+
+#~ msgid "Hours"
+#~ msgstr "Horas"
+
+#, qt-format
+#~ msgid "+%1 in 2 weeks"
+#~ msgstr "+%1 en 2 semanas"
+
+#~ msgid "played in total"
+#~ msgstr "jugadas en total"
+
+#, qt-format
+#~ msgid "Top: %1"
+#~ msgstr "Top: %1"
+
+#, qt-format
+#~ msgid "%1 / %2 unlocked"
+#~ msgstr "%1 de %2"
+
+#, qt-format
+#~ msgid "%1 perfect games"
+#~ msgstr "Al 100 %: %1"
+
+#~ msgid "Friends"
+#~ msgstr "Amigos"
+
+#, qt-format
+#~ msgid "online · %1 in game"
+#~ msgstr "en línea · %1 jugando"
+
+#~ msgid "Private"
+#~ msgstr "Privado"
+
+#~ msgid "No achievements unlocked yet"
+#~ msgstr "Aún no has desbloqueado logros"
+
+#, qt-format
+#~ msgid "%1 ml · reminder every %2 min"
+#~ msgstr "%1 ml · recordatorio cada %2 min"
+
+#~ msgid "Time to drink water"
+#~ msgstr "Hora de beber agua"
+
+#, qt-format
+#~ msgid "%1 / %2 ml — tap an amount to log it"
+#~ msgstr "%1 / %2 ml — toca una cantidad para registrarla"
+
+#~ msgid "Hydration"
+#~ msgstr "Hidratación"
+
+#~ msgid "Daily goal"
+#~ msgstr "Meta diaria"
+
+#~ msgid "Target water intake per day (ml)"
+#~ msgstr "Cantidad de agua objetivo al día (ml)"
+
+#~ msgid "Reminder interval"
+#~ msgstr "Intervalo de recordatorio"
+
+#~ msgid "Minutes without a sip before a reminder"
+#~ msgstr "Minutos sin un trago antes del recordatorio"
+
+#~ msgid "Quick-add button amount (ml)"
+#~ msgstr "Cantidad del botón de suma rápida (ml)"
+
+#, qt-format
+#~ msgid "%1 / %2 ml"
+#~ msgstr "%1 / %2 ml"
+
+#, qt-plural-format
+#~ msgid "%n pending"
+#~ msgid_plural "%n pending"
+#~ msgstr[0] "%n pendiente"
+#~ msgstr[1] "%n pendientes"
+
+#~ msgid "New task"
+#~ msgstr "Nueva tarea"
+
+#~ msgid "Nothing to do"
+#~ msgstr "Nada pendiente"
+
+#~ msgid "All done"
+#~ msgstr "Todo listo"
+
+#, qt-format
+#~ msgid "Completed (%1)"
+#~ msgstr "Completadas (%1)"
+
+#~ msgid "Games (Steam)"
+#~ msgstr "Juegos (Steam)"
+
+#~ msgid "Steam library, achievements and play time in a dashboard tab"
+#~ msgstr "Biblioteca de Steam, logros y tiempo de juego en una pestaña del dashboard"
+
+#~ msgid "Water intake tracker with reminders"
+#~ msgstr "Control de agua con recordatorios"
+
+#~ msgid "Off — also stops the reminders and the tracking"
+#~ msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
+
+#~ msgid "Checklist: create, complete and delete tasks"
+#~ msgstr "Lista de tareas: crea, completa y elimina"
 
 #~ msgid "Removing…"
 #~ msgstr "Eliminando…"
