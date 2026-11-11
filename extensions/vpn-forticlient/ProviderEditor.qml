@@ -3,10 +3,12 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Templates as T
+import Sylphrena.Components
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
 import qs.components.controls
+import qs.services
 
 // Editor of the FortiClient connection (~/.config/openfortivpn/config), shown in Nexus → Network
 // when editing this extension's VPN provider (manifest `vpnProvider.editor`).
@@ -145,25 +147,34 @@ ColumnLayout {
 
     RowLayout {
         Layout.fillWidth: true
-        Layout.topMargin: Tokens.spacing.small
-        spacing: Tokens.spacing.medium
+        Layout.topMargin: Tokens.spacing.medium - root.spacing
+        spacing: Tokens.spacing.small
 
-        TextButton {
+        Item {
             Layout.fillWidth: true
-            Layout.minimumHeight: Tokens.font.body.medium.pointSize + Tokens.padding.medium * 2
-            inactiveColour: Colours.palette.m3secondaryContainer
-            inactiveOnColour: Colours.palette.m3onSecondaryContainer
-            text: Tr.trCtx("Cancel", "button")
-            onClicked: root.close()
         }
 
-        TextButton {
-            Layout.fillWidth: true
-            Layout.minimumHeight: Tokens.font.body.medium.pointSize + Tokens.padding.medium * 2
-            inactiveColour: Colours.palette.m3primary
-            inactiveOnColour: Colours.palette.m3onPrimary
-            text: Tr.trCtx("Save", "button")
-            onClicked: root.save()
+        ButtonRow {
+            spacing: parent.spacing
+
+            TextButton {
+                isRound: true
+                shapeMorph: true
+                horizontalPadding: Tokens.padding.extraLarge
+                verticalPadding: Tokens.padding.medium
+                type: TextButton.Tonal
+                text: Tr.trCtx("Cancel", "button")
+                onClicked: root.close()
+            }
+
+            TextButton {
+                isRound: true
+                shapeMorph: true
+                horizontalPadding: Tokens.padding.extraLarge
+                verticalPadding: Tokens.padding.medium
+                text: Tr.trCtx("Save", "button")
+                onClicked: root.save()
+            }
         }
     }
 }
