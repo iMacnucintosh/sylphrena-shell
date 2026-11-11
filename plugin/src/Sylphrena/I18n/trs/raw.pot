@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 15:04+0100\n"
+"POT-Creation-Date: 2026-11-11 15:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -817,8 +817,6 @@ msgstr ""
 
 #: modules/bar/popouts/UpdatesPassword.qml
 #: modules/bar/popouts/WirelessPassword.qml
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
 msgid "Password"
@@ -827,8 +825,6 @@ msgstr ""
 #: modules/bar/popouts/UpdatesPassword.qml
 #: modules/bar/popouts/WirelessPassword.qml
 #: modules/nexus/common/DialogRowButton.qml
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/ExtensionsPage.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
@@ -1737,33 +1733,12 @@ msgid "Primary DNS"
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
-msgid "Removing…"
+msgid "Its system components are missing: install the extension again from Things."
 msgstr ""
 
 #: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/ExtensionsPage.qml
-msgid "Installing…"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Installation incomplete: it needs your password to finish"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Complete"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Delete this extension?"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-msgid "Finish the installation?"
-msgstr ""
-
-#: modules/nexus/common/ExtensionCard.qml
-#: modules/nexus/pages/network/AddVpnPage.qml
-msgid "Delete"
+msgid "Open Things"
 msgstr ""
 
 #: modules/nexus/common/KeybindRow.qml
@@ -2422,29 +2397,6 @@ msgid "Session toggle for zero gaps/rounding lives in Panels → Utilities"
 msgstr ""
 
 #: modules/nexus/pages/ExtensionsPage.qml
-msgid "Install from zip"
-msgstr ""
-
-#: modules/nexus/pages/ExtensionsPage.qml
-#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
-msgid "Browse"
-msgstr ""
-
-#. TRANSLATORS: %1 = extension name
-#: modules/nexus/pages/ExtensionsPage.qml
-#, qt-format
-msgid "Install %1?"
-msgstr ""
-
-#: modules/nexus/pages/ExtensionsPage.qml
-msgid "Install"
-msgstr ""
-
-#: modules/nexus/pages/ExtensionsPage.qml
-msgid "Installed"
-msgstr ""
-
-#: modules/nexus/pages/ExtensionsPage.qml
 msgid "Find more in Things"
 msgstr ""
 
@@ -2453,15 +2405,11 @@ msgid "Things is not installed"
 msgstr ""
 
 #: modules/nexus/pages/ExtensionsPage.qml
-msgid "Open Things"
+msgid "Installed"
 msgstr ""
 
 #: modules/nexus/pages/ExtensionsPage.qml
-msgid "Select an extension package"
-msgstr ""
-
-#: modules/nexus/pages/ExtensionsPage.qml
-msgid "Extension packages (.zip)"
+msgid "No extensions installed yet."
 msgstr ""
 
 #: modules/nexus/pages/KeybindsPage.qml
@@ -2740,6 +2688,10 @@ msgstr ""
 
 #: modules/nexus/pages/network/AddVpnPage.qml
 msgid "Disconnect command"
+msgstr ""
+
+#: modules/nexus/pages/network/AddVpnPage.qml
+msgid "Delete"
 msgstr ""
 
 #: modules/nexus/pages/network/AddVpnPage.qml
@@ -4221,6 +4173,10 @@ msgid "How the wallpaper colours are interpreted."
 msgstr ""
 
 #: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
+msgid "Browse"
+msgstr ""
+
+#: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
 msgid "Select an image"
 msgstr ""
 
@@ -4854,47 +4810,6 @@ msgstr ""
 msgid "Needs Sylphrena %1"
 msgstr ""
 
-#: services/Extensions.qml services/VPN.qml
-msgid "Unknown error"
-msgstr ""
-
-#: services/Extensions.qml
-msgid "Extension not removed"
-msgstr ""
-
-#: services/Extensions.qml
-msgid "Extension not installed"
-msgstr ""
-
-#: services/Extensions.qml
-msgid "Extension removed"
-msgstr ""
-
-#: services/Extensions.qml
-msgid "Extension updated"
-msgstr ""
-
-#: services/Extensions.qml
-msgid "Extension installed"
-msgstr ""
-
-#: services/Extensions.qml services/Updates.qml
-msgid "Incorrect password"
-msgstr ""
-
-#: services/Extensions.qml services/Updates.qml
-msgid "Too many failed attempts. Wait a minute and try again."
-msgstr ""
-
-#: services/Extensions.qml
-#, qt-format
-msgid "Failed (code %1)"
-msgstr ""
-
-#: services/Extensions.qml
-msgid "Installation incomplete"
-msgstr ""
-
 #: services/Hypr.qml
 msgctxt "keyboard layout"
 msgid "Unknown"
@@ -5384,6 +5299,14 @@ msgid "Update cancelled."
 msgstr ""
 
 #: services/Updates.qml
+msgid "Too many failed attempts. Wait a minute and try again."
+msgstr ""
+
+#: services/Updates.qml
+msgid "Incorrect password"
+msgstr ""
+
+#: services/Updates.qml
 #, qt-format
 msgid "Authentication failed: %1"
 msgstr ""
@@ -5540,6 +5463,10 @@ msgstr ""
 #, qt-format
 msgctxt "vpn name and reason"
 msgid "%1: %2"
+msgstr ""
+
+#: services/VPN.qml
+msgid "Unknown error"
 msgstr ""
 
 #: services/VPN.qml

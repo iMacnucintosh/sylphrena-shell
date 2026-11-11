@@ -8,12 +8,10 @@ import qs.components
 import qs.components.controls
 import qs.services
 
-// One extension in a Nexus list: icon, name, status line, enable switch and, when the extension
-// contributes `settings`, an expandable area with its Settings.qml. Extensions installed from a zip
-// can be deleted (asking for the password when they installed something as root, which goes with
-// them). If that root part is missing or out of date (a failed install), "Installation incomplete"
-// offers to complete it. Nothing here is specific to a given extension: it all comes from the
-// manifest and the extension's service.
+// One extension in a Nexus list: icon, name, what it is (the manifest description), enable switch and,
+// when the extension contributes `settings`, an expandable area with its Settings.qml. Installing,
+// updating and removing extensions is Things' job: here an extension is only turned on and off and
+// configured. Nothing here is specific to a given extension: it all comes from the manifest.
 ConnectedRect {
     id: root
 
@@ -26,33 +24,10 @@ ConnectedRect {
     readonly property bool hasSettings: !!manifest.contributes?.settings && active && !!service
     property bool settingsOpen: false
 
-    readonly property bool hasSystem: Extensions.hasSystem(manifest)
-    // "installed" | "outdated" | "missing" ("" while checking)
-    readonly property string systemState: Extensions.systemState[manifest.id] ?? ""
-    readonly property bool systemBusy: Extensions.systemBusyId === manifest.id
-    readonly property string systemError: Extensions.systemErrorId === manifest.id ? Extensions.systemError : ""
-    // The root part is missing or older than the extension's: offer to complete the install
-    readonly property bool incomplete: hasSystem && ["missing", "outdated"].includes(systemState)
-    // Installed by the user (from a zip): it can be deleted from here
-    readonly property bool removable: Extensions.isUserInstalled(manifest.id)
-    // "" | "remove" | "complete": what the confirmation row below is for
-    property string pendingAction: ""
-    readonly property bool needsPassword: root.pendingAction === "complete" || (root.pendingAction === "remove" && Extensions.needsSystemRemoval(root.manifest.id))
-
-    function cancelAction(): void {
-        passField.text = "";
-        root.pendingAction = "";
-    }
-
-    function confirmAction(): void {
-        if (root.needsPassword && passField.text.length === 0)
-            return;
-        if (root.pendingAction === "remove")
-            Extensions.removeExtension(root.manifest.id, passField.text);
-        else if (root.pendingAction === "complete")
-            Extensions.runSystem(root.manifest.id, "install", passField.text);
-        root.cancelAction();
-    }
+    // Its system pieces (a helper, a package) are not there: it cannot be enabled until Things installs them
+    readonly property bool needsSystem: Extensions.hasSystem(manifest) && !Extensions.systemReady(manifest.id)
+    // Why it is not running (e.g. it needs a newer Sylphrena), when that is the case
+    readonly property string problem: Extensions.loaded.find(e => e.id === manifest.id)?.error || Extensions.incompatibility(manifest)
 
     Layout.fillWidth: true
     implicitHeight: col.implicitHeight + Tokens.padding.medium * 2
@@ -112,23 +87,10 @@ ConnectedRect {
                 onClicked: root.settingsOpen = !root.settingsOpen
             }
 
-            IconButton {
-                visible: root.removable && root.pendingAction === ""
-                isRound: true
-                type: IconButton.Text
-                icon: "delete"
-                padding: Tokens.padding.small
-                Layout.alignment: Qt.AlignVCenter
-                onClicked: {
-                    root.pendingAction = "remove";
-                    Qt.callLater(() => passField.forceActiveFocus());
-                }
-            }
-
             StyledSwitch {
                 Layout.alignment: Qt.AlignVCenter
-                // Installing comes first; turning it off is always possible
-                disabled: !root.active && root.hasSystem && !Extensions.systemReady(root.manifest.id)
+                // Installing its system pieces comes first (in Things); turning it off is always possible
+                disabled: !root.active && root.needsSystem
                 checked: root.active
                 onToggled: {
                     Extensions.setEnabled(root.manifest.id, checked);
@@ -137,11 +99,11 @@ ConnectedRect {
             }
         }
 
-        // ---- Installation incomplete (its root part failed or is out of date) ----
+        // It cannot run here: needs a newer Sylphrena, or its system pieces are missing
         RowLayout {
             Layout.fillWidth: true
-            visible: root.incomplete || root.systemBusy
-            spacing: Tokens.spacing.medium
+            visible: root.problem.length > 0 || root.needsSystem
+            spacing: Tokens.spacing.small
 
             MaterialIcon {
                 Layout.alignment: Qt.AlignVCenter
@@ -152,88 +114,28 @@ ConnectedRect {
 
             StyledText {
                 Layout.fillWidth: true
-                text: root.systemBusy ? (Extensions.systemAction === "uninstall" ? Tr.tr("Removing…") : Tr.tr("Installing…")) : Tr.tr("Installation incomplete: it needs your password to finish")
-                font: Tokens.font.label.medium
+                text: root.problem.length > 0 ? root.problem : Tr.tr("Its system components are missing: install the extension again from Things.")
+                color: Colours.palette.m3error
+                font: Tokens.font.label.small
                 wrapMode: Text.WordWrap
             }
 
             TextButton {
+                visible: root.needsSystem && root.problem.length === 0
                 Layout.alignment: Qt.AlignVCenter
-                visible: !root.systemBusy && root.pendingAction === ""
                 isRound: true
+                type: TextButton.Tonal
                 horizontalPadding: Tokens.padding.large
                 verticalPadding: Tokens.padding.small
-                text: Tr.tr("Complete")
-                onClicked: {
-                    root.pendingAction = "complete";
-                    Qt.callLater(() => passField.forceActiveFocus());
-                }
+                disabled: !Companions.isInstalled("things")
+                text: Tr.tr("Open Things")
+                onClicked: Companions.launch("things")
             }
-        }
-
-        // ---- Confirmation (delete / complete): question and buttons, the password below when needed --
-        ColumnLayout {
-            Layout.fillWidth: true
-            visible: root.pendingAction !== ""
-            spacing: Tokens.spacing.medium
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Tokens.spacing.small
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: root.pendingAction === "remove" ? Tr.tr("Delete this extension?") : Tr.tr("Finish the installation?")
-                    font: Tokens.font.body.small
-                    elide: Text.ElideRight
-                }
-
-                TextButton {
-                    isRound: true
-                    type: TextButton.Tonal
-                    horizontalPadding: Tokens.padding.large
-                    verticalPadding: Tokens.padding.small
-                    text: Tr.trCtx("Cancel", "button")
-                    onClicked: root.cancelAction()
-                }
-
-                TextButton {
-                    isRound: true
-                    horizontalPadding: Tokens.padding.large
-                    verticalPadding: Tokens.padding.small
-                    disabled: Extensions.zipBusy || (root.needsPassword && passField.text.length === 0)
-                    inactiveColour: root.pendingAction === "remove" ? Colours.palette.m3error : Colours.palette.m3primary
-                    inactiveOnColour: root.pendingAction === "remove" ? Colours.palette.m3onError : Colours.palette.m3onPrimary
-                    text: root.pendingAction === "remove" ? Tr.tr("Delete") : Tr.tr("Complete")
-                    onClicked: root.confirmAction()
-                }
-            }
-
-            StyledTextField {
-                id: passField
-
-                Layout.fillWidth: true
-                visible: root.needsPassword
-                placeholderText: Tr.tr("Password")
-                leadingIcon: "key"
-                echoMode: TextInput.Password
-                onAccepted: root.confirmAction()
-                Keys.onEscapePressed: root.cancelAction()
-            }
-        }
-
-        StyledText {
-            Layout.fillWidth: true
-            visible: root.systemError.length > 0
-            text: root.systemError
-            color: Colours.palette.m3error
-            font: Tokens.font.label.small
-            wrapMode: Text.WordWrap
         }
 
         Loader {
             Layout.fillWidth: true
-            active: root.hasSettings && root.settingsOpen && root.pendingAction === ""
+            active: root.hasSettings && root.settingsOpen
             visible: active
             sourceComponent: ExtensionSlot {
                 entry: Extensions.settingsEntry(root.manifest.id)
