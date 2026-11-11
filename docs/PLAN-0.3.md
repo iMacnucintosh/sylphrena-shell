@@ -95,7 +95,8 @@ Pendiente para cerrar la fase (depende del usuario): publicar en el hub la relea
 - **Probado:** la página en pantalla; instalar → activada, actualizar una cargada → recarga de la shell, quitar → limpio (con `ext.py` y extensiones de prueba).
 - Documentación (AGENTS.md, FEATURES.md, CHANGELOG.md) y cadenas al día.
 
-### Fase 3 · Empaquetado
+### Fase 3 · Empaquetado — HECHA en local, sin publicar (2026-11-11)
+- **Hecho:** `setup-kitty.py` + `KittySetup` (probado en HOME aislados); `PKGBUILD` de Things (`makepkg` probado, no instalado); `packaging/PKGBUILD` de la shell (**borrador sin compilar**: los nombres de los paquetes de fuentes están por comprobar); el install del módulo `shell` incluye `scripts/`, `extensions/` y `greeter/`. **`install-system.sh`** se queda como paso opcional del greeter (toca `/etc/greetd`); lo de root de las extensiones lo instala Things, así que no hay solape. Falta publicar los PKGBUILD (AUR) y probar la instalación real.
 - **El paquete base depende de Things, Seeker y kitty** (decidido): Things y Seeker necesitan su `PKGBUILD` (Seeker ya lo tiene en la rama local `feature/pkgbuild` de su repo, sin fusionar; Things falta); kitty es de los repos oficiales. Siguen siendo opcionales en el código (la shell funciona sin ellos).
 - **Conectar kitty:** ser dueña de kitty significa que la base debe dejarlo integrado, no solo instalado: en el primer arranque, añadir a `~/.config/kitty/kitty.conf` (solo si faltan, con copia) el `include` del tema, `allow_remote_control yes` y `listen_on …`, y crear la plantilla y el script de recarga (hoy se hace a mano, ver FEATURES «Kitty y colores»).
 - Dependencias duras del paquete (no sugerencias): `qt6ct`, `cliphist`, `wl-clipboard`, `wtype`, fuentes; recomendadas: Papirus y `adw-gtk-theme`.

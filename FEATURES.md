@@ -216,7 +216,7 @@ Plasma ya no está instalado. Hyprland sigue con qt6ct, Papirus, Thunar y los po
 
 ## Kitty y colores de la activity
 
-Kitty no es un target nativo de Sylphrena; este fork lo integra así:
+Kitty no es un target nativo de Sylphrena; este fork lo integra así. **Desde la 0.3 lo conecta la propia shell** (`services/KittySetup.qml` → `scripts/setup-kitty.py`): en el primer arranque con kitty instalado copia la plantilla (solo si no tienes una) y añade a tu `kitty.conf` un bloque marcado con lo de abajo, solo con lo que falte, dejando una copia `kitty.conf.sylphrena-backup` y avisando con un toast. Respeta un `allow_remote_control no` o un `listen_on` tuyos (no los pisa). Para desconectarlo, borra el bloque (no vuelve a tocarlo: `~/.local/state/sylphrena/kitty-setup.json`). A mano, `python3 scripts/setup-kitty.py --check | --force`. Lo que hace, en detalle:
 
 1. Plantilla de usuario: `~/.config/sylphrena/templates/kitty.conf` (variables `{{ surface.hex }}`, `{{ term0.hex }}`, …).
 2. Generada en: `~/.local/state/sylphrena/theme/kitty.conf`.

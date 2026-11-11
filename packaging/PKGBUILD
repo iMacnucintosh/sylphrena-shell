@@ -1,0 +1,43 @@
+# Maintainer: iMacnucintosh
+# DRAFT (not build-tested; the font package names are to be checked) of the base package of Sylphrena (not published; see docs/PLAN-0.3.md, phase 3).
+# Builds the shell and its C++ plugin from the git repository.
+#   cd packaging && makepkg -si
+pkgname=sylphrena-shell-git
+pkgver=r0.0000000
+pkgrel=1
+pkgdesc="Sylphrena: a Material You shell for Hyprland (Quickshell)"
+arch=('x86_64')
+url="https://github.com/iMacnucintosh/sylphrena-shell"
+license=('GPL3')
+# What Sylphrena is made of and needs to run
+depends=('quickshell' 'hyprland' 'qt6-base' 'qt6-declarative' 'python'
+         'qt6ct' 'cliphist' 'wl-clipboard' 'wtype' 'grim' 'slurp'
+         'ttf-material-symbols-variable' 'ttf-cascadia-code-nerd' 'ttf-rubik'
+         # The apps that come with it
+         'things' 'seeker' 'kitty')
+makedepends=('git' 'cmake' 'ninja')
+optdepends=('papirus-icon-theme: icon theme Sylphrena applies'
+            'adw-gtk-theme: GTK theme that follows the colours of the shell'
+            'greetd: the login screen (scripts/install-system.sh)')
+# things and seeker are -git packages of the same author
+provides=('sylphrena-shell')
+conflicts=('sylphrena-shell')
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd sylphrena-shell
+  printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd sylphrena-shell
+  # VERSION comes from `git describe --match v0.*` (what extensions compare `requires.sylphrena` with)
+  cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build build
+}
+
+package() {
+  cd sylphrena-shell
+  DESTDIR="$pkgdir" cmake --install build
+}

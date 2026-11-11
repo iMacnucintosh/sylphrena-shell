@@ -40,7 +40,10 @@ def _atomic_write(path: Path, text: str) -> None:
 
 
 def _reload_kitty() -> None:
-    script = Path.home() / ".config/sylphrena/scripts/kitty-reload-colours.sh"
+    # The script that ships with the shell; a copy in the user's config (older setups) is the fallback
+    script = Path(__file__).with_name("kitty-reload-colours.sh")
+    if not script.is_file():
+        script = Path.home() / ".config/sylphrena/scripts/kitty-reload-colours.sh"
     if not script.is_file():
         return
     try:
