@@ -1,25 +1,32 @@
 # Maintainer: iMacnucintosh
-# DRAFT (not build-tested; the font package names are to be checked) of the base package of Sylphrena (not published; see docs/PLAN-0.3.md, phase 3).
-# Builds the shell and its C++ plugin from the git repository.
+# Sylphrena: a Material You shell for Hyprland (Quickshell), built from the git repository.
 #   cd packaging && makepkg -si
 pkgname=sylphrena-shell-git
-pkgver=r0.0000000
+pkgver=0.3.0.r0.g0000000
 pkgrel=1
 pkgdesc="Sylphrena: a Material You shell for Hyprland (Quickshell)"
 arch=('x86_64')
 url="https://github.com/iMacnucintosh/sylphrena-shell"
-license=('GPL3')
-# What Sylphrena is made of and needs to run
-depends=('quickshell' 'hyprland' 'qt6-base' 'qt6-declarative' 'python'
-         'qt6ct' 'cliphist' 'wl-clipboard' 'wtype' 'grim' 'slurp'
-         'ttf-material-symbols-variable' 'ttf-cascadia-code-nerd' 'ttf-rubik'
-         # The apps that come with it
-         'things' 'seeker' 'kitty')
-makedepends=('git' 'cmake' 'ninja')
-optdepends=('papirus-icon-theme: icon theme Sylphrena applies'
+# The shell is GPL-3.0; the wallpaper in assets/wallpapers has its own licence (see its README)
+license=('GPL-3.0-only')
+depends=(
+  # What it is made on
+  'quickshell' 'hyprland' 'qt6-base' 'qt6-declarative' 'qt6-5compat' 'qt6-multimedia' 'qt6-svg'
+  'libqalculate' 'libpipewire' 'aubio' 'libcava'
+  # What its scripts and services call
+  'python' 'networkmanager' 'wireplumber' 'libpulse' 'libxml2' 'curl' 'systemd'
+  'cliphist' 'wl-clipboard' 'wtype' 'grim' 'slurp' 'playerctl' 'libnotify' 'qt6ct'
+  # Fonts of the interface
+  'ttf-material-symbols-variable' 'ttf-cascadia-code-nerd'
+  # The CLI and the apps that come with it
+  'sylphrena-cli-git' 'things-git' 'seeker-git' 'kitty'
+)
+makedepends=('git' 'cmake' 'ninja' 'qt6-shadertools')
+optdepends=('ttf-rubik: the font of the clock and the workspaces (AUR)'
+            'papirus-icon-theme: icon theme Sylphrena applies'
             'adw-gtk-theme: GTK theme that follows the colours of the shell'
+            'ddcutil: brightness of external monitors'
             'greetd: the login screen (scripts/install-system.sh)')
-# things and seeker are -git packages of the same author
 provides=('sylphrena-shell')
 conflicts=('sylphrena-shell')
 source=("git+${url}.git")
@@ -27,7 +34,8 @@ sha256sums=('SKIP')
 
 pkgver() {
   cd sylphrena-shell
-  printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  # Our own versions are the v0.* tags (the project this forked has v1.* and v2.*)
+  git describe --tags --long --match 'v0.*' | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
