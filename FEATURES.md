@@ -118,7 +118,7 @@ Inspirado en [arch-update-checker](https://github.com/iMacnucintosh/arch-update-
 
 ## Extensiones (v0.2)
 
-Las funciones opcionales viven en `extensions/` y se activan en Nexus: **widgets** del carrusel (Tareas, Hidratación) en `Panels → Dashboard → Carrusel de widgets` y **extensiones** (VPN FortiClient, Juegos) en `Extensiones`. Nada está activado por defecto y desactivar una extensión no borra sus datos. Para escribir una, ver `AGENTS.md` (sección «Extensiones») y el ejemplo `docs/examples/extension-spike/`; las de usuario se instalan desde zip (Nexus → Extensiones → Instalar desde zip) en `~/.local/share/sylphrena/extensions/<id>/`.
+Las funciones opcionales viven en `extensions/` y se activan en Nexus: **widgets** del carrusel (Tareas, Hidratación) en `Panels → Dashboard → Carrusel de widgets` y **extensiones** (VPN FortiClient, Juegos) en `Extensiones`. Nada está activado por defecto y desactivar una extensión no borra sus datos. Para escribir una, ver `AGENTS.md` (sección «Extensiones») y el ejemplo `docs/examples/extension-spike/`; las de usuario se instalan con Things (sección Sylphrena) o con `scripts/ext.py` en `~/.local/share/sylphrena/extensions/<id>/`.
 
 ## Extensiones
 
