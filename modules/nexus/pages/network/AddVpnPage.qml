@@ -129,8 +129,6 @@ PageBase {
     isSubPage: true
 
     Component.onCompleted: {
-        if (!existing && nState.newVpnType && VPN.providerTypes.some(t => t.id === nState.newVpnType))
-            root.selectedType = nState.newVpnType;
         if (existing) {
             root.selectedType = existing.type ?? "";
             nameField.text = existing.name;

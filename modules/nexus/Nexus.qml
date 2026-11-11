@@ -20,21 +20,10 @@ Item {
 
     signal close
 
-    Component.onDestruction: {
-        if (WindowFactory.activeNexus === nState)
-            WindowFactory.activeNexus = null;
-    }
-
     Component.onCompleted: {
-        WindowFactory.activeNexus = nState;
         if (Updates.pendingNexusPageId) {
             nState.currentPageIdx = PageRegistry.idxOf(Updates.pendingNexusPageId);
             Updates.pendingNexusPageId = "";
-            if (Updates.pendingNexusVpn) {
-                nState.editingVpnIndex = Updates.pendingNexusVpn.index ?? -1;
-                nState.newVpnType = Updates.pendingNexusVpn.type ?? "";
-                Updates.pendingNexusVpn = null;
-            }
             if (Updates.pendingNexusSubPageIdx >= 0)
                 nState.openSubPage(Updates.pendingNexusSubPageIdx);
             Updates.pendingNexusSubPageIdx = -1;

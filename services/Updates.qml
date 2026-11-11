@@ -35,8 +35,6 @@ Singleton {
     property string pendingNexusPageId: ""
     // Sub page to open inside pendingNexusPageId (-1 = none)
     property int pendingNexusSubPageIdx: -1
-    // For the VPN provider sub page: { index (provider to edit, -1 = add), type (to add) } or null
-    property var pendingNexusVpn: null
     // "background" | "logged" while the password UI is open
     property string pendingMode: ""
     property string installMode: ""
