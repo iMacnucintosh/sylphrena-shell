@@ -21,8 +21,8 @@ Singleton {
 
     property bool connectPending: false
     property bool disconnectPending: false
-    readonly property bool connecting: connectProc.running || connectPending
-    readonly property bool disconnecting: disconnectProc.running || disconnectPending
+    readonly property bool connecting: root.selectedExternal ? (root.selectedExternal.service.connecting ?? false) : (connectProc.running || connectPending)
+    readonly property bool disconnecting: root.selectedExternal ? (root.selectedExternal.service.disconnecting ?? false) : (disconnectProc.running || disconnectPending)
 
     // Internal id of the currently selected provider (persisted). Only one
     // provider can be selected at a time; empty means none. Keyed by id rather
@@ -49,6 +49,16 @@ Singleton {
     // The selected provider entry, or null when nothing valid is selected.
     readonly property var selected: root.providers.find(p => p.id === root.selectedProvider) ?? null
 
+    // Providers contributed by extensions (e.g. FortiClient), see Extensions.vpnProviders. They are
+    // driven by the extension's own service instead of the generic command engine below.
+    readonly property var externalProviders: Extensions.vpnProviders
+    readonly property var selectedExternal: root.externalProviders.find(p => p.id === root.selectedProvider) ?? null
+    // Every provider the selector can offer: the configured ones, then the extensions'.
+    readonly property var allProviders: [...root.providers, ...root.externalProviders]
+    // A selection that points at an extension which is not loaded (yet): wait for it, never fall back
+    // to the generic engine with a provider it does not know.
+    readonly property bool externalPending: root.selectedProvider.startsWith("ext:") && !root.selectedExternal
+
     // The single point where every configured provider - a customised built-in
     // or a fully user-defined entry - is folded into one uniform endpoint
     // object. Built-in knowledge lives in the adapters below; config values
@@ -57,6 +67,22 @@ Singleton {
     // Everything downstream runs off this object and never branches on a
     // provider name.
     readonly property var active: {
+        const ext = root.selectedExternal;
+        if (ext)
+            return {
+                name: ext.id,
+                displayName: ext.displayName,
+                interface: "",
+                connectCmd: [],
+                disconnectCmd: [],
+                statusCmd: ["true"],
+                parse: () => root.status,
+                service: "",
+                connectHint: null,
+                registerCmd: null,
+                serverCmd: null,
+                parseServer: null
+            };
         const custom = root.selected;
         const name = custom ? (custom.name || "custom") : "wireguard";
         const adapter = adapters.find(a => a.name === name) ?? null;
@@ -153,8 +179,12 @@ Singleton {
     // Make the provider at `index` the selected one. If a VPN is currently
     // connected, disconnect first, switch, then reconnect.
     function setActiveProvider(index: int): void {
-        const id = root.providerIdAt(index);
-        if (id.length === 0)
+        root.setActiveProviderById(root.providerIdAt(index));
+    }
+
+    // Same, by provider id (works for the providers of extensions too).
+    function setActiveProviderById(id: string): void {
+        if (id.length === 0 || id === root.selectedProvider)
             return;
         if (root.connected) {
             root.pendingSwitchProvider = id;
@@ -173,6 +203,10 @@ Singleton {
     // (or clear it when the list is empty).
     function ensureSelection(): void {
         const providers = root.providers;
+        // An extension's provider stays selected while that extension loads; once it is loaded and
+        // the id is gone (extension disabled), fall through to the first configured provider.
+        if (root.selectedProvider.startsWith("ext:") && (!Extensions.ready || root.externalProviders.some(p => p.id === root.selectedProvider)))
+            return;
         if (providers.some(p => p.id === root.selectedProvider))
             return;
         const next = providers.length > 0 ? providers[0].id : "";
@@ -181,6 +215,11 @@ Singleton {
     }
 
     function connect(): void {
+        if (root.selectedExternal) {
+            if (!root.connected && !root.connecting)
+                root.selectedExternal.service.connect();
+            return;
+        }
         if (status.state === "needs-auth" && status.authUrl) {
             emitStatusToast(status);
             return;
@@ -192,6 +231,11 @@ Singleton {
     }
 
     function disconnect(): void {
+        if (root.selectedExternal) {
+            if (root.connected && !root.disconnecting)
+                root.selectedExternal.service.disconnect();
+            return;
+        }
         if (connected && !connecting) {
             disconnectPending = true;
             disconnectProc.exec(active.disconnectCmd);
@@ -218,9 +262,45 @@ Singleton {
     }
 
     function checkStatus(): void {
+        if (root.selectedExternal || root.externalPending) {
+            root.syncExternal();
+            return;
+        }
         if (root.selectedProvider.length > 0) {
             statusProc.running = true;
         }
+    }
+
+    // Mirror the service of an extension's provider into the same status object the generic engine
+    // fills, so every consumer (Nexus, quick toggle) reads one thing. No toast here: the extension
+    // reports its own changes.
+    function syncExternal(): void {
+        const s = root.selectedExternal?.service;
+        let state = "disconnected";
+        let reason = "";
+        if (s) {
+            if (s.connected) {
+                state = "connected";
+            } else if (s.otpOpen) {
+                state = "needs-auth";
+                reason = Tr.mark("Authentication required");
+            } else if (s.busy) {
+                state = "connecting";
+            } else if (s.lastError) {
+                state = "error";
+                reason = s.lastError;
+            }
+        }
+        root.status = {
+            connected: state === "connected",
+            state: state,
+            reason: reason,
+            authUrl: "",
+            server: ""
+        };
+        root.connected = state === "connected";
+        root.connectPending = false;
+        root.disconnectPending = false;
     }
 
     // Refresh live In/Out byte counters, tunnel latency and - for providers
@@ -512,6 +592,21 @@ Singleton {
 
     onProvidersChanged: root.ensureSelection()
 
+    // Once the extensions are loaded, a selection that points at one that is not there is stale
+    Connections {
+        function onReadyChanged(): void {
+            root.ensureSelection();
+        }
+
+        target: Extensions
+    }
+
+    onExternalProvidersChanged: {
+        root.ensureSelection();
+        if (root.selectedExternal || root.externalPending)
+            root.syncExternal();
+    }
+
     onSelectedProviderChanged: {
         status = {
             connected: false,
@@ -534,7 +629,8 @@ Singleton {
         root.ensureProviderIds();
         root.ensureSelection();
         if (root.selectedProvider.length > 0) {
-            root.autoConnectPending = GlobalConfig.utilities.vpn.enabled;
+            // Extension providers need an interactive step (OTP): never auto-connect them
+            root.autoConnectPending = GlobalConfig.utilities.vpn.enabled && !root.selectedProvider.startsWith("ext:");
             statusCheckTimer.start();
         }
     }
@@ -603,10 +699,33 @@ Singleton {
 
     // ── Generic engine ──────────────────────────────────────────────────────
 
+    // Follow the service of the selected extension provider
+    Connections {
+        function onConnectedChanged(): void {
+            root.syncExternal();
+        }
+
+        function onBusyChanged(): void {
+            root.syncExternal();
+        }
+
+        function onOtpOpenChanged(): void {
+            root.syncExternal();
+        }
+
+        function onLastErrorChanged(): void {
+            root.syncExternal();
+        }
+
+        enabled: root.selectedExternal !== null
+        ignoreUnknownSignals: true
+        target: root.selectedExternal?.service ?? null
+    }
+
     Process {
         id: nmMonitor
 
-        running: root.selectedProvider.length > 0
+        running: root.selectedProvider.length > 0 && !root.selectedExternal && !root.externalPending
         command: ["nmcli", "monitor"]
         stdout: SplitParser {
             onRead: statusCheckTimer.restart()

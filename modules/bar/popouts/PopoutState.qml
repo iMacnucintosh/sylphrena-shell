@@ -1,4 +1,5 @@
 import QtQuick
+import qs.services
 
 QtObject {
     property string currentName
@@ -9,7 +10,7 @@ QtObject {
     // hasCurrent: several close paths (e.g. update started → UpdatesPassword) hide the
     // popout with hasCurrent = false and leave currentName untouched; without this the
     // stale name kept sticky true forever and no bar popout opened until a shell restart.
-    readonly property bool sticky: hasCurrent && (currentName === "updatesPassword" || currentName === "wirelesspassword" || currentName === "vpnOtp" || currentName === "vpnSettings")
+    readonly property bool sticky: hasCurrent && (currentName === "updatesPassword" || currentName === "wirelesspassword" || Extensions.popouts.some(p => p.dialog && p.name === currentName))
 
     signal detachRequested(mode: string)
 }

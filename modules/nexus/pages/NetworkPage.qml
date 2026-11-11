@@ -133,7 +133,7 @@ PageBase {
             horizontalPadding: Tokens.padding.largeIncreased
             checked: VPN.connected
             // Connectable as long as there's a provider and we're not mid-switch.
-            disabled: VPN.connecting || VPN.disconnecting || VPN.providers.length === 0
+            disabled: VPN.connecting || VPN.disconnecting || VPN.allProviders.length === 0
             onToggled: VPN.toggle()
 
             Timer {
@@ -157,7 +157,7 @@ PageBase {
             placeholderText: Tr.tr("No VPN providers configured")
 
             model: ScriptModel {
-                values: [...VPN.providers]
+                values: [...VPN.allProviders]
             }
 
             delegate: Item {
@@ -177,7 +177,7 @@ PageBase {
                     radius: Tokens.rounding.extraSmall
                     onClicked: {
                         if (!provider.isSelected)
-                            VPN.setActiveProvider(provider.index);
+                            VPN.setActiveProviderById(provider.modelData.id);
                     }
                 }
 
@@ -200,7 +200,7 @@ PageBase {
                             id: providerIcon
 
                             anchors.centerIn: parent
-                            text: provider.isConnected || provider.isSelected ? "vpn_key" : "vpn_key_off"
+                            text: provider.modelData.external ? (provider.modelData.icon ?? "vpn_key") : provider.isConnected || provider.isSelected ? "vpn_key" : "vpn_key_off"
                             fill: provider.isConnected ? 1 : 0
                             color: provider.isConnected ? Colours.palette.m3onPrimaryContainer : provider.isSelected ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurfaceVariant
                             fontStyle: Tokens.font.icon.medium
@@ -260,10 +260,10 @@ PageBase {
 
                     Item {
                         Layout.rightMargin: Tokens.spacing.small
-                        opacity: provider.isConnected && root?.cappedWidth > Tokens.sizes.nexus.networkShowVpnDetailWidth ? 1 : 0
+                        opacity: provider.isConnected && !provider.modelData.external && root?.cappedWidth > Tokens.sizes.nexus.networkShowVpnDetailWidth ? 1 : 0
                         visible: opacity > 0
 
-                        implicitWidth: provider.isConnected && root?.cappedWidth > Tokens.sizes.nexus.networkShowVpnDetailWidth ? providerDetailRow.implicitWidth : 0
+                        implicitWidth: provider.isConnected && !provider.modelData.external && root?.cappedWidth > Tokens.sizes.nexus.networkShowVpnDetailWidth ? providerDetailRow.implicitWidth : 0
                         implicitHeight: providerDetailRow.implicitHeight
 
                         Behavior on opacity {
@@ -341,6 +341,8 @@ PageBase {
                         type: IconButton.Tonal
                         isRound: true
                         icon: "edit"
+                        // Providers of extensions are configured from the extension itself
+                        visible: !provider.modelData.external
                         onClicked: {
                             root.nState.editingVpnIndex = provider.index;
                             root.nState.openSubPage(4); // Add/edit provider sub-page

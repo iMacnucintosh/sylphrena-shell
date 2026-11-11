@@ -10,6 +10,7 @@
   "contributes": {
     "service": "Service.qml",
     "settings": "Settings.qml",
+    "vpnProvider": { "id": "forticlient", "name": "FortiClient", "icon": "verified_user" },
     "statusIcons": [{ "id": "vpn", "component": "StatusIcon.qml" }],
     "popouts": [
       { "name": "vpn", "component": "Popout.qml" },

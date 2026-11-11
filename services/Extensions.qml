@@ -5,6 +5,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Sylphrena.Config
+import Sylphrena.I18n
 import qs.components
 import qs.utils
 
@@ -62,6 +63,29 @@ Singleton {
     // Bar popouts of the loaded extensions: [{ name, ext, component, dialog, parentIcon }].
     // A `dialog` popout takes the keyboard, and stays open while hovering its `parentIcon`.
     readonly property var popouts: contributions("popouts")
+
+    // VPN providers of the loaded extensions (manifest `vpnProvider`), shaped like the entries of the
+    // base VPN provider list so the selector can mix both: [{ id, name, displayName, icon, interface,
+    // external, ext, service }]. Ids are namespaced (`ext:<extension id>`) so they never clash with
+    // the ids of the providers in the config.
+    readonly property var vpnProviders: {
+        const out = [];
+        for (const e of loaded) {
+            const p = e.manifest.contributes?.vpnProvider;
+            if (p && e.service)
+                out.push({
+                    id: `ext:${e.id}`,
+                    name: p.name ?? e.manifest.name,
+                    displayName: Tr.tr(p.name ?? e.manifest.name),
+                    icon: p.icon ?? e.manifest.icon ?? "vpn_key",
+                    interface: "",
+                    external: true,
+                    ext: e,
+                    service: e.service
+                });
+        }
+        return out;
+    }
 
     // Widgets of the loaded extensions, ready to place: [{ id, ext, component }]
     readonly property var widgets: {

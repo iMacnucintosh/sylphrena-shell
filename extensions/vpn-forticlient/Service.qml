@@ -81,6 +81,14 @@ Scope {
             root.requestOtp();
     }
 
+    // Provider contract (manifest `vpnProvider`): the base VPN selector drives this service through
+    // connected / connecting / disconnecting / otpOpen (= needs authentication) / lastError,
+    // connect() / disconnect() / toggle(). Connecting needs an OTP, so it opens the OTP dialog that
+    // the VPN icon of the bar shows.
+    function connect(): void {
+        root.requestOtp();
+    }
+
     function requestOtp(): void {
         if (!root.enabled || root.busy || root.connected)
             return;
