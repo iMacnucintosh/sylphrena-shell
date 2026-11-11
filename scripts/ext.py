@@ -168,8 +168,17 @@ def cmd_info() -> int:
     return 0
 
 
-def finish_install(ext_id: str, receipt: dict | None) -> int:
-    """After unpacking: receipt, system pieces, rescan, enable."""
+def was_enabled(ext_id: str) -> bool:
+    """Is it enabled (so loaded) right now? Then its new files need a reload of the shell to be used."""
+    raw = ipc("list")
+    try:
+        return any(i["id"] == ext_id and i.get("enabled") for i in json.loads(raw)) if raw else False
+    except ValueError:
+        return False
+
+
+def finish_install(ext_id: str, receipt: dict | None, reload: bool = False) -> int:
+    """After unpacking: receipt, system pieces, rescan, enable (and reload the shell if it was an update of a loaded one)."""
     ext_dir = USER_DIR / ext_id
     if receipt is not None:
         (ext_dir / ".source.json").write_text(json.dumps(receipt, indent=2) + "\n")
@@ -180,7 +189,11 @@ def finish_install(ext_id: str, receipt: dict | None) -> int:
             print("error: the system part failed: run the same command again to retry", file=sys.stderr)
             return 1
     running = ipc("rescan") is not None
-    enabled = running and ipc("enable", ext_id) == "ok"
+    # "pending": the shell has not listed it yet / is still checking its system pieces; it enables it as soon as it can
+    enabled = running and ipc("enable", ext_id) in ("ok", "pending")
+    if running and reload:
+        step("reloading the shell to use the new code")
+        ipc("reload")
     step("installed" + (" and enabled" if enabled else "") + ("" if running else " (the shell is not running: it will find it when it starts)"))
     return 0
 
@@ -195,11 +208,12 @@ def cmd_install(zip_path: str) -> int:
         print(f"error: {info['name']} {info['version']} {why}", file=sys.stderr)
         return 1
     step(f"{info['name']} {info['version']}: {info.get('description', '')}")
+    reload = was_enabled(info["id"])
     result = installer("install", zip_path, str(USER_DIR), str(BUILTIN))
     if not result.get("ok"):
         print(f"error: {result.get('error')}", file=sys.stderr)
         return 1
-    return finish_install(result["id"], None)
+    return finish_install(result["id"], None, reload)
 
 
 def download(url: str, dest: Path) -> str:
@@ -257,12 +271,13 @@ def cmd_install_hub(args: list[str]) -> int:
             print(f"error: {info['name']} {info['version']} {why}", file=sys.stderr)
             return 1
         step("Installing")
+        reload = was_enabled(ext_id)
         result = installer("install", str(zip_path), str(USER_DIR), str(BUILTIN))
         if not result.get("ok"):
             print(f"error: {result.get('error')}", file=sys.stderr)
             return 1
     receipt = {"source": "hub", "version": version, "sha256": sha, "installedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")}
-    return finish_install(ext_id, receipt)
+    return finish_install(ext_id, receipt, reload)
 
 
 def cmd_remove(ext_id: str) -> int:

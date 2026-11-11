@@ -3,7 +3,7 @@
 Documento de trabajo. Léelo junto con [AGENTS.md](../AGENTS.md). Si algo choca con el código,
 **para y pregunta al usuario**; no improvises un rediseño.
 
-Estado: **fases 0, B (base) y 1 (Things, en local) hechas (2026-11-11)**; fase 2 (adelgazar la shell) por empezar. La 0.2.0 está publicada (`v0.2.0`, PR #34). La rama de trabajo
+Estado: **fases 0, B (base), 1 (Things, en local) y 2 (shell adelgazada) hechas (2026-11-11)**; fase 3 (empaquetado) y 4 (el hub crece) por empezar. La 0.2.0 está publicada (`v0.2.0`, PR #34). La rama de trabajo
 es `dev/0.3` y sigue el mismo flujo: cada fase en una rama `feature/*` que sale de `dev/0.3` y se
 fusiona en ella; `main` no se toca hasta cerrar la 0.3 (PR `dev/0.3` → `main` y tag `v0.3.0`).
 
@@ -87,11 +87,13 @@ Hecho:
 
 Pendiente para cerrar la fase (depende del usuario): publicar en el hub la release `vpn-forticlient-0.4.2` e integrar `feature/index-fields`; hacer PR de `feature/hub` en el repo de Things; y probar la instalación real con contraseña.
 
-### Fase 2 · La shell se adelgaza
-- Nexus → Extensiones: instaladas + interruptor + ajustes + «Buscar más en Things». Se retiran de la
-  shell: instalar desde zip, tarjeta de contraseña, `runSystem`, `zipPending`, `install-extension.py` (queda en la CLI).
-- La regla «instalar activa la extensión» pasa a Things (o a la shell al ver una carpeta nueva marcada como recién instalada).
-- Actualizar la documentación (AGENTS.md, FEATURES.md, CHANGELOG.md) y las cadenas (i18n).
+### Fase 2 · La shell se adelgaza — HECHA en local (2026-11-11)
+- **Nexus → Extensiones:** instaladas + interruptor + ajustes + «Buscar más en Things» (arriba). Si una extensión no puede correr, la tarjeta dice por qué (`requires`/`apiVersion`) o que le faltan sus piezas de sistema (con botón a Things).
+- **Retirado de la shell:** «Instalar desde zip», la tarjeta de contraseña, `installZip`/`confirmZip`/`removeExtension`, `runSystem` (y sus procesos), `zipPending`, el botón de eliminar. `install-extension.py` se queda (lo usa `ext.py`).
+- **Se conserva:** `checkSystem` (comprobación sin root), `prepareRemoval` (`_dropConnections`), la comprobación de compatibilidad.
+- **Nuevo:** IPC `extensions reload` (`ext.py` lo llama al actualizar una extensión ya cargada) y `enable` devuelve `pending` si aún no está listada o se están comprobando sus piezas de sistema (se activa en cuanto puede).
+- **Probado:** la página en pantalla; instalar → activada, actualizar una cargada → recarga de la shell, quitar → limpio (con `ext.py` y extensiones de prueba).
+- Documentación (AGENTS.md, FEATURES.md, CHANGELOG.md) y cadenas al día.
 
 ### Fase 3 · Empaquetado
 - **El paquete base depende de Things, Seeker y kitty** (decidido): Things y Seeker necesitan su `PKGBUILD` (Seeker ya lo tiene en la rama local `feature/pkgbuild` de su repo, sin fusionar; Things falta); kitty es de los repos oficiales. Siguen siendo opcionales en el código (la shell funciona sin ellos).
