@@ -10,7 +10,8 @@ The shell owns the extension contract, so this is the one implementation of inst
   ext.py install-hub <id> --url <zip url> --sha256 <hex> --version <v>
                              what Things runs: download from the hub, check the sha256 and the
                              compatibility with this shell, install, write the receipt, enable it
-  ext.py remove <id>         the extension forgets its data in the shell, its system pieces go, then its files
+  ext.py remove <id> [--purge]  the extension forgets its data in the shell, its system pieces go, then its files.
+                             --purge also deletes its settings and data (the paths its manifest `data` lists)
   ext.py enable <id> | disable <id>
   ext.py rescan
 
@@ -22,6 +23,7 @@ The shell must be running for rescan / enable / disable and for the extension to
 them up when it starts. Progress goes to stdout as «==> …» lines.
 """
 import datetime
+import shutil
 import hashlib
 import json
 import os
@@ -280,11 +282,44 @@ def cmd_install_hub(args: list[str]) -> int:
     return finish_install(ext_id, receipt, reload)
 
 
-def cmd_remove(ext_id: str) -> int:
+def data_paths(ext_id: str, manifest: dict) -> list[Path]:
+    """Settings and data an extension leaves behind: its config file, plus what its manifest `data` lists
+    (strings "config:<path>" or "state:<path>", relative to ~/.config/sylphrena or ~/.local/state/sylphrena).
+    Anything that would leave those two folders is ignored."""
+    roots = {
+        "config": Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "sylphrena",
+        "state": Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "sylphrena",
+    }
+    out = [roots["config"] / "extensions" / f"{ext_id}.json"]
+    for entry in manifest.get("data") or []:
+        where, _, rel = str(entry).partition(":")
+        if where not in roots or not rel or rel.startswith("/") or ".." in Path(rel).parts:
+            continue
+        out.append(roots[where] / rel)
+    return out
+
+
+def purge(ext_id: str, manifest: dict) -> None:
+    step("Deleting its settings and data")
+    for path in data_paths(ext_id, manifest):
+        try:
+            if path.is_dir() and not path.is_symlink():
+                shutil.rmtree(path)
+            elif path.exists() or path.is_symlink():
+                path.unlink()
+        except OSError as e:
+            print(f"warning: {path}: {e}", file=sys.stderr)
+
+
+def cmd_remove(ext_id: str, do_purge: bool = False) -> int:
     ext_dir = USER_DIR / ext_id
     if not (ext_dir / "manifest.json").is_file():
         print(f"error: '{ext_id}' is not installed in {USER_DIR}", file=sys.stderr)
         return 1
+    try:
+        manifest = json.loads((ext_dir / "manifest.json").read_text())
+    except ValueError:
+        manifest = {}
     step("Removing")
     ipc("prepareRemoval", ext_id)
     script = system_script(ext_dir, "uninstall")
@@ -297,6 +332,8 @@ def cmd_remove(ext_id: str) -> int:
         print(f"error: {result.get('error')}", file=sys.stderr)
         return 1
     ipc("rescan")
+    if do_purge:
+        purge(ext_id, manifest)
     step("removed")
     return 0
 
@@ -311,8 +348,8 @@ def main() -> int:
         return cmd_install(a[1])
     if a[:1] == ["install-hub"]:
         return cmd_install_hub(a[1:])
-    if a[:1] == ["remove"] and len(a) == 2:
-        return cmd_remove(a[1])
+    if a[:1] == ["remove"] and len(a) in (2, 3) and (len(a) == 2 or a[2] == "--purge"):
+        return cmd_remove(a[1], len(a) == 3)
     if a[:1] in (["enable"], ["disable"]) and len(a) == 2:
         answer = ipc(a[0], a[1])
         print(answer if answer is not None else "the shell is not running (or is too old for this command)")
