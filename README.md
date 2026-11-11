@@ -83,7 +83,7 @@ Launcher, dashboard, utilities, notificaciones, media/MPRIS, lock PAM, switcher 
 ## Instalación
 
 > [!NOTE]
-> Empaquetado **AUR pendiente**. Hoy el flujo soportado es clone + build user-local del plugin C++.
+> Hay PKGBUILD de los cuatro paquetes (`sylphrena-shell-git`, `sylphrena-cli-git`, `seeker-git`, `things-git`, en el `packaging/` de cada repo; ver [`packaging/README.md`](packaging/README.md)). **La publicación en el AUR está pendiente**: hasta entonces se instalan con `makepkg -si` desde un clon, o con el flujo de abajo (clone + build user-local del plugin C++).
 
 ### Dependencias
 

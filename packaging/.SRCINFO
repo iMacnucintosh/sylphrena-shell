@@ -5,6 +5,7 @@ pkgbase = sylphrena-shell-git
 	url = https://github.com/iMacnucintosh/sylphrena-shell
 	arch = x86_64
 	license = GPL-3.0-only
+	license = LicenseRef-Unsplash
 	makedepends = git
 	makedepends = cmake
 	makedepends = ninja

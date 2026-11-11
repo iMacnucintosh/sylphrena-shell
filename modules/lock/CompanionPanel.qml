@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Sylphrena
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
@@ -19,7 +20,8 @@ StyledRect {
     readonly property bool listening: pam.passwd.active || pam.fprint.active || pam.howdy.active
     readonly property bool welcomed: lock.unlocking
     readonly property bool troubled: pam.state === Pam.Failed || pam.state === Pam.Error || pam.state === Pam.MaxTries || !!pam.lockMessage
-    readonly property string displayName: "Manuel"
+    // The account name, capitalised ("manu" → "Manu")
+    readonly property string displayName: SysInfo.user ? SysInfo.user.charAt(0).toUpperCase() + SysInfo.user.slice(1) : ""
 
     readonly property string greeting: {
         const h = Time.hours;
