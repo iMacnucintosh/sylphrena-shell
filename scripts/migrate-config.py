@@ -14,7 +14,6 @@ from pathlib import Path
 ENABLES = {
     "dashboard.tasksEnabled": ("extensions.enabled", "tasks"),  # Tasks became an extension (v0.2)
     "addons.hydration.enabled": ("extensions.enabled", "hydration"),  # Hydration too (v0.2)
-    "addons.razerMouse.enabled": ("extensions.enabled", "razer-mouse"),
     "addons.fortiVpn.enabled": ("extensions.enabled", "vpn-forticlient"),
     "addons.steam.enabled": ("extensions.enabled", "games"),
 }
@@ -28,12 +27,16 @@ TO_EXTENSION_CONFIG = {
     "addons.hydration.presetMl1": ("hydration", "presetMl1"),
     "addons.hydration.presetMl2": ("hydration", "presetMl2"),
     "addons.hydration.presetMl3": ("hydration", "presetMl3"),
-    "addons.razerMouse.cliPath": ("razer-mouse", "cliPath"),
-    "addons.razerMouse.refreshMinutes": ("razer-mouse", "refreshMinutes"),
     "addons.steam.apiKey": ("games", "apiKey"),
     "addons.steam.steamId": ("games", "steamId"),
     "addons.steam.refreshMinutes": ("games", "refreshMinutes"),
 }
+
+# Removed features: their settings are dropped, and their id leaves extensions.enabled.
+REMOVED_KEYS = [
+    "addons.razerMouse",  # the Razer mouse battery was removed (v0.3)
+]
+REMOVED_EXTENSIONS = ["razer-mouse"]
 
 RENAMES = {
     "addons.madisonVpn": "addons.fortiVpn",  # Madison VPN -> VPN FortiClient (v0.2)
@@ -104,6 +107,15 @@ def main() -> int:
             items = node.setdefault(leaf, [])
             if item not in items:
                 items.append(item)
+    for old in REMOVED_KEYS:
+        if take(data, old)[1]:
+            changed = True
+    enabled = data.get("extensions", {}).get("enabled") if isinstance(data.get("extensions"), dict) else None
+    if isinstance(enabled, list):
+        kept = [i for i in enabled if i not in REMOVED_EXTENSIONS]
+        if kept != enabled:
+            data["extensions"]["enabled"] = kept
+            changed = True
     if changed:
         # Drop sections the migration left empty (e.g. addons.hydration)
         addons = data.get("addons")

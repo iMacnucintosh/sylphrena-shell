@@ -55,7 +55,7 @@ de contraseña y la gestión de piezas de sistema.
 - Definir `requires` (p. ej. `{ "sylphrena": ">=0.3.0" }`) y `apiVersion` en el manifiesto y en `index.json`.
 - Decidir el modelo de confianza (sha256 + confirmación; ¿firma del índice ya o después?).
 - Decidir qué extensiones de serie siguen **dentro** de la shell (`extensions/`) y cuáles pasan al hub
-  (hoy: Tareas, Hidratación, batería Razer, Juegos viven en el repo de la shell).
+  (hoy: Tareas, Hidratación y Juegos viven en el repo de la shell).
 - Añadir a la shell el comando IPC `extensions rescan` (hoy solo existe `status`) y `sylph ext install/remove/list`.
 - Entregable: este documento actualizado y el contrato escrito en AGENTS.md.
 
@@ -86,7 +86,7 @@ de contraseña y la gestión de piezas de sistema.
 
 ## 4. Preguntas abiertas
 - ¿Firma del índice en la 0.3 o más adelante?
-- ¿Se quedan Tareas / Hidratación / Juegos / batería Razer en el repo de la shell o pasan al hub?
+- ¿Se quedan Tareas / Hidratación / Juegos en el repo de la shell o pasan al hub?
 - ¿Things instala también temas, fondos y esquemas del hub (más allá de extensiones y widgets)?
 - ¿Qué pasa con las extensiones instaladas a mano en `~/.local/share/sylphrena/extensions/` sin pasar por el catálogo (se muestran como «local»)?
 

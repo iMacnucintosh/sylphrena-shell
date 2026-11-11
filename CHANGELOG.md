@@ -2,6 +2,10 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 0.3.0 (en desarrollo, rama `dev/0.3`)
+
+- **Se quita la extensión de batería del ratón Razer** (`razer-mouse`) y el enganche `resourceRing`: acoplaba la shell a `synapsex` y se reimplementará mejor más adelante. El dashboard recupera siempre el anillo de almacenamiento. Al arrancar, la migración de configuración quita `addons.razerMouse` y el id `razer-mouse` de `extensions.enabled`.
+
 ## 0.2.0 (2026-11-11)
 
 ### Extensiones

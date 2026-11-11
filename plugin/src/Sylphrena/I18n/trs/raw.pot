@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:30+0100\n"
+"POT-Creation-Date: 2026-11-11 13:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -488,33 +488,6 @@ msgstr ""
 #: extensions/hydration/Widget.qml
 #, qt-format
 msgid "%1 / %2 ml"
-msgstr ""
-
-#: extensions/razer-mouse/Service.qml
-#, qt-format
-msgid "Basilisk V4 Pro · %1 % · charging"
-msgstr ""
-
-#: extensions/razer-mouse/Service.qml
-#, qt-format
-msgid "Basilisk V4 Pro · %1 %"
-msgstr ""
-
-#: extensions/razer-mouse/Service.qml
-msgid "Mouse not found — needs synapsex-cli"
-msgstr ""
-
-#: extensions/razer-mouse/Service.qml
-msgid "Mouse battery low"
-msgstr ""
-
-#: extensions/razer-mouse/Service.qml
-#, qt-format
-msgid "Razer Basilisk V4 Pro: %1 % left"
-msgstr ""
-
-#: extensions/razer-mouse/Service.qml
-msgid "Mouse"
 msgstr ""
 
 #: extensions/tasks/Widget.qml
@@ -5547,14 +5520,6 @@ msgstr ""
 
 #: build/i18n/extensions/hydration/manifest.json.js
 msgid "Off — also stops the reminders and the tracking"
-msgstr ""
-
-#: build/i18n/extensions/razer-mouse/manifest.json.js
-msgid "Razer mouse battery"
-msgstr ""
-
-#: build/i18n/extensions/razer-mouse/manifest.json.js
-msgid "Shows the mouse battery in the dashboard, in place of storage"
 msgstr ""
 
 #: build/i18n/extensions/tasks/manifest.json.js
