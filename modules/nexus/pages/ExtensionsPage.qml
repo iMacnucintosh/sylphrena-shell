@@ -195,6 +195,64 @@ PageBase {
             }
         }
 
+        // ---- Find more in Things (the app that will manage the catalog) -----------------
+        ConnectedRect {
+            Layout.fillWidth: true
+            Layout.topMargin: Tokens.spacing.large
+            first: true
+            last: true
+            implicitHeight: thingsRow.implicitHeight + Tokens.padding.medium * 2
+
+            RowLayout {
+                id: thingsRow
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: Tokens.padding.largeIncreased
+                spacing: Tokens.spacing.medium
+
+                MaterialIcon {
+                    Layout.alignment: Qt.AlignVCenter
+                    text: Companions.find("things").icon
+                    color: Colours.palette.m3onSurfaceVariant
+                    fontStyle: Tokens.font.icon.medium
+                    fill: 1
+                }
+
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 0
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: Tr.tr("Find more in Things")
+                        font: Tokens.font.body.small
+                        elide: Text.ElideRight
+                    }
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        visible: Companions.checked && !Companions.isInstalled("things")
+                        text: Tr.tr("Things is not installed")
+                        color: Colours.palette.m3outline
+                        font: Tokens.font.label.small
+                    }
+                }
+
+                IconTextButton {
+                    Layout.alignment: Qt.AlignVCenter
+                    isRound: true
+                    horizontalPadding: Tokens.padding.large
+                    verticalPadding: Tokens.padding.small
+                    disabled: !Companions.isInstalled("things")
+                    icon: "open_in_new"
+                    text: Tr.tr("Open Things")
+                    onClicked: Companions.launch("things")
+                }
+            }
+        }
+
         FileDialog {
             id: zipPicker
 

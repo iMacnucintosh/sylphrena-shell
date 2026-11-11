@@ -457,5 +457,17 @@ PageBase {
             label: "Qt"
             value: CUtils.qtVersion || "…"
         }
+
+        // The welcome assistant again
+        RowButton {
+            Layout.topMargin: Tokens.spacing.large
+            first: true
+            last: true
+            icon: "waving_hand"
+            text: Tr.tr("Welcome guide")
+            subtext: Tr.tr("What Sylphrena is and what it offers")
+            trailingIcon: "chevron_right"
+            onClicked: Welcome.show()
+        }
     }
 }
