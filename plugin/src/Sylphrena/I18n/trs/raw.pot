@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 03:14+0100\n"
+"POT-Creation-Date: 2026-11-11 10:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,6 +92,7 @@ msgid "Hyprland settings restored"
 msgstr ""
 
 #: docs/examples/extension-spike/Widget.qml extensions/tasks/Widget.qml
+#: build/i18n/extensions/tasks/manifest.json.js
 msgid "Tasks"
 msgstr ""
 
@@ -218,7 +219,7 @@ msgstr ""
 msgid "now"
 msgstr ""
 
-#: extensions/games/Service.qml
+#: extensions/games/Service.qml build/i18n/extensions/games/manifest.json.js
 msgid "Disabled — Games tab is hidden"
 msgstr ""
 
@@ -384,6 +385,7 @@ msgid "Add your API key and Steam ID in Nexus → Complements."
 msgstr ""
 
 #: extensions/games/Tab.qml modules/nexus/pages/ShellPage.qml
+#: build/i18n/extensions/games/manifest.json.js
 #: plugin/src/Sylphrena/Config/activitiesconfig.hpp
 msgid "Games"
 msgstr ""
@@ -452,6 +454,7 @@ msgid "%1 / %2 ml — tap an amount to log it"
 msgstr ""
 
 #: extensions/hydration/Service.qml
+#: build/i18n/extensions/hydration/manifest.json.js
 msgid "Hydration"
 msgstr ""
 
@@ -541,6 +544,7 @@ msgstr ""
 #: extensions/vpn-forticlient/Popout.qml
 #: extensions/vpn-forticlient/PopoutOtp.qml
 #: extensions/vpn-forticlient/Service.qml
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
 msgid "VPN FortiClient"
 msgstr ""
 
@@ -570,6 +574,7 @@ msgstr ""
 #: modules/bar/popouts/UpdatesPassword.qml
 #: modules/bar/popouts/WirelessPassword.qml
 #: modules/nexus/common/DialogRowButton.qml
+#: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
@@ -732,7 +737,7 @@ msgstr ""
 
 #: extensions/vpn-forticlient/Service.qml
 #: extensions/vpn-forticlient/Settings.qml
-msgid "The FortiClient helper is not installed: run scripts/install-system.sh"
+msgid "The FortiClient helper is not installed: install the extension in Nexus → Complements"
 msgstr ""
 
 #: extensions/vpn-forticlient/Service.qml
@@ -1096,7 +1101,8 @@ msgstr ""
 msgid "Authenticating…"
 msgstr ""
 
-#: modules/bar/popouts/UpdatesPassword.qml modules/nexus/pages/UpdatesPage.qml
+#: modules/bar/popouts/UpdatesPassword.qml
+#: modules/nexus/common/ExtensionCard.qml modules/nexus/pages/UpdatesPage.qml
 msgid "Update"
 msgstr ""
 
@@ -1983,6 +1989,42 @@ msgstr ""
 
 #: modules/nexus/common/EthernetSection.qml
 msgid "Primary DNS"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Removing system components…"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Installing system components…"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "System components installed"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "A newer version of its system components is available"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Needs system components (asks for your password once)"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Checking system components…"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Remove"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Install"
+msgstr ""
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Your password (sudo)"
 msgstr ""
 
 #: modules/nexus/common/KeybindRow.qml
@@ -4893,6 +4935,19 @@ msgstr ""
 msgid "Could not read monitor list"
 msgstr ""
 
+#: services/Extensions.qml services/Updates.qml
+msgid "Incorrect password"
+msgstr ""
+
+#: services/Extensions.qml services/Updates.qml
+msgid "Too many failed attempts. Wait a minute and try again."
+msgstr ""
+
+#: services/Extensions.qml
+#, qt-format
+msgid "Failed (code %1)"
+msgstr ""
+
 #: services/Hypr.qml
 msgctxt "keyboard layout"
 msgid "Unknown"
@@ -5382,14 +5437,6 @@ msgid "Update cancelled."
 msgstr ""
 
 #: services/Updates.qml
-msgid "Too many failed attempts. Wait a minute and try again."
-msgstr ""
-
-#: services/Updates.qml
-msgid "Incorrect password"
-msgstr ""
-
-#: services/Updates.qml
 #, qt-format
 msgid "Authentication failed: %1"
 msgstr ""
@@ -5665,6 +5712,50 @@ msgid "%n minute"
 msgid_plural "%n minutes"
 msgstr[0] ""
 msgstr[1] ""
+
+#: build/i18n/extensions/games/manifest.json.js
+msgid "Games (Steam)"
+msgstr ""
+
+#: build/i18n/extensions/games/manifest.json.js
+msgid "Steam library, achievements and play time in a dashboard tab"
+msgstr ""
+
+#: build/i18n/extensions/hydration/manifest.json.js
+msgid "Water intake tracker with reminders"
+msgstr ""
+
+#: build/i18n/extensions/hydration/manifest.json.js
+msgid "Off — also stops the reminders and the tracking"
+msgstr ""
+
+#: build/i18n/extensions/razer-mouse/manifest.json.js
+msgid "Razer mouse battery"
+msgstr ""
+
+#: build/i18n/extensions/razer-mouse/manifest.json.js
+msgid "Shows the mouse battery in the dashboard, in place of storage"
+msgstr ""
+
+#: build/i18n/extensions/tasks/manifest.json.js
+msgid "Checklist: create, complete and delete tasks"
+msgstr ""
+
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
+msgid "FortiClient (openfortivpn) connections for the VPN of Nexus → Network"
+msgstr ""
+
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
+msgid "Disabled — tunnel and related processes are stopped"
+msgstr ""
+
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
+msgid "FortiClient"
+msgstr ""
+
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
+msgid "Installs openfortivpn if missing, the helper /usr/local/sbin/sylphrena-fortivpn and a sudoers rule that lets you run only that helper without a password"
+msgstr ""
 
 #: plugin/src/Sylphrena/Config/rootnodes.cpp
 #, qt-plural-format, c-format

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 03:14+0100\n"
+"POT-Creation-Date: 2026-11-11 10:20+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -91,6 +91,7 @@ msgid "Hyprland settings restored"
 msgstr "Ajustes de Hyprland restaurados"
 
 #: docs/examples/extension-spike/Widget.qml extensions/tasks/Widget.qml
+#: build/i18n/extensions/tasks/manifest.json.js
 msgid "Tasks"
 msgstr "Tareas"
 
@@ -217,7 +218,7 @@ msgstr "Instala Non-Steam Playtimes (Millennium) para registrar sesiones"
 msgid "now"
 msgstr "ahora"
 
-#: extensions/games/Service.qml
+#: extensions/games/Service.qml build/i18n/extensions/games/manifest.json.js
 msgid "Disabled — Games tab is hidden"
 msgstr "Desactivado: la pestaña Juegos está oculta"
 
@@ -383,6 +384,7 @@ msgid "Add your API key and Steam ID in Nexus → Complements."
 msgstr "Añade tu API key y Steam ID en Nexus → Complementos."
 
 #: extensions/games/Tab.qml modules/nexus/pages/ShellPage.qml
+#: build/i18n/extensions/games/manifest.json.js
 #: plugin/src/Sylphrena/Config/activitiesconfig.hpp
 msgid "Games"
 msgstr "Juegos"
@@ -451,6 +453,7 @@ msgid "%1 / %2 ml — tap an amount to log it"
 msgstr "%1 / %2 ml — toca una cantidad para registrarla"
 
 #: extensions/hydration/Service.qml
+#: build/i18n/extensions/hydration/manifest.json.js
 msgid "Hydration"
 msgstr "Hidratación"
 
@@ -540,6 +543,7 @@ msgstr "Completadas (%1)"
 #: extensions/vpn-forticlient/Popout.qml
 #: extensions/vpn-forticlient/PopoutOtp.qml
 #: extensions/vpn-forticlient/Service.qml
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
 msgid "VPN FortiClient"
 msgstr "VPN FortiClient"
 
@@ -569,6 +573,7 @@ msgstr "OTP de 6 dígitos"
 #: modules/bar/popouts/UpdatesPassword.qml
 #: modules/bar/popouts/WirelessPassword.qml
 #: modules/nexus/common/DialogRowButton.qml
+#: modules/nexus/common/ExtensionCard.qml
 #: modules/nexus/pages/network/AddNetworkPage.qml
 #: modules/nexus/pages/network/AddVpnPage.qml
 #: modules/nexus/pages/UpdatesPage.qml
@@ -731,8 +736,8 @@ msgstr "Complemento desactivado"
 
 #: extensions/vpn-forticlient/Service.qml
 #: extensions/vpn-forticlient/Settings.qml
-msgid "The FortiClient helper is not installed: run scripts/install-system.sh"
-msgstr "El ayudante de FortiClient no está instalado: ejecuta scripts/install-system.sh"
+msgid "The FortiClient helper is not installed: install the extension in Nexus → Complements"
+msgstr "El ayudante de FortiClient no está instalado: instala la extensión en Nexus → Complementos"
 
 #: extensions/vpn-forticlient/Service.qml
 msgid "No FortiClient connection: add one in Nexus → Network"
@@ -1095,7 +1100,8 @@ msgstr "Contraseña"
 msgid "Authenticating…"
 msgstr "Autenticando…"
 
-#: modules/bar/popouts/UpdatesPassword.qml modules/nexus/pages/UpdatesPage.qml
+#: modules/bar/popouts/UpdatesPassword.qml
+#: modules/nexus/common/ExtensionCard.qml modules/nexus/pages/UpdatesPage.qml
 msgid "Update"
 msgstr "Actualizar"
 
@@ -1985,6 +1991,42 @@ msgstr "Dirección IP local"
 #: modules/nexus/common/EthernetSection.qml
 msgid "Primary DNS"
 msgstr "DNS principal"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Removing system components…"
+msgstr "Quitando los componentes del sistema…"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Installing system components…"
+msgstr "Instalando los componentes del sistema…"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "System components installed"
+msgstr "Componentes del sistema instalados"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "A newer version of its system components is available"
+msgstr "Hay una versión nueva de sus componentes del sistema"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Needs system components (asks for your password once)"
+msgstr "Necesita componentes del sistema (pide tu contraseña una vez)"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Checking system components…"
+msgstr "Comprobando los componentes del sistema…"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Remove"
+msgstr "Quitar"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Install"
+msgstr "Instalar"
+
+#: modules/nexus/common/ExtensionCard.qml
+msgid "Your password (sudo)"
+msgstr "Tu contraseña (sudo)"
 
 #: modules/nexus/common/KeybindRow.qml
 msgid "Press a key…"
@@ -4894,6 +4936,19 @@ msgstr "Frecuencia fija; menos parpadeo con FreeSync inestable por HDMI"
 msgid "Could not read monitor list"
 msgstr "No se pudo leer la lista de monitores"
 
+#: services/Extensions.qml services/Updates.qml
+msgid "Incorrect password"
+msgstr "Contraseña incorrecta"
+
+#: services/Extensions.qml services/Updates.qml
+msgid "Too many failed attempts. Wait a minute and try again."
+msgstr "Demasiados intentos fallidos. Espera un minuto y vuelve a intentarlo."
+
+#: services/Extensions.qml
+#, qt-format
+msgid "Failed (code %1)"
+msgstr "Falló (código %1)"
+
 #: services/Hypr.qml
 msgctxt "keyboard layout"
 msgid "Unknown"
@@ -5383,14 +5438,6 @@ msgid "Update cancelled."
 msgstr "Actualización cancelada."
 
 #: services/Updates.qml
-msgid "Too many failed attempts. Wait a minute and try again."
-msgstr "Demasiados intentos fallidos. Espera un minuto y vuelve a intentarlo."
-
-#: services/Updates.qml
-msgid "Incorrect password"
-msgstr "Contraseña incorrecta"
-
-#: services/Updates.qml
 #, qt-format
 msgid "Authentication failed: %1"
 msgstr "No se pudo autenticar: %1"
@@ -5666,6 +5713,50 @@ msgid "%n minute"
 msgid_plural "%n minutes"
 msgstr[0] "%n minuto"
 msgstr[1] "%n minutos"
+
+#: build/i18n/extensions/games/manifest.json.js
+msgid "Games (Steam)"
+msgstr "Juegos (Steam)"
+
+#: build/i18n/extensions/games/manifest.json.js
+msgid "Steam library, achievements and play time in a dashboard tab"
+msgstr "Biblioteca de Steam, logros y tiempo de juego en una pestaña del dashboard"
+
+#: build/i18n/extensions/hydration/manifest.json.js
+msgid "Water intake tracker with reminders"
+msgstr "Control de agua con recordatorios"
+
+#: build/i18n/extensions/hydration/manifest.json.js
+msgid "Off — also stops the reminders and the tracking"
+msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
+
+#: build/i18n/extensions/razer-mouse/manifest.json.js
+msgid "Razer mouse battery"
+msgstr "Batería del ratón Razer"
+
+#: build/i18n/extensions/razer-mouse/manifest.json.js
+msgid "Shows the mouse battery in the dashboard, in place of storage"
+msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
+
+#: build/i18n/extensions/tasks/manifest.json.js
+msgid "Checklist: create, complete and delete tasks"
+msgstr "Lista de tareas: crea, completa y elimina"
+
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
+msgid "FortiClient (openfortivpn) connections for the VPN of Nexus → Network"
+msgstr "Conexiones FortiClient (openfortivpn) para la VPN de Nexus → Red"
+
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
+msgid "Disabled — tunnel and related processes are stopped"
+msgstr "Desactivado: túnel y procesos asociados detenidos"
+
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
+msgid "FortiClient"
+msgstr "FortiClient"
+
+#: build/i18n/extensions/vpn-forticlient/manifest.json.js
+msgid "Installs openfortivpn if missing, the helper /usr/local/sbin/sylphrena-fortivpn and a sudoers rule that lets you run only that helper without a password"
+msgstr "Instala openfortivpn si falta, el ayudante /usr/local/sbin/sylphrena-fortivpn y una regla de sudoers que te deja ejecutar solo ese ayudante sin contraseña"
 
 #: plugin/src/Sylphrena/Config/rootnodes.cpp
 #, c-format, qt-plural-format
@@ -6075,21 +6166,6 @@ msgstr "Configura el shell"
 #~ msgid "Stored in ~/.config/openfortivpn/config"
 #~ msgstr "Se guarda en ~/.config/openfortivpn/config"
 
-#~ msgid "Water intake tracker with reminders"
-#~ msgstr "Control de agua con recordatorios"
-
-#~ msgid "Off — also stops the reminders and the tracking"
-#~ msgstr "Desactivado: también detiene los recordatorios y el seguimiento"
-
-#~ msgid "Checklist: create, complete and delete tasks"
-#~ msgstr "Lista de tareas: crea, completa y elimina"
-
-#~ msgid "Razer mouse battery"
-#~ msgstr "Batería del ratón Razer"
-
-#~ msgid "Shows the mouse battery in the dashboard, in place of storage"
-#~ msgstr "Muestra la batería del ratón en el panel, en lugar del almacenamiento"
-
 #~ msgid "Shell shortcuts, remapping and mouse focus"
 #~ msgstr "Atajos del shell, reasignación y foco del ratón"
 
@@ -6114,9 +6190,6 @@ msgstr "Configura el shell"
 #~ msgid "FortiClient / openfortivpn status icon and connect flow"
 #~ msgstr "Icono de estado FortiClient / openfortivpn y flujo de conexión"
 
-#~ msgid "Disabled — tunnel and related processes are stopped"
-#~ msgstr "Desactivado: túnel y procesos asociados detenidos"
-
 #~ msgid "Replaces the dashboard calendar with a water intake tracker"
 #~ msgstr "Sustituye el calendario del dashboard por un seguidor de agua"
 
@@ -6134,9 +6207,6 @@ msgstr "Configura el shell"
 
 #~ msgid "Preset 4"
 #~ msgstr "Preset 4"
-
-#~ msgid "Games (Steam)"
-#~ msgstr "Juegos (Steam)"
 
 #~ msgid "FortiClient VPN config: ~/.config/openfortivpn/config (popout gear). Scripts: ~/.local/share/sylphrena/vpn-forticlient/"
 #~ msgstr "Config VPN FortiClient: ~/.config/openfortivpn/config (engranaje del popout). Scripts: ~/.local/share/sylphrena/vpn-forticlient/"
