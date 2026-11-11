@@ -7,27 +7,21 @@ import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
 import qs.components.controls
-import qs.services
 
+// Editor of the FortiClient connection (~/.config/openfortivpn/config), shown in Nexus → Network
+// when editing this extension's VPN provider (manifest `vpnProvider.editor`).
 ColumnLayout {
     id: root
 
     // Injected by the base: the extension and its service (see services/Extensions.qml)
     required property var ext
     required property var service
+    // Closes the page that hosts the editor (set by the base)
+    property var close: () => {}
 
-    required property var popouts
-
-    readonly property bool shouldBeVisible: root.popouts.currentName === "vpnSettings"
     property bool showPassword: false
 
-    width: Math.max(380, Tokens.sizes.bar.networkWidth + Tokens.padding.large)
-    spacing: Tokens.spacing.medium
-
-    function closeDialog(): void {
-        if (root.popouts.currentName === "vpnSettings")
-            root.popouts.currentName = "vpn";
-    }
+    spacing: Tokens.spacing.large
 
     function save(): void {
         root.service.cfgHost = hostField.text;
@@ -36,66 +30,31 @@ ColumnLayout {
         root.service.cfgPassword = passField.text;
         root.service.cfgRealm = realmField.text;
         if (root.service.saveConfig())
-            root.closeDialog();
+            root.close();
     }
 
-    visible: shouldBeVisible
-    focus: shouldBeVisible
-
-    Keys.onEscapePressed: closeDialog()
-
-    onShouldBeVisibleChanged: {
-        if (shouldBeVisible) {
-            root.service.reloadConfig();
-            Qt.callLater(() => {
-                hostField.text = root.service.cfgHost;
-                portField.text = root.service.cfgPort;
-                userField.text = root.service.cfgUsername;
-                passField.text = root.service.cfgPassword;
-                realmField.text = root.service.cfgRealm;
-                root.showPassword = false;
-                hostField.forceActiveFocus();
-            });
-        }
+    Component.onCompleted: {
+        root.service.reloadConfig();
+        Qt.callLater(() => {
+            hostField.text = root.service.cfgHost;
+            portField.text = root.service.cfgPort;
+            userField.text = root.service.cfgUsername;
+            passField.text = root.service.cfgPassword;
+            realmField.text = root.service.cfgRealm;
+        });
     }
 
-    RowLayout {
+    StyledText {
         Layout.fillWidth: true
-        Layout.topMargin: Tokens.padding.medium
-        Layout.rightMargin: Tokens.padding.extraSmall
-        spacing: Tokens.spacing.small
-
-        IconButton {
-            icon: "arrow_back"
-            type: IconButton.Text
-            isRound: true
-            onClicked: root.closeDialog()
-        }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: Tokens.spacing.extraSmall / 2
-
-            StyledText {
-                Layout.fillWidth: true
-                text: Tr.tr("VPN settings")
-                font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
-            }
-
-            StyledText {
-                Layout.fillWidth: true
-                text: Tr.tr("Stored in ~/.config/openfortivpn/config")
-                color: Colours.palette.m3outline
-                font: Tokens.font.label.small
-                wrapMode: Text.WordWrap
-            }
-        }
+        Layout.leftMargin: Tokens.padding.small
+        text: Tr.tr("Stored in ~/.config/openfortivpn/config")
+        color: Colours.palette.m3onSurfaceVariant
+        font: Tokens.font.body.small
+        wrapMode: Text.WordWrap
     }
 
     ColumnLayout {
         Layout.fillWidth: true
-        Layout.rightMargin: Tokens.padding.extraSmall
-        Layout.topMargin: Tokens.spacing.small
         spacing: Tokens.spacing.large
 
         StyledTextField {
@@ -177,7 +136,6 @@ ColumnLayout {
 
     StyledText {
         Layout.fillWidth: true
-        Layout.rightMargin: Tokens.padding.extraSmall
         visible: !!root.service.configError
         text: root.service.configError
         color: Colours.palette.m3error
@@ -188,7 +146,6 @@ ColumnLayout {
     RowLayout {
         Layout.fillWidth: true
         Layout.topMargin: Tokens.spacing.small
-        Layout.rightMargin: Tokens.padding.extraSmall
         spacing: Tokens.spacing.medium
 
         TextButton {
@@ -197,7 +154,7 @@ ColumnLayout {
             inactiveColour: Colours.palette.m3secondaryContainer
             inactiveOnColour: Colours.palette.m3onSecondaryContainer
             text: Tr.trCtx("Cancel", "button")
-            onClicked: root.closeDialog()
+            onClicked: root.close()
         }
 
         TextButton {

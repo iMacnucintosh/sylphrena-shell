@@ -79,6 +79,7 @@ Singleton {
                     displayName: Tr.tr(p.name ?? e.manifest.name),
                     icon: p.icon ?? e.manifest.icon ?? "vpn_key",
                     interface: "",
+                    editor: p.editor ?? "",
                     external: true,
                     ext: e,
                     service: e.service
@@ -141,6 +142,14 @@ Singleton {
         const file = e?.manifest.contributes?.settings;
         const c = file ? root.component(e, file) : null;
         return c ? { id: `${extId}/settings`, ext: e, component: c } : null;
+    }
+
+    // The provider editor (manifest `vpnProvider.editor`) of an enabled extension, as an entry for ExtensionSlot (or null)
+    function vpnEditorEntry(extId: string): var {
+        const e = loaded.find(x => x.id === extId);
+        const file = e?.manifest.contributes?.vpnProvider?.editor;
+        const c = file ? root.component(e, file) : null;
+        return c ? { id: `${extId}/vpnEditor`, ext: e, component: c } : null;
     }
 
     function service(id: string): var {

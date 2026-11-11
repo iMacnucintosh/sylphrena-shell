@@ -10,12 +10,11 @@
   "contributes": {
     "service": "Service.qml",
     "settings": "Settings.qml",
-    "vpnProvider": { "id": "forticlient", "name": "FortiClient", "icon": "verified_user" },
+    "vpnProvider": { "id": "forticlient", "name": "FortiClient", "icon": "verified_user", "editor": "ProviderEditor.qml" },
     "statusIcons": [{ "id": "vpn", "component": "StatusIcon.qml" }],
     "popouts": [
       { "name": "vpn", "component": "Popout.qml" },
-      { "name": "vpnOtp", "component": "PopoutOtp.qml", "dialog": true, "parentIcon": "vpn" },
-      { "name": "vpnSettings", "component": "PopoutSettings.qml", "dialog": true, "parentIcon": "vpn" }
+      { "name": "vpnOtp", "component": "PopoutOtp.qml", "dialog": true, "parentIcon": "vpn" }
     ]
   }
 }

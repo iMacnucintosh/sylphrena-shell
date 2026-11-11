@@ -15,6 +15,8 @@ QtObject {
     property BluetoothDevice selectedBtDevice
     property DesktopEntry selectedApp
     property int editingVpnIndex: -1
+    // Extension whose VPN provider is being edited (its own editor is shown instead of the generic form)
+    property string editingVpnExt: ""
     property string selectedNetworkSsid
     property string selectedEthernetInterface
     property bool networkDetailsFromSaved

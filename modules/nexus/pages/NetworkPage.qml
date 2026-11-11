@@ -341,10 +341,11 @@ PageBase {
                         type: IconButton.Tonal
                         isRound: true
                         icon: "edit"
-                        // Providers of extensions are configured from the extension itself
-                        visible: !provider.modelData.external
+                        // Providers of extensions are edited with the editor the extension contributes (if any)
+                        visible: !provider.modelData.external || !!provider.modelData.editor
                         onClicked: {
-                            root.nState.editingVpnIndex = provider.index;
+                            root.nState.editingVpnExt = provider.modelData.external ? provider.modelData.ext.id : "";
+                            root.nState.editingVpnIndex = provider.modelData.external ? -1 : provider.index;
                             root.nState.openSubPage(4); // Add/edit provider sub-page
                         }
                     }
@@ -358,6 +359,7 @@ PageBase {
             icon: "add"
             text: Tr.tr("Add provider")
             onClicked: {
+                root.nState.editingVpnExt = "";
                 root.nState.editingVpnIndex = -1;
                 root.nState.openSubPage(4); // Add/edit provider sub-page
             }

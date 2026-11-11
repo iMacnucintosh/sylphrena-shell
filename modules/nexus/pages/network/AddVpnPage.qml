@@ -17,6 +17,8 @@ PageBase {
     readonly property int editIndex: nState.editingVpnIndex
     readonly property bool editing: editIndex >= 0
     readonly property var existing: editing ? (VPN.providers[editIndex] ?? null) : null
+    // Provider of an extension: the extension contributes its own editor instead of the generic form
+    readonly property var extEntry: nState.editingVpnExt ? Extensions.vpnEditorEntry(nState.editingVpnExt) : null
 
     function splitCmd(arr: var): string {
         return arr?.join(" ") ?? "";
@@ -74,7 +76,7 @@ PageBase {
         nState.closeSubPage();
     }
 
-    title: editing ? Tr.tr("Edit VPN provider") : Tr.tr("Add VPN provider")
+    title: editing || extEntry ? Tr.tr("Edit VPN provider") : Tr.tr("Add VPN provider")
     isSubPage: true
 
     Component.onCompleted: {
@@ -93,133 +95,148 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.large
 
-        StyledText {
+        ExtensionSlot {
             Layout.fillWidth: true
-            Layout.leftMargin: Tokens.padding.small
-            // TRANSLATORS: the four names in brackets are provider identifiers, leave them untranslated
-            text: Tr.tr("Built-in names (wireguard, warp, tailscale, netbird) auto-fill their commands. For others, provide the connect/disconnect commands.")
-            color: Colours.palette.m3onSurfaceVariant
-            font: Tokens.font.body.small
-            wrapMode: Text.WordWrap
+            visible: !!root.extEntry
+            entry: root.extEntry
+            props: ({
+                    close: () => root.nState.closeSubPage()
+                })
         }
 
-        StyledTextField {
-            id: nameField
-
+        ColumnLayout {
             Layout.fillWidth: true
-            Layout.topMargin: Tokens.spacing.small
-            placeholderText: Tr.tr("Provider name")
-            leadingIcon: "vpn_key"
-            // TRANSLATORS: id here means the provider identifier, e.g. wireguard
-            supportingText: Tr.tr("Built-in id or a custom name")
-            errorText: Tr.tr("Provider name is required")
-            inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+            visible: !root.extEntry
+            spacing: Tokens.spacing.large
 
-            onAccepted: displayField.forceActiveFocus()
-        }
-
-        StyledTextField {
-            id: displayField
-
-            Layout.fillWidth: true
-            placeholderText: Tr.tr("Display name")
-            // TRANSLATORS: the name shown in the VPN provider list on the network page
-            supportingText: Tr.tr("Shown in the list")
-            leadingIcon: "label"
-            inputMethodHints: Qt.ImhNoPredictiveText
-
-            onAccepted: interfaceField.forceActiveFocus()
-        }
-
-        StyledTextField {
-            id: interfaceField
-
-            Layout.fillWidth: true
-            placeholderText: Tr.trCtx("Interface", "network interface")
-            leadingIcon: "lan"
-            supportingText: Tr.tr("Network interface (for WireGuard / status checks)")
-            inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
-
-            onAccepted: connectField.forceActiveFocus()
-        }
-
-        SectionHeader {
-            text: Tr.tr("Custom commands (optional)")
-        }
-
-        StyledTextField {
-            id: connectField
-
-            Layout.fillWidth: true
-            placeholderText: Tr.tr("Connect command")
-            leadingIcon: "play_arrow"
-            supportingText: Tr.tr("Leave empty to use the built-in default")
-            inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
-
-            onAccepted: disconnectField.forceActiveFocus()
-        }
-
-        StyledTextField {
-            id: disconnectField
-
-            Layout.fillWidth: true
-            placeholderText: Tr.tr("Disconnect command")
-            leadingIcon: "stop"
-            supportingText: Tr.tr("Leave empty to use the built-in default")
-            inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
-
-            onAccepted: root.submit()
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.topMargin: (root.editing ? Tokens.spacing.medium : Tokens.spacing.extraSmall) - parent.spacing
-            spacing: Tokens.spacing.small
-
-            IconTextButton {
-                visible: root.editing
-                isRound: true
-                horizontalPadding: Tokens.padding.extraLarge
-                verticalPadding: Tokens.padding.medium
-                inactiveColour: Colours.palette.m3errorContainer
-                inactiveOnColour: Colours.palette.m3onErrorContainer
-                iconLabel.fill: 1
-                iconLabel.grade: 25
-                icon: "delete_forever"
-                text: Tr.tr("Delete")
-                onClicked: {
-                    if (root.existing.id === VPN.selectedProvider && VPN.connected)
-                        VPN.disconnect();
-                    VPN.deleteProvider(root.editIndex);
-                    root.nState.closeSubPage();
-                }
-            }
-
-            Item {
+            StyledText {
                 Layout.fillWidth: true
+                Layout.leftMargin: Tokens.padding.small
+                // TRANSLATORS: the four names in brackets are provider identifiers, leave them untranslated
+                text: Tr.tr("Built-in names (wireguard, warp, tailscale, netbird) auto-fill their commands. For others, provide the connect/disconnect commands.")
+                color: Colours.palette.m3onSurfaceVariant
+                font: Tokens.font.body.small
+                wrapMode: Text.WordWrap
             }
 
-            ButtonRow {
-                spacing: parent.spacing
+            StyledTextField {
+                id: nameField
 
-                TextButton {
+                Layout.fillWidth: true
+                Layout.topMargin: Tokens.spacing.small
+                placeholderText: Tr.tr("Provider name")
+                leadingIcon: "vpn_key"
+                // TRANSLATORS: id here means the provider identifier, e.g. wireguard
+                supportingText: Tr.tr("Built-in id or a custom name")
+                errorText: Tr.tr("Provider name is required")
+                inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+
+                onAccepted: displayField.forceActiveFocus()
+            }
+
+            StyledTextField {
+                id: displayField
+
+                Layout.fillWidth: true
+                placeholderText: Tr.tr("Display name")
+                // TRANSLATORS: the name shown in the VPN provider list on the network page
+                supportingText: Tr.tr("Shown in the list")
+                leadingIcon: "label"
+                inputMethodHints: Qt.ImhNoPredictiveText
+
+                onAccepted: interfaceField.forceActiveFocus()
+            }
+
+            StyledTextField {
+                id: interfaceField
+
+                Layout.fillWidth: true
+                placeholderText: Tr.trCtx("Interface", "network interface")
+                leadingIcon: "lan"
+                supportingText: Tr.tr("Network interface (for WireGuard / status checks)")
+                inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+
+                onAccepted: connectField.forceActiveFocus()
+            }
+
+            SectionHeader {
+                text: Tr.tr("Custom commands (optional)")
+            }
+
+            StyledTextField {
+                id: connectField
+
+                Layout.fillWidth: true
+                placeholderText: Tr.tr("Connect command")
+                leadingIcon: "play_arrow"
+                supportingText: Tr.tr("Leave empty to use the built-in default")
+                inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+
+                onAccepted: disconnectField.forceActiveFocus()
+            }
+
+            StyledTextField {
+                id: disconnectField
+
+                Layout.fillWidth: true
+                placeholderText: Tr.tr("Disconnect command")
+                leadingIcon: "stop"
+                supportingText: Tr.tr("Leave empty to use the built-in default")
+                inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+
+                onAccepted: root.submit()
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.topMargin: (root.editing ? Tokens.spacing.medium : Tokens.spacing.extraSmall) - parent.spacing
+                spacing: Tokens.spacing.small
+
+                IconTextButton {
+                    visible: root.editing
                     isRound: true
-                    shapeMorph: true
                     horizontalPadding: Tokens.padding.extraLarge
                     verticalPadding: Tokens.padding.medium
-                    type: TextButton.Tonal
-                    text: Tr.trCtx("Cancel", "button")
-                    onClicked: root.nState.closeSubPage()
+                    inactiveColour: Colours.palette.m3errorContainer
+                    inactiveOnColour: Colours.palette.m3onErrorContainer
+                    iconLabel.fill: 1
+                    iconLabel.grade: 25
+                    icon: "delete_forever"
+                    text: Tr.tr("Delete")
+                    onClicked: {
+                        if (root.existing.id === VPN.selectedProvider && VPN.connected)
+                            VPN.disconnect();
+                        VPN.deleteProvider(root.editIndex);
+                        root.nState.closeSubPage();
+                    }
                 }
 
-                TextButton {
-                    isRound: true
-                    shapeMorph: true
-                    horizontalPadding: Tokens.padding.extraLarge
-                    verticalPadding: Tokens.padding.medium
-                    text: root.editing ? Tr.trCtx("Save", "button") : Tr.trCtx("Add", "button")
-                    disabled: !nameField.text.trim()
-                    onClicked: root.submit()
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                ButtonRow {
+                    spacing: parent.spacing
+
+                    TextButton {
+                        isRound: true
+                        shapeMorph: true
+                        horizontalPadding: Tokens.padding.extraLarge
+                        verticalPadding: Tokens.padding.medium
+                        type: TextButton.Tonal
+                        text: Tr.trCtx("Cancel", "button")
+                        onClicked: root.nState.closeSubPage()
+                    }
+
+                    TextButton {
+                        isRound: true
+                        shapeMorph: true
+                        horizontalPadding: Tokens.padding.extraLarge
+                        verticalPadding: Tokens.padding.medium
+                        text: root.editing ? Tr.trCtx("Save", "button") : Tr.trCtx("Add", "button")
+                        disabled: !nameField.text.trim()
+                        onClicked: root.submit()
+                    }
                 }
             }
         }

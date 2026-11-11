@@ -36,16 +36,6 @@ ColumnLayout {
             text: Tr.tr("VPN FortiClient")
             font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
         }
-
-        IconButton {
-            icon: "settings"
-            type: IconButton.Text
-            isRound: true
-            onClicked: {
-                root.service.reloadConfig();
-                root.popouts.currentName = "vpnSettings";
-            }
-        }
     }
 
     RowLayout {
