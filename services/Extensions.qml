@@ -39,6 +39,9 @@ Singleton {
     // Steps that continue another one: the system install once the rescan lists the new extension
     // (with the password, held only until then), a QML reload after updating a loaded extension, the
     // toast to show when it all worked, and the removal of the files once its system pieces are gone.
+    // An extension just installed (new or updated) that is enabled as soon as it can be: once it is
+    // listed, or, if it has system pieces, once their check says they are installed
+    property string _enableId: ""
     property string _systemAfterScan: ""
     property string _pendingPassword: ""
     property bool _reloadAfterSystem: false
@@ -50,6 +53,16 @@ Singleton {
     function isUserInstalled(id: string): bool {
         const d = discovered.find(x => x.manifest.id === id);
         return !!d && d.dir.startsWith(`${root.userDir}/`);
+    }
+
+    // Enable a freshly installed extension once nothing is missing for it (system pieces installed)
+    function _enableWhenReady(): void {
+        const id = root._enableId;
+        if (!id || !discovered.some(d => d.manifest.id === id) || !root.systemReady(id))
+            return;
+        root._enableId = "";
+        if (!root.isEnabled(id))
+            root.setEnabled(id, true);
     }
 
     // Look for extensions again (after installing or removing one)
@@ -96,6 +109,8 @@ Singleton {
         if (zipProc.running || systemProc.running || !root.isUserInstalled(id))
             return;
         root.zipError = "";
+        if (root._enableId === id)
+            root._enableId = "";
         if (root.needsSystemRemoval(id)) {
             if (!password)
                 return;
@@ -475,6 +490,8 @@ Singleton {
                     root._systemAfterScan = "";
                     root._pendingPassword = "";
                     root.runSystem(id, "install", pw);
+                } else {
+                    root._enableWhenReady();
                 }
             }
         }
@@ -520,7 +537,8 @@ Singleton {
                     root._runZip("install", [zipProc.command[3], root.userDir, Quickshell.shellPath("extensions")]);
                     return;
                 }
-                // install
+                // install (new or update): the extension ends up enabled
+                root._enableId = r.id;
                 const toast = `${Tr.tr(r.name)} ${r.version ?? ""}`.trim();
                 const title = r.updated ? Tr.tr("Extension updated") : Tr.tr("Extension installed");
                 // A loaded extension keeps its old code until QML is reloaded (the engine caches it)
@@ -556,6 +574,7 @@ Singleton {
                         next[id] = state;
                 }
                 root.systemState = next;
+                root._enableWhenReady();
             }
         }
     }
