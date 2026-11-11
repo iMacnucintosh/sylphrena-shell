@@ -379,13 +379,24 @@ Singleton {
         loaded = next;
     }
 
-    onDiscoveredChanged: {
-        // Catalogs the extensions ship (i18n/<lang>.json), for Tr when the shell has no translation
+    // Catalogs the extensions ship (i18n/<lang>.json), for Tr when the shell has no translation: those
+    // of the extensions found, plus the one of a zip waiting for the password (so its texts are
+    // translated before it is installed)
+    function updateCatalogs(): void {
         const cats = {};
         for (const d of discovered)
             if (d.i18n && Object.keys(d.i18n).length > 0)
                 cats[d.manifest.id] = d.i18n;
+        const z = zipPending;
+        if (z?.i18n && Object.keys(z.i18n).length > 0)
+            cats[z.id] = z.i18n;
         Tr.extraCatalogs = cats;
+    }
+
+    onZipPendingChanged: updateCatalogs()
+
+    onDiscoveredChanged: {
+        updateCatalogs();
         sync();
         checkSystem();
     }
@@ -462,7 +473,8 @@ Singleton {
                             path: zipProc.command[3],
                             id: r.id,
                             name: r.name,
-                            description: r.systemDescription ?? ""
+                            description: r.systemDescription ?? "",
+                            i18n: r.i18n ?? {}
                         };
                         return;
                     }

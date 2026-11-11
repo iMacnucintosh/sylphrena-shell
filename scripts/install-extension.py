@@ -6,8 +6,9 @@
   install-extension.py remove <id> <user_dir>
 
 inspect: the same checks as install, without writing anything. Prints {"ok", "id", "name", "version",
-"system": bool, "systemDescription"}: the shell asks for the password before installing an
-extension that declares system pieces (manifest `system`).
+"system": bool, "systemDescription", "i18n": {<lang>: {...}}}: the shell asks for the password
+before installing an extension that declares system pieces (manifest `system`), and uses the
+package's own catalogs (i18n/<lang>.json) to show its texts translated before it is installed.
 
 install: the zip holds one extension, its manifest.json either at the root or inside a single top
 folder. It is checked before anything is written: no absolute paths, no "..", no symlinks or other
@@ -97,8 +98,32 @@ def open_checked(zip_path: str, builtin_dir: str):
     return zf, items, root, manifest
 
 
+MAX_CATALOG = 512 * 1024
+
+
+def catalogs(zf: zipfile.ZipFile, root: PurePosixPath) -> dict:
+    """The extension's own catalogs (i18n/<lang>.json) read from the zip; only string pairs."""
+    out = {}
+    for info in zf.infolist():
+        path = PurePosixPath(info.filename)
+        rel = path.relative_to(root) if root.parts else path
+        if len(rel.parts) != 2 or rel.parts[0] != "i18n" or rel.suffix != ".json" or info.file_size > MAX_CATALOG:
+            continue
+        lang = rel.stem
+        if not re.fullmatch(r"[A-Za-z]{2,3}([_-][A-Za-z0-9]+)?", lang):
+            continue
+        try:
+            data = json.loads(zf.read(info))
+        except ValueError:
+            continue
+        if isinstance(data, dict):
+            out[lang] = {k: v for k, v in data.items() if isinstance(k, str) and isinstance(v, str)}
+    return out
+
+
 def inspect(zip_path: str, builtin_dir: str) -> dict:
-    zf, _, _, manifest = open_checked(zip_path, builtin_dir)
+    zf, _, root, manifest = open_checked(zip_path, builtin_dir)
+    i18n = catalogs(zf, root)
     zf.close()
     system = manifest.get("system") if isinstance(manifest.get("system"), dict) else {}
     return {
@@ -108,6 +133,7 @@ def inspect(zip_path: str, builtin_dir: str) -> dict:
         "version": manifest.get("version", ""),
         "system": bool(system.get("install")),
         "systemDescription": system.get("description", ""),
+        "i18n": i18n,
     }
 
 
