@@ -318,6 +318,14 @@ Popout flotante junto al cursor (estilo Sylphrena), respaldado por **cliphist** 
 | Activity siguiente | Super + Ctrl + → |
 | Última ventana (cualquier escritorio/actividad) | Super + \` (grave) |
 | Historial del clipboard | Super + Shift + V |
+| Ir a la actividad 1–4 | Super + Ctrl + 1…4 |
+| Mover la ventana a la actividad siguiente / anterior (y seguirla) | Super + Ctrl + Shift + → / ← |
+| Pantalla completa | Super + F |
+| Mover la ventana con el teclado | Super + Shift + flechas |
+| Fijar ventana (solo flotantes) | Super + Shift + P |
+| Volumen +/−, silencio, silenciar micro | teclas XF86 (antes fijas en `hyprland.lua`; ahora remapeables) |
+
+El resto de atajos de base son los de Caelestia (cerrar Super + C, terminal Super + Q, launcher Super + Espacio, escritorios Super + 1…0, mover a escritorio Super + Shift + 1…0…). La lista completa y los que tengas cambiados salen en el paso «Tus atajos» del asistente de bienvenida, con un botón para editarlos en Nexus.
 
 Cámbialos en **Nexus → Keyboard & mouse**.
 

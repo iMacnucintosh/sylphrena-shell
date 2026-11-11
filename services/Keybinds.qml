@@ -544,6 +544,150 @@ Singleton {
             defaultBind: "SUPER + SHIFT + V",
             global: "sylphrena:clipboard",
             category: "shell"
+        },
+        {
+            id: "toggleFullscreen",
+            label: () => Tr.tr("Toggle fullscreen"),
+            description: () => Tr.tr("Make the active window fullscreen or back"),
+            defaultBind: "SUPER + F",
+            dispatch: "hl.dsp.window.fullscreen()",
+            category: "windows"
+        },
+        {
+            id: "moveWindowLeft",
+            label: () => Tr.tr("Move window left"),
+            description: () => Tr.tr("Move the active window left"),
+            defaultBind: "SUPER + SHIFT + Left",
+            dispatch: "hl.dsp.window.move({ direction = \"left\" })",
+            category: "windows"
+        },
+        {
+            id: "moveWindowRight",
+            label: () => Tr.tr("Move window right"),
+            description: () => Tr.tr("Move the active window right"),
+            defaultBind: "SUPER + SHIFT + Right",
+            dispatch: "hl.dsp.window.move({ direction = \"right\" })",
+            category: "windows"
+        },
+        {
+            id: "moveWindowUp",
+            label: () => Tr.tr("Move window up"),
+            description: () => Tr.tr("Move the active window up"),
+            defaultBind: "SUPER + SHIFT + Up",
+            dispatch: "hl.dsp.window.move({ direction = \"up\" })",
+            category: "windows"
+        },
+        {
+            id: "moveWindowDown",
+            label: () => Tr.tr("Move window down"),
+            description: () => Tr.tr("Move the active window down"),
+            defaultBind: "SUPER + SHIFT + Down",
+            dispatch: "hl.dsp.window.move({ direction = \"down\" })",
+            category: "windows"
+        },
+        {
+            id: "togglePin",
+            label: () => Tr.tr("Pin window"),
+            description: () => Tr.tr("Keep the active floating window on every workspace"),
+            defaultBind: "SUPER + SHIFT + P",
+            dispatch: "hl.dsp.window.pin()",
+            category: "windows"
+        },
+        {
+            id: "activityGo1",
+            label: () => Tr.tr("Activity %1").arg(1),
+            description: () => Tr.tr("Jump to the first desktop of activity %1").arg(1),
+            defaultBind: "SUPER + CTRL + 1",
+            global: "sylphrena:activityGo1",
+            category: "activities"
+        },
+        {
+            id: "activityGo2",
+            label: () => Tr.tr("Activity %1").arg(2),
+            description: () => Tr.tr("Jump to the first desktop of activity %1").arg(2),
+            defaultBind: "SUPER + CTRL + 2",
+            global: "sylphrena:activityGo2",
+            category: "activities"
+        },
+        {
+            id: "activityGo3",
+            label: () => Tr.tr("Activity %1").arg(3),
+            description: () => Tr.tr("Jump to the first desktop of activity %1").arg(3),
+            defaultBind: "SUPER + CTRL + 3",
+            global: "sylphrena:activityGo3",
+            category: "activities"
+        },
+        {
+            id: "activityGo4",
+            label: () => Tr.tr("Activity %1").arg(4),
+            description: () => Tr.tr("Jump to the first desktop of activity %1").arg(4),
+            defaultBind: "SUPER + CTRL + 4",
+            global: "sylphrena:activityGo4",
+            category: "activities"
+        },
+        {
+            id: "moveToActivityNext",
+            label: () => Tr.tr("Move window to next activity"),
+            description: () => Tr.tr("Send the active window to the next activity and follow it"),
+            defaultBind: "SUPER + CTRL + SHIFT + Right",
+            global: "sylphrena:moveToActivityNext",
+            category: "activities"
+        },
+        {
+            id: "moveToActivityPrev",
+            label: () => Tr.tr("Move window to previous activity"),
+            description: () => Tr.tr("Send the active window to the previous activity and follow it"),
+            defaultBind: "SUPER + CTRL + SHIFT + Left",
+            global: "sylphrena:moveToActivityPrev",
+            category: "activities"
+        },
+        {
+            id: "volumeUp",
+            label: () => Tr.tr("Volume up"),
+            description: () => Tr.tr("Raise the volume of the default output"),
+            defaultBind: "XF86AudioRaiseVolume",
+            dispatch: "hl.dsp.exec_cmd(\"wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+\")",
+            category: "system",
+            flags: {
+                locked: true,
+                repeating: true
+            }
+        },
+        {
+            id: "volumeDown",
+            label: () => Tr.tr("Volume down"),
+            description: () => Tr.tr("Lower the volume of the default output"),
+            defaultBind: "XF86AudioLowerVolume",
+            dispatch: "hl.dsp.exec_cmd(\"wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-\")",
+            category: "system",
+            flags: {
+                locked: true,
+                repeating: true
+            }
+        },
+        {
+            id: "volumeMute",
+            label: () => Tr.tr("Mute"),
+            description: () => Tr.tr("Mute or unmute the default output"),
+            defaultBind: "XF86AudioMute",
+            dispatch: "hl.dsp.exec_cmd(\"wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle\")",
+            category: "system",
+            flags: {
+                locked: true,
+                repeating: true
+            }
+        },
+        {
+            id: "micMute",
+            label: () => Tr.tr("Mute microphone"),
+            description: () => Tr.tr("Mute or unmute the default input"),
+            defaultBind: "XF86AudioMicMute",
+            dispatch: "hl.dsp.exec_cmd(\"wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle\")",
+            category: "system",
+            flags: {
+                locked: true,
+                repeating: true
+            }
         }
     ]
 

@@ -134,6 +134,42 @@ Scope {
     }
 
     CustomShortcut {
+        name: "activityGo1"
+        description: "Jump to activity 1"
+        onPressed: Activities.focusActivityByIndex(0)
+    }
+
+    CustomShortcut {
+        name: "activityGo2"
+        description: "Jump to activity 2"
+        onPressed: Activities.focusActivityByIndex(1)
+    }
+
+    CustomShortcut {
+        name: "activityGo3"
+        description: "Jump to activity 3"
+        onPressed: Activities.focusActivityByIndex(2)
+    }
+
+    CustomShortcut {
+        name: "activityGo4"
+        description: "Jump to activity 4"
+        onPressed: Activities.focusActivityByIndex(3)
+    }
+
+    CustomShortcut {
+        name: "moveToActivityNext"
+        description: "Move the active window to the next activity"
+        onPressed: Activities.moveActiveWindowToActivityOffset(1)
+    }
+
+    CustomShortcut {
+        name: "moveToActivityPrev"
+        description: "Move the active window to the previous activity"
+        onPressed: Activities.moveActiveWindowToActivityOffset(-1)
+    }
+
+    CustomShortcut {
         name: "activityOverview"
         description: "Toggle activities overview"
         // Allowed over fullscreen so Super+Tab can escape a game into the overview

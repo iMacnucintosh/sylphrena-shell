@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 16:01+0100\n"
+"POT-Creation-Date: 2026-11-11 16:11+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1327,7 +1327,7 @@ msgstr "Abrir Things"
 msgid "Press a key…"
 msgstr "Pulsa una tecla…"
 
-#: modules/nexus/common/KeybindRow.qml
+#: modules/nexus/common/KeybindRow.qml modules/welcome/WelcomeWindow.qml
 msgid "None"
 msgstr "Ninguno"
 
@@ -4037,6 +4037,58 @@ msgid "Choose terminal"
 msgstr "Elegir terminal"
 
 #: modules/welcome/WelcomeWindow.qml
+msgid "Space"
+msgstr "Espacio"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "PrtSc"
+msgstr "ImprPant"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Left click"
+msgstr "Clic izquierdo"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Right click"
+msgstr "Clic derecho"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Wheel ↓"
+msgstr "Rueda ↓"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Wheel ↑"
+msgstr "Rueda ↑"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Go to workspace 1–10"
+msgstr "Ir al escritorio 1–10"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Move window to workspace 1–10"
+msgstr "Mover ventana al escritorio 1–10"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Go to activity 1–4"
+msgstr "Ir a la actividad 1–4"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Your shortcuts"
+msgstr "Tus atajos"
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "These are the ones in use now. Change any of them in Nexus and they update here."
+msgstr "Estos son los que están en uso ahora. Cambia cualquiera en Nexus y se actualizan aquí."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "In Nexus you can also export and import them."
+msgstr "En Nexus también puedes exportarlos e importarlos."
+
+#: modules/welcome/WelcomeWindow.qml
+msgid "Edit in Nexus"
+msgstr "Editar en Nexus"
+
+#: modules/welcome/WelcomeWindow.qml
 msgid "You are all set"
 msgstr "Todo listo"
 
@@ -4777,6 +4829,112 @@ msgstr "Historial del portapapeles"
 #: services/Keybinds.qml
 msgid "Open clipboard history and paste into the focused window"
 msgstr "Abrir el historial del portapapeles y pegar en la ventana enfocada"
+
+#: services/Keybinds.qml
+msgid "Toggle fullscreen"
+msgstr "Pantalla completa"
+
+#: services/Keybinds.qml
+msgid "Make the active window fullscreen or back"
+msgstr "Pone la ventana activa en pantalla completa o la devuelve"
+
+#: services/Keybinds.qml
+msgid "Move window left"
+msgstr "Mover ventana a la izquierda"
+
+#: services/Keybinds.qml
+msgid "Move the active window left"
+msgstr "Mueve la ventana activa a la izquierda"
+
+#: services/Keybinds.qml
+msgid "Move window right"
+msgstr "Mover ventana a la derecha"
+
+#: services/Keybinds.qml
+msgid "Move the active window right"
+msgstr "Mueve la ventana activa a la derecha"
+
+#: services/Keybinds.qml
+msgid "Move window up"
+msgstr "Mover ventana hacia arriba"
+
+#: services/Keybinds.qml
+msgid "Move the active window up"
+msgstr "Mueve la ventana activa hacia arriba"
+
+#: services/Keybinds.qml
+msgid "Move window down"
+msgstr "Mover ventana hacia abajo"
+
+#: services/Keybinds.qml
+msgid "Move the active window down"
+msgstr "Mueve la ventana activa hacia abajo"
+
+#: services/Keybinds.qml
+msgid "Pin window"
+msgstr "Fijar ventana"
+
+#: services/Keybinds.qml
+msgid "Keep the active floating window on every workspace"
+msgstr "Mantiene la ventana flotante activa en todos los escritorios"
+
+#: services/Keybinds.qml
+#, qt-format
+msgid "Activity %1"
+msgstr "Actividad %1"
+
+#: services/Keybinds.qml
+#, qt-format
+msgid "Jump to the first desktop of activity %1"
+msgstr "Ir al primer escritorio de la actividad %1"
+
+#: services/Keybinds.qml
+msgid "Move window to next activity"
+msgstr "Mover ventana a la actividad siguiente"
+
+#: services/Keybinds.qml
+msgid "Send the active window to the next activity and follow it"
+msgstr "Envía la ventana activa a la actividad siguiente y la sigue"
+
+#: services/Keybinds.qml
+msgid "Move window to previous activity"
+msgstr "Mover ventana a la actividad anterior"
+
+#: services/Keybinds.qml
+msgid "Send the active window to the previous activity and follow it"
+msgstr "Envía la ventana activa a la actividad anterior y la sigue"
+
+#: services/Keybinds.qml
+msgid "Volume up"
+msgstr "Subir volumen"
+
+#: services/Keybinds.qml
+msgid "Raise the volume of the default output"
+msgstr "Sube el volumen de la salida predeterminada"
+
+#: services/Keybinds.qml
+msgid "Volume down"
+msgstr "Bajar volumen"
+
+#: services/Keybinds.qml
+msgid "Lower the volume of the default output"
+msgstr "Baja el volumen de la salida predeterminada"
+
+#: services/Keybinds.qml
+msgid "Mute"
+msgstr "Silenciar"
+
+#: services/Keybinds.qml
+msgid "Mute or unmute the default output"
+msgstr "Silencia o reactiva la salida predeterminada"
+
+#: services/Keybinds.qml
+msgid "Mute microphone"
+msgstr "Silenciar micrófono"
+
+#: services/Keybinds.qml
+msgid "Mute or unmute the default input"
+msgstr "Silencia o reactiva la entrada predeterminada"
 
 #: services/Keybinds.qml
 msgid "Windows"
@@ -5631,6 +5789,10 @@ msgstr "Ajustes"
 msgid "Configure the shell"
 msgstr "Configura el shell"
 
+#, qt-format
+#~ msgid "Send the active window to workspace %1"
+#~ msgstr "Envía la ventana activa al escritorio %1"
+
 #~ msgid "Achievements"
 #~ msgstr "Logros"
 
@@ -5641,10 +5803,6 @@ msgstr "Configura el shell"
 #, qt-format
 #~ msgid "Locked · %1"
 #~ msgstr "Bloqueados · %1"
-
-#, qt-format
-#~ msgid "Activity in %1"
-#~ msgstr "Actividad en %1"
 
 #~ msgid "Sessions"
 #~ msgstr "Sesiones"

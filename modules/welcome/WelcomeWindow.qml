@@ -12,11 +12,11 @@ import qs.modules.nexus
 import qs.modules.nexus.common
 
 // The welcome assistant window (see services/Welcome.qml): what Sylphrena is, what it offers, and
-// the apps of its family that are worth installing. Four steps; skipping or finishing both count as seen.
+// the apps of its family that are worth installing. Five steps; skipping or finishing both count as seen.
 FloatingWindow {
     id: win
 
-    readonly property int stepCount: 4
+    readonly property int stepCount: 5
     property int step: 0
 
     property bool done: false
@@ -102,7 +102,7 @@ FloatingWindow {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
-            sourceComponent: [welcomePage, offerPage, companionsPage, donePage][win.step]
+            sourceComponent: [welcomePage, offerPage, companionsPage, shortcutsPage, donePage][win.step]
 
             onLoaded: fade.restart()
 
@@ -574,7 +574,211 @@ FloatingWindow {
         }
     }
 
-    // ── 4 · Ready ─────────────────────────────────────────────────────────────────────────
+    // ── 4 · The shortcuts ───────────────────────────────────────────────────────────────────
+    // What is bound right now (it follows Nexus: edit a shortcut there and it changes here)
+    Component {
+        id: shortcutsPage
+
+        ColumnLayout {
+            id: sc
+
+            spacing: Tokens.spacing.large
+
+            // Keycap names for what Hyprland calls the keys
+            readonly property var keyNames: ({
+                    super: "Super",
+                    ctrl: "Ctrl",
+                    alt: "Alt",
+                    shift: "Shift",
+                    left: "←",
+                    right: "→",
+                    up: "↑",
+                    down: "↓",
+                    grave: "`",
+                    comma: ",",
+                    space: Tr.tr("Space"),
+                    equal: "=",
+                    minus: "−",
+                    backspace: "⌫",
+                    delete: "Del",
+                    print: Tr.tr("PrtSc"),
+                    tab: "Tab",
+                    "mouse:272": Tr.tr("Left click"),
+                    "mouse:273": Tr.tr("Right click"),
+                    mouse_down: Tr.tr("Wheel ↓"),
+                    mouse_up: Tr.tr("Wheel ↑")
+                })
+
+            function keys(bind: string): var {
+                if (!bind)
+                    return [];
+                return bind.split("+").map(k => k.trim()).filter(k => k).map(k => sc.keyNames[k.toLowerCase()] ?? k);
+            }
+
+            // Numbered families collapse into one row ("Super + 1…0")
+            readonly property var rows: {
+                Keybinds.overrides; // follow the edits
+                const out = [];
+                const families = [
+                    {
+                        prefix: "workspace",
+                        label: Tr.tr("Go to workspace 1–10")
+                    },
+                    {
+                        prefix: "moveToWorkspace",
+                        label: Tr.tr("Move window to workspace 1–10")
+                    },
+                    {
+                        prefix: "activityGo",
+                        label: Tr.tr("Go to activity 1–4")
+                    }
+                ];
+                const isNumbered = id => families.some(f => id.startsWith(f.prefix) && /^\d+$/.test(id.slice(f.prefix.length)));
+                for (const cat of ["windows", "workspaces", "activities", "apps", "shell", "notifications", "media", "system", "capture"]) {
+                    const acts = Keybinds.catalog.filter(a => a.category === cat);
+                    if (!acts.length)
+                        continue;
+                    out.push({
+                        header: Keybinds.categoryLabels[cat]()
+                    });
+                    for (const f of families) {
+                        const first = acts.find(a => a.id === f.prefix + "1");
+                        if (first)
+                            out.push({
+                                label: f.label,
+                                keys: sc.keys(Keybinds.bindFor(first.id)).map((k, i, a) => i === a.length - 1 ? k + "…" : k)
+                            });
+                    }
+                    for (const a of acts) {
+                        if (isNumbered(a.id))
+                            continue;
+                        out.push({
+                            label: a.label(),
+                            keys: sc.keys(Keybinds.bindFor(a.id))
+                        });
+                    }
+                }
+                return out;
+            }
+
+            PageHeader {
+                title: Tr.tr("Your shortcuts")
+                subtitle: Tr.tr("These are the ones in use now. Change any of them in Nexus and they update here.")
+                onSlotReady: (slot, size) => win.registerSlot(slot, size)
+            }
+
+            StyledRect {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                radius: Tokens.rounding.large
+                color: Colours.tPalette.m3surfaceContainer
+                clip: true
+
+                ListView {
+                    anchors.fill: parent
+                    anchors.margins: Tokens.padding.medium
+                    clip: true
+                    spacing: 2
+                    model: sc.rows
+                    boundsBehavior: Flickable.StopAtBounds
+
+                    delegate: Item {
+                        id: row
+
+                        required property var modelData
+
+                        width: ListView.view.width
+                        implicitHeight: row.modelData.header ? 34 : 30
+
+                        StyledText {
+                            visible: !!row.modelData.header
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 4
+                            text: row.modelData.header ?? ""
+                            color: Colours.palette.m3primary
+                            font: Tokens.font.label.large
+                        }
+
+                        StyledText {
+                            visible: !row.modelData.header
+                            anchors.left: parent.left
+                            anchors.leftMargin: Tokens.padding.small
+                            anchors.right: caps.left
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: row.modelData.label ?? ""
+                            elide: Text.ElideRight
+                            font: Tokens.font.body.medium
+                        }
+
+                        Row {
+                            id: caps
+
+                            visible: !row.modelData.header
+                            anchors.right: parent.right
+                            anchors.rightMargin: Tokens.padding.small
+                            anchors.verticalCenter: parent.verticalCenter
+                            spacing: 4
+
+                            StyledText {
+                                visible: (row.modelData.keys ?? []).length === 0
+                                text: Tr.tr("None")
+                                color: Colours.palette.m3outline
+                                font: Tokens.font.label.medium
+                            }
+
+                            Repeater {
+                                model: row.modelData.keys ?? []
+
+                                StyledRect {
+                                    id: cap
+
+                                    required property string modelData
+
+                                    implicitWidth: Math.max(capLabel.implicitWidth + Tokens.padding.medium * 2, 26)
+                                    implicitHeight: capLabel.implicitHeight + Tokens.padding.small
+                                    radius: Tokens.rounding.small
+                                    color: Colours.tPalette.m3surfaceContainerHighest
+
+                                    StyledText {
+                                        id: capLabel
+
+                                        anchors.centerIn: parent
+                                        text: cap.modelData
+                                        font: Tokens.font.label.medium
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Tokens.spacing.medium
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: Tr.tr("In Nexus you can also export and import them.")
+                    color: Colours.palette.m3onSurfaceVariant
+                    font: Tokens.font.body.small
+                    wrapMode: Text.WordWrap
+                }
+
+                TextButton {
+                    type: TextButton.Tonal
+                    isRound: true
+                    horizontalPadding: Tokens.padding.large
+                    verticalPadding: Tokens.padding.small
+                    text: Tr.tr("Edit in Nexus")
+                    onClicked: WindowFactory.openPage("keybinds")
+                }
+            }
+        }
+    }
+
+    // ── 5 · Ready ─────────────────────────────────────────────────────────────────────────
     Component {
         id: donePage
 
