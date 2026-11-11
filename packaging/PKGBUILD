@@ -41,7 +41,8 @@ pkgver() {
 build() {
   cd sylphrena-shell
   # VERSION comes from `git describe --match v0.*` (what extensions compare `requires.sylphrena` with)
-  cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+  cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
+    -DINSTALL_QSCONFDIR=/etc/xdg/quickshell/sylphrena
   cmake --build build
 }
 

@@ -69,7 +69,7 @@ endif()
 
 if("shell" IN_LIST ENABLE_MODULES)
     foreach(dir assets components daemons extensions greeter modules scripts services utils)
-        install(DIRECTORY ${dir} DESTINATION "${INSTALL_QSCONFDIR}")
+        install(DIRECTORY ${dir} DESTINATION "${INSTALL_QSCONFDIR}" USE_SOURCE_PERMISSIONS)
     endforeach()
 
     install(PROGRAMS assets/wrap_term_launch.sh DESTINATION "${INSTALL_QSCONFDIR}/assets")
