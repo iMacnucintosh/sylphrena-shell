@@ -68,7 +68,7 @@ ColumnLayout {
             spacing: 0
 
             StyledText {
-                text: Tr.tr("VPN FortiClient")
+                text: root.service.currentName || Tr.tr("VPN FortiClient")
                 font: Tokens.font.title.small
                 color: Colours.palette.m3onSurface
             }

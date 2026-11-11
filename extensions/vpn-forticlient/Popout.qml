@@ -21,8 +21,10 @@ ColumnLayout {
     spacing: Tokens.spacing.small
 
     function startConnect(): void {
-        root.service.requestOtp();
-        root.popouts.currentName = "vpnOtp";
+        root.service.connect(null);
+        // Connections that ask for a one-time code continue in the OTP dialog
+        if (root.service.otpOpen)
+            root.popouts.currentName = "vpnOtp";
     }
 
     RowLayout {
@@ -33,8 +35,9 @@ ColumnLayout {
 
         StyledText {
             Layout.fillWidth: true
-            text: Tr.tr("VPN FortiClient")
+            text: root.service.currentName || Tr.tr("VPN FortiClient")
             font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
+            elide: Text.ElideRight
         }
     }
 
@@ -66,6 +69,16 @@ ColumnLayout {
                 font: Tokens.font.mono.small
             }
         }
+    }
+
+    StyledText {
+        Layout.fillWidth: true
+        Layout.rightMargin: Tokens.padding.extraSmall
+        visible: root.service.lastError.length > 0 && !root.service.otpOpen
+        text: root.service.lastError
+        color: Colours.palette.m3error
+        font: Tokens.font.body.small
+        wrapMode: Text.Wrap
     }
 
     TextButton {

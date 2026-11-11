@@ -1,4 +1,3 @@
-
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -8,20 +7,36 @@ import Sylphrena.I18n
 import Sylphrena.Services
 import qs.utils
 
+// FortiClient (openfortivpn) connections. This extension contributes a VPN provider *type*
+// (manifest `vpnProviderType`): every FortiClient connection is an entry of the VPN providers of the
+// config (Nexus → Network, `type: "ext:vpn-forticlient"`), whose `options` hold its settings. The
+// password never goes to shell.json: it lives in ~/.config/sylphrena/vpn/<id>.conf (mode 600), the
+// openfortivpn file this service generates from `options` + password. The tunnel runs through the
+// root helper of helper/sylphrena-fortivpn (installed by scripts/install-system.sh).
 Scope {
     id: root
 
     // Injected by the base (services/Extensions.qml)
     required property var ext
 
-    readonly property string scriptsDir: `${Paths.data}/vpn-forticlient`
-    readonly property string configPath: `${Quickshell.env("HOME")}/.config/openfortivpn/config`
+    readonly property string typeId: `ext:${root.ext.id}`
+    readonly property string helper: "/usr/local/sbin/sylphrena-fortivpn"
+    readonly property string connDir: `${Quickshell.env("HOME")}/.config/sylphrena/vpn`
+    // Until checked (test -x) nothing calls the helper
+    property bool helperInstalled: false
 
-    // The service exists only while the extension is enabled (kept so the code below reads as before)
-    readonly property bool enabled: true
+    // Connections of this type, in the order of the provider list
+    readonly property var connections: GlobalConfig.utilities.vpn.provider.values.filter(p => p.type === root.typeId)
+    // The connection the bar acts on: the one up, else the one selected in Nexus, else the first
+    readonly property var current: root.connectionById(root.connected ? root.activeId : "") ?? root.connectionById(root.pendingId) ?? root.connectionById(GlobalConfig.utilities.vpn.selectedProvider) ?? root.connections[0] ?? null
+    readonly property string currentName: root.current ? (root.current.displayName || root.current.name) : ""
 
     property bool connected: false
     property string vpnIp: ""
+    // Connection id of the tunnel that is up (reported by the helper)
+    property string activeId: ""
+    // Connection id being connected (or waiting for its OTP)
+    property string pendingId: ""
     property string statusText: Tr.trCtx("Disconnected", "vpn state")
     property bool busy: false
     property bool otpOpen: false
@@ -29,123 +44,158 @@ Scope {
     property bool wasConnected: false
     property bool tearingDown: false
 
-    // Editable openfortivpn connection fields (rest of the file is preserved on save)
-    property string cfgHost: ""
-    property string cfgPort: "10443"
-    property string cfgUsername: ""
-    property string cfgPassword: ""
-    property string cfgRealm: ""
-    property bool configLoaded: false
-    property string configError: ""
-
     readonly property bool connecting: busy && !connected
     readonly property bool disconnecting: busy && connected
+
+    // Arguments of the helper start waiting for the connection file to be written
+    property var _startArgs: null
+
+    function connectionById(id: string): var {
+        return id ? (root.connections.find(p => p.id === id) ?? null) : null;
+    }
+
+    function opt(conn: var, key: string, fallback: var): var {
+        const v = conn?.options?.[key];
+        return v === undefined || v === null || v === "" ? fallback : v;
+    }
+
+    function list(v: var): var {
+        if (Array.isArray(v))
+            return v.map(x => String(x).trim()).filter(x => x.length > 0);
+        return String(v ?? "").split(/[\s,]+/).filter(x => x.length > 0);
+    }
+
+    function needsOtp(conn: var): bool {
+        return root.opt(conn, "auth", "password") === "otp";
+    }
 
     // Called by the base just before the extension is disabled from Nexus: stop the tunnel and clear
     // DNS/hosts. Detached, because this service is destroyed right after.
     function aboutToDisable(): void {
-        Quickshell.execDetached(["sh", "-c", '"$1"; "$2"', "sh", `${root.scriptsDir}/disconnect_vpn.sh`, `${root.scriptsDir}/heal_vpn.sh`]);
+        Quickshell.execDetached(["sudo", "-n", root.helper, "stop"]);
         if (GlobalConfig.utilities.toasts.vpnChanged)
             Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("Complement disabled"), "shield");
     }
 
     function refreshStatus(): void {
-        // While connect/disconnect is in flight the piped status is stale by
-        // definition; the process onExited handler refreshes at the end.
-        // Previously poll here reset `busy` mid-connect (UI flicker + a second
-        // connectWithOtp could kill the first tunnel attempt).
-        if (connectProc.running || disconnectProc.running)
+        // While connect/disconnect is in flight the status is stale by definition; the process
+        // onExited handler refreshes at the end.
+        if (connectProc.running || disconnectProc.running || writerProc.running || statusProc.running)
             return;
-        if (!root.enabled || statusProc.running)
+        if (!root.helperInstalled) {
+            // Installed later with scripts/install-system.sh: picked up by the next poll
+            if (!helperCheck.running)
+                helperCheck.running = true;
             return;
+        }
         statusProc.running = true;
     }
 
     function onResumed(): void {
-        if (!root.enabled)
+        if (!root.helperInstalled)
             return;
-        // After sleep the SSL tunnel is usually dead while ppp0 still looks up.
-        // Heal tears down zombies + clears hosts/DNS; then burst-poll status.
+        // After sleep the SSL tunnel is usually dead while ppp still looks up: heal tears it down
         if (!healProc.running)
             healProc.running = true;
         resumeBurst.ticks = 0;
         resumeBurst.restart();
     }
 
+    // ── Provider contract (manifest `vpnProviderType`) ─────────────────────────
+    // The VPN of the base drives a connection through connect(conn) / disconnect() / toggle() and
+    // reads connected / activeId / pendingId / busy / otpOpen (= needs authentication) / lastError.
+
+    function connect(conn: var): void {
+        const c = conn ?? root.current;
+        if (root.busy || root.connected)
+            return;
+        root.lastError = "";
+        if (!root.helperInstalled) {
+            if (!helperCheck.running)
+                helperCheck.running = true;
+            root.lastError = Tr.tr("The FortiClient helper is not installed: run scripts/install-system.sh");
+            return;
+        }
+        if (!c) {
+            root.lastError = Tr.tr("No FortiClient connection: add one in Nexus → Network");
+            return;
+        }
+        root.pendingId = c.id;
+        if (root.needsOtp(c))
+            root.otpOpen = true;
+        else
+            root.start(c, "");
+    }
+
     function toggle(): void {
-        if (!root.enabled || root.busy)
+        if (root.busy)
             return;
         if (root.connected)
             root.disconnect();
         else
-            root.requestOtp();
+            root.connect(null);
     }
 
-    // Provider contract (manifest `vpnProvider`): the base VPN selector drives this service through
-    // connected / connecting / disconnecting / otpOpen (= needs authentication) / lastError,
-    // connect() / disconnect() / toggle(). Connecting needs an OTP, so it opens the OTP dialog that
-    // the VPN icon of the bar shows.
-    function connect(): void {
-        root.requestOtp();
-    }
-
+    // Kept for the bar popouts
     function requestOtp(): void {
-        if (!root.enabled || root.busy || root.connected)
-            return;
-        root.lastError = "";
-        root.otpOpen = true;
+        root.connect(null);
     }
 
     function cancelOtp(): void {
         root.otpOpen = false;
         root.lastError = "";
+        if (!root.busy)
+            root.pendingId = "";
     }
 
     function connectWithOtp(otp: string): void {
-        if (!root.enabled)
-            return;
         const token = (otp || "").replace(/\s+/g, "");
-        if (token.length === 0 || root.busy)
+        const c = root.connectionById(root.pendingId);
+        if (token.length === 0 || root.busy || !c)
             return;
-
         root.otpOpen = false;
+        root.start(c, token);
+    }
+
+    function start(conn: var, otp: string): void {
+        const args = ["sudo", "-n", root.helper, "start", conn.id];
+        if (otp)
+            args.push("--otp", otp);
+        const health = String(root.opt(conn, "healthHost", "")).trim();
+        if (health)
+            args.push("--health", health);
+        const dns = root.list(root.opt(conn, "dns", []));
+        if (dns.length)
+            args.push("--dns", dns.join(","));
+        const domains = root.list(root.opt(conn, "domains", []));
+        if (domains.length)
+            args.push("--domains", domains.join(","));
+        const hosts = root.list(root.opt(conn, "hosts", []));
+        if (hosts.length)
+            args.push("--hosts", hosts.join(","));
+
+        root.pendingId = conn.id;
         root.busy = true;
         root.lastError = "";
         root.statusText = Tr.trCtx("Connecting…", "vpn state");
-        connectProc.command = [`${root.scriptsDir}/connect_vpn.sh`, token];
-        connectProc.running = true;
+        // Regenerate the connection file first: `options` may have changed by hand in shell.json
+        root._startArgs = args;
+        root.writeConnection(conn.id, conn.options ?? {}, root.readPassword(conn.id));
     }
 
     function disconnect(): void {
-        if (!root.enabled || root.busy || !root.connected)
+        if (root.busy || !root.connected)
             return;
         root.busy = true;
         root.statusText = Tr.trCtx("Disconnecting…", "vpn state");
         disconnectProc.running = true;
     }
 
-    // Kill tunnel / openfortivpn even if status already looks disconnected
-    function teardown(): void {
-        root.cancelOtp();
-        root.tearingDown = true;
-        root.busy = true;
-        root.lastError = "";
-        root.statusText = Tr.trCtx("Disconnected", "vpn state");
-        resumeBurst.stop();
-        if (connectProc.running)
-            connectProc.running = false;
-        if (statusProc.running)
-            statusProc.running = false;
-        if (disconnectProc.running) {
-            // Already stopping; heal will run on exit
-            return;
-        }
-        disconnectProc.running = true;
-    }
-
     function clearRuntimeState(): void {
         root.connected = false;
         root.vpnIp = "";
+        root.activeId = "";
+        root.pendingId = "";
         root.busy = false;
         root.wasConnected = false;
         root.otpOpen = false;
@@ -153,116 +203,88 @@ Scope {
         root.statusText = Tr.trCtx("Disconnected", "vpn state");
     }
 
-    function reloadConfig(): void {
-        root.configError = "";
-        configFile.reload();
+    // ── Connection files (the only place with the password) ─────────────────────
+
+    function confPath(id: string): string {
+        return `${root.connDir}/${id}.conf`;
     }
 
-    function applyConfigText(text: string): void {
-        let host = "";
-        let port = "10443";
-        let username = "";
-        let password = "";
-        let realm = "";
-        for (const raw of (text || "").split("\n")) {
-            const line = raw.trim();
-            if (!line || line.startsWith("#"))
-                continue;
-            const eq = line.indexOf("=");
-            if (eq < 0)
-                continue;
-            const key = line.slice(0, eq).trim();
-            const value = line.slice(eq + 1).trim();
-            switch (key) {
-            case "host":
-                host = value;
-                break;
-            case "port":
-                port = value || "10443";
-                break;
-            case "username":
-                username = value;
-                break;
-            case "password":
-                password = value;
-                break;
-            case "realm":
-                realm = value;
-                break;
-            }
+    function readPassword(id: string): string {
+        if (!/^[A-Za-z0-9_-]+$/.test(id))
+            return "";
+        secretReader.path = root.confPath(id);
+        secretReader.reload();
+        const text = secretReader.text() || "";
+        for (const raw of text.split("\n")) {
+            const m = raw.match(/^\s*password\s*=\s?(.*)$/);
+            if (m)
+                return m[1];
         }
-        root.cfgHost = host;
-        root.cfgPort = port;
-        root.cfgUsername = username;
-        root.cfgPassword = password;
-        root.cfgRealm = realm;
-        root.configLoaded = true;
+        return "";
     }
 
-    function saveConfig(): bool {
-        if (!root.cfgHost.trim()) {
-            root.configError = Tr.tr("Host is required");
-            return false;
-        }
-        const port = (root.cfgPort || "").trim() || "10443";
-        if (!/^\d+$/.test(port)) {
-            root.configError = Tr.tr("Port must be a number");
-            return false;
-        }
-
-        const updates = {
-            host: root.cfgHost.trim(),
-            port: port,
-            username: root.cfgUsername.trim(),
-            password: root.cfgPassword,
-            realm: root.cfgRealm.trim()
+    function buildConf(o: var, password: string): string {
+        const clean = v => String(v ?? "").replace(/[\r\n]/g, "").trim();
+        const lines = ["# Generated by Sylphrena from Nexus → Network. Edit the connection there."];
+        const add = (key, value) => {
+            const v = clean(value);
+            if (v.length > 0)
+                lines.push(`${key} = ${v}`);
         };
-        const seen = {};
-        const src = configFile.text() || "";
-        const lines = src.length ? src.split("\n") : [];
-        const out = lines.map(raw => {
-            const m = raw.match(/^(\s*)([\w-]+)(\s*=\s*)(.*)$/);
-            if (!m)
-                return raw;
-            const key = m[2];
-            if (!(key in updates))
-                return raw;
-            seen[key] = true;
-            return `${m[1]}${key}${m[3]}${updates[key]}`;
-        });
-        for (const key of Object.keys(updates)) {
-            if (!seen[key])
-                out.push(`${key} = ${updates[key]}`);
-        }
-        try {
-            configFile.setText(out.join("\n").replace(/\n+$/, "") + "\n");
-            root.configError = "";
-            root.cfgPort = port;
-            return true;
-        } catch (e) {
-            root.configError = Tr.tr("Could not write VPN config");
-            return false;
-        }
+        add("host", o.host);
+        add("port", o.port || "443");
+        add("username", o.username);
+        if (password)
+            lines.push(`password = ${String(password).replace(/[\r\n]/g, "")}`);
+        add("realm", o.realm);
+        add("user-cert", o.userCert);
+        add("user-key", o.userKey);
+        for (const cert of root.list(o.trustedCert))
+            add("trusted-cert", cert);
+        lines.push("set-routes = 1");
+        lines.push(`set-dns = ${o.setDns === false ? 0 : 1}`);
+        if (o.halfInternetRoutes)
+            lines.push("half-internet-routes = 1");
+        if (o.legacyTls)
+            lines.push("seclevel-1 = 1");
+        lines.push("persistent = 0");
+        return lines.join("\n") + "\n";
+    }
+
+    // Write ~/.config/sylphrena/vpn/<id>.conf (dir 700, file 600). The text goes through stdin, so the
+    // password is never on a command line nor in a file with wider permissions.
+    function writeConnection(id: string, options: var, password: string): void {
+        if (!/^[A-Za-z0-9_-]+$/.test(id))
+            return;
+        writerProc._payload = root.buildConf(options ?? {}, password ?? "");
+        writerProc.command = ["sh", "-c", 'umask 077; mkdir -p "$1" && chmod 700 "$1" && cat > "$2.tmp" && mv -f "$2.tmp" "$2"', "sh", root.connDir, root.confPath(id)];
+        writerProc.stdinEnabled = true;
+        writerProc.running = true;
+    }
+
+    // The connection was deleted from Nexus: drop its file (and the tunnel if it is the one up)
+    function forget(id: string): void {
+        if (!/^[A-Za-z0-9_-]+$/.test(id))
+            return;
+        if (root.connected && root.activeId === id)
+            root.disconnect();
+        Quickshell.execDetached(["rm", "-f", "--", root.confPath(id)]);
     }
 
     function applyStatus(out: string): void {
-        if (!root.enabled) {
-            root.clearRuntimeState();
-            return;
-        }
         const parts = (out || "").trim().split("|");
-        const state = parts[0] || "disconnected";
-        const ip = parts[1] || "";
-        const nowConnected = state === "connected";
-        // A transition is owned by its process; ignore piped status that raced
-        // with it (would stamp "Disconnected" over "Connecting…" and clear busy).
-        if (connectProc.running || disconnectProc.running)
+        const nowConnected = parts[0] === "connected";
+        // A transition is owned by its process; ignore status that raced with it
+        if (connectProc.running || disconnectProc.running || writerProc.running)
             return;
         const dropped = root.wasConnected && !nowConnected && !root.busy;
 
         root.connected = nowConnected;
-        root.vpnIp = ip;
-        root.statusText = root.connected ? Tr.tr("Connected · %1").arg(ip) : Tr.trCtx("Disconnected", "vpn state");
+        root.vpnIp = nowConnected ? (parts[1] || "") : "";
+        root.activeId = nowConnected ? (parts[2] || "") : "";
+        if (!root.otpOpen)
+            root.pendingId = "";
+        root.statusText = nowConnected ? Tr.tr("Connected · %1").arg(root.vpnIp) : Tr.trCtx("Disconnected", "vpn state");
         root.busy = false;
         root.wasConnected = nowConnected;
 
@@ -270,12 +292,62 @@ Scope {
             Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("VPN dropped (reconnect after sleep)"), "gpp_bad");
     }
 
+    FileView {
+        id: secretReader
+
+        blockAllReads: true
+        printErrors: false
+    }
+
+    Process {
+        id: writerProc
+
+        property string _payload: ""
+
+        stdinEnabled: true
+        stderr: StdioCollector {
+            onStreamFinished: {
+                if (text.trim().length > 0)
+                    console.warn(`vpn-forticlient: ${text.trim()}`);
+            }
+        }
+        onStarted: {
+            writerProc.write(writerProc._payload);
+            writerProc._payload = "";
+            writerProc.stdinEnabled = false;
+        }
+        onExited: code => {
+            const args = root._startArgs;
+            root._startArgs = null;
+            if (!args)
+                return;
+            if (code !== 0) {
+                root.busy = false;
+                root.pendingId = "";
+                root.lastError = Tr.tr("Could not write VPN config");
+                root.refreshStatus();
+                return;
+            }
+            connectProc.command = args;
+            connectProc.running = true;
+        }
+    }
+
+    Process {
+        id: helperCheck
+
+        command: ["test", "-x", root.helper]
+        onExited: code => {
+            root.helperInstalled = code === 0;
+            if (root.helperInstalled)
+                root.refreshStatus();
+        }
+    }
+
     Process {
         id: statusProc
 
-        command: [`${root.scriptsDir}/status_vpn.sh`]
-        running: false
-
+        command: [root.helper, "status"]
         stdout: StdioCollector {
             onStreamFinished: root.applyStatus(text)
         }
@@ -284,53 +356,38 @@ Scope {
     Process {
         id: healProc
 
-        command: [`${root.scriptsDir}/heal_vpn.sh`]
-        running: false
+        command: ["sudo", "-n", root.helper, "heal"]
         stdout: StdioCollector {
-            onStreamFinished: {
-                if (root.tearingDown || !root.enabled)
-                    root.clearRuntimeState();
-                else
-                    root.applyStatus(text);
-            }
+            onStreamFinished: root.applyStatus(text)
         }
-        onExited: () => {
-            if (root.tearingDown || !root.enabled) {
-                root.clearRuntimeState();
-                return;
-            }
-            root.refreshStatus();
-        }
+        onExited: root.refreshStatus()
     }
 
     Process {
         id: connectProc
 
-        running: false
         stdout: StdioCollector {}
         stderr: StdioCollector {
             onStreamFinished: {
-                if (text.trim().length > 0)
-                    root.lastError = text.trim();
+                const t = text.trim();
+                if (t.length > 0)
+                    root.lastError = t.split("\n").pop().replace(/^sylphrena-fortivpn:\s*/, "");
             }
         }
         onExited: code => {
-            if (!root.enabled) {
-                root.clearRuntimeState();
-                return;
-            }
             if (code === 0) {
+                root.lastError = "";
                 if (GlobalConfig.utilities.toasts.vpnChanged)
-                    Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("VPN connected"), "vpn_lock");
-            } else if (code === 3) {
-                root.lastError = Tr.tr("Login failed (user / password / OTP / certificate).");
+                    Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("Connected to %1").arg(root.currentName), "vpn_lock");
+            } else {
+                if (code === 3)
+                    root.lastError = Tr.tr("Login failed (user / password / OTP / certificate).");
+                else if (!root.lastError || root.lastError.includes("password is required"))
+                    root.lastError = Tr.tr("Could not start the VPN tunnel (code %1).").arg(code);
                 if (GlobalConfig.utilities.toasts.vpnChanged)
                     Toaster.toast(Tr.tr("VPN FortiClient"), root.lastError, "gpp_bad");
-            } else if (code !== 0) {
-                const detail = root.lastError || Tr.tr("Could not start the VPN tunnel (code %1).").arg(code);
-                if (GlobalConfig.utilities.toasts.vpnChanged)
-                    Toaster.toast(Tr.tr("VPN FortiClient"), detail, "gpp_bad");
             }
+            root.busy = false;
             root.refreshStatus();
         }
     }
@@ -338,33 +395,21 @@ Scope {
     Process {
         id: disconnectProc
 
-        command: [`${root.scriptsDir}/disconnect_vpn.sh`]
-        running: false
+        command: ["sudo", "-n", root.helper, "stop"]
         stdout: StdioCollector {}
         stderr: StdioCollector {}
         onExited: () => {
-            if (root.tearingDown || !root.enabled) {
-                // After forced stop, heal to clear DNS/hosts/zombies
-                if (!healProc.running)
-                    healProc.running = true;
-                else
-                    root.clearRuntimeState();
-                if (GlobalConfig.utilities.toasts.vpnChanged)
-                    Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("Complement disabled"), "shield");
-                return;
-            }
             if (GlobalConfig.utilities.toasts.vpnChanged)
                 Toaster.toast(Tr.tr("VPN FortiClient"), Tr.tr("VPN disconnected"), "shield");
+            root.busy = false;
             root.refreshStatus();
         }
     }
 
     Timer {
-        id: poll
-
-        // Connected/busy: catch drops quickly; idle disconnect: cheap heartbeat
-        interval: root.connected || root.busy || root.tearingDown ? 8000 : 30000
-        running: root.enabled
+        // Connected/busy: catch drops quickly; idle: cheap heartbeat
+        interval: root.connected || root.busy ? 8000 : 30000
+        running: true
         repeat: true
         triggeredOnStart: true
         onTriggered: root.refreshStatus()
@@ -374,13 +419,10 @@ Scope {
         id: resumeBurst
 
         property int ticks: 0
+
         interval: 1500
         repeat: true
         onTriggered: {
-            if (!root.enabled) {
-                resumeBurst.stop();
-                return;
-            }
             root.refreshStatus();
             resumeBurst.ticks++;
             if (resumeBurst.ticks >= 6)
@@ -396,23 +438,5 @@ Scope {
         }
     }
 
-    FileView {
-        id: configFile
-
-        path: root.configPath
-        printErrors: false
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: root.applyConfigText(text())
-        onLoadFailed: err => {
-            root.configLoaded = true;
-            if (err !== FileViewError.FileNotFound)
-                root.configError = Tr.tr("Could not read VPN config");
-        }
-    }
-
-    Component.onCompleted: {
-        if (root.enabled)
-            root.refreshStatus();
-    }
+    Component.onCompleted: helperCheck.running = true
 }

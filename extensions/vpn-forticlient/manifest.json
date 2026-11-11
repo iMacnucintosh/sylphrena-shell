@@ -2,7 +2,7 @@
   "id": "vpn-forticlient",
   "type": "addon",
   "name": "VPN FortiClient",
-  "description": "FortiClient / openfortivpn status icon and connect flow",
+  "description": "FortiClient (openfortivpn) connections for the VPN of Nexus → Network",
   "offNote": "Disabled — tunnel and related processes are stopped",
   "icon": "verified_user",
   "version": "0.1.0",
@@ -10,7 +10,7 @@
   "contributes": {
     "service": "Service.qml",
     "settings": "Settings.qml",
-    "vpnProvider": { "id": "forticlient", "name": "FortiClient", "icon": "verified_user", "editor": "ProviderEditor.qml" },
+    "vpnProviderType": { "name": "FortiClient", "icon": "verified_user", "editor": "ProviderEditor.qml" },
     "statusIcons": [{ "id": "vpn", "component": "StatusIcon.qml" }],
     "popouts": [
       { "name": "vpn", "component": "Popout.qml" },

@@ -7,12 +7,14 @@ import qs.services
 
 // Shown in the extension's card in Nexus → Complements
 StyledText {
+    id: root
+
     required property var ext
     required property var service
 
     Layout.fillWidth: true
-    text: Tr.tr("FortiClient VPN config: ~/.config/openfortivpn/config (Nexus → Network → edit). Scripts: ~/.local/share/sylphrena/vpn-forticlient/")
-    color: Colours.palette.m3outline
+    text: root.service.helperInstalled ? Tr.tr("Connections: Nexus → Network → Add provider → FortiClient.") : Tr.tr("The FortiClient helper is not installed: run scripts/install-system.sh")
+    color: root.service.helperInstalled ? Colours.palette.m3outline : Colours.palette.m3error
     font: Tokens.font.label.small
     wrapMode: Text.Wrap
 }
