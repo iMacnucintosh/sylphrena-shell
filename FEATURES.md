@@ -125,7 +125,7 @@ Las funciones opcionales viven en `extensions/` y se activan en Nexus: **widgets
 Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
 
 - Lista de features opcionales del fork, con icono identificativo por fila.
-- **VPN FortiClient**: interruptor on/off. Al desactivar se oculta el icono, se para el poll y se ejecuta teardown (`disconnect` + `heal`) para matar `openfortivpn`/helper.
+- **VPN FortiClient**: interruptor on/off. Al activarla aparece el tipo **FortiClient** en Nexus → Red → Añadir proveedor; al desactivarla se para el túnel (`sylphrena-fortivpn stop`) y sus conexiones quedan en la lista como «extensión desactivada».
 - **Timers** (base): ya no está en Complementos; su interruptor on/off y sus presets viven en **Nexus → Panels → Taskbar → Clock** (`addons.timers.enabled`). Al desactivar se limpian timers activos y se oculta la sección del popout del reloj (el calendario sigue).
 - **Batería del ratón Razer** (extensión `razer-mouse`, tipo complemento, `extensions/razer-mouse/`): se activa en Nexus → Complementos (`extensions.enabled`). Lee la batería del Basilisk V4 Pro (2,4 GHz) con `synapsex-cli battery` (proyecto `~/Desarrollo/Projects/synapsex`; se busca en `PATH` y, si no, en `target/release/`, o se fija con `cliPath` en `~/.config/sylphrena/extensions/razer-mouse.json`, junto a `refreshMinutes`) y la muestra en la columna de recursos del dashboard, **en el hueco del anillo de almacenamiento** (con rayo si carga y en rojo ≤ 20 %): es el punto de enganche `resourceRing` de las extensiones. Se guarda el último valor leído (`~/.local/state/sylphrena/razer-mouse.json`). Avisa una vez al bajar del 20 % y del 10 %. Apagado no consulta nada y vuelve el anillo de almacenamiento.
 - **Hidratación** (extensión `hydration`, `extensions/hydration/`): se activa en `Panels → Dashboard → Carrusel de widgets` (`extensions.enabled`); apagarla descarga el servicio (recordatorios y seguimiento) pero conserva los datos. Depósito con waves (shader propio `water.frag.qsb`), meta diaria (default 3000 ml), botones +20/+83/+250/+500 configurables, undo del último trago, y recordatorio con acciones si pasan N minutos (default 15) sin registrar un trago. Sus ajustes viven en `~/.config/sylphrena/extensions/hydration.json` (se migran solos desde `addons.hydration`). Estado en `~/.local/state/sylphrena/hydration.json`.
@@ -133,19 +133,24 @@ Página **Nexus → Complementos** (sustituye el placeholder de Plugins):
 
 ## VPN FortiClient (openfortivpn)
 
-Es la extensión `vpn-forticlient` (`extensions/vpn-forticlient/`): se activa en Nexus → Complementos (`extensions.enabled`). Al desactivarla desde Nexus se para el túnel.
+Es la extensión `vpn-forticlient` (`extensions/vpn-forticlient/`): se activa en Nexus → Complementos (`extensions.enabled`). No trae ninguna red concreta: aporta el **tipo de proveedor FortiClient** a la VPN de la base.
 
-Icono en la pastilla de status (debajo de Bluetooth):
+**Conexiones.** Nexus → Red → **Añadir proveedor** → **FortiClient**. Cada conexión tiene nombre, servidor, puerto, realm, usuario y contraseña, y además:
 
-- Clic desconectado → diálogo OTP integrado → conecta
-- Clic conectado → desconecta
-- Estado con poll (`status_vpn.sh`); exige que la intranet responda (no basta con `ppp0` vivo)
-- Tras **suspender el PC**: al reanudar se ejecuta `heal` (limpia túnel zombie + DNS/`hosts`) y el icono refleja la realidad
+- **Pedir un código OTP** (opcional): si está activo, conectar abre el diálogo del código en el icono VPN de la barra; si no, conecta directamente.
+- **TLS antiguo** (`seclevel-1`) y **rutas de medio Internet** (`half-internet-routes`).
+- **Certificado** (opcional): certificado y clave de cliente (rutas PEM absolutas) y `trusted-cert` (SHA-256, varios separados por comas).
+- **Red** (opcional): **host de comprobación** (si deja de responder al ping, p. ej. tras suspender, se cierra el túnel; sin él basta con que `ppp` esté arriba), **servidores DNS** y **dominios** (solo con systemd-resolved; sin él se usan los DNS que empuja el servidor vía `set-dns`) y **entradas de `/etc/hosts`** («IP nombre», se quitan al desconectar).
 
-**Scripts**: la shell los busca en `~/.local/share/sylphrena/vpn-forticlient/` y **no los incluye** (dependen de cada red y de un ayudante con privilegios fuera del repo). Contrato:
+Al añadir una conexión nueva, si existe `~/.config/openfortivpn/config` el formulario se rellena con sus valores (importación). Se pueden tener varias conexiones; solo una conectada a la vez. Se seleccionan y conectan como cualquier proveedor (interruptor de Nexus → Red, botón rápido de Utilidades) o desde el icono VPN de la barra, que **solo conecta y desconecta** (actúa sobre la conexión activa, la seleccionada o la primera).
 
-| Script | Argumento | Salida |
-|---|---|---|
+**Dónde se guarda.** Lo que no es secreto va en `shell.json` (`utilities.vpn.provider`, con `type: "ext:vpn-forticlient"` y `options`; ver CONFIG.md). La **contraseña nunca** va en `shell.json`: la shell genera por conexión `~/.config/sylphrena/vpn/<id>.conf` (directorio 700, fichero 600; la escribe por stdin), que es el fichero que lee openfortivpn. Borrar la conexión en Nexus borra ese fichero.
+
+**Ayudante con privilegios.** openfortivpn necesita root: lo lanza `/usr/local/sbin/sylphrena-fortivpn` (fuente en `extensions/vpn-forticlient/helper/`), que instala `scripts/install-system.sh` (paso `20-forticlient.sh`, con una regla de sudoers sin contraseña solo para ese fichero y tu usuario; se salta si no está instalado `openfortivpn`). El ayudante lee el fichero de la conexión **como tu usuario**, solo acepta opciones conocidas de openfortivpn (nada de `pppd-*`), copia certificados y configuración a `/run/sylphrena-fortivpn` (solo root) y valida DNS/dominios/hosts/OTP. `sylphrena-fortivpn status` funciona sin root. Tras **suspender** se ejecuta `heal`, que cierra un túnel zombi y limpia DNS/`hosts`.
+
+Si vienes de los scripts antiguos (`~/.local/share/sylphrena/vpn-forticlient/`, ayudante `madison-vpn`): ya no se usan. Ejecuta `scripts/install-system.sh` y crea la conexión en Nexus (se importa de `~/.config/openfortivpn/config`). Puedes borrar luego el ayudante antiguo y su regla de sudoers.
+
+---|---|---|
 | `connect_vpn.sh` | OTP como `$1` | código de salida 0 si conecta |
 | `disconnect_vpn.sh` | — | — |
 | `heal_vpn.sh` | — | `connected\|IP` o `disconnected\|` |

@@ -51,7 +51,7 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
 > - `notifs`: `actionOnClick`, `defaultExpireTimeout`, `expire`, `fullscreen`, `fullscreenExpireTimeout`
 > - `paths`: `lyricsDir`, `wallpaperDir`
 > - `services`: `audioIncrement`, `brightnessIncrement`, `clockFormat`, `dataUnits`, `defaultPlayer`, `gpuType`, `lyricsBackend`, `maxVolume`, `playerAliases`, `sensorUnits`, `smartScheme`, `visualiserBars`, `weatherLocation`, `weatherUnits`
-> - `utilities`: `toasts.*`, `vpn.*`
+> - `utilities`: `toasts.*`, `vpn.*` (un proveedor con `type` = `ext:<extensión>` es una conexión de un tipo aportado por una extensión: su `options` es de la extensión y nunca lleva secretos; p. ej. FortiClient guarda la contraseña en `~/.config/sylphrena/vpn/<id>.conf`)
 >
 > </details>
 
@@ -722,6 +722,28 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
                     "interface": "your-connection-name",
                     "displayName": "Wireguard (Your VPN)",
                     "enabled": false
+                },
+                {
+                    "id": "vpn-work",
+                    "name": "Work",
+                    "displayName": "Work",
+                    "type": "ext:vpn-forticlient",
+                    "options": {
+                        "host": "vpn.example.com",
+                        "port": "443",
+                        "realm": "",
+                        "username": "me",
+                        "auth": "otp",
+                        "userCert": "",
+                        "userKey": "",
+                        "trustedCert": "",
+                        "legacyTls": false,
+                        "halfInternetRoutes": false,
+                        "healthHost": "10.0.0.1",
+                        "dns": [],
+                        "domains": ["~example.com"],
+                        "hosts": ["10.0.0.1=intranet.example.com"]
+                    }
                 }
             ]
         },
