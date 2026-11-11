@@ -36,6 +36,7 @@ ShellRoot {
         Activities;
         Clipboard;
         Updates;
+        DefaultsSetup;
         ConfigMigration;
         Extensions;
         Welcome;
