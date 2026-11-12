@@ -43,13 +43,13 @@ def sandbox_env(home: Path) -> dict:
     """An environment whose HOME, config, state and data live in `home` (nothing of the real ones is seen)."""
     env = {k: v for k, v in os.environ.items() if not k.startswith(("XDG_", "SYLPHRENA"))}
     env.update(HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"), XDG_STATE_HOME=str(home / ".local/state"),
-               XDG_DATA_HOME=str(home / ".local/share"))
+               XDG_DATA_HOME=str(home / ".local/share"), SYLPHRENA_TEST_KEYBOARD="")   # no system layout unless a test sets one
     return env
 
 
-def run_script(name: str, args: list[str], home: Path) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(SCRIPTS / name), *args], env=sandbox_env(home), capture_output=True,
-                          text=True, check=False)
+def run_script(name: str, args: list[str], home: Path, env: dict | None = None) -> subprocess.CompletedProcess:
+    return subprocess.run([sys.executable, str(SCRIPTS / name), *args], env={**sandbox_env(home), **(env or {})},
+                          capture_output=True, text=True, check=False)
 
 
 def tmpdir() -> tempfile.TemporaryDirectory:
