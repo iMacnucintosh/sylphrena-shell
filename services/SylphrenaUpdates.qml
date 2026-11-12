@@ -7,9 +7,13 @@ import Quickshell.Io
 import Sylphrena
 import Sylphrena.I18n
 
-// New releases of Sylphrena (the shell, the CLI, Seeker, Things) for a machine that installed it with its packages:
-// scripts/check-sylphrena-releases.py compares the installed versions with the latest release of each repository.
-// The bar's updates icon and Nexus → Updates show them; "Update" runs the installer in --update mode in a terminal.
+// What Sylphrena itself can update, as two more sources of the updates list (next to pacman, the AUR and Flatpak):
+//  · SYLPHRENA: its packages (the shell, the CLI, Seeker, Things) behind their latest release, on a machine that
+//    installed them; updated by the installer in --update mode.
+//  · EXTENSION: the extensions installed from the hub whose catalog has a newer version; updated with
+//    `ext.py update-hub` (what Things does too).
+// scripts/check-sylphrena-releases.py finds them; Updates merges `entries` into its list and its "Update" runs them
+// after the system packages, with the same password (scripts/run-system-update.sh --sylphrena --extension <id>).
 Singleton {
     id: root
 
@@ -18,11 +22,31 @@ Singleton {
 
     // [{ pkg, name, repo, installed, latest, notes, url }]
     property var updates: []
-    readonly property bool hasUpdate: updates.length > 0
-    // The release of the shell itself, if it is one of them (its notes are the ones shown)
+    // [{ id, name, installed, latest }]
+    property var extensions: []
+
+    // The release of the shell itself, if it is one of them (its notes are the ones shown in Nexus)
     readonly property var shell: updates.find(u => u.pkg === "sylphrena-shell-git") ?? null
     readonly property string version: shell ? shell.latest : (updates[0]?.latest ?? "")
-    property bool updating: false
+    readonly property bool hasUpdate: updates.length > 0
+
+    // In the shape of Updates.packages: { name, from, to, source, … }
+    readonly property var entries: [...updates.map(u => ({
+                name: u.name,
+                from: u.installed,
+                to: u.latest,
+                source: "SYLPHRENA",
+                pkg: u.pkg,
+                url: u.url,
+                desc: ""
+            })), ...extensions.map(e => ({
+                name: Tr.tr(e.name),
+                from: e.installed,
+                to: e.latest,
+                source: "EXTENSION",
+                id: e.id,
+                desc: ""
+            }))]
 
     property var _announced: []
 
@@ -31,20 +55,15 @@ Singleton {
             proc.running = true;
     }
 
-    function update(): void {
-        root.updating = true;
-        Updates.runInTerminal(`python3 ${JSON.stringify(Quickshell.shellPath("scripts/installer.py"))} --update`, Tr.tr("Updating Sylphrena"));
-        // The terminal stays open until it is closed; check again after a while
-        afterUpdate.restart();
-    }
-
     function announce(): void {
-        const fresh = root.updates.filter(u => !root._announced.includes(`${u.pkg}@${u.latest}`));
+        const keys = [...root.updates.map(u => `${u.pkg}@${u.latest}`), ...root.extensions.map(e => `ext:${e.id}@${e.latest}`)];
+        const fresh = root.entries.filter((_, i) => !root._announced.includes(keys[i]));
         if (!fresh.length)
             return;
-        root._announced = [...root._announced, ...fresh.map(u => `${u.pkg}@${u.latest}`)];
-        const names = fresh.map(u => `${u.name} ${u.latest}`).join(", ");
-        Toaster.toast(Tr.tr("New version of Sylphrena"), Tr.tr("%1 · update it from Nexus → Updates").arg(names), "sylphrena");
+        root._announced = [...root._announced, ...keys];
+        const names = fresh.map(e => `${e.name} ${e.to}`).join(", ");
+        const title = fresh.some(e => e.source === "SYLPHRENA") ? Tr.tr("New version of Sylphrena") : Tr.tr("Extension updates");
+        Toaster.toast(title, Tr.tr("%1 · update it from Nexus → Updates").arg(names), "sylphrena");
     }
 
     Timer {
@@ -55,27 +74,20 @@ Singleton {
         onTriggered: root.check()
     }
 
-    Timer {
-        id: afterUpdate
-
-        interval: 60 * 1000
-        onTriggered: {
-            root.updating = false;
-            root.check();
-        }
-    }
-
     Process {
         id: proc
 
         command: ["python3", Quickshell.shellPath("scripts/check-sylphrena-releases.py")]
         stdout: StdioCollector {
             onStreamFinished: {
+                let data;
                 try {
-                    root.updates = JSON.parse(text).updates ?? [];
+                    data = JSON.parse(text);
                 } catch (e) {
                     return;
                 }
+                root.updates = data.updates ?? [];
+                root.extensions = data.extensions ?? [];
                 root.announce();
             }
         }

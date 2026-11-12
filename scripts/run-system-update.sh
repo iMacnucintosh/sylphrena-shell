@@ -54,6 +54,8 @@ export SYLPHRENA_SUDO_ASKPASS_SOCK="$SOCK"
 do_aur=0
 do_arch=0
 do_flatpak=0
+do_sylphrena=0
+extensions=()
 wrapper="yay"
 aur_flags=()
 flatpak_flags=()
@@ -81,6 +83,14 @@ while [[ $# -gt 0 ]]; do
             flatpak_flags+=("$2")
             shift 2
             ;;
+        --sylphrena)
+            do_sylphrena=1
+            shift
+            ;;
+        --extension)
+            extensions+=("$2")
+            shift 2
+            ;;
         *)
             shift
             ;;
@@ -101,5 +111,17 @@ if [[ "$do_flatpak" -eq 1 ]]; then
     echo "→ flatpak update -y ${flatpak_flags[*]-}"
     flatpak update -y ${flatpak_flags[@]+"${flatpak_flags[@]}"}
 fi
+
+# Sylphrena's own packages (built from their release by the installer, with this same askpass), then the extensions
+# installed from the hub (exactly what Things runs). After the system, so they build against what was just updated.
+if [[ "$do_sylphrena" -eq 1 ]]; then
+    echo "→ Sylphrena: installer.py --update"
+    python3 "${SCRIPT_DIR}/installer.py" --update --yes </dev/null
+fi
+
+for ext in ${extensions[@]+"${extensions[@]}"}; do
+    echo "→ extension ${ext}: ext.py update-hub ${ext}"
+    python3 "${SCRIPT_DIR}/ext.py" update-hub "${ext}" </dev/null
+done
 
 echo "Update finished."

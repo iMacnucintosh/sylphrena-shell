@@ -44,10 +44,13 @@ Singleton {
     // Ephemeral; cleared after writing to the update script stdin
     property string _authPw: ""
 
-    readonly property int count: packages.length
+    // Everything that can be updated: the system's packages, then Sylphrena's own and its extensions
+    readonly property var entries: [...packages, ...SylphrenaUpdates.entries]
+    readonly property int count: entries.length
     readonly property bool hasUpdates: count > 0
-    // System packages or a new release of Sylphrena: what the bar icon shows
-    readonly property bool anyUpdates: hasUpdates || SylphrenaUpdates.hasUpdate
+    readonly property bool anyUpdates: hasUpdates
+    // Set while an update that includes the shell runs: it restarts the shell when it ends
+    property bool _shellUpdating: false
     readonly property bool awaitingPassword: pendingMode.length > 0
     readonly property string downloadSizeLabel: root.humanize(downloadSizeMb)
 
@@ -144,6 +147,12 @@ Singleton {
         }
         if (!root.checkAur && !root.checkArch && !root.checkFlatpak)
             args.push("--arch");
+        // Sylphrena and its extensions, after the system
+        if (SylphrenaUpdates.updates.length)
+            args.push("--sylphrena");
+        for (const e of SylphrenaUpdates.extensions)
+            args.push("--extension", e.id);
+        root._shellUpdating = !!SylphrenaUpdates.shell;
         return args;
     }
 
@@ -272,12 +281,26 @@ Singleton {
         }
         root.statusIcon = root.glyph;
         root.refresh();
+        SylphrenaUpdates.check();
+        // The shell itself was replaced: start the new one (what runs now is the old one)
+        if (code === 0 && root._shellUpdating)
+            Quickshell.execDetached(["sh", "-c", "sleep 3; exec sylph shell -r -d"]);
+        root._shellUpdating = false;
     }
 
     function updatePackage(pkg: var): void {
         if (!pkg)
             return;
-        if (!root.allowSingleModification && !(pkg.source || "").startsWith("FLATPAK")) {
+        const own = pkg.source === "SYLPHRENA" || pkg.source === "EXTENSION";
+        if (pkg.source === "SYLPHRENA") {
+            root.runInTerminal(`python3 ${JSON.stringify(Quickshell.shellPath("scripts/installer.py"))} --update`, Tr.tr("Updating %1…").arg(pkg.name));
+            return;
+        }
+        if (pkg.source === "EXTENSION") {
+            root.runInTerminal(`python3 ${JSON.stringify(Quickshell.shellPath("scripts/ext.py"))} update-hub ${JSON.stringify(pkg.id)}`, Tr.tr("Updating %1…").arg(pkg.name));
+            return;
+        }
+        if (!own && !root.allowSingleModification && !(pkg.source || "").startsWith("FLATPAK")) {
             root.showSingleWarning = true;
             return;
         }
@@ -311,6 +334,10 @@ Singleton {
     function showPackageInfo(pkg: var): void {
         if (!pkg)
             return;
+        if (pkg.source === "SYLPHRENA" || pkg.source === "EXTENSION") {
+            root.openPackageUrl(pkg);
+            return;
+        }
         const name = pkg.name;
         const src = pkg.source || "";
         const pause = `read -n 1 -p ${JSON.stringify(Tr.tr("Press any key to close…"))}`;

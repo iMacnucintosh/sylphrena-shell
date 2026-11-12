@@ -10,6 +10,7 @@ The shell owns the extension contract, so this is the one implementation of inst
   ext.py install <zip>       a local zip: unpack (checked), install its system pieces if it has them
                              (sudo), enable it. It stays "local" (no hub receipt)
   ext.py install-hub <id> --url <zip url> --sha256 <hex> --version <v>
+  ext.py update-hub <id>     install the version the hub's catalog has now (what the shell's updates run)
                              what Things runs: download from the hub, check the sha256 and the
                              compatibility with this shell, install, write the receipt, enable it
   ext.py remove <id> [--purge]  the extension forgets its data in the shell, its system pieces go, then its files.
@@ -45,6 +46,7 @@ BUILTIN = SHELL / "extensions"
 # Zips of the hub live in the releases of its repository. Anything else is refused (defence in depth:
 # the URL comes from a catalog). Tests may point SYLPHRENA_HUB_TEST_PREFIX at a local folder (file://…).
 HUB_RELEASES = "https://github.com/iMacnucintosh/sylphrena-hub/releases/download/"
+HUB_INDEX = "https://raw.githubusercontent.com/iMacnucintosh/sylphrena-hub/main/index.json"
 MAX_ZIP = 50 * 1024 * 1024
 ID_RE = re.compile(r"^[a-z0-9-]+$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -334,6 +336,23 @@ def purge(ext_id: str, manifest: dict) -> None:
             print(f"warning: {path}: {e}", file=sys.stderr)
 
 
+def cmd_update_hub(ext_id: str) -> int:
+    """The catalog's current version of an extension, installed exactly as Things does (install-hub)."""
+    if not ID_RE.match(ext_id):
+        print("usage: ext.py update-hub <id>", file=sys.stderr)
+        return 2
+    try:
+        with urllib.request.urlopen(os.environ.get("SYLPHRENA_HUB_INDEX") or HUB_INDEX, timeout=15) as r:
+            entry = next((i for i in json.load(r).get("items", []) if i.get("id") == ext_id), None)
+    except (OSError, ValueError, urllib.error.URLError) as e:
+        print(f"error: could not read the hub's catalog: {e}", file=sys.stderr)
+        return 1
+    if not entry:
+        print(f"error: {ext_id} is not in the hub's catalog", file=sys.stderr)
+        return 1
+    return cmd_install_hub([ext_id, "--url", entry["zip"], "--sha256", entry["sha256"], "--version", entry["version"]])
+
+
 def cmd_remove(ext_id: str, do_purge: bool = False) -> int:
     if not ID_RE.match(ext_id):
         print(f"error: '{ext_id}' is not an extension id", file=sys.stderr)
@@ -376,6 +395,8 @@ def main() -> int:
         return cmd_install(a[1])
     if a[:1] == ["install-hub"]:
         return cmd_install_hub(a[1:])
+    if a[:1] == ["update-hub"] and len(a) == 2:
+        return cmd_update_hub(a[1])
     if a[:1] == ["remove"] and len(a) in (2, 3) and (len(a) == 2 or a[2] == "--purge"):
         return cmd_remove(a[1], len(a) == 3)
     if a[:1] in (["enable"], ["disable"]) and len(a) == 2 and ID_RE.match(a[1]):
