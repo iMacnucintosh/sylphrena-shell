@@ -25,6 +25,9 @@ StyledRect {
     readonly property var displayActions: Notifs.displayActions(root.modelData)
     readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? Tokens.spacing.extraSmall * 2 + appName.height + body.height + progress.height + progress.anchors.topMargin + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
     property bool expanded: Config.notifs.openExpanded
+    // Born expanded: show it so at once. Animating the unfolding while the card comes in made the title cross the
+    // app name and the time (they share the first line when folded); later (un)folds animate as before.
+    property bool settled: false
 
     color: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
     radius: Tokens.rounding.large
@@ -33,6 +36,7 @@ StyledRect {
 
     x: implicitWidth
     Component.onCompleted: {
+        Qt.callLater(() => root.settled = true);
         x = 0;
         modelData.lock(this);
     }
@@ -257,6 +261,8 @@ StyledRect {
                 }
 
                 transitions: Transition {
+                    enabled: root.settled
+
                     PropertyAction {
                         target: summary
                         property: "maximumLineCount"
@@ -303,6 +309,8 @@ StyledRect {
                 }
 
                 transitions: Transition {
+                    enabled: root.settled
+
                     AnchorAnim {}
                 }
             }
