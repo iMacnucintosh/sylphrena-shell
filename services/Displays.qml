@@ -226,10 +226,6 @@ Singleton {
         return Tr.tr("Fixed refresh rate; least flicker on flaky HDMI FreeSync");
     }
 
-    function escapeLuaString(s: string): string {
-        return String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    }
-
     function findMonitor(name: string): var {
         for (let i = 0; i < root.monitors.length; i++) {
             if (root.monitors[i].name === name)
@@ -260,7 +256,7 @@ Singleton {
         const mode = root.modeForHypr(mon.mode);
         const scale = Number(mon.scale) || 1;
         const vrr = root.normalizeVrr(Number.isFinite(Number(mon.vrr)) ? Number(mon.vrr) : root.defaultVrrPolicy);
-        const code = `hl.monitor({ output = "${root.escapeLuaString(mon.name)}", mode = "${root.escapeLuaString(mode)}", position = "auto", scale = ${scale}, bitdepth = 8, vrr = ${vrr} })`;
+        const code = `hl.monitor({ output = "${Strings.luaString(mon.name)}", mode = "${Strings.luaString(mode)}", position = "auto", scale = ${scale}, bitdepth = 8, vrr = ${vrr} })`;
         Quickshell.execDetached(["hyprctl", "eval", code]);
     }
 
@@ -275,8 +271,8 @@ Singleton {
             const scale = Number(mon.scale) || 1;
             const vrr = root.normalizeVrr(Number.isFinite(Number(mon.vrr)) ? Number(mon.vrr) : root.policyVrr(mon.name, root.defaultVrrPolicy));
             out += `hl.monitor({\n`;
-            out += `    output   = "${root.escapeLuaString(mon.name)}",\n`;
-            out += `    mode     = "${root.escapeLuaString(mode)}",\n`;
+            out += `    output   = "${Strings.luaString(mon.name)}",\n`;
+            out += `    mode     = "${Strings.luaString(mode)}",\n`;
             out += `    position = "auto",\n`;
             out += `    scale    = ${scale},\n`;
             out += `    bitdepth = 8,\n`;

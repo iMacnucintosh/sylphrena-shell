@@ -8,6 +8,7 @@ import Quickshell.Hyprland
 import Sylphrena.Config
 import qs.services
 import qs.modules.launcher.services
+import qs.utils
 
 Singleton {
     id: root
@@ -681,18 +682,14 @@ Singleton {
         root.restoreFullscreenAfterOverview();
     }
 
-    function escapeLuaString(s: string): string {
-        return (s || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    }
-
     function escapeClassRegex(s: string): string {
         // Hyprland window_rule class match is RE2 regex (not Lua patterns).
         // Literals become (?i)^…$ so Cursor/cursor both match; user ^regex is kept as-is.
         const raw = s || "";
         if (raw.startsWith("^"))
-            return root.escapeLuaString(raw);
+            return Strings.luaString(raw);
         const escaped = raw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        return root.escapeLuaString(`(?i)^${escaped}$`);
+        return Strings.luaString(`(?i)^${escaped}$`);
     }
 
     function generateRulesLua(): string {
@@ -711,7 +708,7 @@ Singleton {
             if (!cls)
                 continue;
             const ws = root.workspaceForRule(rule);
-            const name = `sylphrena-activity-${i}-${root.escapeLuaString(cls).replace(/[^a-zA-Z0-9_-]/g, "_")}`;
+            const name = `sylphrena-activity-${i}-${Strings.luaString(cls).replace(/[^a-zA-Z0-9_-]/g, "_")}`;
             // No "silent": opening a pinned app also focuses its workspace
             out += `hl.window_rule({\n`;
             out += `    name = "${name}",\n`;
