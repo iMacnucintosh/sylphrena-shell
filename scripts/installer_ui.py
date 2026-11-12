@@ -116,8 +116,8 @@ def can_interact() -> bool:
 
 
 ANSI = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
-MIN_LINES = 20      # the list scrolls, but it needs room for the panel and the keys
-PANEL_LINES = 6     # top border, up to three lines of explanation, one for the password, bottom border
+MIN_LINES = 24      # the list scrolls, but it needs room for the panel and the keys
+PANEL_LINES = 8     # border, space, up to three lines of explanation, space, the password line, border
 FOOTER_LINES = 3    # blank, count, keys
 
 
@@ -132,11 +132,11 @@ def visible(text: str) -> int:
 
 def box(title: str, lines: list[str], w: int) -> list[str]:
     """A rounded box `w` wide; `title` goes into the top border."""
-    inner = w - 4
+    inner = w - 6      # two spaces of margin on each side
     head = f"╭─ {title} "
     out = [rgb(LAVENDER, head + "─" * max(1, w - len(head) - 1) + "╮")]
     for line in lines:
-        out.append(rgb(LAVENDER, "│") + " " + line + " " * max(0, inner - visible(line)) + " " + rgb(LAVENDER, "│"))
+        out.append(rgb(LAVENDER, "│") + "  " + line + " " * max(0, inner - visible(line)) + "  " + rgb(LAVENDER, "│"))
     out.append(rgb(LAVENDER, "╰" + "─" * (w - 2) + "╯"))
     return out
 
@@ -201,10 +201,12 @@ def checklist(groups: list[tuple[str, list]], describe, lock_text, hint: str, st
         view += [""] * (rows_available - len(view)) if len(lines) >= rows_available else []
         w = min(width(), 80)
         it = flat[pos]
-        text = (textwrap.wrap(title_words(describe(it)), w - 6) or [""])[:3]
-        panel_text = text + ([""] if lock_text(it) else []) + [style(lock_text(it), dim=True)]
-        panel_text += [""] * (PANEL_LINES - 2 - len(panel_text))
+        text = (textwrap.wrap(title_words(describe(it)), w - 8) or [""])[:3]
+        # a line of air above and below the explanation, then the password line
+        panel_text = [""] + text + ["", style(lock_text(it), dim=True)]
         panel = ["  " + l for l in box(label(it), panel_text, w)]
+        # the box is as tall as its text; the space below keeps the whole frame the same height (so it redraws cleanly)
+        panel += [""] * (PANEL_LINES - len(panel))
         frame = view + [""] + panel + ["", "  " + style(status_text(flat), dim=True) + "   " + style(hint, dim=True)]
         if printed:
             out.write(f"\033[{printed}F\033[J")
