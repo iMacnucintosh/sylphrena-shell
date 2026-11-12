@@ -43,6 +43,43 @@ def starts_shell(text: str) -> bool:
     return bool(re.search(r"start-shell-with-tray-watcher|sylph\s+shell|qs\s+-c\s+sylphrena", text))
 
 
+def system_keyboard() -> tuple[str, str]:
+    """The keyboard layout (and variant) of the system, as set when Arch was installed: localectl's X11 layout,
+    or else the console keymap (es, de-latin1, uk… → es, de, gb). ("", "") if there is none."""
+    test = os.environ.get("SYLPHRENA_TEST_KEYBOARD")
+    if test is not None:
+        layout, _, variant = test.partition(":")
+        return layout, variant
+    layout = variant = ""
+    out = _run(["localectl", "status"])
+    if out and out[0] == 0:
+        for line in out[1].splitlines():
+            key, _, value = line.strip().partition(":")
+            if key == "X11 Layout":
+                layout = value.strip().split(",")[0]
+            elif key == "X11 Variant":
+                variant = value.strip().split(",")[0]
+    if not layout:
+        try:
+            keymap = next((l.split("=", 1)[1].strip().strip('"') for l in Path("/etc/vconsole.conf").read_text().splitlines()
+                           if l.startswith("KEYMAP=")), "")
+        except OSError:
+            keymap = ""
+        layout = {"uk": "gb"}.get(keymap.split("-")[0], keymap.split("-")[0])
+    return layout, variant
+
+
+def keyboard_line(rest: str) -> str | None:
+    """Hyprland's own default is "us": use the system's layout unless the configuration chose one of its own."""
+    layout, variant = system_keyboard()
+    if not layout or layout == "us":
+        return None
+    configured = re.search(r'kb_layout\s*=\s*"([^"]*)"', rest)
+    if configured and configured.group(1) not in ("", "us"):
+        return None
+    return f'hl.config({{ input = {{ kb_layout = "{layout}", kb_variant = "{variant}" }} }})'
+
+
 def render(shell_dir: Path, rest: str) -> str:
     """The block, leaving out what the rest of the file already does."""
     lines = [BEGIN, "-- Sylphrena writes the files below from Nexus; they do not exist until the shell has run once (pcall)."]
@@ -52,6 +89,9 @@ def render(shell_dir: Path, rest: str) -> str:
         watcher = shell_dir / "scripts" / "start-shell-with-tray-watcher.sh"
         cmd = str(watcher) if watcher.is_file() else "sylph shell -d"
         lines += ['hl.on("hyprland.start", function()', f'  hl.exec_cmd("{cmd}")', "end)"]
+    kb = keyboard_line(rest)
+    if kb:
+        lines += ["-- The keyboard layout of the system (Hyprland's default is \"us\")", kb]
     wanted = [n for n in FILES if f'"{n}"' not in rest and f"'{n}'" not in rest]
     if wanted:
         names = ", ".join(f'"{n}"' for n in wanted)

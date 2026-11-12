@@ -8,8 +8,8 @@ from helpers import run_script, tmpdir
 SCRIPT = "setup-hyprland.py"
 
 
-def run(home: Path, *args: str) -> dict:
-    p = run_script(SCRIPT, list(args), home)
+def run(home: Path, *args: str, keyboard: str = "") -> dict:
+    p = run_script(SCRIPT, list(args), home, {"SYLPHRENA_TEST_KEYBOARD": keyboard})
     return {**json.loads(p.stdout), "rc": p.returncode}
 
 
@@ -84,3 +84,35 @@ class Hyprland(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Keyboard(unittest.TestCase):
+    def test_the_system_layout_replaces_hyprlands_default_us(self):
+        with tmpdir() as d:
+            home = Path(d)
+            conf(home).parent.mkdir(parents=True)
+            conf(home).write_text('hl.config({ input = { kb_layout = "us", kb_variant = "" } })\n')
+            self.assertEqual(run(home, keyboard="es")["status"], "done")
+            self.assertIn('kb_layout = "es"', conf(home).read_text())
+            self.assertEqual(run(home, keyboard="es")["status"], "already")
+
+    def test_a_layout_of_your_own_is_left_alone(self):
+        with tmpdir() as d:
+            home = Path(d)
+            conf(home).parent.mkdir(parents=True)
+            conf(home).write_text('hl.config({ input = { kb_layout = "de" } })\n')
+            run(home, keyboard="es")
+            self.assertNotIn('kb_layout = "es"', conf(home).read_text())
+
+    def test_nothing_when_the_system_is_us_or_unknown(self):
+        for layout in ("", "us"):
+            with tmpdir() as d:
+                home = Path(d)
+                run(home, keyboard=layout)
+                self.assertEqual(conf(home).read_text().count("kb_layout = \"us\", kb_variant = \"\" } })"), 0)
+
+    def test_the_variant_goes_with_it(self):
+        with tmpdir() as d:
+            home = Path(d)
+            run(home, keyboard="es:cat")
+            self.assertIn('kb_layout = "es", kb_variant = "cat"', conf(home).read_text())
