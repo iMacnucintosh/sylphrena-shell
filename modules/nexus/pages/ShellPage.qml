@@ -177,6 +177,30 @@ PageBase {
             onToggled: GlobalConfig.activities.crossActivityWorkspaces = checked
         }
 
+        SelectRow {
+            id: workspaceAnimationRow
+
+            label: Tr.tr("Desktop transition")
+            subtext: Tr.tr("How the screen changes when you move between desktops and activities; sliding gives a sense of where you are")
+            active: workspaceAnimationItems.instances.find(i => i.modelData === Hypr.normalizeWorkspaceAnimation(GlobalConfig.general.workspaceAnimation)) ?? null
+            fallbackText: Hypr.workspaceAnimationLabel(GlobalConfig.general.workspaceAnimation)
+            onSelected: item => GlobalConfig.general.workspaceAnimation = item.modelData
+
+            menuItems: workspaceAnimationItems.instances
+
+            Variants {
+                id: workspaceAnimationItems
+
+                model: ["fade", "slide", "slidefade"]
+
+                MenuItem {
+                    required property string modelData
+
+                    text: Hypr.workspaceAnimationLabel(modelData)
+                }
+            }
+        }
+
         ToggleRow {
             text: Tr.tr("Display wallpaper")
             subtext: Tr.tr("Turns the wallpaper machinery on or off shell-wide")

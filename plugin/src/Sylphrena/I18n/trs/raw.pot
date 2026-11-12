@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 03:53+0100\n"
+"POT-Creation-Date: 2026-11-12 14:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3508,6 +3508,14 @@ msgstr ""
 msgid "Allow next/previous desktop shortcuts to leave the current activity; when off, they stay inside it"
 msgstr ""
 
+#: modules/nexus/pages/ShellPage.qml
+msgid "Desktop transition"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "How the screen changes when you move between desktops and activities; sliding gives a sense of where you are"
+msgstr ""
+
 #: modules/nexus/pages/ShellPage.qml modules/nexus/pages/WallpaperAndStyle.qml
 msgid "Display wallpaper"
 msgstr ""
@@ -4531,6 +4539,18 @@ msgstr ""
 
 #: services/Hypr.qml
 msgid "On hover"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "Slide"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "Slide and fade"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "Fade"
 msgstr ""
 
 #: services/Keybinds.qml

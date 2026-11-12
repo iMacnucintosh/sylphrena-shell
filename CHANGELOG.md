@@ -2,6 +2,11 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## Sin publicar
+
+- **Mostrar escritorio:** pulsar en la barra el escritorio activo desliza sus ventanas fuera de la pantalla (izquierda/derecha según su mitad) y otra pulsación las devuelve idénticas; el pill pasa a solo borde mientras están ocultas. Ya no abre el scratchpad ni atenúa la pantalla.
+- **Transición entre escritorios:** ajuste nuevo en Nexus → Activities (fundido, deslizar, deslizar y fundir).
+
 ## 0.4.0 (2026-11-12)
 
 - **Instalador de Arch (`./install.sh`):** de un Arch con Hyprland a la experiencia completa en una sola sesión de terminal. Escanea, enseña el plan con el porqué de cada cosa, confirma, y lo hace con una contraseña: herramientas base, `yay`, librerías del AUR, los cuatro paquetes (de GitHub con `makepkg` mientras no estén en el AUR), recomendados, enganche a Hyprland (`setup-hyprland.py`), ajustes del primer arranque y la pantalla de login. Se puede repetir.

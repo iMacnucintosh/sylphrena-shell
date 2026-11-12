@@ -31,7 +31,7 @@ class Hyprland(unittest.TestCase):
             self.assertEqual(text.count(">>> sylphrena"), 1)
             self.assertIn('hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")', text)
             self.assertIn("start-shell-with-tray-watcher.sh", text)
-            for name in ("sylphrena-monitors", "sylphrena-input", "sylphrena-binds", "sylphrena-activity-rules"):
+            for name in ("sylphrena-monitors", "sylphrena-input", "sylphrena-binds", "sylphrena-activity-rules", "sylphrena-animation"):
                 self.assertIn(f'"{name}"', text)
             self.assertIn("pcall(require", text)
             self.assertEqual(Path(str(conf(home)) + ".sylphrena-backup").read_text().count("sylphrena"), 0)
@@ -59,7 +59,7 @@ class Hyprland(unittest.TestCase):
             home = Path(d)
             conf(home).parent.mkdir(parents=True)
             text = ('hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")\nhl.exec_cmd("qs -c sylphrena")\n'
-                    + "".join(f'require("{n}")\n' for n in ("sylphrena-monitors", "sylphrena-input", "sylphrena-binds", "sylphrena-activity-rules")))
+                    + "".join(f'require("{n}")\n' for n in ("sylphrena-monitors", "sylphrena-input", "sylphrena-binds", "sylphrena-activity-rules", "sylphrena-animation")))
             conf(home).write_text(text)
             self.assertEqual(run(home)["status"], "already")
             self.assertEqual(conf(home).read_text(), text)
