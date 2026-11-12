@@ -2,6 +2,11 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## Sin publicar (siguiente versión)
+
+- **Instalador de Arch (`./install.sh`):** de un Arch con Hyprland a la experiencia completa en una sola sesión de terminal. Escanea, enseña el plan con el porqué de cada cosa, confirma, y lo hace con una contraseña: herramientas base, `yay`, librerías del AUR, los cuatro paquetes (de GitHub con `makepkg` mientras no estén en el AUR), recomendados, enganche a Hyprland (`setup-hyprland.py`), ajustes del primer arranque y la pantalla de login. Se puede repetir.
+- **Paquete de la shell:** `papirus-icon-theme`, `adw-gtk-theme` y `swappy` son dependencias obligatorias (la shell escribe la configuración de los dos primeros y la captura normal abre `swappy`); `gpu-screen-recorder` pasa a opcional del paquete y el instalador lo ofrece.
+
 ## 0.3.1 (2026-11-12)
 
 - **Things, Seeker y la pantalla de login hablan tu idioma:** su código está ahora en inglés y cada idioma es un catálogo JSON (`i18n/es.json`; la pantalla de login, `greeter/i18n/es.json`). Un idioma sin catálogo se ve en inglés. Antes estaban escritos en español, sin más idioma posible. Sus comprobadores: `scripts/check-i18n.py`.
