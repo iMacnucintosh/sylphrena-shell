@@ -3,7 +3,7 @@
 Punto de referencia para cualquier agente/IDE/modelo que entre sin contexto. Si cambias algo respecto
 a este fichero, **actualízalo en el mismo commit**.
 
-Documentación por rol: [README.md](./README.md) = cara pública (features + install real);
+Documentación por rol: [README.md](./README.md) (inglés) y [README.es.md](./README.es.md) (español) = cara pública (features + install real), **mantener los dos a la par**;
 [FEATURES.md](./FEATURES.md) = guía de uso del fork; [CONFIG.md](./CONFIG.md) = referencia `shell.json`;
 [CHANGELOG.md](./CHANGELOG.md) = cambios recientes; [docs/DEVELOPMENT.md](./docs/DEVELOPMENT.md) = instalación manual, compilar y contribuir (lo técnico que salió del README).
 

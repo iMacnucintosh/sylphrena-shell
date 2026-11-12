@@ -1,21 +1,23 @@
 <h1 align="center">Sylphrena</h1>
 
+<p align="center"><strong>English</strong> · <a href="./README.es.md">Español</a></p>
+
 <p align="center">
-Un escritorio <strong>Material You</strong> completo para <a href="https://hypr.land">Hyprland</a>: barra, paneles, actividades, ajustes, pantalla de inicio de sesión y apps propias, todo con el mismo aspecto y en español.
+A complete <strong>Material You</strong> desktop for <a href="https://hypr.land">Hyprland</a>: bar, panels, activities, settings, login screen and its own apps, all with the same look.
 </p>
 
 <div align="center">
 
-![Última versión](https://img.shields.io/github/v/tag/iMacnucintosh/sylphrena-shell?filter=v0.*&style=for-the-badge&labelColor=101418&color=9ccbfb&label=versi%C3%B3n)
-![Último commit](https://img.shields.io/github/last-commit/iMacnucintosh/sylphrena-shell?style=for-the-badge&labelColor=101418&color=b9c8da&label=%C3%BAltimo%20cambio)
+![Latest version](https://img.shields.io/github/v/tag/iMacnucintosh/sylphrena-shell?filter=v0.*&style=for-the-badge&labelColor=101418&color=9ccbfb&label=version)
+![Last commit](https://img.shields.io/github/last-commit/iMacnucintosh/sylphrena-shell?style=for-the-badge&labelColor=101418&color=b9c8da&label=last%20change)
 
 </div>
 
 https://github.com/user-attachments/assets/1d005d8f-ab43-442d-a75a-917899f02845
 
-## Instalación
+## Installation
 
-Necesitas **Arch Linux con Hyprland** ya funcionando. Desde una terminal, con tu usuario (no como root):
+You need **Arch Linux**. From a terminal, as your user (not as root):
 
 ```sh
 git clone https://github.com/iMacnucintosh/sylphrena-shell
@@ -23,103 +25,107 @@ cd sylphrena-shell
 ./install.sh
 ```
 
-El instalador mira qué tiene tu sistema, te enseña qué va a instalar y por qué, y **no toca nada hasta que confirmas**. Pide la contraseña una sola vez. Al terminar, cierra sesión: entrarás por la pantalla de inicio de sesión de Sylphrena y, la primera vez, te recibirá un asistente de bienvenida con lo básico.
+The installer looks at your system, shows what it is going to install and why, and **changes nothing until you confirm**. It asks for your password once, and installs Hyprland too if it is not there yet. When it finishes, log out (or reboot): you will come in through the Sylphrena login screen and, the first time, a welcome guide shows you the basics.
 
-Puedes repetirlo cuando quieras: solo hace lo que falte. Para ver qué haría sin cambiar nada, `./install.sh --dry-run`.
+You can run it again whenever you want: it only does what is still missing. To see what it would do without changing anything, `./install.sh --dry-run`.
 
-<!-- captura: docs/media/installer.webp — el instalador con la lista de pasos -->
+It compiles a few packages, so give it some time; on a machine with little memory (a 2 GB virtual machine, say) it compiles one thing at a time and takes longer.
 
-## Qué trae
+<!-- screenshot: docs/media/installer.webp — the installer with its list of steps -->
 
-### Actividades
+## What it brings
 
-Agrupa tus escritorios por contexto (por ejemplo *Principal*, *Juegos* y *Trabajo*). Cada actividad tiene **su propio fondo, esquema de colores y modo claro u oscuro**, y al cambiar de una a otra todo el sistema cambia de aspecto. Puedes **anclar apps** a un escritorio para que siempre se abran allí, y con `Super+Tab` ves todas las actividades a la vez y arrastras ventanas entre ellas.
+### Activities
 
-Las transiciones también se eligen: por defecto, deslizar en vertical entre escritorios y un fundido al cambiar de actividad.
+Group your desktops by context (for instance *Main*, *Games* and *Work*). Each activity has **its own wallpaper, colour scheme and light or dark mode**, and switching from one to another changes the look of the whole system. You can **pin apps** to a desktop so they always open there, and `Super+Tab` shows every activity at once so you can drag windows between them.
 
-<!-- captura: docs/media/activities.webp — vista general (Super+Tab) -->
+Transitions can be chosen too: by default, a vertical slide between desktops and a fade when you change activity.
 
-### Barra y paneles
+<!-- screenshot: docs/media/activities.webp — the overview (Super+Tab) -->
 
-Una barra lateral con tus escritorios y los iconos de sus apps, la bandeja del sistema, el reloj y los indicadores. Los paneles salen de la propia barra:
+### Bar and panels
 
-- **Dashboard** con el tiempo, multimedia, rendimiento del equipo y un carrusel de widgets (calendario y los que añadas con extensiones).
-- **Panel lateral** con notificaciones e interruptores rápidos (wifi, bluetooth, micrófono, grabar pantalla…).
-- **Lanzador** de aplicaciones con búsqueda, calculadora y fondos de pantalla.
-- **Mostrar escritorio**: pulsa el escritorio en el que ya estás y las ventanas se apartan; púlsalo otra vez y vuelven a su sitio.
+A side bar with your desktops and the icons of their apps, the system tray, the clock and the indicators. The panels come out of the bar itself:
 
-<!-- captura: docs/media/dashboard.webp — el dashboard abierto -->
+- **Dashboard** with the weather, media, how the computer is doing and a carousel of widgets (a calendar, plus whatever extensions add).
+- **Side panel** with notifications and quick toggles (wifi, bluetooth, microphone, screen recording…).
+- **App launcher** with search, a calculator and wallpapers.
+- **Show desktop**: click the desktop you are already on and the windows slide away; click it again and they come back.
 
-### Nexus, los ajustes
+<!-- screenshot: docs/media/dashboard.webp — the dashboard open -->
 
-Todo se configura desde **Nexus** (`Super+,`), sin tocar ficheros: actividades y su aspecto, paneles, atajos de teclado (los graba pulsando la combinación), red y VPN, bluetooth, audio, pantallas (resolución, frecuencia, escala y VRR), idioma, notificaciones y actualizaciones.
+### Nexus, the settings
 
-<!-- captura: docs/media/nexus.webp — Nexus en la página de Actividades -->
+Everything is set up from **Nexus** (`Super+,`), without editing files: activities and their look, panels, keyboard shortcuts (recorded by pressing the keys), network and VPN, bluetooth, audio, displays (resolution, refresh rate, scale and VRR), language, notifications and updates.
 
-### Actualizaciones del sistema
+<!-- screenshot: docs/media/nexus.webp — Nexus on the Activities page -->
 
-Cuando hay paquetes nuevos (Arch, AUR o Flatpak), aparece un aviso en la barra. Desde ahí o desde Nexus actualizas con tu contraseña y ves el progreso en directo, sin abrir una terminal.
+### System updates
 
-<!-- captura: docs/media/updates.webp — la página de actualizaciones con el progreso -->
+When there are new packages (Arch, AUR or Flatpak), a notice shows up in the bar. From there or from Nexus you update with your password and watch the progress live, without opening a terminal.
 
-### Extensiones y Things
+<!-- screenshot: docs/media/updates.webp — the updates page with its progress -->
 
-Sylphrena se amplía con extensiones (hidratación, tareas, tu biblioteca de Steam con logros y tiempo de juego, VPN FortiClient…). Se instalan con un clic desde **Things**, el gestor de paquetes que viene con Sylphrena, que además busca e instala programas de Arch, AUR y Flatpak.
+### Extensions and Things
 
-<!-- captura: docs/media/things.webp — Things en la sección Sylphrena -->
+Sylphrena grows with extensions (hydration, tasks, your Steam library with achievements and play time, a FortiClient VPN…). They are installed with one click from **Things**, the package manager that comes with Sylphrena, which also finds and installs programs from Arch, the AUR and Flatpak.
 
-### Apps que vienen con Sylphrena
+<!-- screenshot: docs/media/things.webp — Things on its Sylphrena section -->
 
-- **[Things](https://github.com/iMacnucintosh/things)**: gestor de paquetes y de extensiones.
-- **[Seeker](https://github.com/iMacnucintosh/seeker)**: explorador de archivos, con el mismo aspecto que la shell.
-- **kitty**: el terminal, que cambia de colores con tu actividad.
+### Apps that come with Sylphrena
 
-Las apps GTK y Qt también siguen el esquema de colores, y puedes pedir que ciertas apps se vean siempre en claro.
+- **[Things](https://github.com/iMacnucintosh/things)**: package and extension manager.
+- **[Seeker](https://github.com/iMacnucintosh/seeker)**: file manager, with the same look as the shell.
+- **kitty**: the terminal, which changes its colours with your activity.
 
-<!-- captura: docs/media/apps.webp — Seeker y Things junto a la shell -->
+GTK and Qt apps follow the colour scheme as well, and you can ask for some apps to always look light.
 
-### Y además
+<!-- screenshot: docs/media/apps.webp — Seeker and Things next to the shell -->
 
-- **Portapapeles** con historial, favoritos, búsqueda y vista previa de imágenes (`Super+Shift+V`).
-- **Capturas y grabación de pantalla**, con indicador en la barra mientras grabas.
-- **Pantalla de bloqueo** y **pantalla de inicio de sesión** con el mismo estilo.
-- Notificaciones, control multimedia, perfil de audio de auriculares bluetooth y modo *no molestar*.
-- Todo en **español** (y en inglés).
+### And also
 
-<!-- captura: docs/media/lock.webp — la pantalla de bloqueo -->
+- **Clipboard** with history, favourites, search and image previews (`Super+Shift+V`).
+- **Screenshots and screen recording**, with an indicator in the bar while recording.
+- **Lock screen** and **login screen** in the same style.
+- Notifications, media controls, the audio profile of bluetooth headphones and *do not disturb*.
+- In **English and Spanish**.
 
-## Atajos básicos
+<!-- screenshot: docs/media/lock.webp — the lock screen -->
 
-| Atajo | Qué hace |
+## Basic shortcuts
+
+| Shortcut | What it does |
 | --- | --- |
-| `Super+Espacio` | Lanzador de aplicaciones |
+| `Super+Space` | App launcher |
 | `Super+Q` | Terminal |
-| `Super+E` | Explorador de archivos |
-| `Super+C` | Cerrar la ventana |
-| `Super+1` … `Super+0` | Ir a un escritorio |
-| `Super+Ctrl+←` / `→` | Actividad anterior / siguiente |
-| `Super+Tab` | Vista general de actividades |
+| `Super+E` | File manager |
+| `Super+C` | Close the window |
+| `Super+1` … `Super+0` | Go to a desktop |
+| `Super+Ctrl+←` / `→` | Previous / next activity |
+| `Super+Tab` | Overview of the activities |
 | `Super+D` | Dashboard |
-| `Super+,` | Nexus (ajustes) |
-| `Super+Shift+V` | Portapapeles |
-| `Super+L` | Bloquear |
-| `Impr Pant` | Captura de pantalla |
+| `Super+,` | Nexus (settings) |
+| `Super+Shift+V` | Clipboard |
+| `Super+L` | Lock |
+| `Print` | Screenshot |
 
-Todos se cambian en Nexus → Teclado y ratón.
+All of them can be changed in Nexus → Keyboard & mouse.
 
-## Más información
+## More information
 
-| Documento | Contenido |
+The detailed documentation is in Spanish for now:
+
+| Document | Contents |
 | --- | --- |
-| [FEATURES.md](./FEATURES.md) | Guía de uso detallada de cada función |
-| [CONFIG.md](./CONFIG.md) | Todas las opciones de `shell.json` |
-| [CHANGELOG.md](./CHANGELOG.md) | Qué cambia en cada versión |
-| [docs/DEVELOPMENT.md](./docs/DEVELOPMENT.md) | Instalación manual, compilar desde el código y contribuir |
+| [FEATURES.md](./FEATURES.md) | How to use every feature, in detail |
+| [CONFIG.md](./CONFIG.md) | Every option of `shell.json` |
+| [CHANGELOG.md](./CHANGELOG.md) | What changes in each version |
+| [docs/DEVELOPMENT.md](./docs/DEVELOPMENT.md) | Manual installation, building from source and contributing |
 
-¿Algo no funciona o echas algo en falta? [Abre una issue](https://github.com/iMacnucintosh/sylphrena-shell/issues/new).
+Something does not work, or something is missing? [Open an issue](https://github.com/iMacnucintosh/sylphrena-shell/issues/new).
 
-## Créditos
+## Credits
 
-Sylphrena empezó como un fork de [caelestia-shell](https://github.com/caelestia-dots/shell), de soramane, y hoy es un proyecto propio de [iMacnucintosh](https://github.com/iMacnucintosh). Gracias también a [Quickshell](https://github.com/outfoxxed/quickshell) ([@outfoxxed](https://github.com/outfoxxed)), sobre el que está construida, y a [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland) y [Ax-Shell](https://github.com/Axenide/Ax-Shell) por la inspiración.
+Sylphrena started as a fork of [caelestia-shell](https://github.com/caelestia-dots/shell), by soramane, and today is a project of its own by [iMacnucintosh](https://github.com/iMacnucintosh). Thanks also to [Quickshell](https://github.com/outfoxxed/quickshell) ([@outfoxxed](https://github.com/outfoxxed)), which it is built on, and to [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland) and [Ax-Shell](https://github.com/Axenide/Ax-Shell) for the inspiration.
 
-Licencia GPL-3.0.
+Licensed under GPL-3.0.
