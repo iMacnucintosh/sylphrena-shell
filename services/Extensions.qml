@@ -468,7 +468,7 @@ Singleton {
         }
 
         // → "ok" (enabled), "pending" (not listed yet, or its system pieces are still being checked: it
-        // will be enabled as soon as it can) or "incompatible" / "needs-system" (will not be)
+        // will be enabled as soon as it can) or "incompatible" (it will not be)
         function enable(id: string): string {
             const d = root.discovered.find(x => x.manifest.id === id);
             if (d && root.incompatibility(d.manifest))
