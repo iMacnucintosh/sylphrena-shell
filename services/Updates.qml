@@ -118,17 +118,22 @@ Singleton {
         return Tr.trN("%n update available", "%n updates available", root.count);
     }
 
-    function runInTerminal(shellCmd: string, message: string): void {
+    // shellCmd refers to its values as "$1", "$2"…: they go as arguments, never inside the script (JSON.stringify
+    // is JavaScript quoting, not the shell's: "$(…)" in a value would run)
+    function runInTerminal(shellCmd: string, message: string, values: var): void {
         root.statusMessage = message;
         root.statusIcon = "terminal";
-        const term = GlobalConfig.general.apps.terminal;
-        const banner = `echo ${JSON.stringify(Tr.tr("##### Sylphrena updates #####"))}; `;
-        const footer = `; echo; read -n 1 -p ${JSON.stringify(Tr.tr("Press any key to close…"))}`;
-        const wrapped = `${banner}${shellCmd}${footer}`;
-        Quickshell.execDetached([...term, "bash", "-c", wrapped]);
+        Quickshell.execDetached([...GlobalConfig.general.apps.terminal, "bash", "-c", root._terminalScript(shellCmd), "bash", ...(values ?? [])]);
         // Re-check after a delay so the list refreshes once the user closes the terminal
         Qt.callLater(() => poll.restart());
         refreshTimer.restart();
+    }
+
+    function _terminalScript(shellCmd: string): string {
+        // Our own texts, in single quotes (nothing expands inside them)
+        const banner = Tr.tr("##### Sylphrena updates #####").replace(/'/g, "'\\''");
+        const close = Tr.tr("Press any key to close…").replace(/'/g, "'\\''");
+        return `printf '%s\\n' '${banner}'; ${shellCmd}; echo; read -n 1 -p '${close}'`;
     }
 
     function buildUpdateArgs(): var {
@@ -286,51 +291,46 @@ Singleton {
         SylphrenaUpdates.check();
         // The shell itself was replaced: start the new one (what runs now is the old one)
         if (code === 0 && root._shellUpdating)
-            Quickshell.execDetached(["sh", "-c", "sleep 3; exec sylph shell -r -d"]);
+            Quickshell.execDetached(["sh", "-c", "sleep 3; PATH=\"$HOME/.local/bin:$PATH\" exec sylph shell -r -d"]);
         root._shellUpdating = false;
     }
 
     function updatePackage(pkg: var): void {
         if (!pkg)
             return;
-        const own = pkg.source === "SYLPHRENA" || pkg.source === "EXTENSION";
+        const message = Tr.tr("Updating %1…").arg(pkg.name);
         if (pkg.source === "SYLPHRENA") {
-            root.runInTerminal(`python3 ${JSON.stringify(Quickshell.shellPath("scripts/installer.py"))} --update`, Tr.tr("Updating %1…").arg(pkg.name));
+            root.runInTerminal(`python3 "$1" --update`, message, [Quickshell.shellPath("scripts/installer.py")]);
             return;
         }
         if (pkg.source === "EXTENSION") {
-            root.runInTerminal(`python3 ${JSON.stringify(Quickshell.shellPath("scripts/ext.py"))} update-hub ${JSON.stringify(pkg.id)}`, Tr.tr("Updating %1…").arg(pkg.name));
+            root.runInTerminal(`python3 "$1" update-hub "$2"`, message, [Quickshell.shellPath("scripts/ext.py"), pkg.id]);
             return;
         }
-        if (!own && !root.allowSingleModification && !(pkg.source || "").startsWith("FLATPAK")) {
+        const src = pkg.source || "";
+        if (!root.allowSingleModification && !src.startsWith("FLATPAK")) {
             root.showSingleWarning = true;
             return;
         }
-        const name = pkg.name;
-        const src = pkg.source || "";
-        let cmd = "";
         if (src.startsWith("FLATPAK"))
-            cmd = `flatpak update ${JSON.stringify(pkg.from)}`;
+            root.runInTerminal(`flatpak update "$1"`, message, [pkg.from]);
         else if (src === "AUR")
-            cmd = `${root.aurWrapper} -S ${JSON.stringify(name)}`;
+            root.runInTerminal(`"$1" -S "$2"`, message, [root.aurWrapper, pkg.name]);
         else
-            cmd = `sudo pacman -S ${JSON.stringify(name)}`;
-        root.runInTerminal(cmd, Tr.tr("Updating %1…").arg(name));
+            root.runInTerminal(`sudo pacman -S "$1"`, message, [pkg.name]);
     }
 
     function uninstallPackage(pkg: var): void {
         if (!pkg)
             return;
-        const name = pkg.name;
         const src = pkg.source || "";
-        let cmd = "";
+        const message = Tr.tr("Uninstalling %1…").arg(pkg.name);
         if (src.startsWith("FLATPAK"))
-            cmd = `flatpak remove ${JSON.stringify(pkg.from)}`;
+            root.runInTerminal(`flatpak remove "$1"`, message, [pkg.from]);
         else if (src === "AUR")
-            cmd = `sudo ${root.aurWrapper} -R ${JSON.stringify(name)}`;
+            root.runInTerminal(`"$1" -R "$2"`, message, [root.aurWrapper, pkg.name]);
         else
-            cmd = `sudo pacman -R ${JSON.stringify(name)}`;
-        root.runInTerminal(cmd, Tr.tr("Uninstalling %1…").arg(name));
+            root.runInTerminal(`sudo pacman -R "$1"`, message, [pkg.name]);
     }
 
     function showPackageInfo(pkg: var): void {
@@ -340,18 +340,11 @@ Singleton {
             root.openPackageUrl(pkg);
             return;
         }
-        const name = pkg.name;
         const src = pkg.source || "";
-        const pause = `read -n 1 -p ${JSON.stringify(Tr.tr("Press any key to close…"))}`;
-        let cmd = "";
-        if (src.startsWith("FLATPAK"))
-            cmd = `flatpak info ${JSON.stringify(pkg.from)}; ${pause}`;
-        else if (src === "AUR")
-            cmd = `${root.aurWrapper} -Sii ${JSON.stringify(name)}; ${pause}`;
-        else
-            cmd = `pacman -Sii ${JSON.stringify(name)}; ${pause}`;
-        const term = GlobalConfig.general.apps.terminal;
-        Quickshell.execDetached([...term, "bash", "-c", cmd]);
+        const pause = `read -n 1 -p "$2"`;
+        const cmd = src.startsWith("FLATPAK") ? `flatpak info "$1"; ${pause}` : src === "AUR" ? `"$3" -Sii "$1"; ${pause}` : `pacman -Sii "$1"; ${pause}`;
+        const what = src.startsWith("FLATPAK") ? pkg.from : pkg.name;
+        Quickshell.execDetached([...GlobalConfig.general.apps.terminal, "bash", "-c", cmd, "bash", what, Tr.tr("Press any key to close…"), root.aurWrapper]);
     }
 
     function openPackageUrl(pkg: var): void {
@@ -360,7 +353,7 @@ Singleton {
     }
 
     function cleanupOrphans(): void {
-        root.runInTerminal("sudo pacman -Rns $(pacman -Qtdq)", Tr.tr("Cleaning orphans…"));
+        root.runInTerminal("sudo pacman -Rns $(pacman -Qtdq)", Tr.tr("Cleaning orphans…"), []);
     }
 
     function prepareNexus(): void {
