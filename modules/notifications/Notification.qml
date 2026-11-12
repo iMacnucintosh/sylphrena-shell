@@ -23,7 +23,7 @@ StyledRect {
     readonly property bool showAppIconMain: hasAppIcon && !useMaterialPrimary
     readonly property int bodyTextFormat: /[<*_`#\[\]]/.test(modelData.body) ? Text.MarkdownText : Text.PlainText
     readonly property var displayActions: Notifs.displayActions(root.modelData)
-    readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? Tokens.spacing.extraSmall * 2 + appName.height + body.height + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
+    readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? Tokens.spacing.extraSmall * 2 + appName.height + body.height + progress.height + progress.anchors.topMargin + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
     property bool expanded: Config.notifs.openExpanded
 
     color: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
@@ -461,12 +461,35 @@ StyledRect {
                 }
             }
 
+            // Progress of the notification (a download, the water of the day…), when it has one
+            StyledProgressBar {
+                id: progress
+
+                readonly property bool shown: (root.modelData?.progress ?? -1) >= 0
+
+                anchors.left: body.left
+                anchors.right: body.right
+                anchors.top: body.bottom
+                anchors.topMargin: shown ? Tokens.spacing.small : 0
+
+                visible: shown
+                height: shown ? Tokens.padding.small : 0
+                value: Math.max(0, root.modelData?.progress ?? 0)
+                opacity: root.expanded ? 1 : 0
+
+                Behavior on opacity {
+                    Anim {
+                        type: Anim.DefaultEffects
+                    }
+                }
+            }
+
             ButtonRow {
                 id: actions
 
                 anchors.left: body.left
                 anchors.right: body.right
-                anchors.top: body.bottom
+                anchors.top: progress.bottom
                 anchors.topMargin: Tokens.spacing.small
 
                 spacing: Tokens.spacing.extraSmall

@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
+import qs.components.controls
 import qs.services
 
 StyledRect {
@@ -156,6 +157,13 @@ StyledRect {
                 Qt.openUrlExternally(link);
                 root.screenState.sidebar = false;
             }
+        }
+
+        StyledProgressBar {
+            Layout.fillWidth: true
+            Layout.preferredHeight: Tokens.padding.small
+            visible: (root.modelData?.progress ?? -1) >= 0
+            value: Math.max(0, root.modelData?.progress ?? 0)
         }
 
         NotifActionList {

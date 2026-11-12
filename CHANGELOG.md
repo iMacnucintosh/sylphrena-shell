@@ -4,6 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## Sin publicar
 
+- **Barra de progreso en las notificaciones:** las emergentes y las del panel lateral muestran una barra de progreso Material cuando la notificación la trae (el aviso estándar `value` de cualquier app, como una descarga, o `localProgress` en las de la shell y sus extensiones).
 - **Esquina inferior derecha sin panel lateral:** con el panel lateral desactivado abre los interruptores rápidos solos (antes hacían amago de salir y se escondían), y un aviso emergente se aparta a su izquierda acompañando su animación.
 - **Avisos de versiones nuevas:** se recuerdan entre reinicios (`~/.local/state/sylphrena/updates-announced.json`); cada versión se avisa una sola vez.
 - **Dashboard sin el gato:** fuera el gato animado de la tarjeta de multimedia de la base original (el GIF y sus opciones `paths.mediaGif` y `general.mediaGifSpeedAdjustment`, que se borran solas de las configuraciones existentes); de paso deja de correr el detector de ritmo que solo lo animaba.
