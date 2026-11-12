@@ -40,7 +40,8 @@ GITHUB = "https://github.com/iMacnucintosh"
 # Our packages, in the order they have to be installed (the shell depends on the other three)
 PACKAGES = [("sylphrena-cli-git", "sylphrena-cli"), ("seeker-git", "seeker"), ("things-git", "things"),
             ("sylphrena-shell-git", "sylphrena-shell")]
-AUR_DEPS = ["quickshell-git", "qt6-m3shapes-git", "python-materialyoucolor"]
+# Dependencies of the shell package that are not in the Arch repositories (makepkg -s cannot install them)
+AUR_DEPS = ["quickshell-git", "qt6-m3shapes-git", "python-materialyoucolor", "libcava"]
 STATE = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "sylphrena"
 CACHE = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "sylphrena-install"
 
@@ -106,7 +107,7 @@ ES = {
     "Base tools": "Herramientas base", "to build packages from the AUR and run this installer": "para construir paquetes del AUR y ejecutar este instalador",
     "Hyprland": "Hyprland", "the compositor Sylphrena runs on": "el compositor sobre el que corre Sylphrena",
     "AUR helper (yay)": "Ayudante del AUR (yay)", "to install packages that are only in the AUR": "para instalar paquetes que solo están en el AUR",
-    "Libraries from the AUR": "Librerías del AUR", "Quickshell (git version), the Material shapes and the colour library the shell is built on": "Quickshell (versión git), las formas Material y la librería de color sobre las que se construye la shell",
+    "Libraries from the AUR": "Librerías del AUR", "Quickshell (git version), the Material shapes, the colour library and the audio visualiser the shell is built on": "Quickshell (versión git), las formas Material, la librería de color y el visualizador de audio sobre los que se construye la shell",
     "Remove the stable Quickshell": "Quitar el Quickshell estable", "it conflicts with the git version the shell needs": "choca con la versión git que necesita la shell",
     "sylphrena-cli": "sylphrena-cli", "the sylph command (shell, themes, wallpapers, screenshots)": "el comando sylph (shell, temas, fondos, capturas)",
     "Seeker": "Seeker", "the file manager of Sylphrena": "el explorador de archivos de Sylphrena",
@@ -276,7 +277,7 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         add("quickshell-conflict", "Required", "Remove the stable Quickshell", "it conflicts with the git version the shell needs",
             True, required=True, steps=[Step("root", ["pacman", "-Rdd", "--noconfirm", "quickshell"])])
     add("aur-deps", "Required", "Libraries from the AUR",
-        "Quickshell (git version), the Material shapes and the colour library the shell is built on", True, todo=bool(need_aur),
+        "Quickshell (git version), the Material shapes, the colour library and the audio visualiser the shell is built on", True, todo=bool(need_aur),
         required=True, steps=[Step("aur", need_aur)] if need_aur else [])
     labels = {"sylphrena-cli-git": ("sylphrena-cli", "the sylph command (shell, themes, wallpapers, screenshots)"),
               "seeker-git": ("Seeker", "the file manager of Sylphrena"), "things-git": ("Things", "the package manager and extension manager"),

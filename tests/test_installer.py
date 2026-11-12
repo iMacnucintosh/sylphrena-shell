@@ -87,6 +87,19 @@ class Plan(unittest.TestCase):
         import subprocess
         self.assertEqual(subprocess.run(["bash", "-n", str(Path(__file__).resolve().parent.parent / "scripts/system/10-greeter.sh")]).returncode, 0)
 
+    def test_every_dependency_outside_the_repositories_is_installed_from_the_aur(self):
+        # makepkg -s installs the repository ones; anything else must be an AUR dependency or one of our packages
+        import re, subprocess, shutil
+        if not shutil.which("pacman"):
+            self.skipTest("needs pacman")
+        pkgbuild = (Path(__file__).resolve().parent.parent / "packaging" / "PKGBUILD").read_text()
+        block = re.search(r"^depends=\((.*?)\)", pkgbuild, re.S | re.M).group(1)
+        deps = re.findall(r"['\"]([^'\"]+)['\"]", block)
+        ours = {"sylphrena-cli-git", "seeker-git", "things-git"}
+        missing = [d for d in deps if d not in ours and d not in inst.AUR_DEPS
+                   and subprocess.run(["pacman", "-Si", d], capture_output=True).returncode != 0]
+        self.assertEqual(missing, [])
+
     def test_extensions_are_not_part_of_it(self):
         # they are installed later from Things; the installer only says so at the end
         self.assertNotIn("extensions", ids(inst.build_plan(bare())))
