@@ -2,6 +2,11 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 0.5.4 (2026-11-12)
+
+- **Aviso de Sylphrena:** título «Actualizaciones de Sylphrena», como el de las extensiones.
+- **Comprobación de actualizaciones unificada:** Sylphrena y sus extensiones se comprueban con el mismo intervalo que los paquetes del sistema (el de Nexus → Actualizaciones, 30 minutos por defecto) y con el mismo botón de refrescar; ya no cada minuto.
+
 ## 0.5.3 (2026-11-12)
 
 - **Notificaciones sin texto:** en el panel lateral ya no muestran «No body here! :/».

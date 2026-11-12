@@ -73,6 +73,8 @@ Singleton {
     function refresh(): void {
         if (checkProc.running || root.installing)
             return;
+        // Sylphrena and its extensions, on the same refresh as the packages
+        SylphrenaUpdates.check();
         root.busy = true;
         root.error = "";
         root.statusMessage = Tr.tr("Checking for updates…");
