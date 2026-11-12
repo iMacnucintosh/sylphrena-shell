@@ -18,8 +18,6 @@ import qs.utils
 Singleton {
     id: root
 
-    // TODO: every minute while it is being tested in the VM; then every few hours
-    readonly property int checkMinutes: 1
 
     // [{ pkg, name, repo, installed, latest, notes, url }]
     property var updates: []
@@ -84,7 +82,8 @@ Singleton {
     }
 
     Timer {
-        interval: root.checkMinutes * 60 * 1000
+        // The same interval as the system's packages (Nexus → Updates → settings); Updates.refresh() checks too
+        interval: Updates.pollIntervalMinutes * 60 * 1000
         running: true
         repeat: true
         triggeredOnStart: true
