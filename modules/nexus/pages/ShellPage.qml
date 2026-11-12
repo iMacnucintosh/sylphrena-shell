@@ -302,12 +302,6 @@ PageBase {
             onToggled: GlobalConfig.bar.workspaces.showWindows = checked
         }
 
-        ToggleRow {
-            text: Tr.trCtx("Windows on special workspaces", "bar workspaces")
-            checked: Config.bar.workspaces.showWindowsOnSpecialWorkspaces
-            onToggled: GlobalConfig.bar.workspaces.showWindowsOnSpecialWorkspaces = checked
-        }
-
         StepperRow {
             // TRANSLATORS: maximum number of window icons shown per workspace
             label: Tr.trCtx("Max window icons", "bar workspaces")

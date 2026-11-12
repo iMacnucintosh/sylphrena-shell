@@ -37,6 +37,11 @@ REMOVED_KEYS = [
     "addons.razerMouse",  # the Razer mouse battery was removed (v0.3)
     "paths.sessionGif",  # the animated character of the session menu was removed (v0.5)
     "general.sessionGifSpeed",
+    # options of the old workspace strip of the base, which the activities strip replaced (v0.5)
+    "bar.workspaces.shown",
+    "bar.workspaces.showUnoccupied",
+    "bar.workspaces.showWindowsOnSpecialWorkspaces",
+    "bar.workspaces.specialDisplayType",
 ]
 REMOVED_EXTENSIONS = ["razer-mouse"]
 
