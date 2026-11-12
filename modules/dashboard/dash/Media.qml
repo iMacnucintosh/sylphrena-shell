@@ -20,7 +20,6 @@ Item {
     }
 
     readonly property real arcCoverGap: Tokens.spacing.extraSmall
-    readonly property bool hasMediaGif: Config.paths.mediaGif.trim() !== ""
     readonly property real coverInset: Tokens.padding.medium + root.arcCoverGap + prog.thickness
 
     anchors.top: parent.top
@@ -41,10 +40,6 @@ Item {
         onTriggered: Players.active?.positionChanged()
     }
 
-    ServiceRef {
-        service: Audio.beatTracker
-    }
-
     Column {
         id: content
 
@@ -52,20 +47,6 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         spacing: Tokens.spacing.medium
-
-        // With media gif, keep the block top-aligned so the gif can fill the bottom.
-        states: State {
-            when: root.hasMediaGif
-
-            AnchorChanges {
-                target: content
-                anchors.verticalCenter: undefined
-                anchors.top: root.top
-            }
-            PropertyChanges {
-                content.anchors.topMargin: Tokens.padding.small
-            }
-        }
 
         Item {
             anchors.horizontalCenter: parent.horizontalCenter
@@ -172,26 +153,6 @@ Item {
                 disabled: !Players.active?.canGoNext
                 onClicked: Players.active?.next()
             }
-        }
-    }
-
-    Loader {
-        active: root.hasMediaGif
-        anchors.top: content.bottom
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.topMargin: Tokens.spacing.small
-        anchors.bottomMargin: Tokens.padding.large
-        anchors.margins: Tokens.padding.extraLargeIncreased
-
-        sourceComponent: AnimatedImage {
-            anchors.fill: parent
-            playing: Players.active?.isPlaying ?? false
-            speed: Audio.beatTracker.bpm / Config.general.mediaGifSpeedAdjustment
-            source: Paths.absolutePath(Config.paths.mediaGif)
-            asynchronous: true
-            fillMode: AnimatedImage.PreserveAspectFit
         }
     }
 }

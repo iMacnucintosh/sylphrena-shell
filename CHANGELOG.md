@@ -4,6 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## Sin publicar
 
+- **Dashboard sin el gato:** fuera el gato animado de la tarjeta de multimedia de la base original (el GIF y sus opciones `paths.mediaGif` y `general.mediaGifSpeedAdjustment`, que se borran solas de las configuraciones existentes); de paso deja de correr el detector de ritmo que solo lo animaba.
 - **Opciones heredadas fuera:** las de la tira de escritorios antigua de la base que ya no hacían nada con las actividades («Mostrados», «Mostrar desocupados», «Ventanas en escritorios especiales» y la forma de los escritorios especiales), con su código; se borran solas de las configuraciones existentes. «Por monitor» pasa a «Atenuar los escritorios de otro monitor», que es lo que hace.
 - **Vista previa de ventanas:** al pasar el ratón por el icono de una app en la barra se ve una miniatura en vivo de su ventana (pulsar lleva a ella); activable en Nexus → Paneles → Barra de tareas → Escritorios.
 
