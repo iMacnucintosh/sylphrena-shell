@@ -197,6 +197,24 @@ class Look(unittest.TestCase):
         self.assertEqual(ui.visible(lines[0]), 60)
         self.assertTrue(lines[0].lstrip("\x1b[0-9;m").startswith("╭") or "╭" in lines[0])
 
+    def test_title_words_capitalises_every_word_and_leaves_the_rest(self):
+        ui = sys.modules["installer_ui"]
+        self.assertEqual(ui.title_words("lets the brightness reach a monitor over DDC/CI"),
+                         "Lets The Brightness Reach A Monitor Over DDC/CI")
+        self.assertEqual(ui.title_words("para que funcione sylph record"), "Para Que Funcione Sylph Record")
+
+
+class Translations(unittest.TestCase):
+    def test_every_string_the_installer_shows_has_its_spanish(self):
+        import re
+
+        src = (Path(__file__).resolve().parent.parent / "scripts/installer.py").read_text()
+        wanted = set(re.findall(r'\btr\(\s*"((?:[^"\\]|\\.)*)"', src)) | set(inst.GROUPS)
+        for f in (bare(), inst.Facts(arch=True, helper="yay", installed={"quickshell"}, backlight=True)):
+            for it in inst.build_plan(f):
+                wanted |= {it.title, it.why}
+        self.assertEqual(sorted(w for w in wanted if w not in inst.ES), [])
+
 
 if __name__ == "__main__":
     unittest.main()

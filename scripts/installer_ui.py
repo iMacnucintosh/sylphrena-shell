@@ -121,6 +121,11 @@ PANEL_LINES = 6     # top border, up to three lines of explanation, one for the 
 FOOTER_LINES = 3    # blank, count, keys
 
 
+def title_words(text: str) -> str:
+    """The first letter of every word in capitals; the rest is left as it is (DDC/CI, sylph…)."""
+    return " ".join(w[:1].upper() + w[1:] for w in text.split(" "))
+
+
 def visible(text: str) -> int:
     return len(ANSI.sub("", text))
 
@@ -196,7 +201,7 @@ def checklist(groups: list[tuple[str, list]], describe, lock_text, hint: str, st
         view += [""] * (rows_available - len(view)) if len(lines) >= rows_available else []
         w = min(width(), 80)
         it = flat[pos]
-        text = (textwrap.wrap(describe(it), w - 6) or [""])[:3]
+        text = (textwrap.wrap(title_words(describe(it)), w - 6) or [""])[:3]
         panel_text = text + ([""] if lock_text(it) else []) + [style(lock_text(it), dim=True)]
         panel_text += [""] * (PANEL_LINES - 2 - len(panel_text))
         panel = ["  " + l for l in box(label(it), panel_text, w)]
