@@ -90,7 +90,7 @@ Launcher, dashboard, utilities, notificaciones, media/MPRIS, lock PAM, switcher 
 Runtime / sistema (Arch):
 
 - [`quickshell-git`](https://git.outfoxxed.me/quickshell/quickshell) (versión git, no solo el tag estable)
-- CLI user-local **`sylph`** (paquete `sylphrena-cli` cuando exista; mientras tanto el binario en `~/.local/bin`)
+- CLI **`sylph`** (paquete `sylphrena-cli-git`, ver `packaging/`; o el binario user-local en `~/.local/bin`)
 - `ddcutil`, `brightnessctl`, `libcava`, `networkmanager`, `lm_sensors`, `aubio`, `libpipewire`, `libqalculate`, `power-profiles-daemon`
 - Fuentes: `ttf-material-symbols-variable`, `ttf-rubik-vf`, `ttf-cascadia-code-nerd`
 - Qt 6: `qt6-base`, `qt6-declarative`, `qt6-imageformats`, `qt6-multimedia`, [`qt6-m3shapes-git`](https://github.com/soramanew/m3shapes)
