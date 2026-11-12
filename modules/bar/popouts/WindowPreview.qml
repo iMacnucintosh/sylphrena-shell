@@ -14,13 +14,17 @@ Item {
     required property PopoutState popouts
     readonly property var toplevel: popouts.previewToplevel
 
-    implicitWidth: toplevel ? child.implicitWidth : -Tokens.padding.extraLargeIncreased
+    // As wide as the thumbnail (a tall window makes a narrow one), never narrower than a readable title
+    readonly property real contentWidth: Math.max(previewBox.implicitWidth, Tokens.sizes.bar.windowPreviewSize * 0.6)
+
+    implicitWidth: toplevel ? contentWidth : -Tokens.padding.extraLargeIncreased
     implicitHeight: child.implicitHeight
 
     Column {
         id: child
 
         anchors.centerIn: parent
+        width: root.contentWidth
         spacing: Tokens.spacing.medium
 
         RowLayout {
@@ -58,6 +62,9 @@ Item {
         }
 
         ClippingWrapperRectangle {
+            id: previewBox
+
+            anchors.horizontalCenter: parent.horizontalCenter
             color: "transparent"
             radius: Tokens.rounding.medium
 
