@@ -28,6 +28,7 @@ Item {
     property alias currentName: popoutState.currentName
     property alias hasCurrent: popoutState.hasCurrent
     property alias activityMenuId: popoutState.activityMenuId
+    property alias previewToplevel: popoutState.previewToplevel
     readonly property alias sticky: popoutState.sticky
     property real currentCenter
 
