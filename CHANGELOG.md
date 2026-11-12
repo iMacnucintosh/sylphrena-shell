@@ -4,6 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## Sin publicar
 
+- **Aviso de Sylphrena:** título «Actualizaciones de Sylphrena», como el de las extensiones.
 - **Comprobación de actualizaciones unificada:** Sylphrena y sus extensiones se comprueban con el mismo intervalo que los paquetes del sistema (el de Nexus → Actualizaciones, 30 minutos por defecto) y con el mismo botón de refrescar; ya no cada minuto.
 
 ## 0.5.3 (2026-11-12)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 19:22+0100\n"
+"POT-Creation-Date: 2026-11-12 19:26+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -3896,10 +3896,6 @@ msgstr "Base %1, capas %2"
 msgid "Nexus — %1"
 msgstr "Nexus — %1"
 
-#: modules/sidebar/Notif.qml
-msgid "No body here! :/"
-msgstr "¡Aquí no hay nadie! :/"
-
 #. TRANSLATORS: the count itself is rendered separately, immediately to the left
 #: modules/sidebar/NotifDock.qml
 msgctxt "notification count label, number shown separately"
@@ -5219,8 +5215,8 @@ msgid "Updates available"
 msgstr "Actualizaciones disponibles"
 
 #: services/SylphrenaUpdates.qml
-msgid "New version of Sylphrena"
-msgstr "Nueva versión de Sylphrena"
+msgid "Sylphrena updates"
+msgstr "Actualizaciones de Sylphrena"
 
 #: services/SylphrenaUpdates.qml
 msgid "Extension updates"
@@ -5950,6 +5946,12 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "No body here! :/"
+#~ msgstr "¡Aquí no hay nadie! :/"
+
+#~ msgid "New version of Sylphrena"
+#~ msgstr "Nueva versión de Sylphrena"
 
 #~ msgid "Updatable extensions"
 #~ msgstr "Extensiones actualizables"

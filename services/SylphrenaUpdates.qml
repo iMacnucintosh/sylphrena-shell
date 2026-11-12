@@ -69,7 +69,7 @@ Singleton {
         announcedFile.setText(JSON.stringify({ announced: [...new Set([...root._announced, ...keys])] }));
         const own = fresh.some(e => e.source === "SYLPHRENA");
         const exts = fresh.some(e => e.source === "EXTENSION");
-        const title = own && exts ? Tr.tr("Updates available") : own ? Tr.tr("New version of Sylphrena") : Tr.tr("Extension updates");
+        const title = own && exts ? Tr.tr("Updates available") : own ? Tr.tr("Sylphrena updates") : Tr.tr("Extension updates");
         Toaster.toast(title, fresh.map(e => e.name).join("  ·  "), "sylphrena");
     }
 
