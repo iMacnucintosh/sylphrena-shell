@@ -75,7 +75,7 @@ StyledWindow {
         readonly property real localX: Clipboard.cursorX - (win.screen?.x ?? 0)
         readonly property real localY: Clipboard.cursorY - (win.screen?.y ?? 0)
         readonly property real margin: Tokens.padding.large
-        readonly property real maxW: Math.min(420, (win.screen?.width ?? 420) - margin * 2)
+        readonly property real maxW: Math.min(640, (win.screen?.width ?? 640) - margin * 2)
         readonly property real maxH: Math.min(520, (win.screen?.height ?? 520) - margin * 2)
 
         x: Math.min(Math.max(margin, localX), (win.screen?.width ?? width) - width - margin)
@@ -196,7 +196,7 @@ StyledWindow {
                         readonly property bool hovered: rowLayer.containsMouse
 
                         width: list.width
-                        height: Tokens.font.body.medium.pointSize + Tokens.padding.large * 2
+                        height: Tokens.font.body.small.pointSize + Tokens.padding.large * 2
 
                         StyledRect {
                             anchors.fill: parent
@@ -312,7 +312,7 @@ StyledWindow {
                                 elide: Text.ElideRight
                                 maximumLineCount: 1
                                 color: row.selected ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
-                                font: Tokens.font.body.medium
+                                font: Tokens.font.body.small
                             }
 
                             IconButton {
