@@ -78,7 +78,9 @@ def extension_updates(pretend: dict) -> list[dict]:
     if not installed:
         return []
     try:
-        with urllib.request.urlopen(urllib.request.Request(HUB_INDEX, headers={"User-Agent": "sylphrena-updates"}), timeout=8) as r:
+        # ?t=: past GitHub's cache, which keeps an old catalog for minutes after a new version is published
+        req = urllib.request.Request(f"{HUB_INDEX}?t={int(time.time())}", headers={"User-Agent": "sylphrena-updates"})
+        with urllib.request.urlopen(req, timeout=8) as r:
             catalog = {i["id"]: i for i in json.load(r).get("items", [])}
     except (OSError, ValueError, KeyError, urllib.error.URLError):
         return []

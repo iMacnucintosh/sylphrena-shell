@@ -4,6 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## Sin publicar
 
+- **Actualizar una extensión recién publicada:** `ext.py update-hub` lee el catálogo por la API de GitHub, porque la caché del fichero tardaba minutos en dar la versión nueva y volvía a instalar la vieja; la comprobación de cada minuto pide el catálogo sin caché.
 - **Actualizar sin Flatpak (o sin ayudante del AUR):** «Actualizar» se saltaba con error al no encontrar `flatpak` y ya no actualizaba Sylphrena ni las extensiones; ahora salta lo que no está instalado y lo dice en el registro.
 
 ## 0.5.2 (2026-11-12)
