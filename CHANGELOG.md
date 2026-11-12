@@ -4,6 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## Sin publicar
 
+- **Capturas por defecto:** `Impr Pant` congela la pantalla y copia la zona elegida al portapapeles; `Alt+Impr Pant` la abre para editarla.
 - **Menú de sesión:** el orbe animado de Sylphrena sustituye al personaje animado de la base original (se quitan el GIF y sus opciones `paths.sessionGif` y `general.sessionGifSpeed`, que se borran solas de las configuraciones existentes).
 - **Instalador:** recomienda el navegador Zen (del AUR); viene marcado solo si no hay otro navegador instalado.
 - **Teclado en Nexus:** Idioma y región → Teclado permite elegir las distribuciones (y variantes), cuál es la principal y el atajo para cambiar entre ellas.

@@ -107,7 +107,8 @@ GTK and Qt apps follow the colour scheme as well, and you can ask for some apps 
 | `Super+,` | Nexus (settings) |
 | `Super+Shift+V` | Clipboard |
 | `Super+L` | Lock |
-| `Print` | Screenshot |
+| `Print` | Screenshot of an area, to the clipboard |
+| `Alt+Print` | Screenshot of an area, to edit it |
 
 All of them can be changed in Nexus → Keyboard & mouse.
 

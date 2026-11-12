@@ -107,7 +107,8 @@ Las apps GTK y Qt también siguen el esquema de colores, y puedes pedir que cier
 | `Super+,` | Nexus (ajustes) |
 | `Super+Shift+V` | Portapapeles |
 | `Super+L` | Bloquear |
-| `Impr Pant` | Captura de pantalla |
+| `Impr Pant` | Captura de una zona, al portapapeles |
+| `Alt+Impr Pant` | Captura de una zona, para editarla |
 
 Todos se cambian en Nexus → Teclado y ratón.
 
