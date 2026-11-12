@@ -11,6 +11,10 @@ Sylphrena is four packages. All are `-git` packages: their version follows the r
 
 Each has its `PKGBUILD` and `.SRCINFO` in its repository's `packaging/` folder.
 
+## The easy way: the installer
+
+`./install.sh` at the root of the shell repository does all of this (and the rest of the setup) from a terminal: see the README.
+
 ## Build and install from a clone
 
 ```bash

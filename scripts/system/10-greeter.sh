@@ -5,6 +5,13 @@
 
 step_main() {
   local greeter_dir old_dir session_user qs_dst
+
+  # What this step needs; the Sylphrena installer (./install.sh) installs them first
+  local tool
+  for tool in rsync python3; do
+    command -v "$tool" >/dev/null || { echo "Missing $tool: install it and run this again." >&2; return 1; }
+  done
+  [[ -x /usr/bin/greetd ]] || { echo "Missing greetd: install it (pacman -S greetd) and run this again." >&2; return 1; }
   greeter_dir="${SYLPHRENA_GREETER_DIR:-/etc/greetd/sylphrena}"
   old_dir="/etc/greetd/sylphrena"
   qs_dst="$greeter_dir/qs"
@@ -107,15 +114,28 @@ command = "${greeter_dir}/start-greeter-compositor.sh"
 user = "greeter"
 EOF
 
+  # Shorter hand-off from the greeter to the session (no 10 s black screen after typing the password; a stuck
+  # leftover app cannot hold the next session for 90 s). The names it had before the rename are cleaned up.
   mkdir -p /etc/systemd/logind.conf.d /etc/systemd/system/user@.service.d
   install -m 644 "$SYLPHRENA_ROOT/greeter/systemd/logind.conf" \
     /etc/systemd/logind.conf.d/sylphrena-greeter.conf
   install -m 644 "$SYLPHRENA_ROOT/greeter/systemd/user-service.conf" \
     /etc/systemd/system/user@.service.d/sylphrena-timeout.conf
-  rm -f /etc/systemd/logind.conf.d/sylphrena-greeter.conf \
-    /etc/systemd/system/user@.service.d/sylphrena-timeout.conf
+  rm -f /etc/systemd/logind.conf.d/caelestia-greeter.conf \
+    /etc/systemd/system/user@.service.d/caelestia-timeout.conf
   systemctl daemon-reload
   systemctl reload systemd-logind.service
+
+  # greetd has to be the display manager. Nothing is restarted (that would end the session you are in):
+  # it takes over at the next boot or when the display manager is restarted from a text console.
+  local current
+  current="$(basename "$(readlink -f /etc/systemd/system/display-manager.service 2>/dev/null || true)" .service)"
+  if [[ -n "$current" && "$current" != "greetd" && "$current" != "display-manager" ]]; then
+    echo "Replacing the display manager $current with greetd (disabled, not stopped)"
+    systemctl disable "$current.service"
+  fi
+  systemctl enable -f greetd.service
+  echo "greetd is enabled: it takes over at the next boot"
 
   echo "Greeter dir: $greeter_dir (symlink $old_dir)"
   echo "greetd initial_session user: $session_user"

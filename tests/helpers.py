@@ -16,6 +16,7 @@ def load(name: str):
     """scripts/<name>.py as a module (the file names have dashes)."""
     spec = importlib.util.spec_from_file_location(name.replace("-", "_"), SCRIPTS / f"{name}.py")
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = mod  # dataclasses and friends look the module up by name
     spec.loader.exec_module(mod)
     return mod
 

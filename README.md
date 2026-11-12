@@ -82,6 +82,17 @@ Launcher, dashboard, utilities, notificaciones, media/MPRIS, lock PAM, switcher 
 
 ## Instalación
 
+### Instalador (Arch)
+
+Con Arch y Hyprland ya instalados, desde una terminal y con tu usuario:
+
+```sh
+git clone https://github.com/iMacnucintosh/sylphrena-shell && cd sylphrena-shell && ./install.sh
+```
+
+Mira qué tiene el sistema y qué falta, te lo enseña con el porqué de cada cosa y **no cambia nada hasta que confirmas**; después lo hace con una sola contraseña:
+las herramientas base, `yay` si no hay ayudante del AUR, las librerías del AUR (Quickshell git, M3Shapes, `python-materialyoucolor`), los cuatro paquetes (`sylphrena-cli`, Seeker, Things y la shell), la fuente del reloj, el grabador de pantalla, `ddcutil` si el equipo no tiene pantalla integrada, el enganche a tu `hyprland.lua` (se le añade un bloque, con copia de seguridad), los ajustes del primer arranque y kitty, y la pantalla de inicio de sesión (que sustituye a tu gestor de sesiones). Las extensiones recomendadas se ofrecen sin marcar. Se puede repetir: solo hace lo que falte. El instalador tiene su propia cara: un banner con el logo, una lista que se maneja con las flechas (espacio para activar o desactivar, intro para instalar, con la explicación de lo que tienes seleccionado), un indicador por paso con su tiempo y, si algo falla, las últimas líneas de la salida. En una terminal sin colores o redirigida sale en texto plano. Opciones: `--yes`, `--dry-run`, `--demo` (cómo se ve en un Arch desnudo, sin cambiar nada), `--verbose` (la salida de cada comando), `--list`, `--skip <id>`, `--no-login-screen`; registro en `~/.local/state/sylphrena/install.log`.
+
 > [!NOTE]
 > Hay PKGBUILD de los cuatro paquetes (`sylphrena-shell-git`, `sylphrena-cli-git`, `seeker-git`, `things-git`, en el `packaging/` de cada repo; ver [`packaging/README.md`](packaging/README.md)). **La publicación en el AUR está pendiente**: hasta entonces se instalan con `makepkg -si` desde un clon, o con el flujo de abajo (clone + build user-local del plugin C++).
 
@@ -96,7 +107,7 @@ Runtime / sistema (Arch):
 - Qt 6: `qt6-base`, `qt6-declarative`, `qt6-imageformats`, `qt6-multimedia`, [`qt6-m3shapes-git`](https://github.com/soramanew/m3shapes)
 - `swappy`, `fish`, `bash`
 - Clipboard: `cliphist`, `wl-clipboard`, `wtype`
-- Hyprland + portales (`xdg-desktop-portal-hyprland`, `xdg-desktop-portal-gtk`), `qt6ct`, tema de iconos Papirus (recomendado)
+- Hyprland + portales (`xdg-desktop-portal-hyprland`, `xdg-desktop-portal-gtk`), `qt6ct`, tema de iconos `papirus-icon-theme` y tema GTK `adw-gtk-theme` (necesarios: la shell escribe su configuración)
 
 Build: `cmake`, `ninja`, `qt6-shadertools`.
 

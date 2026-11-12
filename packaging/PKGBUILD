@@ -16,7 +16,9 @@ depends=(
   'xdg-desktop-portal-hyprland' 'xdg-desktop-portal-gtk'
   # What its scripts and services call
   'python' 'networkmanager' 'wireplumber' 'libpulse' 'libxml2' 'curl' 'systemd' 'brightnessctl' 'lm_sensors'
-  'power-profiles-daemon' 'cliphist' 'wl-clipboard' 'wtype' 'grim' 'slurp' 'playerctl' 'libnotify' 'qt6ct'
+  'power-profiles-daemon' 'cliphist' 'wl-clipboard' 'wtype' 'grim' 'slurp' 'swappy' 'playerctl' 'libnotify' 'qt6ct'
+  # Look: icons and GTK theme that follow the colours of the shell (sylphrena-quiet writes their settings)
+  'papirus-icon-theme' 'adw-gtk-theme'
   # Fonts of the interface
   'ttf-material-symbols-variable' 'ttf-cascadia-code-nerd'
   # The CLI and the apps that come with it
@@ -24,10 +26,8 @@ depends=(
 )
 makedepends=('git' 'cmake' 'ninja' 'qt6-shadertools')
 optdepends=('ttf-rubik-vf: the font of the clock and the workspaces (AUR)'
-            'swappy: edit a screenshot after taking it'
+            'gpu-screen-recorder: screen recording (sylph record)'
             'fish: the calculator of the launcher opens qalc in it'
-            'papirus-icon-theme: icon theme Sylphrena applies'
-            'adw-gtk-theme: GTK theme that follows the colours of the shell'
             'ddcutil: brightness of external monitors'
             'greetd: the login screen (scripts/install-system.sh)')
 provides=('sylphrena-shell')
