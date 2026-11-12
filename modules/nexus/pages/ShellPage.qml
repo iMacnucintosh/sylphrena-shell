@@ -191,12 +191,37 @@ PageBase {
             Variants {
                 id: workspaceAnimationItems
 
-                model: ["fade", "slide", "slidefade"]
+                model: ["fade", "slide", "slidevert", "slidefade", "slidefadevert"]
 
                 MenuItem {
                     required property string modelData
 
                     text: Hypr.workspaceAnimationLabel(modelData)
+                }
+            }
+        }
+
+        SelectRow {
+            id: workspaceAnimationSpeedRow
+
+            visible: Hypr.normalizeWorkspaceAnimation(GlobalConfig.general.workspaceAnimation) !== "fade"
+            label: Tr.tr("Transition speed")
+            subtext: Tr.tr("How fast the desktop transition plays")
+            active: workspaceAnimationSpeedItems.instances.find(i => i.modelData === Hypr.normalizeWorkspaceAnimationSpeed(GlobalConfig.general.workspaceAnimationSpeed)) ?? null
+            fallbackText: Hypr.workspaceAnimationSpeedLabel(GlobalConfig.general.workspaceAnimationSpeed)
+            onSelected: item => GlobalConfig.general.workspaceAnimationSpeed = item.modelData
+
+            menuItems: workspaceAnimationSpeedItems.instances
+
+            Variants {
+                id: workspaceAnimationSpeedItems
+
+                model: ["slow", "normal", "fast"]
+
+                MenuItem {
+                    required property string modelData
+
+                    text: Hypr.workspaceAnimationSpeedLabel(modelData)
                 }
             }
         }

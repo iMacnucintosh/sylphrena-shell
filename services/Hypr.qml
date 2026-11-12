@@ -86,15 +86,34 @@ Singleton {
     }
 
     function normalizeWorkspaceAnimation(mode: string): string {
-        return ["slide", "slidefade"].includes(mode) ? mode : "fade";
+        return ["slide", "slidevert", "slidefade", "slidefadevert"].includes(mode) ? mode : "fade";
+    }
+
+    function normalizeWorkspaceAnimationSpeed(speed: string): string {
+        return ["slow", "fast"].includes(speed) ? speed : "normal";
+    }
+
+    function workspaceAnimationSpeedLabel(speed: string): string {
+        switch (root.normalizeWorkspaceAnimationSpeed(speed)) {
+        case "slow":
+            return Tr.tr("Slow");
+        case "fast":
+            return Tr.tr("Fast");
+        default:
+            return Tr.tr("Normal");
+        }
     }
 
     function workspaceAnimationLabel(mode: string): string {
         switch (root.normalizeWorkspaceAnimation(mode)) {
         case "slide":
             return Tr.tr("Slide");
+        case "slidevert":
+            return Tr.tr("Slide vertically");
         case "slidefade":
             return Tr.tr("Slide and fade");
+        case "slidefadevert":
+            return Tr.tr("Slide and fade vertically");
         default:
             return Tr.tr("Fade");
         }
@@ -104,9 +123,10 @@ Singleton {
     function workspaceAnimationLua(mode: string): string {
         const m = root.normalizeWorkspaceAnimation(mode);
         const slide = m !== "fade";
-        const style = m === "slidefade" ? "slidefade 20%" : m;
+        const style = m.startsWith("slidefade") ? `${m} 20%` : m;
         const curve = slide ? "sylphrena-quint" : "sylphrena-almostlinear";
-        const speeds = slide ? [4, 4, 4] : [1.94, 1.21, 1.94];
+        const base = ({ slow: 2.5, normal: 4, fast: 6 })[root.normalizeWorkspaceAnimationSpeed(GlobalConfig.general.workspaceAnimationSpeed)];
+        const speeds = slide ? [base, base, base] : [1.94, 1.21, 1.94];
         let out = 'hl.curve("sylphrena-quint", { type = "bezier", points = { { 0.23, 1 }, { 0.32, 1 } } })\n';
         out += 'hl.curve("sylphrena-almostlinear", { type = "bezier", points = { { 0.5, 0.5 }, { 0.75, 1 } } })\n';
         ["workspaces", "workspacesIn", "workspacesOut"].forEach((leaf, i) => {
@@ -396,6 +416,10 @@ Singleton {
         }
 
         function onWorkspaceAnimationChanged(): void {
+            root.applyWorkspaceAnimation(true);
+        }
+
+        function onWorkspaceAnimationSpeedChanged(): void {
             root.applyWorkspaceAnimation(true);
         }
     }

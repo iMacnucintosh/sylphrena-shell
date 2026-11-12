@@ -108,9 +108,11 @@ class GeneralConfig : public settings::ObjectNode {
     // Hyprland input:follow_mouse — 0 never, 1 on hover, 2 on click (keyboard focus).
     // Owned by Nexus → Keyboard & mouse; written to sylphrena-input.lua.
     CONFIG_PROPERTY(int, followMouse, 1)
-    // Hyprland animation between workspaces: "fade" (Hyprland's own), "slide" or "slidefade".
+    // Hyprland animation between workspaces: "fade" (Hyprland's own), "slide", "slidevert", "slidefade" or
+    // "slidefadevert"; speed is "slow", "normal" or "fast" (sliding modes only).
     // Owned by Nexus → Activities; written to sylphrena-animation.lua.
     CONFIG_PROPERTY(QString, workspaceAnimation, u"fade"_s)
+    CONFIG_PROPERTY(QString, workspaceAnimationSpeed, u"normal"_s)
     CONFIG_PROPERTY(qreal, mediaGifSpeedAdjustment, 300)
     CONFIG_PROPERTY(qreal, sessionGifSpeed, 0.7)
     CONFIG_GLOBAL_SUBOBJECT(GeneralApps, apps)

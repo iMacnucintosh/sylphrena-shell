@@ -5,7 +5,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 ## Sin publicar
 
 - **Mostrar escritorio:** pulsar en la barra el escritorio activo desliza sus ventanas fuera de la pantalla (izquierda/derecha según su mitad) y otra pulsación las devuelve idénticas; el pill pasa a solo borde mientras están ocultas. Ya no abre el scratchpad ni atenúa la pantalla.
-- **Transición entre escritorios:** ajuste nuevo en Nexus → Activities (fundido, deslizar, deslizar y fundir).
+- **Transición entre escritorios:** ajuste nuevo en Nexus → Activities (fundido, deslizar, deslizar y fundir, también en vertical) y su velocidad.
 
 ## 0.4.0 (2026-11-12)
 
