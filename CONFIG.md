@@ -704,7 +704,6 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
             "capsLockChanged": true,
             "numLockChanged": true,
             "kbLayoutChanged": true,
-            "kbLimit": true,
             "vpnChanged": true,
             "nowPlaying": false
         },

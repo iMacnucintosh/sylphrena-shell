@@ -119,7 +119,6 @@ class BarTokens : public settings::ObjectNode {
 class DashboardTokens : public settings::ObjectNode {
     CONFIG_NODE(DashboardTokens, settings::ObjectNode)
 
-    CONFIG_PROPERTY(int, tabIndicatorHeight, 3)
     CONFIG_PROPERTY(int, tabIndicatorSpacing, 5)
     CONFIG_PROPERTY(int, userWidth, 340)
     CONFIG_PROPERTY(int, logoSize, 30)
@@ -185,7 +184,6 @@ class UtilitiesTokens : public settings::ObjectNode {
     CONFIG_NODE(UtilitiesTokens, settings::ObjectNode)
 
     CONFIG_PROPERTY(int, width, 430)
-    CONFIG_PROPERTY(int, toastWidth, 430)
 };
 
 class LockTokens : public settings::ObjectNode {
