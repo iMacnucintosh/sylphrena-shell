@@ -35,6 +35,8 @@ TO_EXTENSION_CONFIG = {
 # Removed features: their settings are dropped, and their id leaves extensions.enabled.
 REMOVED_KEYS = [
     "addons.razerMouse",  # the Razer mouse battery was removed (v0.3)
+    "paths.sessionGif",  # the animated character of the session menu was removed (v0.5)
+    "general.sessionGifSpeed",
 ]
 REMOVED_EXTENSIONS = ["razer-mouse"]
 
