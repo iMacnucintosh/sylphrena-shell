@@ -2,7 +2,7 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## Sin publicar
+## 0.5.3 (2026-11-12)
 
 - **Notificaciones sin texto:** en el panel lateral ya no muestran «No body here! :/».
 - **Notificaciones que se abren desplegadas:** entran ya desplegadas; antes se desplegaban mientras entraban y el título se cruzaba con el nombre de la app y la hora.
