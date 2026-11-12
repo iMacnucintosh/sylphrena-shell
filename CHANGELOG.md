@@ -2,6 +2,10 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## Sin publicar
+
+- **Actualizar sin Flatpak (o sin ayudante del AUR):** «Actualizar» se saltaba con error al no encontrar `flatpak` y ya no actualizaba Sylphrena ni las extensiones; ahora salta lo que no está instalado y lo dice en el registro.
+
 ## 0.5.2 (2026-11-12)
 
 - **Órdenes de extensiones con `sylph ext <id> <orden>`:** una extensión declara sus órdenes en el manifiesto (`contributes.commands`) y su servicio las responde; `sylph ext <id>` las lista. Hidratación trae `show`, `add <ml>` y `status`.
