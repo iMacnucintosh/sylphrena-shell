@@ -278,7 +278,7 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         # install-system.sh (10-greeter.sh) also makes greetd the display manager: it disables the one in use
         steps += [Step("root", [str(shell_dir / "scripts" / "install-system.sh")])]
         add("login-screen", "Login screen", "Sylphrena login screen",
-            f"greetd with the Material You greeter; it replaces {dm}" if dm else "greetd with the Material You greeter",
+            "greetd with the Material You greeter; it replaces %s" if dm else "greetd with the Material You greeter",
             True, todo=not f.greeter_installed, steps=steps)
     ext_missing = [e for e in RECOMMENDED_EXTENSIONS if e not in f.extensions]
     add("extensions", "Optional", "Recommended extensions", "Tasks and Hydration, from the Sylphrena Hub", False, todo=bool(ext_missing),
@@ -444,7 +444,7 @@ def describe(it: Item, f: Facts) -> str:
     if not it.todo:
         return tr("Already done")
     why = tr(it.why)
-    return why % f.display_manager if "%s" in why else why
+    return why % (f.display_manager or "") if "%s" in why else why
 
 
 def lock_text(it: Item) -> str:

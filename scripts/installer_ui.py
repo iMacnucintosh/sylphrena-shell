@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import sys
 import textwrap
@@ -111,54 +112,100 @@ def can_interact() -> bool:
         import termios  # noqa: F401
     except ImportError:
         return False
-    return shutil.get_terminal_size((90, 24)).lines >= 24
+    return shutil.get_terminal_size((90, 24)).lines >= MIN_LINES
+
+
+ANSI = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
+MIN_LINES = 20      # the list scrolls, but it needs room for the panel and the keys
+PANEL_LINES = 6     # top border, up to three lines of explanation, one for the password, bottom border
+FOOTER_LINES = 3    # blank, count, keys
+
+
+def visible(text: str) -> int:
+    return len(ANSI.sub("", text))
+
+
+def box(title: str, lines: list[str], w: int) -> list[str]:
+    """A rounded box `w` wide; `title` goes into the top border."""
+    inner = w - 4
+    head = f"╭─ {title} "
+    out = [rgb(LAVENDER, head + "─" * max(1, w - len(head) - 1) + "╮")]
+    for line in lines:
+        out.append(rgb(LAVENDER, "│") + " " + line + " " * max(0, inner - visible(line)) + " " + rgb(LAVENDER, "│"))
+    out.append(rgb(LAVENDER, "╰" + "─" * (w - 2) + "╯"))
+    return out
 
 
 def checklist(groups: list[tuple[str, list]], describe, lock_text, hint: str, status_text, label=None, required_text: str = "required") -> bool:
     """Arrow keys / space / enter. `groups` = [(title, [item…])]; an item has title, on, todo, required.
-    `describe(item)` gives the explanation of the highlighted one. Returns False if the user quits."""
+    `describe(item)` explains the highlighted one (shown in a box under the list). The list scrolls when the terminal is
+    short, so the frame always has the same height. Returns False if the user quits."""
     label = label or (lambda it: it.title)
     flat = [it for _, rows in groups for it in rows]
     movable = [i for i, it in enumerate(flat) if it.todo]
     if not movable:
         return True
     pos = movable[0]
+    top = 0
     printed = 0
     out = sys.stdout
 
-    def render() -> None:
-        nonlocal printed
+    def body_lines() -> tuple[list[str], dict[int, int]]:
         lines: list[str] = []
+        row_at: dict[int, int] = {}
         n = -1
         for title, rows in groups:
-            lines.append("")
             lines.append(f"  {rgb(LAVENDER, '◆', True)} {style(title, bold=True)}")
             for it in rows:
                 n += 1
-                here = n == pos
                 if not it.todo:
-                    box, name = rgb(GREEN, "✔"), style(label(it), dim=True)
+                    box_, name = rgb(GREEN, "✔"), style(label(it), dim=True)
                 elif it.required:
-                    box, name = rgb(LAVENDER, "◉"), label(it)
+                    box_, name = rgb(LAVENDER, "◉"), label(it)
                 else:
-                    box, name = (rgb(LAVENDER, "◉") if it.on else style("○", dim=True)), label(it)
-                tag = ""
-                if it.todo and it.required:
-                    tag = style("  " + required_text, dim=True)
-                pointer = rgb(ROSE, "❯", True) if here else " "
-                text = f"   {pointer} {box} {name}{tag}"
-                lines.append(style(text, bold=True) if here else text)
-        lines.append("")
-        lines.append(wrap(describe(flat[pos]), 5, "  "))
-        lines.append("  " + style(lock_text(flat[pos]), dim=True))
-        lines.append("")
-        lines.append("  " + style(status_text(flat), dim=True))
-        lines.append("  " + style(hint, dim=True))
+                    box_, name = (rgb(LAVENDER, "◉") if it.on else style("○", dim=True)), label(it)
+                tag = style("  " + required_text, dim=True) if (it.todo and it.required) else ""
+                pointer = rgb(ROSE, "❯", True) if n == pos else " "
+                text = f"   {pointer} {box_} {name}{tag}"
+                row_at[n] = len(lines)
+                lines.append(style(text, bold=True) if n == pos else text)
+        return lines, row_at
+
+    def render() -> None:
+        nonlocal printed, top
+        rows_available = max(8, shutil.get_terminal_size((90, 24)).lines - PANEL_LINES - FOOTER_LINES - 2)
+        lines, row_at = body_lines()
+        height = min(len(lines), rows_available)
+        here = row_at[pos]
+        scrolls = len(lines) > height
+        # The first and last visible lines carry the "more" marks when the list scrolls: keep the highlighted row clear
+        # of them, and show its group title above it when it fits
+        low, high = (1, height - 2) if scrolls else (0, height - 1)
+        if here - top < low:
+            top = here - low
+        if here - top > high:
+            top = here - high
+        if scrolls and here - top == low and here > 0 and ANSI.sub("", lines[here - 1]).strip().startswith("◆"):
+            top = max(0, here - low - 1)
+        top = max(0, min(top, len(lines) - height))
+        view = lines[top:top + height]
+        if top > 0:
+            view[0] = "  " + style("↑ …", dim=True)
+        if top + height < len(lines):
+            view[-1] = "  " + style("↓ …", dim=True)
+        view += [""] * (rows_available - len(view)) if len(lines) >= rows_available else []
+        w = min(width(), 80)
+        it = flat[pos]
+        text = (textwrap.wrap(describe(it), w - 6) or [""])[:3]
+        panel_text = text + ([""] if lock_text(it) else []) + [style(lock_text(it), dim=True)]
+        panel_text += [""] * (PANEL_LINES - 2 - len(panel_text))
+        panel = ["  " + l for l in box(label(it), panel_text, w)]
+        frame = view + [""] + panel + ["", "  " + style(status_text(flat), dim=True) + "   " + style(hint, dim=True)]
         if printed:
             out.write(f"\033[{printed}F\033[J")
-        out.write("\n".join(lines) + "\n")
+        out.write("\n".join(frame) + "\n")
         out.flush()
-        printed = len(lines)
+        printed = len(frame)
 
     out.write("\033[?25l")
     try:

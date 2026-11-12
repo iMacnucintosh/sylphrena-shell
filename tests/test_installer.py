@@ -69,7 +69,7 @@ class Plan(unittest.TestCase):
         items = {i.id: i for i in inst.build_plan(bare())}
         login = items["login-screen"]
         self.assertTrue(login.on and login.root)
-        self.assertIn("sddm", login.why)  # it says which display manager it replaces
+        self.assertIn("sddm", inst.describe(login, bare()))  # it says which display manager it replaces
         scripts = [s.args[0] for s in login.steps if s.kind == "root"]
         self.assertTrue(any(a.endswith("install-system.sh") for a in scripts))
         self.assertNotIn("login-screen", ids(inst.build_plan(bare(), login_screen=False)))
@@ -189,6 +189,13 @@ class Look(unittest.TestCase):
     def test_the_demo_option_is_a_dry_run(self):
         o = inst.parse(["--demo"])
         self.assertTrue(o["demo"] and o["dry"])
+
+    def test_the_description_box_has_the_same_width_on_every_line(self):
+        ui = sys.modules["installer_ui"]
+        lines = ui.box("Title", ["short", "a longer line of explanation"], 60)
+        self.assertEqual(len({ui.visible(l) for l in lines}), 1)
+        self.assertEqual(ui.visible(lines[0]), 60)
+        self.assertTrue(lines[0].lstrip("\x1b[0-9;m").startswith("╭") or "╭" in lines[0])
 
 
 if __name__ == "__main__":
