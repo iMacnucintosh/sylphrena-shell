@@ -25,7 +25,7 @@ Item {
 
         reloadableId: "utilities"
     }
-    readonly property bool shouldBeActive: screenState.sidebar || (screenState.utilities && Config.utilities.enabled && !(screenState.session && Config.session.enabled))
+    readonly property bool shouldBeActive: (screenState.sidebar && Config.sidebar.enabled) || (screenState.utilities && Config.utilities.enabled && !(screenState.session && Config.session.enabled))
     readonly property real totalPadding: content.anchors.margins + CUtils.clamp(content.anchors.margins - Config.border.thickness, 0, content.anchors.margins)
     readonly property real nonAnimHeight: ((content.item as Content)?.nonAnimHeight ?? 0) + totalPadding
     property real offsetScale: shouldBeActive ? 0 : 1
@@ -39,7 +39,7 @@ Item {
 
     states: State {
         name: "attachedToSidebar"
-        when: root.screenState.sidebar
+        when: root.screenState.sidebar && Config.sidebar.enabled
 
         PropertyChanges {
             root.sidebarLerp: 1

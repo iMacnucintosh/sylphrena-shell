@@ -501,6 +501,43 @@ Singleton {
             return "ok";
         }
 
+        // Commands an extension declares (contributes.commands: [{ name, description }]) and runs in its
+        // service's command(name, args); `sylph ext <id> <command> [args]` comes here. args: "a:" + a JSON list of
+        // strings, and the command "c:" + its name: prefixed so qs' ipc call neither drops an empty or "[]" argument nor
+        // takes a command named like one of its own words (show).
+        function commands(id: string): string {
+            const d = root.discovered.find(x => x.manifest.id === id);
+            if (!d)
+                return "error: no such extension";
+            return JSON.stringify(d.manifest.contributes?.commands ?? []);
+        }
+
+        function run(id: string, cmd: string, args: string): string {
+            const command = String(cmd).replace(/^c:/, "");
+            const d = root.discovered.find(x => x.manifest.id === id);
+            if (!d)
+                return "error: no such extension";
+            if (!(d.manifest.contributes?.commands ?? []).some(c => c.name === command))
+                return `error: ${id} has no command "${command}"`;
+            const svc = root.service(id);
+            if (!svc)
+                return "error: the extension is not enabled";
+            if (typeof svc.command !== "function")
+                return "error: the extension does not answer commands";
+            let list = [];
+            try {
+                list = JSON.parse(String(args).replace(/^a:/, "") || "[]");
+            } catch (e) {
+                return "error: bad arguments";
+            }
+            try {
+                const answer = svc.command(command, list.map(String));
+                return answer === undefined || answer === null ? "ok" : String(answer);
+            } catch (e) {
+                return `error: ${e}`;
+            }
+        }
+
         function status(): string {
             return JSON.stringify({
                 enabled: root.enabledIds,

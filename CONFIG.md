@@ -232,7 +232,6 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
     "general": {
         "logo": "",
         "showOverFullscreen": false,
-        "mediaGifSpeedAdjustment": 300,
         "apps": {
             "terminal": ["foot"],
             "audio": ["pwvucontrol"],
@@ -329,17 +328,13 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
             "statusIcons": true
         },
         "workspaces": {
-            "shown": 5,
             "activeIndicator": true,
             "occupiedBg": false,
-            "showUnoccupied": true,
             "perMonitor": true,
             "showWindows": true,
-            "showWindowsOnSpecialWorkspaces": true,
             "maxWindowIcons": 5,
             "activeTrail": false,
             "displayType": "shapes",
-            "specialDisplayType": "icons",
             "label": "  ",
             "occupiedLabel": "󰮯",
             "activeLabel": "󰮯",
@@ -780,7 +775,6 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
     "paths": {
         "wallpaperDir": "~/Pictures/Wallpapers",
         "lyricsDir": "~/Music/lyrics/",
-        "mediaGif": "root:/assets/bongocat.gif",
         "noNotifsPic": "root:/assets/dino.png",
         "lockNoNotifsPic": "root:/assets/dino.png"
     }

@@ -23,7 +23,7 @@ StyledRect {
     readonly property bool showAppIconMain: hasAppIcon && !useMaterialPrimary
     readonly property int bodyTextFormat: /[<*_`#\[\]]/.test(modelData.body) ? Text.MarkdownText : Text.PlainText
     readonly property var displayActions: Notifs.displayActions(root.modelData)
-    readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? Tokens.spacing.extraSmall * 2 + appName.height + body.height + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
+    readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? Tokens.spacing.extraSmall * 2 + appName.height + body.height + progress.height + progress.anchors.topMargin + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
     property bool expanded: Config.notifs.openExpanded
 
     color: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
@@ -191,42 +191,6 @@ StyledRect {
                             text: root.useMaterialPrimary ? "notifications" : Icons.getNotifIcon(root.modelData.summary, root.modelData?.urgency)
                             color: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData?.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
                             fontStyle: Tokens.font.icon.medium
-                        }
-                    }
-                }
-            }
-
-            Shape {
-                id: progressIndicator
-
-                anchors.centerIn: appIcon
-                width: appIcon.implicitWidth + progressShape.strokeWidth * 2
-                height: appIcon.implicitHeight + progressShape.strokeWidth * 2
-                preferredRendererType: Shape.CurveRenderer
-
-                ShapePath {
-                    id: progressShape
-
-                    capStyle: ShapePath.RoundCap
-                    fillColor: "transparent"
-                    strokeWidth: 2
-                    strokeColor: Colours.palette.m3primary
-
-                    PathAngleArc {
-                        id: progressArc
-
-                        radiusX: progressIndicator.width / 2 - root.Tokens.padding.extraSmall / 2
-                        centerX: progressIndicator.width / 2
-                        radiusY: progressIndicator.height / 2 - root.Tokens.padding.extraSmall / 2
-                        centerY: progressIndicator.height / 2
-
-                        startAngle: -90
-                        sweepAngle: ((root.modelData.hints?.value ?? 0) / 100) * 360
-
-                        Behavior on sweepAngle {
-                            Anim {
-                                easing: Tokens.anim.emphasizedDecel
-                            }
                         }
                     }
                 }
@@ -461,12 +425,35 @@ StyledRect {
                 }
             }
 
+            // Progress of the notification (a download, the water of the day…), when it has one
+            NotifProgress {
+                id: progress
+
+                readonly property bool shown: (root.modelData?.progress ?? -1) >= 0
+
+                anchors.left: body.left
+                anchors.right: body.right
+                anchors.top: body.bottom
+                anchors.topMargin: shown ? Tokens.spacing.small : 0
+
+                notif: root.modelData
+                visible: shown
+                height: shown ? implicitHeight : 0
+                opacity: root.expanded ? 1 : 0
+
+                Behavior on opacity {
+                    Anim {
+                        type: Anim.DefaultEffects
+                    }
+                }
+            }
+
             ButtonRow {
                 id: actions
 
                 anchors.left: body.left
                 anchors.right: body.right
-                anchors.top: body.bottom
+                anchors.top: progress.bottom
                 anchors.topMargin: Tokens.spacing.small
 
                 spacing: Tokens.spacing.extraSmall

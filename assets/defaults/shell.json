@@ -138,10 +138,7 @@
             "activeTrail": true,
             "occupiedBg": false,
             "perMonitor": true,
-            "showUnoccupied": false,
-            "showWindows": true,
-            "showWindowsOnSpecialWorkspaces": true,
-            "shown": 4
+            "showWindows": true
         }
     },
     "dashboard": {

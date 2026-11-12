@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 18:41+0100\n"
+"POT-Creation-Date: 2026-11-12 18:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1415,7 +1415,7 @@ msgid "Panels"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Dashboard, taskbar, launcher, sidebar"
+msgid "Dashboard, taskbar, launcher, side panel"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/ExtensionsPage.qml
@@ -2840,11 +2840,11 @@ msgstr ""
 
 #: modules/nexus/pages/panels/SidebarPanel.qml
 #: modules/nexus/pages/PanelsPage.qml services/Keybinds.qml
-msgid "Sidebar"
+msgid "Side panel"
 msgstr ""
 
 #: modules/nexus/pages/panels/SidebarPanel.qml
-msgid "Pixels dragged before the sidebar opens"
+msgid "Pixels dragged before the side panel opens"
 msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarActiveWindow.qml
@@ -3001,16 +3001,6 @@ msgstr ""
 msgid "Workspaces"
 msgstr ""
 
-#. TRANSLATORS: the number of workspaces shown on the bar
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgctxt "bar workspaces"
-msgid "Shown"
-msgstr ""
-
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgid "Number of workspaces displayed"
-msgstr ""
-
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
 msgctxt "bar workspaces"
 msgid "Active indicator"
@@ -3028,20 +3018,11 @@ msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
 msgctxt "bar workspaces"
-msgid "Show unoccupied"
+msgid "Dim desktops on another monitor"
 msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgid "Show workspaces that are inactive and empty"
-msgstr ""
-
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgctxt "bar workspaces"
-msgid "Per monitor"
-msgstr ""
-
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgid "Hide workspaces not on the current monitor"
+msgid "With several monitors, the desktops open on another one look faded"
 msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
@@ -3612,11 +3593,6 @@ msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
 msgid "Show icons of open windows on each workspace"
-msgstr ""
-
-#: modules/nexus/pages/ShellPage.qml
-msgctxt "bar workspaces"
-msgid "Windows on special workspaces"
 msgstr ""
 
 #. TRANSLATORS: maximum number of window icons shown per workspace
@@ -4884,7 +4860,7 @@ msgid "Power / session menu"
 msgstr ""
 
 #: services/Keybinds.qml
-msgid "Toggle the sidebar"
+msgid "Toggle the side panel"
 msgstr ""
 
 #: services/Keybinds.qml
@@ -5238,16 +5214,15 @@ msgid "%1 - %2"
 msgstr ""
 
 #: services/SylphrenaUpdates.qml
+msgid "Updates available"
+msgstr ""
+
+#: services/SylphrenaUpdates.qml
 msgid "New version of Sylphrena"
 msgstr ""
 
 #: services/SylphrenaUpdates.qml
-msgid "Extension updates"
-msgstr ""
-
-#: services/SylphrenaUpdates.qml
-#, qt-format
-msgid "%1 · update it from Nexus → Updates"
+msgid "New extension updates"
 msgstr ""
 
 #: services/Timers.qml

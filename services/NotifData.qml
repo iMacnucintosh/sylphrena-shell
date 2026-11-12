@@ -51,6 +51,18 @@ QtObject {
     // "notifications" only if there is no real app icon.
     property bool useMaterialNotifIcon: false
     property var hints // Hints are not persisted across restarts
+    // A progress bar under the body, 0..1 (-1: none): the standard "value" hint (0-100) of an app's notification,
+    // or set directly by a notification of the shell (pushLocal({ localProgress: 0.5 }))
+    property real localProgress: -1
+    // Optional texts at the ends of the bar ("1497 ml" … "2600 ml")
+    property string progressFrom
+    property string progressTo
+    readonly property real progress: {
+        const v = hints?.value;
+        if (typeof v === "number" && v >= 0)
+            return Math.min(1, v / 100);
+        return localProgress;
+    }
     property real expireTimeout: GlobalConfig.notifs.defaultExpireTimeout
     property int urgency: NotificationUrgency.Normal
     property bool resident

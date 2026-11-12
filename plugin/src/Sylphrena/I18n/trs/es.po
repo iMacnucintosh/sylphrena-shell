@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 18:41+0100\n"
+"POT-Creation-Date: 2026-11-12 18:59+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1416,8 +1416,8 @@ msgid "Panels"
 msgstr "Paneles"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Dashboard, taskbar, launcher, sidebar"
-msgstr "Panel, barra de tareas, lanzador, barra lateral"
+msgid "Dashboard, taskbar, launcher, side panel"
+msgstr "Panel, barra de tareas, lanzador, panel lateral"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/ExtensionsPage.qml
 #: modules/welcome/WelcomeWindow.qml
@@ -2841,12 +2841,12 @@ msgstr "Fondos de pantalla"
 
 #: modules/nexus/pages/panels/SidebarPanel.qml
 #: modules/nexus/pages/PanelsPage.qml services/Keybinds.qml
-msgid "Sidebar"
-msgstr "Barra lateral"
+msgid "Side panel"
+msgstr "Panel lateral"
 
 #: modules/nexus/pages/panels/SidebarPanel.qml
-msgid "Pixels dragged before the sidebar opens"
-msgstr "Píxeles arrastrados antes de que se abra la barra lateral"
+msgid "Pixels dragged before the side panel opens"
+msgstr "Píxeles que hay que arrastrar para que se abra el panel lateral"
 
 #: modules/nexus/pages/panels/taskbar/BarActiveWindow.qml
 #: modules/nexus/pages/panels/TaskbarPanel.qml
@@ -3002,16 +3002,6 @@ msgstr "Muestra el menú emergente de la bandeja al pasar el cursor"
 msgid "Workspaces"
 msgstr "Escritorios"
 
-#. TRANSLATORS: the number of workspaces shown on the bar
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgctxt "bar workspaces"
-msgid "Shown"
-msgstr "Mostrados"
-
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgid "Number of workspaces displayed"
-msgstr "Número de espacios de trabajo mostrados"
-
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
 msgctxt "bar workspaces"
 msgid "Active indicator"
@@ -3029,21 +3019,12 @@ msgstr "Fondo de ocupados"
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
 msgctxt "bar workspaces"
-msgid "Show unoccupied"
-msgstr "Mostrar sin ocupar"
+msgid "Dim desktops on another monitor"
+msgstr "Atenuar los escritorios de otro monitor"
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgid "Show workspaces that are inactive and empty"
-msgstr "Muestra los espacios de trabajo inactivos y vacíos"
-
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgctxt "bar workspaces"
-msgid "Per monitor"
-msgstr "Por monitor"
-
-#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
-msgid "Hide workspaces not on the current monitor"
-msgstr "Oculta los espacios de trabajo que no están en el monitor actual"
+msgid "With several monitors, the desktops open on another one look faded"
+msgstr "Con varios monitores, los escritorios abiertos en otro se ven más apagados"
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
 msgid "Window preview on hover"
@@ -3614,11 +3595,6 @@ msgstr "Mostrar ventanas"
 #: modules/nexus/pages/ShellPage.qml
 msgid "Show icons of open windows on each workspace"
 msgstr "Muestra los iconos de las ventanas abiertas en cada espacio de trabajo"
-
-#: modules/nexus/pages/ShellPage.qml
-msgctxt "bar workspaces"
-msgid "Windows on special workspaces"
-msgstr "Ventanas en espacios de trabajo especiales"
 
 #. TRANSLATORS: maximum number of window icons shown per workspace
 #: modules/nexus/pages/ShellPage.qml
@@ -4885,8 +4861,8 @@ msgid "Power / session menu"
 msgstr "Menú de energía / sesión"
 
 #: services/Keybinds.qml
-msgid "Toggle the sidebar"
-msgstr "Mostrar u ocultar la barra lateral"
+msgid "Toggle the side panel"
+msgstr "Abrir o cerrar el panel lateral"
 
 #: services/Keybinds.qml
 msgid "Toggle utilities panel"
@@ -5239,17 +5215,16 @@ msgid "%1 - %2"
 msgstr "%1 - %2"
 
 #: services/SylphrenaUpdates.qml
+msgid "Updates available"
+msgstr "Actualizaciones disponibles"
+
+#: services/SylphrenaUpdates.qml
 msgid "New version of Sylphrena"
 msgstr "Nueva versión de Sylphrena"
 
 #: services/SylphrenaUpdates.qml
-msgid "Extension updates"
-msgstr "Actualizaciones de extensiones"
-
-#: services/SylphrenaUpdates.qml
-#, qt-format
-msgid "%1 · update it from Nexus → Updates"
-msgstr "%1 · actualízala desde Nexus → Actualizaciones"
+msgid "New extension updates"
+msgstr "Actualizaciones nuevas de extensiones"
 
 #: services/Timers.qml
 msgid "Timer finished"
@@ -5975,6 +5950,54 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#, qt-format
+#~ msgid "%1 and %2"
+#~ msgstr "%1 y %2"
+
+#~ msgid "Extension updates"
+#~ msgstr "Actualizaciones de extensiones"
+
+#, qt-format
+#~ msgid "%1 · update it from Nexus → Updates"
+#~ msgstr "%1 · actualízala desde Nexus → Actualizaciones"
+
+#~ msgid "Dashboard, taskbar, launcher, sidebar"
+#~ msgstr "Panel, barra de tareas, lanzador, barra lateral"
+
+#~ msgid "Sidebar"
+#~ msgstr "Barra lateral"
+
+#~ msgid "Pixels dragged before the sidebar opens"
+#~ msgstr "Píxeles arrastrados antes de que se abra la barra lateral"
+
+#~ msgid "Toggle the sidebar"
+#~ msgstr "Mostrar u ocultar la barra lateral"
+
+#~ msgctxt "bar workspaces"
+#~ msgid "Shown"
+#~ msgstr "Mostrados"
+
+#~ msgid "Number of workspaces displayed"
+#~ msgstr "Número de espacios de trabajo mostrados"
+
+#~ msgctxt "bar workspaces"
+#~ msgid "Show unoccupied"
+#~ msgstr "Mostrar sin ocupar"
+
+#~ msgid "Show workspaces that are inactive and empty"
+#~ msgstr "Muestra los espacios de trabajo inactivos y vacíos"
+
+#~ msgctxt "bar workspaces"
+#~ msgid "Per monitor"
+#~ msgstr "Por monitor"
+
+#~ msgid "Hide workspaces not on the current monitor"
+#~ msgstr "Oculta los espacios de trabajo que no están en el monitor actual"
+
+#~ msgctxt "bar workspaces"
+#~ msgid "Windows on special workspaces"
+#~ msgstr "Ventanas en espacios de trabajo especiales"
 
 #~ msgid "The rest of the system is up to date."
 #~ msgstr "El resto del sistema está al día."

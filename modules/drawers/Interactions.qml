@@ -255,7 +255,12 @@ CustomMouseArea {
         // (notifications matter when entering from the top-right corner)
         const overNotifsPanel = inRightPanel(panels.sidebar, x, y) || inRightPanel(panels.utilities, x, y) || inRightPanel(panels.osdWrapper, x, y) || inRightPanel(panels.notifications, x, y);
 
-        if (!sidebarShortcutActive) {
+        if (!Config.sidebar.enabled) {
+            // No side panel: the bottom-right corner shows the quick toggles on their own (opening the side panel
+            // there made them start to come out with it and hide again, because it never appeared)
+            if (Config.utilities.enabled && !utilitiesShortcutActive && !Recorder.running && !Recorder.arming)
+                screenState.utilities = inBottomPanel(panels.utilities, x, y, true) || (screenState.utilities && inRightPanel(panels.utilities, x, y));
+        } else if (!sidebarShortcutActive) {
             screenState.sidebar = showNotifsCorner || (screenState.sidebar && overNotifsPanel);
             // Avoid utilities-only panel stealing the corner (but not while recording)
             if (showNotifsCorner && !Recorder.running && !Recorder.arming)

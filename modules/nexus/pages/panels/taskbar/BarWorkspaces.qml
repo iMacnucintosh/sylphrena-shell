@@ -18,19 +18,8 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        StepperRow {
-            first: true
-            // TRANSLATORS: the number of workspaces shown on the bar
-            label: Tr.trCtx("Shown", "bar workspaces")
-            subtext: Tr.tr("Number of workspaces displayed")
-            value: Config.bar.workspaces.shown
-            from: 1
-            to: 20
-            stepSize: 1
-            onMoved: v => GlobalConfig.bar.workspaces.shown = v
-        }
-
         ToggleRow {
+            first: true
             text: Tr.trCtx("Active indicator", "bar workspaces")
             checked: Config.bar.workspaces.activeIndicator
             onToggled: GlobalConfig.bar.workspaces.activeIndicator = checked
@@ -49,17 +38,10 @@ PageBase {
         }
 
         ToggleRow {
-            text: Tr.trCtx("Show unoccupied", "bar workspaces")
-            subtext: Tr.tr("Show workspaces that are inactive and empty")
-            checked: Config.bar.workspaces.showUnoccupied
-            onToggled: GlobalConfig.bar.workspaces.showUnoccupied = checked
-        }
-
-        ToggleRow {
-            text: Tr.trCtx("Per monitor", "bar workspaces")
-            subtext: Tr.tr("Hide workspaces not on the current monitor")
-            checked: Config.bar.workspaces.perMonitor
-            onToggled: GlobalConfig.bar.workspaces.perMonitor = checked
+            text: Tr.trCtx("Dim desktops on another monitor", "bar workspaces")
+            subtext: Tr.tr("With several monitors, the desktops open on another one look faded")
+            checked: !Config.bar.workspaces.perMonitor
+            onToggled: GlobalConfig.bar.workspaces.perMonitor = !checked
         }
 
         ToggleRow {

@@ -2,8 +2,14 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## Sin publicar
+## 0.5.2 (2026-11-12)
 
+- **Órdenes de extensiones con `sylph ext <id> <orden>`:** una extensión declara sus órdenes en el manifiesto (`contributes.commands`) y su servicio las responde; `sylph ext <id>` las lista. Hidratación trae `show`, `add <ml>` y `status`.
+- **Barra de progreso en las notificaciones:** las emergentes y las del panel lateral muestran una barra de progreso Material cuando la notificación la trae (el aviso estándar `value` de cualquier app, como una descarga, o `localProgress` en las de la shell y sus extensiones).
+- **Esquina inferior derecha sin panel lateral:** con el panel lateral desactivado abre los interruptores rápidos solos (antes hacían amago de salir y se escondían), y un aviso emergente se aparta a su izquierda acompañando su animación.
+- **Avisos de versiones nuevas:** se recuerdan entre reinicios (`~/.local/state/sylphrena/updates-announced.json`); cada versión se avisa una sola vez.
+- **Dashboard sin el gato:** fuera el gato animado de la tarjeta de multimedia de la base original (el GIF y sus opciones `paths.mediaGif` y `general.mediaGifSpeedAdjustment`, que se borran solas de las configuraciones existentes); de paso deja de correr el detector de ritmo que solo lo animaba.
+- **Opciones heredadas fuera:** las de la tira de escritorios antigua de la base que ya no hacían nada con las actividades («Mostrados», «Mostrar desocupados», «Ventanas en escritorios especiales» y la forma de los escritorios especiales), con su código; se borran solas de las configuraciones existentes. «Por monitor» pasa a «Atenuar los escritorios de otro monitor», que es lo que hace.
 - **Vista previa de ventanas:** al pasar el ratón por el icono de una app en la barra se ve una miniatura en vivo de su ventana (pulsar lleva a ella); activable en Nexus → Paneles → Barra de tareas → Escritorios.
 
 ## 0.5.1 (2026-11-12)
