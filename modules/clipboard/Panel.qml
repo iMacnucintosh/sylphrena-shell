@@ -45,9 +45,43 @@ StyledWindow {
 
     Component.onCompleted: Qt.callLater(() => search.forceActiveFocus())
 
+    // Image preview that unfolds from the thumbnail: the row asks for it (hover, or keyboard selection)
+    // and it appears after a short pause so sweeping over the list does not open one per row.
+    property Item previewWanted: null
+    property bool keyboardNav: false
+
+    function previewRequest(leading: Item): void {
+        previewWanted = leading;
+        previewDelay.restart();
+    }
+
+    function previewRelease(leading: Item): void {
+        if (previewWanted !== leading)
+            return;
+        previewWanted = null;
+        previewDelay.stop();
+        preview.close();
+    }
+
+    Timer {
+        id: previewDelay
+
+        interval: 300
+        onTriggered: {
+            if (win.previewWanted)
+                preview.open(win.previewWanted);
+        }
+    }
+
     Keys.onEscapePressed: Clipboard.close()
-    Keys.onUpPressed: Clipboard.moveSelection(-1)
-    Keys.onDownPressed: Clipboard.moveSelection(1)
+    Keys.onUpPressed: {
+        keyboardNav = true;
+        Clipboard.moveSelection(-1);
+    }
+    Keys.onDownPressed: {
+        keyboardNav = true;
+        Clipboard.moveSelection(1);
+    }
     Keys.onReturnPressed: Clipboard.activateCurrent()
     Keys.onEnterPressed: Clipboard.activateCurrent()
     Keys.onPressed: event => {
@@ -194,6 +228,18 @@ StyledWindow {
                         readonly property bool isFav: modelData.section === "favorite" || Clipboard.isFavorite(modelData)
                         readonly property bool selected: index === Clipboard.currentIndex
                         readonly property bool hovered: rowLayer.containsMouse
+                        readonly property bool wantsPreview: leading.isImage && leading.thumbReady && (hovered || (selected && win.keyboardNav))
+
+                        onWantsPreviewChanged: {
+                            if (wantsPreview)
+                                win.previewRequest(leading);
+                            else
+                                win.previewRelease(leading);
+                        }
+                        onHoveredChanged: {
+                            if (hovered)
+                                win.keyboardNav = false;
+                        }
 
                         width: list.width
                         height: Tokens.font.body.small.pointSize + Tokens.padding.large * 2
@@ -356,6 +402,143 @@ StyledWindow {
                                 onClicked: Clipboard.deleteEntry(row.modelData)
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    // Big image that unfolds from the hovered thumbnail (non-interactive: clicks and hover go to the list)
+    Item {
+        id: preview
+
+        readonly property real maxW: 480
+        readonly property real maxH: 360
+
+        property Item leading: null
+        property real progress: 0
+        property real fromX
+        property real fromY
+        property real fromW: 1
+        property real fromH: 1
+        property real toX
+        property real toY
+        property real toW: 1
+        property real toH: 1
+
+        function lerp(a: real, b: real): real {
+            return a + (b - a) * progress;
+        }
+
+        function open(l: Item): void {
+            const nw = big.implicitWidth;
+            const nh = big.implicitHeight;
+            if (!l || nw <= 0 || nh <= 0)
+                return; // not decoded yet: big.onStatusChanged opens it when it is
+            leading = l;
+            const from = l.mapToItem(null, 0, 0);
+            fromX = from.x;
+            fromY = from.y;
+            fromW = l.width;
+            fromH = l.height;
+            const k = Math.min(1, maxW / nw, maxH / nh);
+            // Barely bigger than the thumbnail: nothing to gain from a popup
+            if (nw * k < l.width * 1.5 && nh * k < l.height * 1.5)
+                return;
+            toW = Math.max(l.width, nw * k);
+            toH = Math.max(l.height, nh * k);
+            const gap = Tokens.padding.medium;
+            const sw = win.width;
+            // Beside the card, on the side with room; centred on the thumbnail's height
+            let x = card.x + card.width + gap;
+            if (x + toW > sw - card.margin)
+                x = card.x - gap - toW;
+            toX = Math.max(card.margin, Math.min(x, sw - toW - card.margin));
+            toY = Math.max(card.margin, Math.min(from.y + l.height / 2 - toH / 2, win.height - toH - card.margin));
+            progress = 0;
+            anim.to = 1;
+            anim.restart();
+        }
+
+        function close(): void {
+            anim.to = 0;
+            anim.restart();
+        }
+
+        visible: leading !== null && progress > 0.001
+        enabled: false
+        x: lerp(fromX, toX)
+        y: lerp(fromY, toY)
+        width: lerp(fromW, toW)
+        height: lerp(fromH, toH)
+
+        Anim {
+            id: anim
+
+            target: preview
+            property: "progress"
+            type: Anim.DefaultSpatial
+            onFinished: {
+                if (preview.progress <= 0.001)
+                    preview.leading = null;
+            }
+        }
+
+        // Decoded in the background while the pause runs, so it is ready when the popup opens
+        Image {
+            id: big
+
+            visible: false
+            asynchronous: true
+            cache: false
+            onStatusChanged: {
+                // Decoded after the pause already ran out: open now if it is still wanted
+                if (status === Image.Ready && win.previewWanted && !previewDelay.running && preview.progress < 0.001)
+                    preview.open(win.previewWanted);
+            }
+            source: preview.leading ? Qt.resolvedUrl(preview.leading.thumbPath) : (win.previewWanted ? Qt.resolvedUrl(win.previewWanted.thumbPath) : "")
+        }
+
+        Elevation {
+            anchors.fill: parent
+            radius: Tokens.rounding.large
+            level: 3
+            opacity: Math.min(1, preview.progress * 3)
+
+            ClipRect {
+                anchors.fill: parent
+                radius: Tokens.rounding.large
+
+                StyledRect {
+                    anchors.fill: parent
+                    color: Colours.tPalette.m3surface
+                }
+
+                Image {
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectCrop
+                    smooth: true
+                    mipmap: true
+                    source: big.source
+                }
+
+                StyledRect {
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    anchors.margins: Tokens.padding.small
+                    implicitWidth: dims.implicitWidth + Tokens.padding.medium * 2
+                    implicitHeight: dims.implicitHeight + Tokens.padding.extraSmall * 2
+                    radius: Tokens.rounding.full
+                    color: Qt.alpha(Colours.palette.m3surface, 0.8)
+                    opacity: Math.max(0, (preview.progress - 0.7) / 0.3)
+
+                    StyledText {
+                        id: dims
+
+                        anchors.centerIn: parent
+                        text: `${big.implicitWidth} × ${big.implicitHeight}`
+                        color: Colours.palette.m3onSurface
+                        font: Tokens.font.label.small
                     }
                 }
             }
