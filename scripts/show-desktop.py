@@ -116,28 +116,63 @@ def plan(group, out, anchor=None):
     plan(second, out, second[0])
 
 
+def batch(cmds):
+    if cmds:
+        hypr("--batch", " ; ".join(cmds))
+
+
+def option(name):
+    try:
+        d = json.loads(hypr("getoption", name, "-j"))
+        return d.get("bool", d.get("int"))
+    except (ValueError, AttributeError):
+        return None
+
+
+def settle(targets, timeout=0.7):
+    """Wait until the sliding windows reach their saved position (or give up)."""
+    end = time.time() + timeout
+    while time.time() < end:
+        now = {c["address"]: c["at"] for c in clients()}
+        if all(abs(now.get(a, at)[0] - at[0]) <= 3 and abs(now.get(a, at)[1] - at[1]) <= 3 for a, at in targets):
+            return
+        time.sleep(0.04)
+
+
 def show(ws, state):
     saved = state.pop(str(ws), [])
     save(state)
     alive = {c["address"] for c in clients()}
     saved = [w for w in saved if w["address"] in alive]
     active = (json.loads(hypr("activewindow", "-j") or "{}") or {}).get("address")
+
+    # 1. Slide everything back to its place (smooth: they are all floating) ...
     for w in saved:
-        if w["floating"]:
-            move(w["address"], w["at"][0], w["at"][1])
+        move(w["address"], w["at"][0], w["at"][1])
+    settle([(w["address"], w["at"]) for w in saved])
+
+    # 2. ... then put the tiled ones back in the layout in one go, with animations and cursor warps off,
+    #    so the swap from floating to tiled is not visible (positions already match).
     tiled = [w for w in saved if not w["floating"]]
     steps = []
     if tiled:
         tiled.sort(key=lambda w: (w["at"][0], w["at"][1]))
         plan(tiled, steps)
+    anim = option("animations:enabled")
+    warps = option("cursor:no_warps")
+    split = option("dwindle:force_split") or 0
+    # force_split = 2: a new window always goes to the right/bottom, whatever the pointer position
+    hypr("eval", "hl.config({ animations = { enabled = false }, cursor = { no_warps = true }, dwindle = { force_split = 2 } })")
+    cmds = []
     for w, focus_on in steps:
         if focus_on:
-            hypr("dispatch", f"hl.dsp.focus({{ {win(focus_on['address'])} }})")
-        move(w["address"], w["at"][0], w["at"][1])
-        set_float(w["address"], False)
-        time.sleep(0.15)
+            cmds.append(f"dispatch hl.dsp.focus({{ {win(focus_on['address'])} }})")
+        cmds.append(f'dispatch hl.dsp.window.float({{ action = "disable", {win(w["address"])} }})')
     if active and active in alive:
-        hypr("dispatch", f"hl.dsp.focus({{ window = \"address:{active}\" }})")
+        cmds.append(f'dispatch hl.dsp.focus({{ window = "address:{active}" }})')
+    batch(cmds)
+    time.sleep(0.05)
+    hypr("eval", f"hl.config({{ animations = {{ enabled = {'false' if anim is False else 'true'} }}, cursor = {{ no_warps = {'true' if warps else 'false'} }}, dwindle = {{ force_split = {split} }} }})")
 
 
 def prune(state):
