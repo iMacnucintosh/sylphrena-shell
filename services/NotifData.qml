@@ -54,6 +54,9 @@ QtObject {
     // A progress bar under the body, 0..1 (-1: none): the standard "value" hint (0-100) of an app's notification,
     // or set directly by a notification of the shell (pushLocal({ localProgress: 0.5 }))
     property real localProgress: -1
+    // Optional texts at the ends of the bar ("1497 ml" … "2600 ml")
+    property string progressFrom
+    property string progressTo
     readonly property real progress: {
         const v = hints?.value;
         if (typeof v === "number" && v >= 0)

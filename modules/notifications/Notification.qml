@@ -426,7 +426,7 @@ StyledRect {
             }
 
             // Progress of the notification (a download, the water of the day…), when it has one
-            StyledProgressBar {
+            NotifProgress {
                 id: progress
 
                 readonly property bool shown: (root.modelData?.progress ?? -1) >= 0
@@ -436,9 +436,9 @@ StyledRect {
                 anchors.top: body.bottom
                 anchors.topMargin: shown ? Tokens.spacing.small : 0
 
+                notif: root.modelData
                 visible: shown
-                height: shown ? Tokens.padding.small : 0
-                value: Math.max(0, root.modelData?.progress ?? 0)
+                height: shown ? implicitHeight : 0
                 opacity: root.expanded ? 1 : 0
 
                 Behavior on opacity {

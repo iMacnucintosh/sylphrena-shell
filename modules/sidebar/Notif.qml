@@ -7,6 +7,7 @@ import Sylphrena.I18n
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.modules.notifications as Notifications
 
 StyledRect {
     id: root
@@ -159,11 +160,12 @@ StyledRect {
             }
         }
 
-        StyledProgressBar {
+        // Still here: the list may stay open, and a moving wave keeps it redrawing
+        Notifications.NotifProgress {
             Layout.fillWidth: true
-            Layout.preferredHeight: Tokens.padding.small
             visible: (root.modelData?.progress ?? -1) >= 0
-            value: Math.max(0, root.modelData?.progress ?? 0)
+            notif: root.modelData
+            still: true
         }
 
         NotifActionList {
