@@ -32,7 +32,8 @@ optdepends=('ttf-rubik-vf: the font of the clock and the workspaces (AUR)'
             'greetd: the login screen (scripts/install-system.sh)')
 provides=('sylphrena-shell')
 conflicts=('sylphrena-shell')
-source=("git+${url}.git")
+# SYLPHRENA_REF=<tag> builds that release (the Sylphrena installer and its updates set it); without it, the latest commit
+source=("git+${url}.git${SYLPHRENA_REF:+#tag=$SYLPHRENA_REF}")
 sha256sums=('SKIP')
 
 pkgver() {

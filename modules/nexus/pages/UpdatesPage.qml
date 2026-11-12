@@ -95,6 +95,87 @@ PageBase {
             }
         }
 
+        // A new release of Sylphrena, with its notes
+        ConnectedRect {
+            Layout.fillWidth: true
+            Layout.topMargin: Tokens.spacing.small
+            visible: SylphrenaUpdates.hasUpdate
+            first: true
+            last: true
+            implicitHeight: sylCol.implicitHeight + Tokens.padding.medium * 2
+
+            ColumnLayout {
+                id: sylCol
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.margins: Tokens.padding.medium
+                anchors.leftMargin: Tokens.padding.largeIncreased
+                anchors.rightMargin: Tokens.padding.largeIncreased
+                spacing: Tokens.spacing.small
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Tokens.spacing.medium
+
+                    MaterialIcon {
+                        text: "auto_awesome"
+                        color: Colours.palette.m3primary
+                        fontStyle: Tokens.font.icon.medium
+                        fill: 1
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 0
+
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: Tr.tr("Sylphrena %1 is available").arg(SylphrenaUpdates.version)
+                            font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
+                            elide: Text.ElideRight
+                        }
+
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: SylphrenaUpdates.updates.map(u => `${u.name} ${u.installed} → ${u.latest}`).join(" · ")
+                            color: Colours.palette.m3outline
+                            font: Tokens.font.label.small
+                            wrapMode: Text.WordWrap
+                        }
+                    }
+
+                    IconTextButton {
+                        icon: "deployed_code_update"
+                        text: Tr.tr("Update")
+                        type: IconTextButton.Filled
+                        isRound: true
+                        enabled: !SylphrenaUpdates.updating
+                        onClicked: SylphrenaUpdates.update()
+                    }
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    visible: text.length > 0
+                    text: (SylphrenaUpdates.shell ?? SylphrenaUpdates.updates[0] ?? {}).notes ?? ""
+                    textFormat: Text.MarkdownText
+                    color: Colours.palette.m3onSurfaceVariant
+                    font: Tokens.font.body.small
+                    wrapMode: Text.WordWrap
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: Tr.tr("It opens a terminal: the new versions are built there and it asks for your password once.")
+                    color: Colours.palette.m3outline
+                    font: Tokens.font.label.small
+                    wrapMode: Text.WordWrap
+                }
+            }
+        }
+
         // Password dialog (logged / Nexus mode)
         ConnectedRect {
             Layout.fillWidth: true

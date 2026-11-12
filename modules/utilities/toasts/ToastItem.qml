@@ -87,9 +87,14 @@ StyledRect {
         StyledRect {
             id: glyph
 
+            // icon "sylphrena": the animated Sylphrena orb instead of a symbol (news of Sylphrena itself)
+            readonly property bool orb: root.modelData?.icon === "sylphrena"
+
             visible: !root.hasImage
             radius: Tokens.rounding.large
             color: {
+                if (orb)
+                    return "transparent";
                 if (root.modelData?.type === Toast.Success)
                     return Colours.palette.m3success;
                 if (root.modelData?.type === Toast.Warning)
@@ -105,11 +110,21 @@ StyledRect {
             Layout.preferredHeight: implicitHeight
             Layout.alignment: Qt.AlignVCenter
 
+            Loader {
+                anchors.centerIn: parent
+                active: glyph.orb
+
+                sourceComponent: SylphOrb {
+                    orbSize: Math.round(glyph.implicitHeight / 1.55)
+                }
+            }
+
             MaterialIcon {
                 id: icon
 
                 anchors.centerIn: parent
-                text: root.modelData?.icon ?? ""
+                opacity: glyph.orb ? 0 : 1
+                text: glyph.orb ? "circle" : (root.modelData?.icon ?? "")
                 color: {
                     if (root.modelData?.type === Toast.Success)
                         return Colours.palette.m3onSuccess;

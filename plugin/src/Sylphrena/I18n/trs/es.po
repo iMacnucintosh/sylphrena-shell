@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 17:21+0100\n"
+"POT-Creation-Date: 2026-11-12 17:38+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -418,7 +418,8 @@ msgstr "Cancelar"
 msgid "Authenticating…"
 msgstr "Autenticando…"
 
-#: modules/bar/popouts/UpdatesPassword.qml modules/nexus/pages/UpdatesPage.qml
+#: modules/bar/popouts/UpdatesPassword.qml
+#: modules/bar/popouts/UpdatesPopout.qml modules/nexus/pages/UpdatesPage.qml
 msgid "Update"
 msgstr "Actualizar"
 
@@ -443,6 +444,16 @@ msgstr "%1 Actualizaciones (%2)"
 #, qt-format
 msgid "%1 Updates"
 msgstr "%1 Actualizaciones"
+
+#. TRANSLATORS: %1 = version, e.g. 0.5.0
+#: modules/bar/popouts/UpdatesPopout.qml modules/nexus/pages/UpdatesPage.qml
+#, qt-format
+msgid "Sylphrena %1 is available"
+msgstr "Sylphrena %1 está disponible"
+
+#: modules/bar/popouts/UpdatesPopout.qml
+msgid "The rest of the system is up to date."
+msgstr "El resto del sistema está al día."
 
 #: modules/bar/popouts/UpdatesPopout.qml modules/nexus/pages/UpdatesPage.qml
 msgid "No updates available."
@@ -3730,6 +3741,10 @@ msgid "New activity"
 msgstr "Nueva actividad"
 
 #: modules/nexus/pages/UpdatesPage.qml
+msgid "It opens a terminal: the new versions are built there and it asks for your password once."
+msgstr "Se abre un terminal: allí se compilan las versiones nuevas y te pide la contraseña una vez."
+
+#: modules/nexus/pages/UpdatesPage.qml
 msgid "Enter your password to start the system update."
 msgstr "Introduce tu contraseña para iniciar la actualización del sistema."
 
@@ -5220,6 +5235,19 @@ msgstr "Las notificaciones emergentes están ahora activadas"
 msgctxt "track artist and title"
 msgid "%1 - %2"
 msgstr "%1 - %2"
+
+#: services/SylphrenaUpdates.qml
+msgid "Updating Sylphrena"
+msgstr "Actualizando Sylphrena"
+
+#: services/SylphrenaUpdates.qml
+msgid "New version of Sylphrena"
+msgstr "Nueva versión de Sylphrena"
+
+#: services/SylphrenaUpdates.qml
+#, qt-format
+msgid "%1 · update it from Nexus → Updates"
+msgstr "%1 · actualízala desde Nexus → Actualizaciones"
 
 #: services/Timers.qml
 msgid "Timer finished"

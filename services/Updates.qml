@@ -46,6 +46,8 @@ Singleton {
 
     readonly property int count: packages.length
     readonly property bool hasUpdates: count > 0
+    // System packages or a new release of Sylphrena: what the bar icon shows
+    readonly property bool anyUpdates: hasUpdates || SylphrenaUpdates.hasUpdate
     readonly property bool awaitingPassword: pendingMode.length > 0
     readonly property string downloadSizeLabel: root.humanize(downloadSizeMb)
 

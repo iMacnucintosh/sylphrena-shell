@@ -2,7 +2,12 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## Sin publicar
+## 0.5.0 (2026-11-12)
+
+- **Avisos de versión nueva:** en un equipo instalado con los paquetes, la shell comprueba la última release de la shell, la CLI, Seeker y Things y avisa (con el orbe de Sylphrena) cuando hay una más nueva: el icono de actualizaciones de la barra, una franja en su popout y una tarjeta en Nexus → Actualizaciones con las notas de la release. «Actualizar» abre un terminal con el instalador en modo `--update`. De momento comprueba cada minuto (pruebas); se espaciará.
+- **El instalador instala releases:** cada paquete se compila desde la última release de su repo (`SYLPHRENA_REF=<tag>` en los PKGBUILD) y se actualiza si va por detrás; `--main` compila lo último de `main` y `--update` solo pone al día lo instalado. Seeker y Things pasan a numerarse por release (`0.1.2.r0.g…`).
+- **Primer arranque en un Arch nuevo:** la shell arranca sola (faltaba `python-gobject`), las rutas apuntan a la shell instalada y no al clon, Hyprland usa la distribución de teclado del sistema y no enseña su propio fondo mientras arranca la shell; al terminar, el instalador pide reiniciar. Seeker y Things se abren desde el lanzador (los `.desktop` del paquete apuntaban a `~/.local/bin`).
+- **Instalador más robusto:** `libcava` desde el AUR, compilar sin `fish`, compilación limitada a la memoria y aviso si se queda sin ella, `makepkg` sin volver a pedir la contraseña, carpetas de compilaciones anteriores que no se podían borrar.
 
 - **Capturas por defecto:** `Impr Pant` congela la pantalla y copia la zona elegida al portapapeles; `Alt+Impr Pant` la abre para editarla.
 - **Menú de sesión:** el orbe animado de Sylphrena sustituye al personaje animado de la base original (se quitan el GIF y sus opciones `paths.sessionGif` y `general.sessionGifSpeed`, que se borran solas de las configuraciones existentes).

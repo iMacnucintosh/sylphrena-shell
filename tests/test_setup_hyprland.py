@@ -59,6 +59,7 @@ class Hyprland(unittest.TestCase):
             home = Path(d)
             conf(home).parent.mkdir(parents=True)
             text = ('hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")\nhl.exec_cmd("qs -c sylphrena")\n'
+                    'hl.config({ misc = { disable_hyprland_logo = true } })\n'
                     + "".join(f'require("{n}")\n' for n in ("sylphrena-monitors", "sylphrena-input", "sylphrena-binds", "sylphrena-activity-rules", "sylphrena-animation")))
             conf(home).write_text(text)
             self.assertEqual(run(home)["status"], "already")
@@ -116,3 +117,21 @@ class Keyboard(unittest.TestCase):
             home = Path(d)
             run(home, keyboard="es:cat")
             self.assertIn('kb_layout = "es", kb_variant = "cat"', conf(home).read_text())
+
+
+class Wallpaper(unittest.TestCase):
+    def test_hyprlands_wallpaper_is_turned_off(self):
+        with tmpdir() as d:
+            home = Path(d)
+            conf(home).parent.mkdir(parents=True)
+            conf(home).write_text('hl.config({ misc = { disable_hyprland_logo = false } })\n')
+            run(home)
+            self.assertIn("disable_hyprland_logo = true", conf(home).read_text().split(">>> sylphrena")[1])
+
+    def test_left_alone_when_the_configuration_already_does_it(self):
+        with tmpdir() as d:
+            home = Path(d)
+            conf(home).parent.mkdir(parents=True)
+            conf(home).write_text('hl.config({ misc = { disable_hyprland_logo = true } })\n')
+            run(home)
+            self.assertNotIn("disable_splash_rendering", conf(home).read_text())

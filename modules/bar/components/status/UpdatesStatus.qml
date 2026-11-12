@@ -21,7 +21,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         animate: true
         text: Updates.installing ? "install_desktop" : Updates.glyph
-        fill: Updates.hasUpdates || Updates.installing ? 1 : 0
+        fill: Updates.anyUpdates || Updates.installing ? 1 : 0
         color: root.colour
         opacity: Updates.busy || Updates.installing ? 0.55 : 1
 
@@ -48,8 +48,11 @@ Item {
         anchors.top: icon.bottom
         anchors.topMargin: -Tokens.padding.extraSmall
         anchors.horizontalCenter: parent.horizontalCenter
-        visible: Updates.hasUpdates && !Updates.busy && !Updates.installing
-        text: Updates.count > 99 ? "99+" : `${Updates.count}`
+        visible: Updates.anyUpdates && !Updates.busy && !Updates.installing
+        text: {
+            const n = Updates.count + SylphrenaUpdates.updates.length;
+            return n > 99 ? "99+" : `${n}`;
+        }
         color: root.colour
         font: Tokens.font.label.builders.small.weight(Font.Bold).scale(0.8).build()
         horizontalAlignment: Text.AlignHCenter
