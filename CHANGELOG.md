@@ -4,6 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## Sin publicar
 
+- **Órdenes de extensiones con `sylph ext <id> <orden>`:** una extensión declara sus órdenes en el manifiesto (`contributes.commands`) y su servicio las responde; `sylph ext <id>` las lista. Hidratación trae `show`, `add <ml>` y `status`.
 - **Barra de progreso en las notificaciones:** las emergentes y las del panel lateral muestran una barra de progreso Material cuando la notificación la trae (el aviso estándar `value` de cualquier app, como una descarga, o `localProgress` en las de la shell y sus extensiones).
 - **Esquina inferior derecha sin panel lateral:** con el panel lateral desactivado abre los interruptores rápidos solos (antes hacían amago de salir y se escondían), y un aviso emergente se aparta a su izquierda acompañando su animación.
 - **Avisos de versiones nuevas:** se recuerdan entre reinicios (`~/.local/state/sylphrena/updates-announced.json`); cada versión se avisa una sola vez.

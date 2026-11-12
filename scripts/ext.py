@@ -11,6 +11,8 @@ The shell owns the extension contract, so this is the one implementation of inst
                              (sudo), enable it. It stays "local" (no hub receipt)
   ext.py install-hub <id> --url <zip url> --sha256 <hex> --version <v>
   ext.py update-hub <id>     install the version the hub's catalog has now (what the shell's updates run)
+  ext.py <id>                the commands an extension offers
+  ext.py <id> <command> [args]   run one of them (sylph ext hydration show, sylph ext hydration add 250)
                              what Things runs: download from the hub, check the sha256 and the
                              compatibility with this shell, install, write the receipt, enable it
   ext.py remove <id> [--purge]  the extension forgets its data in the shell, its system pieces go, then its files.
@@ -353,6 +355,39 @@ def cmd_update_hub(ext_id: str) -> int:
     return cmd_install_hub([ext_id, "--url", entry["zip"], "--sha256", entry["sha256"], "--version", entry["version"]])
 
 
+def cmd_commands(ext_id: str) -> int:
+    answer = ipc("commands", ext_id)
+    if answer is None:
+        print("the shell is not running (or is too old for this command)", file=sys.stderr)
+        return 1
+    if answer.startswith("error:"):
+        print(answer, file=sys.stderr)
+        return 1
+    commands = json.loads(answer)
+    if not commands:
+        print(f"{ext_id} has no commands")
+        return 0
+    width = max(len(c.get("name", "")) for c in commands)
+    for c in commands:
+        print(f"{c.get('name', ''):<{width}}  {c.get('description', '')}".rstrip())
+    return 0
+
+
+def cmd_run(ext_id: str, command: str, args: list[str]) -> int:
+    # Prefixed: a command named like one of qs' own words (show, call…) would be taken by qs, and an empty or
+    # bracket-only argument is dropped
+    answer = ipc("run", ext_id, "c:" + command, "a:" + json.dumps(args))
+    if answer is None:
+        print("the shell is not running (or is too old for this command)", file=sys.stderr)
+        return 1
+    if answer.startswith("error:"):
+        print(answer, file=sys.stderr)
+        return 1
+    if answer != "ok":
+        print(answer)
+    return 0
+
+
 def cmd_remove(ext_id: str, do_purge: bool = False) -> int:
     if not ID_RE.match(ext_id):
         print(f"error: '{ext_id}' is not an extension id", file=sys.stderr)
@@ -405,6 +440,9 @@ def main() -> int:
         return 0 if answer == "ok" else 1
     if a == ["rescan"]:
         return 0 if ipc("rescan") is not None else 1
+    # Anything else that is an id: the extension's own commands
+    if a and ID_RE.match(a[0]):
+        return cmd_commands(a[0]) if len(a) == 1 else cmd_run(a[0], a[1], a[2:])
     print(__doc__)
     return 2
 
