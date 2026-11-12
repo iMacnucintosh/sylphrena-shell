@@ -296,7 +296,9 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         "this computer has no built-in screen, so its monitor is controlled over DDC/CI" if not f.backlight
         else "lets the brightness slider reach an external monitor over DDC/CI",
         True, todo=not f.have("ddcutil"), default=not f.backlight, steps=ddc_steps)
-    shell_dir = installed_shell_dir()
+    # The setup steps run after the packages, so they use the installed shell even though, while planning, it is
+    # not there yet (otherwise hyprland.lua and the settings would point at the clone, which may be deleted)
+    shell_dir = INSTALLED_SHELL if any(i.id == "sylphrena-shell-git" for i in items) else installed_shell_dir()
     add("hyprland-config", "Setup", "Hook Sylphrena into Hyprland",
         "starts the shell with the session and loads its shortcuts and rules; your configuration is only added to, and copied first",
         False, todo=f.hyprland_needed,
