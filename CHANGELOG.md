@@ -2,6 +2,14 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 0.5.3 (2026-11-12)
+
+- **Notificaciones sin texto:** en el panel lateral ya no muestran «No body here! :/».
+- **Notificaciones que se abren desplegadas:** entran ya desplegadas; antes se desplegaban mientras entraban y el título se cruzaba con el nombre de la app y la hora.
+- **Aviso de extensiones actualizables:** título «Actualizaciones de extensiones», que cabe (el anterior se cortaba).
+- **Actualizar una extensión recién publicada:** `ext.py update-hub` lee el catálogo por la API de GitHub, porque la caché del fichero tardaba minutos en dar la versión nueva y volvía a instalar la vieja; la comprobación de cada minuto pide el catálogo sin caché.
+- **Actualizar sin Flatpak (o sin ayudante del AUR):** «Actualizar» se saltaba con error al no encontrar `flatpak` y ya no actualizaba Sylphrena ni las extensiones; ahora salta lo que no está instalado y lo dice en el registro.
+
 ## 0.5.2 (2026-11-12)
 
 - **Órdenes de extensiones con `sylph ext <id> <orden>`:** una extensión declara sus órdenes en el manifiesto (`contributes.commands`) y su servicio las responde; `sylph ext <id>` las lista. Hidratación trae `show`, `add <ml>` y `status`.

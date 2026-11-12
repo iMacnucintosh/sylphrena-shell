@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 18:58+0100\n"
+"POT-Creation-Date: 2026-11-12 19:20+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -5214,15 +5214,17 @@ msgctxt "track artist and title"
 msgid "%1 - %2"
 msgstr "%1 - %2"
 
-#. TRANSLATORS: the last two names of a list ("Tasks and Games")
-#: services/SylphrenaUpdates.qml
-#, qt-format
-msgid "%1 and %2"
-msgstr "%1 y %2"
-
 #: services/SylphrenaUpdates.qml
 msgid "Updates available"
 msgstr "Actualizaciones disponibles"
+
+#: services/SylphrenaUpdates.qml
+msgid "New version of Sylphrena"
+msgstr "Nueva versión de Sylphrena"
+
+#: services/SylphrenaUpdates.qml
+msgid "Updatable extensions"
+msgstr "Extensiones actualizables"
 
 #: services/Timers.qml
 msgid "Timer finished"
@@ -5949,8 +5951,12 @@ msgstr "Ajustes"
 msgid "Configure the shell"
 msgstr "Configura el shell"
 
-#~ msgid "New version of Sylphrena"
-#~ msgstr "Nueva versión de Sylphrena"
+#~ msgid "New extension updates"
+#~ msgstr "Actualizaciones nuevas de extensiones"
+
+#, qt-format
+#~ msgid "%1 and %2"
+#~ msgstr "%1 y %2"
 
 #~ msgid "Extension updates"
 #~ msgstr "Actualizaciones de extensiones"

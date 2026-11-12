@@ -49,6 +49,7 @@ BUILTIN = SHELL / "extensions"
 # the URL comes from a catalog). Tests may point SYLPHRENA_HUB_TEST_PREFIX at a local folder (file://…).
 HUB_RELEASES = "https://github.com/iMacnucintosh/sylphrena-hub/releases/download/"
 HUB_INDEX = "https://raw.githubusercontent.com/iMacnucintosh/sylphrena-hub/main/index.json"
+HUB_INDEX_API = "https://api.github.com/repos/iMacnucintosh/sylphrena-hub/contents/index.json?ref=main"
 MAX_ZIP = 50 * 1024 * 1024
 ID_RE = re.compile(r"^[a-z0-9-]+$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -344,7 +345,11 @@ def cmd_update_hub(ext_id: str) -> int:
         print("usage: ext.py update-hub <id>", file=sys.stderr)
         return 2
     try:
-        with urllib.request.urlopen(os.environ.get("SYLPHRENA_HUB_INDEX") or HUB_INDEX, timeout=15) as r:
+        # The API, not raw.githubusercontent.com: right after a version is published, the raw file's cache may still
+        # give the old catalog for minutes (and install the old version again). This runs rarely: the API's limit is fine.
+        url = os.environ.get("SYLPHRENA_HUB_INDEX") or HUB_INDEX_API
+        req = urllib.request.Request(url, headers={"Accept": "application/vnd.github.raw", "User-Agent": "sylphrena-ext"})
+        with urllib.request.urlopen(req, timeout=15) as r:
             entry = next((i for i in json.load(r).get("items", []) if i.get("id") == ext_id), None)
     except (OSError, ValueError, urllib.error.URLError) as e:
         print(f"error: could not read the hub's catalog: {e}", file=sys.stderr)

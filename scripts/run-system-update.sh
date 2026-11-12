@@ -97,6 +97,18 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# A source whose tool is not installed is skipped, not fatal (a fresh system has no Flatpak, maybe no AUR
+# helper): with set -e it stopped everything after it, Sylphrena's own update included.
+if [[ "$do_aur" -eq 1 ]] && ! command -v "$wrapper" >/dev/null; then
+    echo "→ ${wrapper} is not installed: updating the official packages with pacman instead"
+    do_aur=0
+    do_arch=1
+fi
+if [[ "$do_flatpak" -eq 1 ]] && ! command -v flatpak >/dev/null; then
+    echo "→ Flatpak is not installed: skipped"
+    do_flatpak=0
+fi
+
 if [[ "$do_aur" -eq 1 ]]; then
     echo "→ ${wrapper} -Syu --noconfirm --sudoflags=-A ${aur_flags[*]-}"
     "$wrapper" -Syu --noconfirm --sudoflags=-A ${aur_flags[@]+"${aur_flags[@]}"}
