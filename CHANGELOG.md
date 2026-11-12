@@ -2,7 +2,7 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## Sin publicar
+## 0.5.5 (2026-11-12)
 
 - **La fuente del reloj, el grabador de pantalla y el brillo de monitores externos vienen con la shell:** son dependencias de su paquete (`ttf-rubik-vf` desde el AUR, `gpu-screen-recorder`, `ddcutil`, y el paquete carga `i2c-dev` al arrancar) y dejan de ser opciones del instalador, donde solo queda recomendado el navegador Zen.
 
