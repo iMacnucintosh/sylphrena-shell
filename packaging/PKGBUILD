@@ -8,21 +8,24 @@ pkgdesc="Sylphrena: a Material You shell for Hyprland (Quickshell)"
 arch=('x86_64')
 url="https://github.com/iMacnucintosh/sylphrena-shell"
 # The shell is GPL-3.0; the wallpaper in assets/wallpapers has its own licence (see its README)
-license=('GPL-3.0-only')
+license=('GPL-3.0-only' 'LicenseRef-Unsplash')
 depends=(
-  # What it is made on
-  'quickshell' 'hyprland' 'qt6-base' 'qt6-declarative' 'qt6-5compat' 'qt6-multimedia' 'qt6-svg'
-  'libqalculate' 'libpipewire' 'aubio' 'libcava'
+  # What it is made on (the git Quickshell: the stable tag lacks what the shell uses)
+  'quickshell-git' 'hyprland' 'qt6-base' 'qt6-declarative' 'qt6-5compat' 'qt6-multimedia' 'qt6-svg'
+  'qt6-imageformats' 'qt6-m3shapes-git' 'libqalculate' 'libpipewire' 'aubio' 'libcava'
+  'xdg-desktop-portal-hyprland' 'xdg-desktop-portal-gtk'
   # What its scripts and services call
-  'python' 'networkmanager' 'wireplumber' 'libpulse' 'libxml2' 'curl' 'systemd'
-  'cliphist' 'wl-clipboard' 'wtype' 'grim' 'slurp' 'playerctl' 'libnotify' 'qt6ct'
+  'python' 'networkmanager' 'wireplumber' 'libpulse' 'libxml2' 'curl' 'systemd' 'brightnessctl' 'lm_sensors'
+  'power-profiles-daemon' 'cliphist' 'wl-clipboard' 'wtype' 'grim' 'slurp' 'playerctl' 'libnotify' 'qt6ct'
   # Fonts of the interface
   'ttf-material-symbols-variable' 'ttf-cascadia-code-nerd'
   # The CLI and the apps that come with it
   'sylphrena-cli-git' 'things-git' 'seeker-git' 'kitty'
 )
 makedepends=('git' 'cmake' 'ninja' 'qt6-shadertools')
-optdepends=('ttf-rubik: the font of the clock and the workspaces (AUR)'
+optdepends=('ttf-rubik-vf: the font of the clock and the workspaces (AUR)'
+            'swappy: edit a screenshot after taking it'
+            'fish: the calculator of the launcher opens qalc in it'
             'papirus-icon-theme: icon theme Sylphrena applies'
             'adw-gtk-theme: GTK theme that follows the colours of the shell'
             'ddcutil: brightness of external monitors'
@@ -49,4 +52,6 @@ build() {
 package() {
   cd sylphrena-shell
   DESTDIR="$pkgdir" cmake --install build
+  # The wallpaper is not GPL: its licence and author travel with the package
+  install -Dm644 assets/wallpapers/README.md "$pkgdir/usr/share/licenses/$pkgname/wallpaper-licence.md"
 }

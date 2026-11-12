@@ -47,7 +47,7 @@ Item {
             }
 
             StyledText {
-                text: root.current?.name ?? "Sesión"
+                text: root.current?.name ?? Tr.tr("Session")
                 color: Theme.palette.m3onSurface
                 font.pixelSize: Theme.font.bodySmall
             }

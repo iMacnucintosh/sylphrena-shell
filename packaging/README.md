@@ -30,6 +30,7 @@ After changing a `PKGBUILD`: `makepkg --printsrcinfo > .SRCINFO`.
 
 Notes:
 - `seeker` (without `-git`) already exists in the AUR and is another program, so ours is `seeker-git` and conflicts with it.
-- `ttf-rubik` (clock and workspace font) comes from the AUR; it is an optional dependency.
+- Dependencies that only exist in the AUR (an AUR helper such as `yay` installs them): `quickshell-git`, `qt6-m3shapes-git`
+  (shell), `python-materialyoucolor` (CLI) and the optional `ttf-rubik-vf` (clock and workspace font).
 - The shell's version comes from the nearest `v0.*` tag (the project this forked has `v1.*` and `v2.*`).
 - The wallpaper that ships with the shell has its own licence: see `assets/wallpapers/README.md`.

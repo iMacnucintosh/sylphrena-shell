@@ -15,7 +15,7 @@ Singleton {
     property var daily
 
     readonly property string icon: cc ? getIcon(cc.code, cc.isDay) : "cloud_alert"
-    readonly property string description: cc ? getCondition(cc.code) : "Sin datos del tiempo"
+    readonly property string description: cc ? getCondition(cc.code) : Tr.tr("No weather data")
     readonly property string temp: formatTemp(cc?.tempC)
     readonly property string feelsLike: formatTemp(cc?.feelsLikeC)
     readonly property string high: formatTemp(daily?.max)
@@ -65,39 +65,42 @@ Singleton {
 
     function getCondition(code: int): string {
         const conditions = {
-            0: "Despejado",
-            1: "Despejado",
-            2: "Parcialmente nublado",
-            3: "Cubierto",
-            45: "Niebla",
-            48: "Niebla",
-            51: "Llovizna",
-            53: "Llovizna",
-            55: "Llovizna",
-            56: "Llovizna helada",
-            57: "Llovizna helada",
-            61: "Lluvia ligera",
-            63: "Lluvia",
-            65: "Lluvia fuerte",
-            66: "Lluvia ligera",
-            67: "Lluvia fuerte",
-            71: "Nieve ligera",
-            73: "Nieve",
-            75: "Nieve fuerte",
-            77: "Nieve",
-            80: "Lluvia ligera",
-            81: "Lluvia",
-            82: "Lluvia fuerte",
-            85: "Nevadas ligeras",
-            86: "Nevadas fuertes",
-            95: "Tormenta",
-            96: "Tormenta con granizo",
-            99: "Tormenta con granizo"
+            0: Tr.tr("Clear"),
+            1: Tr.tr("Clear"),
+            2: Tr.tr("Partly cloudy"),
+            3: Tr.tr("Overcast"),
+            45: Tr.tr("Fog"),
+            48: Tr.tr("Fog"),
+            51: Tr.tr("Drizzle"),
+            53: Tr.tr("Drizzle"),
+            55: Tr.tr("Drizzle"),
+            56: Tr.tr("Freezing drizzle"),
+            57: Tr.tr("Freezing drizzle"),
+            61: Tr.tr("Light rain"),
+            63: Tr.tr("Rain"),
+            65: Tr.tr("Heavy rain"),
+            66: Tr.tr("Light rain"),
+            67: Tr.tr("Heavy rain"),
+            71: Tr.tr("Light snow"),
+            73: Tr.tr("Snow"),
+            75: Tr.tr("Heavy snow"),
+            77: Tr.tr("Snow"),
+            80: Tr.tr("Light rain"),
+            81: Tr.tr("Rain"),
+            82: Tr.tr("Heavy rain"),
+            85: Tr.tr("Light snow showers"),
+            86: Tr.tr("Heavy snow showers"),
+            95: Tr.tr("Thunderstorm"),
+            96: Tr.tr("Thunderstorm with hail"),
+            99: Tr.tr("Thunderstorm with hail")
         };
-        return conditions[code] ?? "Desconocido";
+        return conditions[code] ?? Tr.tr("Unknown");
     }
 
     function reload(): void {
+        // No location chosen (Nexus → weather): no request, the card shows "no data"
+        if (!Theme.location || !Theme.location.includes(","))
+            return;
         if (!proc.running)
             proc.running = true;
     }

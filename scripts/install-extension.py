@@ -55,7 +55,9 @@ def members(zf: zipfile.ZipFile) -> list[tuple[zipfile.ZipInfo, PurePosixPath]]:
         if name.startswith("/") or "\\" in name or ".." in path.parts or re.match(r"^[A-Za-z]:", name):
             raise Bad(f"unsafe path in the zip: {name}")
         mode = info.external_attr >> 16
-        if mode and not (stat.S_ISREG(mode) or stat.S_ISDIR(mode)):
+        # Only a type that is set and is not a regular file or a folder is refused (a zip made by a script, with
+        # plain permission bits and no file type, is an ordinary zip)
+        if stat.S_IFMT(mode) and not (stat.S_ISREG(mode) or stat.S_ISDIR(mode)):
             raise Bad(f"links and special files are not allowed: {name}")
         total += info.file_size
         if total > MAX_BYTES:

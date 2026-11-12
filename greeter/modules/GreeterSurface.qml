@@ -95,7 +95,7 @@ Item {
             id: demoLabel
 
             anchors.centerIn: parent
-            text: "Demo del greeter — contraseña cualquiera / «fail» para error · Esc cierra"
+            text: Tr.tr("Greeter demo — any password / “fail” for an error · Esc closes")
             color: Theme.palette.m3onSecondaryContainer
             font.pixelSize: Theme.font.bodySmall
         }

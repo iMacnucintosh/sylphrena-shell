@@ -293,10 +293,21 @@ def cmd_install_hub(args: list[str]) -> int:
     return finish_install(ext_id, receipt, reload)
 
 
+# What the shell itself keeps in those two folders: an extension's `data` can never name them (removing
+# an extension with --purge must not take the user's configuration, other extensions' settings or the theme)
+SHELL_OWNED = {
+    "config": {"shell.json", "shell-tokens.json", "keybinds.json", "cli.json", "templates", "extensions", "monitors",
+               "scripts"},
+    "state": {"scheme.json", "state.json", "wallpaper", "theme", "welcome.json", "defaults.json", "kitty-setup.json",
+              "sequences.txt", "notifs.json", "apps.sqlite", "clipboard", "record", "lyrics", "timers.json",
+              "light-apps.json", "force-apps-light", "session-startup.log"},
+}
+
+
 def data_paths(ext_id: str, manifest: dict) -> list[Path]:
     """Settings and data an extension leaves behind: its config file, plus what its manifest `data` lists
     (strings "config:<path>" or "state:<path>", relative to ~/.config/sylphrena or ~/.local/state/sylphrena).
-    Anything that would leave those two folders is ignored."""
+    Anything that would leave those two folders, or that the shell itself owns there, is ignored."""
     roots = {
         "config": Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "sylphrena",
         "state": Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "sylphrena",
@@ -304,7 +315,8 @@ def data_paths(ext_id: str, manifest: dict) -> list[Path]:
     out = [roots["config"] / "extensions" / f"{ext_id}.json"]
     for entry in manifest.get("data") or []:
         where, _, rel = str(entry).partition(":")
-        if where not in roots or not rel or rel.startswith("/") or ".." in Path(rel).parts:
+        parts = Path(rel).parts
+        if where not in roots or not rel or rel.startswith("/") or ".." in parts or parts[0] in SHELL_OWNED[where]:
             continue
         out.append(roots[where] / rel)
     return out
@@ -323,6 +335,9 @@ def purge(ext_id: str, manifest: dict) -> None:
 
 
 def cmd_remove(ext_id: str, do_purge: bool = False) -> int:
+    if not ID_RE.match(ext_id):
+        print(f"error: '{ext_id}' is not an extension id", file=sys.stderr)
+        return 2
     ext_dir = USER_DIR / ext_id
     if not (ext_dir / "manifest.json").is_file():
         print(f"error: '{ext_id}' is not installed in {USER_DIR}", file=sys.stderr)
@@ -363,7 +378,7 @@ def main() -> int:
         return cmd_install_hub(a[1:])
     if a[:1] == ["remove"] and len(a) in (2, 3) and (len(a) == 2 or a[2] == "--purge"):
         return cmd_remove(a[1], len(a) == 3)
-    if a[:1] in (["enable"], ["disable"]) and len(a) == 2:
+    if a[:1] in (["enable"], ["disable"]) and len(a) == 2 and ID_RE.match(a[1]):
         answer = ipc(a[0], a[1])
         print(answer if answer is not None else "the shell is not running (or is too old for this command)")
         return 0 if answer == "ok" else 1

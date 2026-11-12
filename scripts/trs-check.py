@@ -565,7 +565,8 @@ def check_file(filepath: Path) -> list[Issue]:
 
 def source_files() -> list[Path]:
     files = (p for ext in ("*.qml", "*.cpp", "*.hpp") for p in REPO_ROOT.rglob(ext))
-    return sorted(p for p in files if "build" not in p.parts)
+    # greeter/: the login screen has its own Tr and catalogue (greeter/i18n), not the plugin's
+    return sorted(p for p in files if "build" not in p.parts and "greeter" not in p.parts)
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:

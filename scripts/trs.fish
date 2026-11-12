@@ -24,7 +24,7 @@ function gen -a lang
         -ktrN:1,2 -ktrCtxN:4c,1,2 \
         -kmark:1 -kmarkCtx:2c,1 \
         -kmarkN:1,2 -kmarkCtxN:4c,1,2 \
-        (string match -v 'build/*' $argv[2..])
+        (string match -v 'build/*' $argv[2..] | string match -v 'greeter/*')  # the login screen has its own catalogue (greeter/i18n)
 end
 
 function compile -a po mo

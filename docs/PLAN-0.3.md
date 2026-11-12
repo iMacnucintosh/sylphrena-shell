@@ -3,9 +3,7 @@
 Documento de trabajo. Léelo junto con [AGENTS.md](../AGENTS.md). Si algo choca con el código,
 **para y pregunta al usuario**; no improvises un rediseño.
 
-Estado: **fases 0, B (base), 1 (Things, en local) y 2 (shell adelgazada) hechas (2026-11-11)**; fase 3 (empaquetado) y 4 (el hub crece) por empezar. La 0.2.0 está publicada (`v0.2.0`, PR #34). La rama de trabajo
-es `dev/0.3` y sigue el mismo flujo: cada fase en una rama `feature/*` que sale de `dev/0.3` y se
-fusiona en ella; `main` no se toca hasta cerrar la 0.3 (PR `dev/0.3` → `main` y tag `v0.3.0`).
+Estado: **0.3.0 publicada (`v0.3.0`, 2026-11-11)**: fases 0, B, 1, 2 y 4 hechas y en `main`; la fase 3 (empaquetado) está hecha salvo subir los paquetes al AUR (ver el final de la fase). El trabajo siguiente va en ramas `feature/*` a `main` por PR.
 
 ---
 
@@ -95,14 +93,16 @@ Pendiente para cerrar la fase (depende del usuario): publicar en el hub la relea
 - **Probado:** la página en pantalla; instalar → activada, actualizar una cargada → recarga de la shell, quitar → limpio (con `ext.py` y extensiones de prueba).
 - Documentación (AGENTS.md, FEATURES.md, CHANGELOG.md) y cadenas al día.
 
-### Fase 3 · Empaquetado — HECHA en local, sin publicar (2026-11-11)
+### Fase 3 · Empaquetado — HECHA salvo el AUR (2026-11-11)
+**Estado final:** PKGBUILD y `.SRCINFO` de `sylphrena-shell-git`, `sylphrena-cli-git`, `seeker-git` y `things-git` en `main` de cada repo (`packaging/README.md` explica cómo construirlos y subirlos). El de la shell se construye con `makepkg`; el del CLI **no se ha podido compilar** aquí (faltan `python-build`/`hatchling`). **Falta:** subirlos al AUR (cuenta y clave SSH del usuario; el registro de usuarios estaba caído) y probar una instalación base real. El texto de abajo es el registro histórico de la fase.
 - **Hecho:** `setup-kitty.py` + `KittySetup` (probado en HOME aislados); `PKGBUILD` de Things (`makepkg` probado, no instalado); `packaging/PKGBUILD` de la shell (**borrador sin compilar**: los nombres de los paquetes de fuentes están por comprobar); el install del módulo `shell` incluye `scripts/`, `extensions/` y `greeter/`. **`install-system.sh`** se queda como paso opcional del greeter (toca `/etc/greetd`); lo de root de las extensiones lo instala Things, así que no hay solape. **Actualización:** el PKGBUILD de la shell se construye con `makepkg` (probado con `--nodeps`: instala la config en `/etc/xdg`, con los permisos de ejecución, el plugin en `/usr/lib/qt6/qml`), y hay PKGBUILD + `.SRCINFO` de `sylphrena-cli-git` (sin probar su compilación: faltan `python-build`/`hatchling` en este equipo), `seeker-git` y `things-git`; ver `packaging/README.md`. Falta subirlos al AUR (necesita cuenta y clave SSH) y probar una instalación base real.
 - **El paquete base depende de Things, Seeker y kitty** (decidido): Things y Seeker necesitan su `PKGBUILD` (Seeker ya lo tiene en la rama local `feature/pkgbuild` de su repo, sin fusionar; Things falta); kitty es de los repos oficiales. Siguen siendo opcionales en el código (la shell funciona sin ellos).
 - **Conectar kitty:** ser dueña de kitty significa que la base debe dejarlo integrado, no solo instalado: en el primer arranque, añadir a `~/.config/kitty/kitty.conf` (solo si faltan, con copia) el `include` del tema, `allow_remote_control yes` y `listen_on …`, y crear la plantilla y el script de recarga (hoy se hace a mano, ver FEATURES «Kitty y colores»).
 - Dependencias duras del paquete (no sugerencias): `qt6ct`, `cliphist`, `wl-clipboard`, `wtype`, fuentes; recomendadas: Papirus y `adw-gtk-theme`.
 - `scripts/install-system.sh` y el instalador de Things se coordinan (un solo sitio que instale lo de root).
 
-### Fase 4 · El hub crece (y la shell se queda sin extensiones propias) — Tareas, Hidratación y Juegos MIGRADAS en local (2026-11-11)
+### Fase 4 · El hub crece (y la shell se queda sin extensiones propias) — HECHA (2026-11-11)
+**Estado final:** Tareas, Hidratación y Juegos están en el hub y publicadas; la CI del hub comprueba el índice; cada extensión lleva su ficha (`store/`) que Things muestra (descripción larga, capturas, requisitos, qué toca en tu equipo, novedades). **Quedan** capturas de la VPN y widgets nuevos. El texto de abajo es el registro histórico.
 - **Hecho:** las tres están en la rama local `feature/tasks-hydration-games` del hub (`requires >=0.2.0`, `i18n/es.json`, zips) y se quitaron de `extensions/` de la shell; instaladas con `ext.py` desde los zips locales, cargan sin errores y conservan sus datos. `extension-catalog.py` y `Tr.trN` soportan plurales. **Falta publicar** las releases `tasks|hydration|games-0.1.0` y el índice (usuario), `build.py --check` en CI y añadir widgets nuevos.
 - `scripts/build.py --check` en CI del hub; `requires` y `apiVersion` copiados del manifiesto al índice y validados.
 - **Migrar al hub Tareas, Hidratación y Juegos.** Orden: publicarlas en el hub **antes** de quitarlas de `extensions/` de la shell, y quitarlas solo cuando Things pueda instalarlas (fase 1). Antes de cada una:

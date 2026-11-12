@@ -2,6 +2,14 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 0.3.1 (2026-11-12)
+
+- **Things, Seeker y la pantalla de login hablan tu idioma:** su código está ahora en inglés y cada idioma es un catálogo JSON (`i18n/es.json`; la pantalla de login, `greeter/i18n/es.json`). Un idioma sin catálogo se ve en inglés. Antes estaban escritos en español, sin más idioma posible. Sus comprobadores: `scripts/check-i18n.py`.
+- **Nada personal en el repo:** la pantalla de login ya no trae un nombre ni unas coordenadas del tiempo (salen de la cuenta y del ajuste del tiempo de Nexus) y la pantalla de bloqueo saluda con el usuario del sistema.
+- **Things:** «Usar la del hub» para cambiar una copia local por la del hub (así se puede actualizar).
+- **Hub:** una versión ya publicada no puede cambiar de zip (la comprueba la CI contra `origin/main`); `tasks` 0.1.2 y `games` 0.1.4 piden Sylphrena 0.3.
+- **Tests:** `unittest` para `ext.py`, `install-extension.py`, `setup-defaults.py`, `setup-kitty.py`, `build.py` y los scripts de Juegos. Un zip hecho por un script (sin tipo de fichero en los permisos) ya no se rechaza como «fichero especial».
+
 ## 0.3.0 (2026-11-11)
 
 - **Paquetes del AUR:** `sylphrena-shell-git`, `sylphrena-cli-git`, `seeker-git` y `things-git` (PKGBUILD y `.SRCINFO` en el `packaging/` de cada repo; guía en `packaging/README.md`). El paquete instala la configuración en `/etc/xdg/quickshell/sylphrena` con los permisos de ejecución, y el selector de ficheros encuentra Seeker también en el PATH.
