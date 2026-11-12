@@ -58,5 +58,22 @@ class DataPaths(unittest.TestCase):
         self.assertFalse(any("escape" in p or "/abs" in p or "thing" in p for p in paths))
 
 
+class Hardening(unittest.TestCase):
+    def test_purge_never_takes_what_the_shell_owns(self):
+        paths = [str(p) for p in ext.data_paths("demo", {"data": [
+            "config:shell.json", "config:extensions", "config:keybinds.json", "state:scheme.json", "state:theme/kitty.conf",
+            "state:demo.json"]})]
+        self.assertFalse(any(p.endswith(("shell.json", "keybinds.json", "scheme.json", "kitty.conf"))
+                             or p.endswith("sylphrena/extensions") for p in paths))
+        self.assertTrue(any(p.endswith("demo.json") and "/state/" in p.replace(".local/state", "/state/") for p in paths))
+
+    def test_remove_refuses_something_that_is_not_an_id(self):
+        import io
+        from contextlib import redirect_stderr
+
+        with redirect_stderr(io.StringIO()):
+            self.assertEqual(ext.cmd_remove("../../etc"), 2)
+
+
 if __name__ == "__main__":
     unittest.main()
