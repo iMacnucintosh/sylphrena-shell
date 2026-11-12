@@ -2,7 +2,7 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## Sin publicar
+## 0.5.2 (2026-11-12)
 
 - **Órdenes de extensiones con `sylph ext <id> <orden>`:** una extensión declara sus órdenes en el manifiesto (`contributes.commands`) y su servicio las responde; `sylph ext <id>` las lista. Hidratación trae `show`, `add <ml>` y `status`.
 - **Barra de progreso en las notificaciones:** las emergentes y las del panel lateral muestran una barra de progreso Material cuando la notificación la trae (el aviso estándar `value` de cualquier app, como una descarga, o `localProgress` en las de la shell y sus extensiones).
