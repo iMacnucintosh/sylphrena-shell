@@ -189,7 +189,7 @@ ClipRect {
                 if (Hypr.activeWsId !== ws)
                     Hypr.focusWorkspace(ws);
                 else
-                    Hypr.toggleSpecial("special");
+                    Hypr.toggleShowDesktop();
             }
         }
 

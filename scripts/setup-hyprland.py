@@ -6,7 +6,7 @@
 Adds to ~/.config/hypr/hyprland.lua a block between markers that
   - starts the shell with the session (unless the file already starts it),
   - sets QT_QPA_PLATFORMTHEME=qt6ct (unless the file sets it),
-  - loads the files Sylphrena writes from Nexus (sylphrena-monitors, -input, -binds, -activity-rules), each
+  - loads the files Sylphrena writes from Nexus (sylphrena-monitors, -input, -binds, -activity-rules, -animation), each
     through pcall because they do not exist until the shell has run once.
 If there is no hyprland.lua yet it starts from Hyprland's own default (/usr/share/hypr/hyprland.lua). An existing
 file keeps everything it has: the block goes at the end, a copy is left in hyprland.lua.sylphrena-backup (once), and
@@ -25,7 +25,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 BEGIN = "-- >>> sylphrena (added by Sylphrena: remove this block to disconnect it) >>>"
 END = "-- <<< sylphrena <<<"
-FILES = ["sylphrena-monitors", "sylphrena-input", "sylphrena-binds", "sylphrena-activity-rules"]
+FILES = ["sylphrena-monitors", "sylphrena-input", "sylphrena-binds", "sylphrena-activity-rules", "sylphrena-animation"]
 DEFAULT_CONFIG = Path("/usr/share/hypr/hyprland.lua")
 MINIMAL = "-- Hyprland configuration (created by Sylphrena). See https://wiki.hypr.land/Configuring/\n"
 

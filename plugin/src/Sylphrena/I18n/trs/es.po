@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 16:14+0100\n"
+"POT-Creation-Date: 2026-11-12 14:41+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -3509,6 +3509,38 @@ msgstr "Saltar entre actividades al cambiar de escritorio"
 msgid "Allow next/previous desktop shortcuts to leave the current activity; when off, they stay inside it"
 msgstr "Permitir que los atajos de escritorio anterior/siguiente salten a otra actividad; si está desactivado, se quedan dentro de la actual"
 
+#: modules/nexus/pages/ShellPage.qml
+msgid "Desktop transition"
+msgstr "Transición entre escritorios"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "How the screen changes when you move between desktops of an activity; sliding gives a sense of where you are"
+msgstr "Cómo cambia la pantalla al moverte entre los escritorios de una actividad; deslizar da sensación de dónde estás"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Desktop transition speed"
+msgstr "Velocidad de la transición entre escritorios"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "How fast the desktop transition plays"
+msgstr "Lo rápido que se reproduce la transición entre escritorios"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Activity transition"
+msgstr "Transición entre actividades"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "How the screen changes when you switch to another activity"
+msgstr "Cómo cambia la pantalla al pasar a otra actividad"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Activity transition speed"
+msgstr "Velocidad de la transición entre actividades"
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "How fast the activity transition plays"
+msgstr "Lo rápido que se reproduce la transición entre actividades"
+
 #: modules/nexus/pages/ShellPage.qml modules/nexus/pages/WallpaperAndStyle.qml
 msgid "Display wallpaper"
 msgstr "Mostrar fondo de pantalla"
@@ -4533,6 +4565,38 @@ msgstr "Al hacer clic"
 #: services/Hypr.qml
 msgid "On hover"
 msgstr "Al pasar por encima"
+
+#: services/Hypr.qml
+msgid "Slow"
+msgstr "Lenta"
+
+#: services/Hypr.qml
+msgid "Fast"
+msgstr "Rápida"
+
+#: services/Hypr.qml
+msgid "Normal"
+msgstr "Normal"
+
+#: services/Hypr.qml
+msgid "Slide"
+msgstr "Deslizar"
+
+#: services/Hypr.qml
+msgid "Slide vertically"
+msgstr "Deslizar en vertical"
+
+#: services/Hypr.qml
+msgid "Slide and fade"
+msgstr "Deslizar y fundir"
+
+#: services/Hypr.qml
+msgid "Slide and fade vertically"
+msgstr "Deslizar y fundir en vertical"
+
+#: services/Hypr.qml
+msgid "Fade"
+msgstr "Fundido"
 
 #: services/Keybinds.qml
 msgid "Close window"
@@ -5824,6 +5888,12 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "How the screen changes when you move between desktops and activities; sliding gives a sense of where you are"
+#~ msgstr "Cómo cambia la pantalla al moverte entre escritorios y actividades; deslizar da sensación de dónde estás"
+
+#~ msgid "Transition speed"
+#~ msgstr "Velocidad de la transición"
 
 #, qt-format
 #~ msgid "Send the active window to workspace %1"

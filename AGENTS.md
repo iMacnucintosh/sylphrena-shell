@@ -18,7 +18,7 @@ Documentación por rol: [README.md](./README.md) = cara pública (features + ins
 - El código que **corre** es este checkout: `~/.config/quickshell/sylphrena` (no el paquete AUR de `/etc/xdg`). El plugin C++ de config se compila **desde la raíz del repo** e instala en `~/.local` (sin sudo); `shell.qml` lo carga vía pragma `QT_ADDITIONAL_PACKAGES_PREFIX_PATH` — ver "Plugin C++ (build user-local)" en FEATURES.md.
 - Runtime de la shell: `~/.config/sylphrena/` (`shell.json`, `keybinds.json`, `cli.json`, `templates/`). El plugin escribe `/sylphrena` (config, state, cache, runtime).
 - Estado persistente: `~/.local/state/sylphrena/` (`timers.json`, `hydration.json`, `light-apps.json`, `nonsteam-sessions.json`, `steam-activity.json`, `steam-achievements-cache.json`, `sequences.txt`, `theme/kitty.conf`).
-- Generados por el fork en Hyprland (todos via `require(...)` desde `hyprland.lua`): `sylphrena-binds.lua`, `sylphrena-activity-rules.lua`, `sylphrena-monitors.lua`.
+- Generados por el fork en Hyprland (todos via `require(...)` desde `hyprland.lua`): `sylphrena-binds.lua`, `sylphrena-activity-rules.lua`, `sylphrena-monitors.lua`, `sylphrena-input.lua`, `sylphrena-animation.lua`.
 
 ## 2. Entorno del usuario (Manu)
 
@@ -69,7 +69,7 @@ Documentación por rol: [README.md](./README.md) = cara pública (features + ins
 | `Extensions` | Cargador de extensiones (§Extensiones): descubre `extensions/` (+ `~/.local/share/sylphrena/extensions/`), crea el servicio de las activadas (`extensions.enabled`, nada por defecto) y expone `widgets`/`widgetDecls`. Tareas, Hidratación, la batería del ratón, la VPN FortiClient y Juegos (Steam) ya son extensiones (`extensions/tasks/`, `extensions/hydration/`; la de Hidratación aporta además `Settings.qml` y un shader `.qsb` propio) |
 | `DashWidgets` | Registro del carrusel del dashboard (`all`/`order`/`active`/`move`); orden en `dashboard.widgetOrder`. Sin widgets por defecto (calendario = `dashboard.calendarEnabled`); vacío → botón «Activa widgets» → `WindowFactory.openSubPage("panels", 1)`; añadir widget = entrada aquí + caso en `WidgetCarousel.qml` + tarjeta en `DashboardPanel.qml` |
 | `Keybinds` | Exportar/importar (`exportTo(carpeta)`, `importFrom(fichero)`, `parseImport`, `ioResult`; formato `{format:"sylphrena-keybinds", version:1, binds}`); grabación de teclas con submap vacío de Hyprland (inhibe binds), soporte F13–F35, diálogo de conflicto → `sylphrena-binds.lua`; incluye `focusLast` (última ventana cross-desktop) |
-| `Hypr` | Bridge de eventos de Hyprland; conectar directos cuando el `rawEvent` no se re-emite; aplica `follow_mouse` (Nexus) a `sylphrena-input.lua` |
+| `Hypr` | Bridge de eventos de Hyprland; conectar directos cuando el `rawEvent` no se re-emite; aplica `follow_mouse` (Nexus) a `sylphrena-input.lua`; `workspaceAnimation*` (escritorios, Nexus → Activities) a `sylphrena-animation.lua` y `activityAnimation*` (saltos de actividad: `Activities.focusWorkspace` → `Hypr.focusWorkspaceInOtherActivity` aplica su animación por el mismo socket, salta y repone la de escritorios a los 1,2 s); `toggleShowDesktop` (pulsar el escritorio activo en la barra) llama a `scripts/show-desktop.py`, que desliza las ventanas fuera de pantalla y las devuelve (estado en `$XDG_RUNTIME_DIR/sylphrena/`, `hiddenWs` para el pill con borde) |
 
 Capas internas de Steam (`services/steam/`, no singletons públicos): `SteamFormat`, `SteamApi`, `SteamLibrary`, `SteamAchievements` (RAM+disco `steam-achievements-cache.json`), `SteamLocal`, `SteamActivity` (snapshot por **stdin**).
 

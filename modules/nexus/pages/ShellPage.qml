@@ -177,6 +177,104 @@ PageBase {
             onToggled: GlobalConfig.activities.crossActivityWorkspaces = checked
         }
 
+        SelectRow {
+            id: workspaceAnimationRow
+
+            label: Tr.tr("Desktop transition")
+            subtext: Tr.tr("How the screen changes when you move between desktops of an activity; sliding gives a sense of where you are")
+            active: workspaceAnimationItems.instances.find(i => i.modelData === Hypr.normalizeWorkspaceAnimation(GlobalConfig.general.workspaceAnimation)) ?? null
+            fallbackText: Hypr.workspaceAnimationLabel(GlobalConfig.general.workspaceAnimation)
+            onSelected: item => GlobalConfig.general.workspaceAnimation = item.modelData
+
+            menuItems: workspaceAnimationItems.instances
+
+            Variants {
+                id: workspaceAnimationItems
+
+                model: ["fade", "slide", "slidevert", "slidefade", "slidefadevert"]
+
+                MenuItem {
+                    required property string modelData
+
+                    text: Hypr.workspaceAnimationLabel(modelData)
+                }
+            }
+        }
+
+        SelectRow {
+            id: workspaceAnimationSpeedRow
+
+            visible: Hypr.normalizeWorkspaceAnimation(GlobalConfig.general.workspaceAnimation) !== "fade"
+            label: Tr.tr("Desktop transition speed")
+            subtext: Tr.tr("How fast the desktop transition plays")
+            active: workspaceAnimationSpeedItems.instances.find(i => i.modelData === Hypr.normalizeWorkspaceAnimationSpeed(GlobalConfig.general.workspaceAnimationSpeed)) ?? null
+            fallbackText: Hypr.workspaceAnimationSpeedLabel(GlobalConfig.general.workspaceAnimationSpeed)
+            onSelected: item => GlobalConfig.general.workspaceAnimationSpeed = item.modelData
+
+            menuItems: workspaceAnimationSpeedItems.instances
+
+            Variants {
+                id: workspaceAnimationSpeedItems
+
+                model: ["slow", "normal", "fast"]
+
+                MenuItem {
+                    required property string modelData
+
+                    text: Hypr.workspaceAnimationSpeedLabel(modelData)
+                }
+            }
+        }
+
+        SelectRow {
+            id: activityAnimationRow
+
+            label: Tr.tr("Activity transition")
+            subtext: Tr.tr("How the screen changes when you switch to another activity")
+            active: activityAnimationItems.instances.find(i => i.modelData === Hypr.normalizeWorkspaceAnimation(GlobalConfig.general.activityAnimation)) ?? null
+            fallbackText: Hypr.workspaceAnimationLabel(GlobalConfig.general.activityAnimation)
+            onSelected: item => GlobalConfig.general.activityAnimation = item.modelData
+
+            menuItems: activityAnimationItems.instances
+
+            Variants {
+                id: activityAnimationItems
+
+                model: ["fade", "slide", "slidevert", "slidefade", "slidefadevert"]
+
+                MenuItem {
+                    required property string modelData
+
+                    text: Hypr.workspaceAnimationLabel(modelData)
+                }
+            }
+        }
+
+        SelectRow {
+            id: activityAnimationSpeedRow
+
+            visible: Hypr.normalizeWorkspaceAnimation(GlobalConfig.general.activityAnimation) !== "fade"
+            label: Tr.tr("Activity transition speed")
+            subtext: Tr.tr("How fast the activity transition plays")
+            active: activityAnimationSpeedItems.instances.find(i => i.modelData === Hypr.normalizeWorkspaceAnimationSpeed(GlobalConfig.general.activityAnimationSpeed)) ?? null
+            fallbackText: Hypr.workspaceAnimationSpeedLabel(GlobalConfig.general.activityAnimationSpeed)
+            onSelected: item => GlobalConfig.general.activityAnimationSpeed = item.modelData
+
+            menuItems: activityAnimationSpeedItems.instances
+
+            Variants {
+                id: activityAnimationSpeedItems
+
+                model: ["slow", "normal", "fast"]
+
+                MenuItem {
+                    required property string modelData
+
+                    text: Hypr.workspaceAnimationSpeedLabel(modelData)
+                }
+            }
+        }
+
         ToggleRow {
             text: Tr.tr("Display wallpaper")
             subtext: Tr.tr("Turns the wallpaper machinery on or off shell-wide")
