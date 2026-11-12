@@ -2,7 +2,7 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## Sin publicar (siguiente versión)
+## 0.4.0 (2026-11-12)
 
 - **Instalador de Arch (`./install.sh`):** de un Arch con Hyprland a la experiencia completa en una sola sesión de terminal. Escanea, enseña el plan con el porqué de cada cosa, confirma, y lo hace con una contraseña: herramientas base, `yay`, librerías del AUR, los cuatro paquetes (de GitHub con `makepkg` mientras no estén en el AUR), recomendados, enganche a Hyprland (`setup-hyprland.py`), ajustes del primer arranque y la pantalla de login. Se puede repetir.
 - **Pantalla de login (`install-system.sh`):** instalaba los ajustes de `logind` (sin la espera de 10 s de pantalla negra tras escribir la contraseña) y justo después los borraba, por un resto del renombrado; ahora los deja puestos y solo quita los nombres antiguos (`caelestia-*`). Además deja a `greetd` como gestor de sesiones (desactiva el que hubiera, sin pararlo) y avisa si faltan `rsync`, `python3` o `greetd`.
