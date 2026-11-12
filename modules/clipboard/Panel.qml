@@ -75,7 +75,7 @@ StyledWindow {
         readonly property real localX: Clipboard.cursorX - (win.screen?.x ?? 0)
         readonly property real localY: Clipboard.cursorY - (win.screen?.y ?? 0)
         readonly property real margin: Tokens.padding.large
-        readonly property real maxW: Math.min(640, (win.screen?.width ?? 640) - margin * 2)
+        readonly property real maxW: Math.min(520, (win.screen?.width ?? 520) - margin * 2)
         readonly property real maxH: Math.min(520, (win.screen?.height ?? 520) - margin * 2)
 
         x: Math.min(Math.max(margin, localX), (win.screen?.width ?? width) - width - margin)
@@ -208,6 +208,18 @@ StyledWindow {
                                     type: Anim.DefaultEffects
                                 }
                             }
+                        }
+
+                        // Divider between entries (not under the last one, nor next to the highlighted row)
+                        StyledRect {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            anchors.leftMargin: Tokens.padding.large
+                            anchors.rightMargin: Tokens.padding.large
+                            implicitHeight: 1
+                            color: Colours.palette.m3outlineVariant
+                            opacity: row.index === list.count - 1 || row.selected || row.index + 1 === Clipboard.currentIndex ? 0 : 0.5
                         }
 
                         StateLayer {
