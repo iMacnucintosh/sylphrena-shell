@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 18:58+0100\n"
+"POT-Creation-Date: 2026-11-12 18:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5213,14 +5213,16 @@ msgctxt "track artist and title"
 msgid "%1 - %2"
 msgstr ""
 
-#. TRANSLATORS: the last two names of a list ("Tasks and Games")
 #: services/SylphrenaUpdates.qml
-#, qt-format
-msgid "%1 and %2"
+msgid "Updates available"
 msgstr ""
 
 #: services/SylphrenaUpdates.qml
-msgid "Updates available"
+msgid "New version of Sylphrena"
+msgstr ""
+
+#: services/SylphrenaUpdates.qml
+msgid "New extension updates"
 msgstr ""
 
 #: services/Timers.qml
