@@ -2,12 +2,13 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## Sin publicar
+## 0.5.6 (2026-11-13)
 
 - **Contraseña de las actualizaciones:** el socket que la guarda en memoria es privado desde que se crea (antes, un instante con los permisos por defecto) y solo responde a procesos de tu usuario.
 - **Actualizar, quitar o ver un paquete desde la lista:** el nombre llega a la terminal como argumento y no pegado dentro de la orden.
 - **Desplegable de distribuciones de teclado de la barra:** usa las mismas distribuciones y nombres que Nexus → Idioma y región, sin su propio lector de XKB.
 - **Log limpio:** fuera cientos de avisos que dejaban el orbe, el menú de la bandeja y las notificaciones al cerrarse.
+- **`sylph install` / `sylph update`** (CLI 0.4.0) lanzan el instalador de Sylphrena; antes eran los de la base original y desplegaban sus dotfiles.
 - **Limpieza:** código, opciones y traducciones que ya no usaba nadie (entre ellas `utilities.toasts.kbLimit`, que se borra sola de las configuraciones existentes).
 
 ## 0.5.5 (2026-11-12)
