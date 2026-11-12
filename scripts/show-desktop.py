@@ -141,14 +141,7 @@ def option(name):
         return None
 
 
-def settle(targets, timeout=0.7):
-    """Wait until the sliding windows reach their saved position (or give up)."""
-    end = time.time() + timeout
-    while time.time() < end:
-        now = {c["address"]: c["at"] for c in clients()}
-        if all(abs(now.get(a, at)[0] - at[0]) <= 3 and abs(now.get(a, at)[1] - at[1]) <= 3 for a, at in targets):
-            return
-        time.sleep(0.04)
+SLIDE_SECONDS = 0.75
 
 
 def show(ws, state):
@@ -161,7 +154,8 @@ def show(ws, state):
     # 1. Slide everything back to its place (smooth: they are all floating) ...
     for w in saved:
         move(w["address"], w["at"][0], w["at"][1])
-    settle([(w["address"], w["at"]) for w in saved])
+    # hyprctl reports the target position at once, so the end of the animation can only be waited for
+    time.sleep(SLIDE_SECONDS)
 
     # 2. ... then put the tiled ones back in the layout in one go, with animations and cursor warps off,
     #    so the swap from floating to tiled is not visible (positions already match).
