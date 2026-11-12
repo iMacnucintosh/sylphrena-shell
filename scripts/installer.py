@@ -40,6 +40,8 @@ GITHUB = "https://github.com/iMacnucintosh"
 # Our packages, in the order they have to be installed (the shell depends on the other three)
 PACKAGES = [("sylphrena-cli-git", "sylphrena-cli"), ("seeker-git", "seeker"), ("things-git", "things"),
             ("sylphrena-shell-git", "sylphrena-shell")]
+# Commands of the usual web browsers: with one of them there, Zen is offered but not selected
+BROWSERS = ["zen-browser", "firefox", "chromium", "google-chrome-stable", "brave", "librewolf", "vivaldi-stable", "epiphany"]
 # Dependencies of the shell package that are not in the Arch repositories (makepkg -s cannot install them)
 AUR_DEPS = ["quickshell-git", "qt6-m3shapes-git", "python-materialyoucolor", "libcava"]
 STATE = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "sylphrena"
@@ -113,6 +115,10 @@ ES = {
     "Seeker": "Seeker", "the file manager of Sylphrena": "el explorador de archivos de Sylphrena",
     "Things": "Things", "the package manager and extension manager": "el gestor de paquetes y de extensiones",
     "Sylphrena shell": "Shell de Sylphrena", "the shell itself, with its icons, GTK theme, fonts and tools": "la shell, con sus iconos, tema GTK, fuentes y herramientas",
+    "Zen browser": "Navegador Zen",
+    "a Firefox-based web browser that suits Sylphrena": "un navegador web basado en Firefox que encaja con Sylphrena",
+    "a Firefox-based web browser that suits Sylphrena; not selected because you already have a browser":
+        "un navegador web basado en Firefox que encaja con Sylphrena; no viene marcado porque ya tienes un navegador",
     "Clock font (Rubik)": "Fuente del reloj (Rubik)", "the font of the clock and the workspaces": "la fuente del reloj y de los escritorios",
     "Screen recorder": "Grabador de pantalla", "so that sylph record works": "para que funcione sylph record",
     "External monitor brightness (ddcutil)": "Brillo del monitor externo (ddcutil)", "this computer has no built-in screen, so its monitor is controlled over DDC/CI": "este equipo no tiene pantalla integrada, así que su monitor se controla por DDC/CI",
@@ -174,6 +180,7 @@ class Facts:
     hyprland_needed: bool = True                            # setup-hyprland.py --check says it would change something
     first_run_needed: bool = True                           # same for the first-run settings and kitty
     greeter_installed: bool = False
+    browser: str | None = None                              # a web browser that is already there (then Zen is not preselected)
 
     def have(self, pkg: str) -> bool:
         return pkg in self.installed
@@ -210,7 +217,7 @@ def scan() -> Facts:
     f.is_root = os.geteuid() == 0
     f.helper = next((h for h in ("yay", "paru") if shutil.which(h)), None)
     names = ["git", "base-devel", "hyprland", "quickshell", "quickshell-git", "greetd", "ddcutil", "gpu-screen-recorder", "ttf-rubik-vf",
-             "rsync", *AUR_DEPS, *(p for p, _ in PACKAGES)]
+             "rsync", "zen-browser-bin", *AUR_DEPS, *(p for p, _ in PACKAGES)]
     f.installed = {n for n in dict.fromkeys(names) if provided(n)}
     f.in_aur = aur_knows([*AUR_DEPS, "ttf-rubik-vf", *(p for p, _ in PACKAGES)])
     backlight = Path("/sys/class/backlight")
@@ -223,6 +230,7 @@ def scan() -> Facts:
     f.hyprland_needed = check_status("setup-hyprland.py") in ("needed", "failed")
     f.first_run_needed = any(check_status(n) == "needed" for n in ("setup-defaults.py", "setup-kitty.py"))
     f.greeter_installed = Path("/etc/greetd/sylphrena").is_dir() and f.display_manager == "greetd"
+    f.browser = next((b for b in BROWSERS if shutil.which(b)), None)
     return f
 
 
@@ -269,7 +277,8 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         steps=[Step("pacman", ["hyprland"])])
     need_aur = [p for p in AUR_DEPS if not f.have(p)]
     own_from_aur = [p for p, _ in PACKAGES if not f.have(p) and p in f.in_aur]
-    need_helper = f.helper is None and bool(need_aur or own_from_aur or not f.have("ttf-rubik-vf"))
+    need_helper = f.helper is None and bool(need_aur or own_from_aur or not f.have("ttf-rubik-vf")
+                                            or (f.browser is None and not f.have("zen-browser-bin")))
     add("aur-helper", "Required", "AUR helper (yay)", "to install packages that are only in the AUR", True, todo=need_helper,
         required=True, steps=[Step("build", ["yay-bin", "https://aur.archlinux.org/yay-bin.git"])])
     conflict = f.have("quickshell") and not f.have("quickshell-git") and "quickshell-git" in need_aur
@@ -290,6 +299,11 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         steps=[Step("aur", ["ttf-rubik-vf"])])
     add("recorder", "Recommended", "Screen recorder", "so that sylph record works", True, todo=not f.have("gpu-screen-recorder"),
         steps=[Step("pacman", ["gpu-screen-recorder"])])
+    add("zen", "Recommended", "Zen browser",
+        "a Firefox-based web browser that suits Sylphrena; not selected because you already have a browser" if f.browser
+        else "a Firefox-based web browser that suits Sylphrena",
+        True, todo=not f.have("zen-browser-bin") and f.browser != "zen-browser", default=f.browser is None,
+        steps=[Step("aur", ["zen-browser-bin"])])
     ddc_steps = [Step("pacman", ["ddcutil"]), Step("write-root", ["/etc/modules-load.d/i2c-dev.conf", "i2c-dev\n"]),
                  Step("root", ["modprobe", "i2c-dev"], ) ]
     add("ddcutil", "Recommended", "External monitor brightness (ddcutil)",

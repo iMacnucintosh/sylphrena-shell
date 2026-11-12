@@ -108,6 +108,11 @@ class GeneralConfig : public settings::ObjectNode {
     // Hyprland input:follow_mouse — 0 never, 1 on hover, 2 on click (keyboard focus).
     // Owned by Nexus → Keyboard & mouse; written to sylphrena-input.lua.
     CONFIG_PROPERTY(int, followMouse, 1)
+    // Keyboard layouts, first = default ("es" or "es:cat" for a variant); empty = left to the system/hyprland.lua.
+    // keyboardSwitch is the XKB option that switches between them ("grp:alt_shift_toggle"…). Nexus → Language &
+    // region; written to sylphrena-input.lua.
+    CONFIG_PROPERTY(QStringList, keyboardLayouts, {})
+    CONFIG_PROPERTY(QString, keyboardSwitch, {})
     // Hyprland animation between workspaces: "fade" (Hyprland's own), "slide", "slidevert", "slidefade" or
     // "slidefadevert"; speed is "slow", "normal" or "fast" (sliding modes only).
     // workspaceAnimation* is for moving between desktops, activityAnimation* for jumping to another activity.

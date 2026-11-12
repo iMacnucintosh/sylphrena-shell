@@ -107,6 +107,13 @@ PageBase {
             }
         }
 
+        // Keyboard
+        SectionHeader {
+            text: Tr.tr("Keyboard")
+        }
+
+        KeyboardLayoutsCard {}
+
         // Weather
         SectionHeader {
             text: Tr.tr("Weather")
