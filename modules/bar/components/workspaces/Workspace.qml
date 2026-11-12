@@ -261,6 +261,11 @@ Item {
 
                     readonly property int iconSize: Math.round((Tokens.sizes.bar.innerWidth - Tokens.padding.small) * 0.55)
                     readonly property string appClass: modelData.lastIpcObject?.class ?? ""
+                    // For the preview popout: which window this icon is
+                    readonly property var toplevel: modelData
+
+                    Component.onCompleted: BarWindowIcons.add(win)
+                    Component.onDestruction: BarWindowIcons.remove(win)
 
                     width: parent?.width ?? Tokens.sizes.bar.innerWidth
                     implicitHeight: root.desktopAppIcons ? iconSize + Tokens.padding.extraSmall : (winIcon.implicitHeight || iconSize)

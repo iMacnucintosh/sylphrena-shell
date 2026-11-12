@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 18:24+0100\n"
+"POT-Creation-Date: 2026-11-12 18:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3042,6 +3042,14 @@ msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
 msgid "Hide workspaces not on the current monitor"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
+msgid "Window preview on hover"
+msgstr ""
+
+#: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml
+msgid "Hovering an app icon of a desktop in the bar shows a live thumbnail of its window; click it to go there"
 msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarWorkspaces.qml

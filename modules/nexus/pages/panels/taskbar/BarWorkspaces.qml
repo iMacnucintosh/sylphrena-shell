@@ -62,6 +62,13 @@ PageBase {
             onToggled: GlobalConfig.bar.workspaces.perMonitor = checked
         }
 
+        ToggleRow {
+            text: Tr.tr("Window preview on hover")
+            subtext: Tr.tr("Hovering an app icon of a desktop in the bar shows a live thumbnail of its window; click it to go there")
+            checked: GlobalConfig.activities.windowPreview
+            onToggled: GlobalConfig.activities.windowPreview = checked
+        }
+
         NavRow {
             last: true
             icon: "dashboard_customize"
