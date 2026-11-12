@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 18:45+0100\n"
+"POT-Creation-Date: 2026-11-12 18:49+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1416,8 +1416,8 @@ msgid "Panels"
 msgstr "Paneles"
 
 #: modules/nexus/PageRegistry.qml
-msgid "Dashboard, taskbar, launcher, sidebar"
-msgstr "Panel, barra de tareas, lanzador, barra lateral"
+msgid "Dashboard, taskbar, launcher, side panel"
+msgstr "Panel, barra de tareas, lanzador, panel lateral"
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/ExtensionsPage.qml
 #: modules/welcome/WelcomeWindow.qml
@@ -2841,12 +2841,12 @@ msgstr "Fondos de pantalla"
 
 #: modules/nexus/pages/panels/SidebarPanel.qml
 #: modules/nexus/pages/PanelsPage.qml services/Keybinds.qml
-msgid "Sidebar"
-msgstr "Barra lateral"
+msgid "Side panel"
+msgstr "Panel lateral"
 
 #: modules/nexus/pages/panels/SidebarPanel.qml
-msgid "Pixels dragged before the sidebar opens"
-msgstr "Píxeles arrastrados antes de que se abra la barra lateral"
+msgid "Pixels dragged before the side panel opens"
+msgstr "Píxeles que hay que arrastrar para que se abra el panel lateral"
 
 #: modules/nexus/pages/panels/taskbar/BarActiveWindow.qml
 #: modules/nexus/pages/panels/TaskbarPanel.qml
@@ -4861,8 +4861,8 @@ msgid "Power / session menu"
 msgstr "Menú de energía / sesión"
 
 #: services/Keybinds.qml
-msgid "Toggle the sidebar"
-msgstr "Mostrar u ocultar la barra lateral"
+msgid "Toggle the side panel"
+msgstr "Abrir o cerrar el panel lateral"
 
 #: services/Keybinds.qml
 msgid "Toggle utilities panel"
@@ -5951,6 +5951,18 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "Dashboard, taskbar, launcher, sidebar"
+#~ msgstr "Panel, barra de tareas, lanzador, barra lateral"
+
+#~ msgid "Sidebar"
+#~ msgstr "Barra lateral"
+
+#~ msgid "Pixels dragged before the sidebar opens"
+#~ msgstr "Píxeles arrastrados antes de que se abra la barra lateral"
+
+#~ msgid "Toggle the sidebar"
+#~ msgstr "Mostrar u ocultar la barra lateral"
 
 #~ msgctxt "bar workspaces"
 #~ msgid "Shown"

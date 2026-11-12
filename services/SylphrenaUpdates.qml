@@ -63,15 +63,21 @@ Singleton {
             proc.running = true;
     }
 
+    // "A", "A and B", "A, B and C"
+    function listNames(names: var): string {
+        if (names.length <= 1)
+            return names[0] ?? "";
+        // TRANSLATORS: the last two names of a list ("Tasks and Games")
+        return Tr.tr("%1 and %2").arg(names.slice(0, -1).join(", ")).arg(names[names.length - 1]);
+    }
+
     function announce(): void {
         const keys = [...root.updates.map(u => `${u.pkg}@${u.latest}`), ...root.extensions.map(e => `ext:${e.id}@${e.latest}`)];
         const fresh = root.entries.filter((_, i) => !root._announced.includes(keys[i]));
         if (!fresh.length)
             return;
         announcedFile.setText(JSON.stringify({ announced: [...new Set([...root._announced, ...keys])] }));
-        const names = fresh.map(e => `${e.name} ${e.to}`).join(", ");
-        const title = fresh.some(e => e.source === "SYLPHRENA") ? Tr.tr("New version of Sylphrena") : Tr.tr("Extension updates");
-        Toaster.toast(title, Tr.tr("%1 · update it from Nexus → Updates").arg(names), "sylphrena");
+        Toaster.toast(Tr.tr("Updates available"), root.listNames(fresh.map(e => e.name)), "sylphrena");
     }
 
     FileView {

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 18:49+0100\n"
+"POT-Creation-Date: 2026-11-12 18:58+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -5214,18 +5214,15 @@ msgctxt "track artist and title"
 msgid "%1 - %2"
 msgstr "%1 - %2"
 
-#: services/SylphrenaUpdates.qml
-msgid "New version of Sylphrena"
-msgstr "Nueva versión de Sylphrena"
-
-#: services/SylphrenaUpdates.qml
-msgid "Extension updates"
-msgstr "Actualizaciones de extensiones"
-
+#. TRANSLATORS: the last two names of a list ("Tasks and Games")
 #: services/SylphrenaUpdates.qml
 #, qt-format
-msgid "%1 · update it from Nexus → Updates"
-msgstr "%1 · actualízala desde Nexus → Actualizaciones"
+msgid "%1 and %2"
+msgstr "%1 y %2"
+
+#: services/SylphrenaUpdates.qml
+msgid "Updates available"
+msgstr "Actualizaciones disponibles"
 
 #: services/Timers.qml
 msgid "Timer finished"
@@ -5951,6 +5948,16 @@ msgstr "Ajustes"
 #: plugin/src/Sylphrena/Config/launcherconfig.hpp
 msgid "Configure the shell"
 msgstr "Configura el shell"
+
+#~ msgid "New version of Sylphrena"
+#~ msgstr "Nueva versión de Sylphrena"
+
+#~ msgid "Extension updates"
+#~ msgstr "Actualizaciones de extensiones"
+
+#, qt-format
+#~ msgid "%1 · update it from Nexus → Updates"
+#~ msgstr "%1 · actualízala desde Nexus → Actualizaciones"
 
 #~ msgid "Dashboard, taskbar, launcher, sidebar"
 #~ msgstr "Panel, barra de tareas, lanzador, barra lateral"
