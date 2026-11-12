@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 19:20+0100\n"
+"POT-Creation-Date: 2026-11-12 19:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5222,7 +5222,7 @@ msgid "New version of Sylphrena"
 msgstr ""
 
 #: services/SylphrenaUpdates.qml
-msgid "Updatable extensions"
+msgid "Extension updates"
 msgstr ""
 
 #: services/Timers.qml

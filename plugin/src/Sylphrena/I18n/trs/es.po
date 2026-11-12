@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 19:20+0100\n"
+"POT-Creation-Date: 2026-11-12 19:22+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -5223,8 +5223,8 @@ msgid "New version of Sylphrena"
 msgstr "Nueva versión de Sylphrena"
 
 #: services/SylphrenaUpdates.qml
-msgid "Updatable extensions"
-msgstr "Extensiones actualizables"
+msgid "Extension updates"
+msgstr "Actualizaciones de extensiones"
 
 #: services/Timers.qml
 msgid "Timer finished"
@@ -5951,15 +5951,15 @@ msgstr "Ajustes"
 msgid "Configure the shell"
 msgstr "Configura el shell"
 
+#~ msgid "Updatable extensions"
+#~ msgstr "Extensiones actualizables"
+
 #~ msgid "New extension updates"
 #~ msgstr "Actualizaciones nuevas de extensiones"
 
 #, qt-format
 #~ msgid "%1 and %2"
 #~ msgstr "%1 y %2"
-
-#~ msgid "Extension updates"
-#~ msgstr "Actualizaciones de extensiones"
 
 #, qt-format
 #~ msgid "%1 · update it from Nexus → Updates"
