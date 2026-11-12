@@ -919,7 +919,11 @@ Singleton {
                 out += `-- ${action.id}: unbound\n`;
                 continue;
             }
-            out += `hl.bind("${root.escapeLuaString(bind)}", ${root.dispatcherLua(action)}${root.flagsLua(action.flags)})\n`;
+            // Replace whatever hyprland.lua bound to the same keys (Hyprland's default config has Super+Q, Super+C, Super+E…):
+            // without this both actions run (two terminals for one Super+Q)
+            const key = root.escapeLuaString(bind);
+            out += `hl.unbind("${key}")\n`;
+            out += `hl.bind("${key}", ${root.dispatcherLua(action)}${root.flagsLua(action.flags)})\n`;
         }
         return out;
     }
