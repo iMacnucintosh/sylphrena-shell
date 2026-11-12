@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 14:35+0100\n"
+"POT-Creation-Date: 2026-11-12 14:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3513,15 +3513,31 @@ msgid "Desktop transition"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
-msgid "How the screen changes when you move between desktops and activities; sliding gives a sense of where you are"
+msgid "How the screen changes when you move between desktops of an activity; sliding gives a sense of where you are"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
-msgid "Transition speed"
+msgid "Desktop transition speed"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
 msgid "How fast the desktop transition plays"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Activity transition"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "How the screen changes when you switch to another activity"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "Activity transition speed"
+msgstr ""
+
+#: modules/nexus/pages/ShellPage.qml
+msgid "How fast the activity transition plays"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml modules/nexus/pages/WallpaperAndStyle.qml

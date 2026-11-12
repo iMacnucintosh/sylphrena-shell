@@ -76,6 +76,10 @@ Singleton {
         return root.mappedActivities.find(a => ws >= a.startWs && ws <= a.endWs) ?? root.mappedActivities[0] ?? null;
     }
 
+    function activityForWs(ws: int): var {
+        return root.mappedActivities.find(a => ws >= a.startWs && ws <= a.endWs) ?? null;
+    }
+
     readonly property int currentActivityIndex: root.currentActivity?.index ?? 0
 
     readonly property string principalId: "principal"
@@ -493,6 +497,12 @@ Singleton {
     }
 
     function focusWorkspace(ws: int): void {
+        // Another activity: its own transition animation (Nexus → Activities)
+        const target = root.activityForWs(ws);
+        if (root.enabled && Hypr.usingLua && Hypr.activityAnimationDiffers && target && root.currentActivity && target.id !== root.currentActivity.id) {
+            Hypr.focusWorkspaceInOtherActivity(ws);
+            return;
+        }
         // Hyprland-lua expects dsp expressions; classic syntax still works for non-lua
         Hyprland.dispatch(`hl.dsp.focus({ workspace = ${ws} })`);
     }

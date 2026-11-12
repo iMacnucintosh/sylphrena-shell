@@ -120,12 +120,12 @@ Singleton {
     }
 
     // Hyprland's own fade is what a stock config has; "slide" modes override the three workspace leaves.
-    function workspaceAnimationLua(mode: string): string {
+    function workspaceAnimationLua(mode: string, speedName: string): string {
         const m = root.normalizeWorkspaceAnimation(mode);
         const slide = m !== "fade";
         const style = m.startsWith("slidefade") ? `${m} 20%` : m;
         const curve = slide ? "sylphrena-quint" : "sylphrena-almostlinear";
-        const base = ({ slow: 7, normal: 4, fast: 2.5 })[root.normalizeWorkspaceAnimationSpeed(GlobalConfig.general.workspaceAnimationSpeed)];
+        const base = ({ slow: 7, normal: 4, fast: 2.5 })[root.normalizeWorkspaceAnimationSpeed(speedName)];
         const speeds = slide ? [base, base, base] : [1.94, 1.21, 1.94];
         let out = 'hl.curve("sylphrena-quint", { type = "bezier", points = { { 0.23, 1 }, { 0.32, 1 } } })\n';
         out += 'hl.curve("sylphrena-almostlinear", { type = "bezier", points = { { 0.5, 0.5 }, { 0.75, 1 } } })\n';
@@ -140,7 +140,7 @@ Singleton {
         out += "-- Nexus → Activities: animation between workspaces (fade, slide, slide and fade).\n\n";
         // Fade is Hyprland's default: leave the user's own animation settings alone.
         if (root.normalizeWorkspaceAnimation(mode) !== "fade")
-            out += root.workspaceAnimationLua(mode);
+            out += root.workspaceAnimationLua(mode, GlobalConfig.general.workspaceAnimationSpeed);
         return out;
     }
 
@@ -149,7 +149,27 @@ Singleton {
         const m = root.normalizeWorkspaceAnimation(GlobalConfig.general.workspaceAnimation);
         animationLuaFile.setText(root.generateAnimationLua(m));
         if (m !== "fade" || changed)
-            Quickshell.execDetached(["hyprctl", "eval", root.workspaceAnimationLua(m)]);
+            Quickshell.execDetached(["hyprctl", "eval", root.workspaceAnimationLua(m, GlobalConfig.general.workspaceAnimationSpeed)]);
+    }
+
+    readonly property bool activityAnimationDiffers: normalizeWorkspaceAnimation(GlobalConfig.general.activityAnimation) !== normalizeWorkspaceAnimation(GlobalConfig.general.workspaceAnimation) || normalizeWorkspaceAnimationSpeed(GlobalConfig.general.activityAnimationSpeed) !== normalizeWorkspaceAnimationSpeed(GlobalConfig.general.workspaceAnimationSpeed)
+
+    function oneLine(lua: string): string {
+        return lua.trim().replace(/\n/g, " ");
+    }
+
+    // Jump to a workspace of another activity with the activity animation: set it, jump (same socket, so in
+    // order) and put the desktop one back once the transition has played.
+    function focusWorkspaceInOtherActivity(ws: int): void {
+        extras.batchMessage([`eval ${oneLine(workspaceAnimationLua(GlobalConfig.general.activityAnimation, GlobalConfig.general.activityAnimationSpeed))}`, `dispatch hl.dsp.focus({ workspace = ${ws} })`]);
+        restoreDesktopAnimation.restart();
+    }
+
+    Timer {
+        id: restoreDesktopAnimation
+
+        interval: 1200
+        onTriggered: extras.batchMessage([`eval ${root.oneLine(root.workspaceAnimationLua(GlobalConfig.general.workspaceAnimation, GlobalConfig.general.workspaceAnimationSpeed))}`])
     }
 
     function dispatch(request: string): void {
@@ -420,6 +440,14 @@ Singleton {
         }
 
         function onWorkspaceAnimationSpeedChanged(): void {
+            root.applyWorkspaceAnimation(true);
+        }
+
+        function onActivityAnimationChanged(): void {
+            root.applyWorkspaceAnimation(true);
+        }
+
+        function onActivityAnimationSpeedChanged(): void {
             root.applyWorkspaceAnimation(true);
         }
     }
