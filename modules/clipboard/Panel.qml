@@ -326,6 +326,8 @@ StyledWindow {
                                     anchors.fill: parent
                                     radius: Tokens.rounding.small
                                     visible: leading.isImage
+                                    // The thumbnail is out of its row while its preview is open
+                                    opacity: preview.leading === leading && preview.progress > 0.001 ? 0 : 1
 
                                     StyledRect {
                                         anchors.fill: parent
@@ -408,23 +410,30 @@ StyledWindow {
         }
     }
 
-    // Big image that unfolds from the hovered thumbnail (non-interactive: clicks and hover go to the list)
+    // The hovered thumbnail slides out of its row into a panel that grows from the card's edge (to the left
+    // unless there is no room) and becomes the big image. Non-interactive: clicks and hover go to the list.
     Item {
         id: preview
 
         readonly property real maxW: 480
         readonly property real maxH: 360
+        readonly property real pad: Tokens.padding.small
 
         property Item leading: null
         property real progress: 0
+        property int side: -1 // -1: panel on the card's left, 1: on its right
+        // thumbnail rect (start) and final image rect, in window coordinates
         property real fromX
         property real fromY
         property real fromW: 1
         property real fromH: 1
-        property real toX
-        property real toY
-        property real toW: 1
-        property real toH: 1
+        property real imgX
+        property real imgY
+        property real imgW: 1
+        property real imgH: 1
+
+        readonly property real contW: imgW + pad * 2
+        readonly property real contH: imgH + pad * 2
 
         function lerp(a: real, b: real): real {
             return a + (b - a) * progress;
@@ -435,26 +444,28 @@ StyledWindow {
             const nh = big.implicitHeight;
             if (!l || nw <= 0 || nh <= 0)
                 return; // not decoded yet: big.onStatusChanged opens it when it is
-            leading = l;
             const from = l.mapToItem(null, 0, 0);
+            const r = Tokens.rounding.large;
+            const availH = Math.min(maxH, card.height - r * 2 - pad * 2);
+            const k = Math.min(1, maxW / nw, availH / nh);
+            // Barely bigger than the thumbnail: nothing to gain from a panel
+            if (nw * k < l.width * 1.5 && nh * k < l.height * 1.5)
+                return;
+            leading = l;
             fromX = from.x;
             fromY = from.y;
             fromW = l.width;
             fromH = l.height;
-            const k = Math.min(1, maxW / nw, maxH / nh);
-            // Barely bigger than the thumbnail: nothing to gain from a popup
-            if (nw * k < l.width * 1.5 && nh * k < l.height * 1.5)
-                return;
-            toW = Math.max(l.width, nw * k);
-            toH = Math.max(l.height, nh * k);
-            const gap = Tokens.padding.medium;
-            const sw = win.width;
-            // Beside the card, on the side with room; centred on the thumbnail's height
-            let x = card.x + card.width + gap;
-            if (x + toW > sw - card.margin)
-                x = card.x - gap - toW;
-            toX = Math.max(card.margin, Math.min(x, sw - toW - card.margin));
-            toY = Math.max(card.margin, Math.min(from.y + l.height / 2 - toH / 2, win.height - toH - card.margin));
+            const w = Math.max(l.width, nw * k);
+            const h = Math.max(l.height, nh * k);
+            side = card.x - (w + pad * 2) >= card.margin ? -1 : 1;
+            imgW = w;
+            imgH = h;
+            imgX = side < 0 ? card.x - w - pad : card.x + card.width + pad;
+            const top = card.y + r;
+            const bottom = card.y + card.height - r - (h + pad * 2);
+            const wanted = from.y + l.height / 2 - (h + pad * 2) / 2;
+            imgY = Math.max(top, Math.min(wanted, Math.max(top, bottom))) + pad;
             progress = 0;
             anim.to = 1;
             anim.restart();
@@ -465,12 +476,9 @@ StyledWindow {
             anim.restart();
         }
 
-        visible: leading !== null && progress > 0.001
+        anchors.fill: parent
         enabled: false
-        x: lerp(fromX, toX)
-        y: lerp(fromY, toY)
-        width: lerp(fromW, toW)
-        height: lerp(fromH, toH)
+        visible: leading !== null && progress > 0.001
 
         Anim {
             id: anim
@@ -484,7 +492,7 @@ StyledWindow {
             }
         }
 
-        // Decoded in the background while the pause runs, so it is ready when the popup opens
+        // Decoded in the background while the pause runs, so it is ready when the panel opens
         Image {
             id: big
 
@@ -499,47 +507,60 @@ StyledWindow {
             source: preview.leading ? Qt.resolvedUrl(preview.leading.thumbPath) : (win.previewWanted ? Qt.resolvedUrl(win.previewWanted.thumbPath) : "")
         }
 
+        // The panel: starts as a sliver at the card's edge and grows outwards from the row
         Elevation {
-            anchors.fill: parent
+            readonly property real w: preview.lerp(0, preview.contW)
+
+            x: preview.side < 0 ? card.x - w : card.x + card.width
+            y: preview.lerp(preview.fromY, preview.imgY - preview.pad)
+            width: w
+            height: preview.lerp(preview.fromH, preview.contH)
             radius: Tokens.rounding.large
             level: 3
-            opacity: Math.min(1, preview.progress * 3)
 
-            ClipRect {
+            StyledRect {
                 anchors.fill: parent
-                radius: Tokens.rounding.large
+                color: Colours.tPalette.m3surface
+                topLeftRadius: preview.side < 0 ? Tokens.rounding.large : 0
+                bottomLeftRadius: preview.side < 0 ? Tokens.rounding.large : 0
+                topRightRadius: preview.side < 0 ? 0 : Tokens.rounding.large
+                bottomRightRadius: preview.side < 0 ? 0 : Tokens.rounding.large
+            }
+        }
 
-                StyledRect {
-                    anchors.fill: parent
-                    color: Colours.tPalette.m3surface
-                }
+        // The thumbnail itself: leaves the row and grows into the panel
+        ClipRect {
+            x: preview.lerp(preview.fromX, preview.imgX)
+            y: preview.lerp(preview.fromY, preview.imgY)
+            width: preview.lerp(preview.fromW, preview.imgW)
+            height: preview.lerp(preview.fromH, preview.imgH)
+            radius: preview.lerp(Tokens.rounding.small, Tokens.rounding.medium)
 
-                Image {
-                    anchors.fill: parent
-                    fillMode: Image.PreserveAspectCrop
-                    smooth: true
-                    mipmap: true
-                    source: big.source
-                }
+            Image {
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectCrop
+                smooth: true
+                mipmap: true
+                source: big.source
+            }
 
-                StyledRect {
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
-                    anchors.margins: Tokens.padding.small
-                    implicitWidth: dims.implicitWidth + Tokens.padding.medium * 2
-                    implicitHeight: dims.implicitHeight + Tokens.padding.extraSmall * 2
-                    radius: Tokens.rounding.full
-                    color: Qt.alpha(Colours.palette.m3surface, 0.8)
-                    opacity: Math.max(0, (preview.progress - 0.7) / 0.3)
+            StyledRect {
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                anchors.margins: Tokens.padding.small
+                implicitWidth: dims.implicitWidth + Tokens.padding.medium * 2
+                implicitHeight: dims.implicitHeight + Tokens.padding.extraSmall * 2
+                radius: Tokens.rounding.full
+                color: Qt.alpha(Colours.palette.m3surface, 0.8)
+                opacity: Math.max(0, (preview.progress - 0.7) / 0.3)
 
-                    StyledText {
-                        id: dims
+                StyledText {
+                    id: dims
 
-                        anchors.centerIn: parent
-                        text: `${big.implicitWidth} × ${big.implicitHeight}`
-                        color: Colours.palette.m3onSurface
-                        font: Tokens.font.label.small
-                    }
+                    anchors.centerIn: parent
+                    text: `${big.implicitWidth} × ${big.implicitHeight}`
+                    color: Colours.palette.m3onSurface
+                    font: Tokens.font.label.small
                 }
             }
         }
