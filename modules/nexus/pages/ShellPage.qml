@@ -171,6 +171,13 @@ PageBase {
         }
 
         ToggleRow {
+            text: Tr.tr("Window preview on hover")
+            subtext: Tr.tr("Hovering an app icon of a desktop in the bar shows a live thumbnail of its window; click it to go there")
+            checked: GlobalConfig.activities.windowPreview
+            onToggled: GlobalConfig.activities.windowPreview = checked
+        }
+
+        ToggleRow {
             text: Tr.tr("Cross-activity desktop shortcuts")
             subtext: Tr.tr("Allow next/previous desktop shortcuts to leave the current activity; when off, they stay inside it")
             checked: GlobalConfig.activities.crossActivityWorkspaces

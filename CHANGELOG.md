@@ -2,6 +2,10 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## Sin publicar
+
+- **Vista previa de ventanas:** al pasar el ratón por el icono de una app en la barra se ve una miniatura en vivo de su ventana (pulsar lleva a ella); activable en Nexus → Activities.
+
 ## 0.5.1 (2026-11-12)
 
 - **Sylphrena y sus extensiones en la lista de actualizaciones:** dos categorías más junto a pacman, AUR y Flatpak (Sylphrena, con su orbe, y Extensión). «Actualizar» las pone al día en segundo plano después del sistema, con la misma contraseña y el registro en Nexus; si se actualiza la shell, se reinicia sola. Las extensiones se actualizan igual que en Things (`ext.py update-hub`).

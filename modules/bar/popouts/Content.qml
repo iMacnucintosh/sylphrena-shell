@@ -39,6 +39,13 @@ Item {
         anchors.margins: Tokens.padding.large
 
         Popout {
+            name: "windowpreview"
+            sourceComponent: WindowPreview {
+                popouts: root.popouts
+            }
+        }
+
+        Popout {
             name: "activewindow"
             sourceComponent: ActiveWindow {
                 popouts: root.popouts

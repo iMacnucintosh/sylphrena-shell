@@ -46,6 +46,8 @@ class ActivitiesConfig : public settings::ObjectNode {
 
     CONFIG_PROPERTY(bool, enabled, true)
     CONFIG_PROPERTY(bool, showWindowIcons, true)
+    // Hovering an app icon of the bar shows a live thumbnail of its window (Nexus → Activities)
+    CONFIG_PROPERTY(bool, windowPreview, true)
     // When false (default), workspace next/prev stay inside the current activity
     CONFIG_PROPERTY(bool, crossActivityWorkspaces, false)
     CONFIG_GLOBAL_LIST(ActivityEntryList, activities,

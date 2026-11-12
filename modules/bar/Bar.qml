@@ -80,6 +80,17 @@ ColumnLayout {
             popouts.currentName = "clock";
             popouts.currentCenter = Qt.binding(() => (ch.item as Item).mapToItem(root, 0, (ch.item as Item).implicitHeight / 2).y);
             popouts.hasCurrent = true;
+        } else if (id === "workspaces" && GlobalConfig.activities.windowPreview) {
+            // An app icon of a desktop: a live thumbnail of that window
+            const icon = BarWindowIcons.at(root, width / 2, y);
+            if (icon?.toplevel?.wayland) {
+                popouts.previewToplevel = icon.toplevel;
+                popouts.currentName = "windowpreview";
+                popouts.currentCenter = Qt.binding(() => icon.mapToItem(root, 0, icon.height / 2).y);
+                popouts.hasCurrent = true;
+            } else if (popouts.currentName === "windowpreview") {
+                popouts.hasCurrent = false;
+            }
         } else if (id === "activeWindow" && Config.bar.popouts.activeWindow && Config.bar.activeWindow.showOnHover) {
             popouts.currentName = id.toLowerCase();
             popouts.currentCenter = (ch.item as Item).mapToItem(root, 0, (ch.item as Item).implicitHeight / 2).y ?? 0;
