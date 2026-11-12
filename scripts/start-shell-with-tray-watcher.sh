@@ -8,7 +8,8 @@ WATCHER="${ROOT}/scripts/status-notifier-watcher.py"
 # The compositor PATH may lack ~/.local/bin (user-local install): fall back to it explicitly
 SYLPH="${SYLPH:-$(command -v sylph || echo "$HOME/.local/bin/sylph")}"
 
-python3 "$WATCHER"
+# Without the watcher only the tray icons of some apps are lost: the shell must start anyway
+python3 "$WATCHER" || echo "status-notifier-watcher did not start; starting the shell without it" >&2
 
 # On a cold start we own the name immediately. Mid-session qs may still hold
 # it until the next `sylph shell -r`; either way the shell can start.

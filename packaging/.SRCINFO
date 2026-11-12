@@ -27,6 +27,7 @@ pkgbase = sylphrena-shell-git
 	depends = xdg-desktop-portal-hyprland
 	depends = xdg-desktop-portal-gtk
 	depends = python
+	depends = python-gobject
 	depends = networkmanager
 	depends = wireplumber
 	depends = libpulse
