@@ -65,20 +65,27 @@ class Plan(unittest.TestCase):
         laptop.backlight = True
         self.assertFalse({i.id: i for i in inst.build_plan(laptop)}["ddcutil"].on)
 
-    def test_the_login_screen_replaces_the_display_manager_and_can_be_left_out(self):
+    def test_the_login_screen_is_one_root_script_and_can_be_left_out(self):
         items = {i.id: i for i in inst.build_plan(bare())}
         login = items["login-screen"]
         self.assertTrue(login.on and login.root)
-        cmds = [s.args for s in login.steps if s.kind == "root"]
-        self.assertIn(["systemctl", "disable", "sddm.service"], cmds)
-        self.assertIn(["systemctl", "enable", "-f", "greetd.service"], cmds)
+        self.assertIn("sddm", login.why)  # it says which display manager it replaces
+        scripts = [s.args[0] for s in login.steps if s.kind == "root"]
+        self.assertTrue(any(a.endswith("install-system.sh") for a in scripts))
         self.assertNotIn("login-screen", ids(inst.build_plan(bare(), login_screen=False)))
 
-    def test_the_login_screen_does_not_disable_greetd_itself(self):
-        f = bare()
-        f.display_manager = "greetd"
-        login = {i.id: i for i in inst.build_plan(f)}["login-screen"]
-        self.assertFalse([s for s in login.steps if s.args[:2] == ["systemctl", "disable"]])
+    def test_the_login_screen_script_does_what_the_installer_relies_on(self):
+        script = (Path(__file__).resolve().parent.parent / "scripts/system/10-greeter.sh").read_text()
+        # greetd becomes the display manager (the one in use is disabled, nothing is restarted)
+        self.assertIn("systemctl enable -f greetd.service", script)
+        self.assertIn('systemctl disable "$current.service"', script)
+        self.assertNotIn("systemctl restart", script)
+        # the logind drop-ins are installed and only the legacy names are removed
+        self.assertIn("/etc/systemd/logind.conf.d/sylphrena-greeter.conf", script)
+        rm = [l for l in script.splitlines() if "rm -f" in l or l.strip().startswith("/etc/systemd") and "caelestia" in l]
+        self.assertTrue(rm and all("sylphrena-" not in l for l in rm if "rm -f" in l))
+        import subprocess
+        self.assertEqual(subprocess.run(["bash", "-n", str(Path(__file__).resolve().parent.parent / "scripts/system/10-greeter.sh")]).returncode, 0)
 
     def test_extensions_are_optional_and_off(self):
         ext = {i.id: i for i in inst.build_plan(bare())}["extensions"]

@@ -259,10 +259,8 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
     if login_screen:
         dm = f.display_manager if f.display_manager not in (None, "greetd") else None
         steps = [Step("pacman", [p for p in ("greetd", "rsync") if not f.have(p)])] if not (f.have("greetd") and f.have("rsync")) else []
+        # install-system.sh (10-greeter.sh) also makes greetd the display manager: it disables the one in use
         steps += [Step("root", [str(shell_dir / "scripts" / "install-system.sh")])]
-        if dm:
-            steps.append(Step("root", ["systemctl", "disable", f"{dm}.service"]))
-        steps.append(Step("root", ["systemctl", "enable", "-f", "greetd.service"]))
         add("login-screen", "Login screen", "Sylphrena login screen",
             f"greetd with the Material You greeter; it replaces {dm}" if dm else "greetd with the Material You greeter",
             True, todo=not f.greeter_installed, steps=steps)
