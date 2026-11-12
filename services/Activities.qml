@@ -452,9 +452,6 @@ Singleton {
             const cls = t.lastIpcObject?.class ?? "";
             if (!root.classMatches(cls, match))
                 continue;
-            // Parked by "show desktop": leave it there until the user brings it back
-            if (t.workspace?.name === "special:desktop")
-                continue;
             const follow = followNorm.length > 0 && root.normalizeAddress(t.address) === followNorm;
             root.moveWindowToWorkspace(t, ws, true, follow);
         }

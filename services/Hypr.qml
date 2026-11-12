@@ -224,34 +224,9 @@ Singleton {
         return true;
     }
 
-    // Windows hidden by "show desktop", per workspace id: { wsId: ["0xaddr", ...] }.
-    property var desktopHidden: ({})
-
-    function moveWindow(addr: string, workspace: string): void {
-        dispatch(usingLua ? `hl.dsp.window.move({ window = "address:${addr}", workspace = "${workspace}", follow = false })` : `movetoworkspacesilent ${workspace},address:${addr}`);
-    }
-
-    // Hide every window of the active workspace (parked on a special workspace that is never shown); call again to bring them back.
+    // Slide the active workspace's windows off the bottom of the screen (they stay on the workspace); again to bring them back.
     function toggleShowDesktop(): void {
-        const ws = activeWsId;
-        const hidden = desktopHidden[ws] ?? [];
-        const next = Object.assign({}, desktopHidden);
-        if (hidden.length > 0) {
-            const alive = toplevels.values.map(t => `0x${t.address}`);
-            for (const addr of hidden) {
-                if (alive.includes(addr))
-                    moveWindow(addr, String(ws));
-            }
-            delete next[ws];
-        } else {
-            const addrs = toplevels.values.filter(t => t.workspace?.id === ws).map(t => `0x${t.address}`);
-            if (addrs.length === 0)
-                return;
-            for (const addr of addrs)
-                moveWindow(addr, "special:desktop");
-            next[ws] = addrs;
-        }
-        desktopHidden = next;
+        Quickshell.execDetached(["python3", Quickshell.shellPath("scripts/show-desktop.py"), "toggle", String(activeWsId)]);
     }
 
     function toggleSpecial(name: string): void {
