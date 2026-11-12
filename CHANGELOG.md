@@ -2,6 +2,10 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 0.5.1 (2026-11-12)
+
+- **Sylphrena y sus extensiones en la lista de actualizaciones:** dos categorías más junto a pacman, AUR y Flatpak (Sylphrena, con su orbe, y Extensión). «Actualizar» las pone al día en segundo plano después del sistema, con la misma contraseña y el registro en Nexus; si se actualiza la shell, se reinicia sola. Las extensiones se actualizan igual que en Things (`ext.py update-hub`).
+
 ## 0.5.0 (2026-11-12)
 
 - **Avisos de versión nueva:** en un equipo instalado con los paquetes, la shell comprueba la última release de la shell, la CLI, Seeker y Things y avisa (con el orbe de Sylphrena) cuando hay una más nueva: el icono de actualizaciones de la barra, una franja en su popout y una tarjeta en Nexus → Actualizaciones con las notas de la release. «Actualizar» abre un terminal con el instalador en modo `--update`. De momento comprueba cada minuto (pruebas); se espaciará.

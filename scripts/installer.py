@@ -395,6 +395,10 @@ class Runner:
 
     def __init__(self, dry: bool, helper: str | None, log: Path | None, verbose: bool = False):
         self.dry, self.helper, self.log, self.verbose = dry, helper or "yay", log, verbose
+        # Run by the shell's updates (no terminal): every sudo asks the password the shell keeps in memory through
+        # SUDO_ASKPASS (scripts/run-system-update.sh). From a terminal: sudo's own prompt, once, kept alive.
+        self.askpass = bool(os.environ.get("SUDO_ASKPASS")) and not sys.stdin.isatty()
+        self.sudo = ["sudo", "-A"] if self.askpass else ["sudo"]
         self._sudo_alive = False
         self.spinner: ui.Spinner | None = None
         self.recent: deque[str] = deque(maxlen=60)
@@ -462,6 +466,8 @@ class Runner:
     def keep_sudo(self) -> bool:
         if self.dry:
             return True
+        if self.askpass:
+            return subprocess.run([*self.sudo, "-v"], stdin=subprocess.DEVNULL).returncode == 0
         if subprocess.run(["sudo", "-v"]).returncode != 0:
             return False
         self._sudo_alive = True
@@ -480,9 +486,9 @@ class Runner:
     def step(self, s: Step) -> bool:
         k, a = s.kind, s.args
         if k == "pacman":
-            return not a or self.run(["sudo", "pacman", "-S", "--needed", "--noconfirm", *a])
+            return not a or self.run([*self.sudo, "pacman", "-S", "--needed", "--noconfirm", *a])
         if k == "aur":
-            return not a or self.run([self.helper, "-S", "--needed", "--noconfirm", *a])
+            return not a or self.run([self.helper, "-S", "--needed", "--noconfirm", *(["--sudoflags=-A"] if self.askpass else []), *a])
         if k == "build":
             name, url = a[0], a[1]
             sub = a[2] if len(a) > 2 else "."
@@ -491,7 +497,7 @@ class Runner:
             conf = CACHE / "makepkg.conf"
             if not self.dry:
                 CACHE.mkdir(parents=True, exist_ok=True)
-                conf.write_text(MAKEPKG_CONF)
+                conf.write_text(MAKEPKG_CONF.replace("PACMAN_AUTH=(sudo)", "PACMAN_AUTH=(sudo -A)") if self.askpass else MAKEPKG_CONF)
                 if not self.remove_tree(work):
                     # Something in an earlier build could not be removed: build somewhere new instead of failing
                     work = CACHE / f"{name}-{int(time.time())}"
@@ -502,10 +508,10 @@ class Runner:
         if k == "user":
             return self.run(a)
         if k == "root":
-            return self.run(["sudo", *a])
+            return self.run([*self.sudo, *a])
         if k == "write-root":
             path, content = a
-            return self.run(["sudo", "tee", path], input_text=content)
+            return self.run([*self.sudo, "tee", path], input_text=content)
         raise ValueError(k)
 
 

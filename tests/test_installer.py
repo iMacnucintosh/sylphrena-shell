@@ -154,6 +154,26 @@ class Plan(unittest.TestCase):
         make = next(k for c, k in calls if c[0] == "makepkg")
         self.assertEqual(make["env"], {"SYLPHRENA_REF": "v0.1.2"})
 
+    def test_without_a_terminal_every_sudo_uses_the_shells_askpass(self):
+        import os
+        from unittest import mock
+        with mock.patch.dict(os.environ, {"SUDO_ASKPASS": "/x/askpass"}), mock.patch.object(inst.sys.stdin, "isatty", return_value=False):
+            r = inst.Runner(dry=True, helper="yay", log=None)
+        self.assertTrue(r.askpass)
+        calls = []
+        r.run = lambda cmd, **k: calls.append(cmd) or True
+        r.step(inst.Step("pacman", ["greetd"]))
+        r.step(inst.Step("aur", ["libcava"]))
+        r.step(inst.Step("root", ["/x/install-system.sh"]))
+        r.step(inst.Step("write-root", ["/etc/x.conf", "x\n"]))
+        self.assertEqual(calls[0][:2], ["sudo", "-A"])
+        self.assertIn("--sudoflags=-A", calls[1])
+        self.assertEqual(calls[2][:2], ["sudo", "-A"])
+        self.assertEqual(calls[3][:2], ["sudo", "-A"])
+        with mock.patch.dict(os.environ, {}, clear=False), mock.patch.object(inst.sys.stdin, "isatty", return_value=True):
+            os.environ.pop("SUDO_ASKPASS", None)
+            self.assertFalse(inst.Runner(dry=True, helper="yay", log=None).askpass)
+
     def test_extensions_are_not_part_of_it(self):
         # they are installed later from Things; the installer only says so at the end
         self.assertNotIn("extensions", ids(inst.build_plan(bare())))

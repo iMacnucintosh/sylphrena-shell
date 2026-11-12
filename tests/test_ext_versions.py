@@ -75,5 +75,22 @@ class Hardening(unittest.TestCase):
             self.assertEqual(ext.cmd_remove("../../etc"), 2)
 
 
+class UpdateHub(unittest.TestCase):
+    def test_it_installs_what_the_catalog_says(self):
+        import json, os, tempfile
+        from pathlib import Path
+        from unittest import mock
+        with tempfile.TemporaryDirectory() as d:
+            index = Path(d) / "index.json"
+            index.write_text(json.dumps({"items": [{"id": "games", "version": "0.1.5", "zip": "https://x/games.zip", "sha256": "a" * 64}]}))
+            calls = []
+            with mock.patch.dict(os.environ, {"SYLPHRENA_HUB_INDEX": index.as_uri()}), \
+                    mock.patch.object(ext, "cmd_install_hub", side_effect=lambda a: calls.append(a) or 0):
+                self.assertEqual(ext.cmd_update_hub("games"), 0)
+                self.assertEqual(calls[0], ["games", "--url", "https://x/games.zip", "--sha256", "a" * 64, "--version", "0.1.5"])
+                self.assertEqual(ext.cmd_update_hub("missing"), 1)
+            self.assertEqual(ext.cmd_update_hub("../x"), 2)
+
+
 if __name__ == "__main__":
     unittest.main()

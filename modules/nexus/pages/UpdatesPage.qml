@@ -99,7 +99,7 @@ PageBase {
         ConnectedRect {
             Layout.fillWidth: true
             Layout.topMargin: Tokens.spacing.small
-            visible: SylphrenaUpdates.hasUpdate
+            visible: SylphrenaUpdates.hasUpdate && !!(SylphrenaUpdates.shell ?? SylphrenaUpdates.updates[0] ?? {}).notes
             first: true
             last: true
             implicitHeight: sylCol.implicitHeight + Tokens.padding.medium * 2
@@ -119,11 +119,8 @@ PageBase {
                     Layout.fillWidth: true
                     spacing: Tokens.spacing.medium
 
-                    MaterialIcon {
-                        text: "auto_awesome"
-                        color: Colours.palette.m3primary
-                        fontStyle: Tokens.font.icon.medium
-                        fill: 1
+                    SylphOrb {
+                        orbSize: Math.round(Tokens.font.icon.medium.pointSize * 1.4)
                     }
 
                     ColumnLayout {
@@ -145,15 +142,6 @@ PageBase {
                             wrapMode: Text.WordWrap
                         }
                     }
-
-                    IconTextButton {
-                        icon: "deployed_code_update"
-                        text: Tr.tr("Update")
-                        type: IconTextButton.Filled
-                        isRound: true
-                        enabled: !SylphrenaUpdates.updating
-                        onClicked: SylphrenaUpdates.update()
-                    }
                 }
 
                 StyledText {
@@ -163,14 +151,6 @@ PageBase {
                     textFormat: Text.MarkdownText
                     color: Colours.palette.m3onSurfaceVariant
                     font: Tokens.font.body.small
-                    wrapMode: Text.WordWrap
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: Tr.tr("It opens a terminal: the new versions are built there and it asks for your password once.")
-                    color: Colours.palette.m3outline
-                    font: Tokens.font.label.small
                     wrapMode: Text.WordWrap
                 }
             }
@@ -320,7 +300,7 @@ PageBase {
         }
 
         Repeater {
-            model: Updates.packages
+            model: Updates.entries
 
             ConnectedRect {
                 id: pkgRow
@@ -332,7 +312,7 @@ PageBase {
 
                 Layout.fillWidth: true
                 first: index === 0
-                last: index === Updates.packages.length - 1
+                last: index === Updates.entries.length - 1
                 implicitHeight: pkgCol.implicitHeight + Tokens.padding.medium * 2
 
                 ColumnLayout {
@@ -353,16 +333,25 @@ PageBase {
                         MaterialIcon {
                             visible: {
                                 const s = (pkgRow.modelData.source || "").toUpperCase();
-                                return s !== "AUR";
+                                return s !== "AUR" && s !== "SYLPHRENA";
                             }
                             text: {
                                 const s = (pkgRow.modelData.source || "").toUpperCase();
                                 if (s.startsWith("FLATPAK"))
                                     return "deployed_code";
+                                if (s === "EXTENSION")
+                                    return "extension";
                                 return "settings";
                             }
                             color: Colours.palette.m3onSurfaceVariant
                             fontStyle: Tokens.font.icon.medium
+                        }
+
+                        SylphOrb {
+                            visible: pkgRow.modelData.source === "SYLPHRENA"
+                            orbSize: Math.round(Tokens.font.icon.medium.pointSize * 1.1)
+                            Layout.preferredWidth: Tokens.font.icon.medium.pointSize * 1.6
+                            Layout.preferredHeight: Tokens.font.icon.medium.pointSize * 1.6
                         }
 
                         StyledText {
@@ -386,7 +375,8 @@ PageBase {
                             StyledText {
                                 Layout.fillWidth: true
                                 text: {
-                                    const s = pkgRow.modelData.source || "";
+                                    const raw = pkgRow.modelData.source || "";
+                                    const s = raw === "SYLPHRENA" ? "Sylphrena" : raw === "EXTENSION" ? Tr.tr("Extension") : raw;
                                     const frm = pkgRow.modelData.from || "";
                                     const to = pkgRow.modelData.to || "";
                                     return `${s}  ·  ${frm} → ${to}`;
@@ -424,6 +414,7 @@ PageBase {
                             spacing: Tokens.spacing.extraSmall
 
                             IconTextButton {
+                                visible: pkgRow.modelData.source !== "EXTENSION"
                                 icon: "info"
                                 text: Tr.tr("Info")
                                 type: IconTextButton.Text
@@ -438,6 +429,8 @@ PageBase {
                             }
 
                             IconTextButton {
+                                // Sylphrena and its extensions are removed elsewhere (Things), not from here
+                                visible: pkgRow.modelData.source !== "SYLPHRENA" && pkgRow.modelData.source !== "EXTENSION"
                                 icon: "delete"
                                 text: Tr.tr("Uninstall")
                                 type: IconTextButton.Text

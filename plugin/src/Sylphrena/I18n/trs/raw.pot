@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 17:38+0100\n"
+"POT-Creation-Date: 2026-11-12 18:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -419,8 +419,7 @@ msgstr ""
 msgid "Authenticating…"
 msgstr ""
 
-#: modules/bar/popouts/UpdatesPassword.qml
-#: modules/bar/popouts/UpdatesPopout.qml modules/nexus/pages/UpdatesPage.qml
+#: modules/bar/popouts/UpdatesPassword.qml modules/nexus/pages/UpdatesPage.qml
 msgid "Update"
 msgstr ""
 
@@ -444,16 +443,6 @@ msgstr ""
 #: modules/bar/popouts/UpdatesPopout.qml
 #, qt-format
 msgid "%1 Updates"
-msgstr ""
-
-#. TRANSLATORS: %1 = version, e.g. 0.5.0
-#: modules/bar/popouts/UpdatesPopout.qml modules/nexus/pages/UpdatesPage.qml
-#, qt-format
-msgid "Sylphrena %1 is available"
-msgstr ""
-
-#: modules/bar/popouts/UpdatesPopout.qml
-msgid "The rest of the system is up to date."
 msgstr ""
 
 #: modules/bar/popouts/UpdatesPopout.qml modules/nexus/pages/UpdatesPage.qml
@@ -3740,7 +3729,8 @@ msgid "New activity"
 msgstr ""
 
 #: modules/nexus/pages/UpdatesPage.qml
-msgid "It opens a terminal: the new versions are built there and it asks for your password once."
+#, qt-format
+msgid "Sylphrena %1 is available"
 msgstr ""
 
 #: modules/nexus/pages/UpdatesPage.qml
@@ -3758,6 +3748,10 @@ msgstr ""
 
 #: modules/nexus/pages/UpdatesPage.qml
 msgid "Available"
+msgstr ""
+
+#: modules/nexus/pages/UpdatesPage.qml
+msgid "Extension"
 msgstr ""
 
 #: modules/nexus/pages/UpdatesPage.qml
@@ -5236,11 +5230,11 @@ msgid "%1 - %2"
 msgstr ""
 
 #: services/SylphrenaUpdates.qml
-msgid "Updating Sylphrena"
+msgid "New version of Sylphrena"
 msgstr ""
 
 #: services/SylphrenaUpdates.qml
-msgid "New version of Sylphrena"
+msgid "Extension updates"
 msgstr ""
 
 #: services/SylphrenaUpdates.qml
