@@ -23,7 +23,7 @@ PageBase {
         }
 
         NavRow {
-            icon: "dock_to_bottom"
+            icon: "dock_to_right"
             text: Tr.tr("Taskbar")
             subtext: Config.bar.persistent ? Tr.tr("Always visible") : Config.bar.showOnHover ? Tr.tr("Reveal on hover") : Tr.tr("Reveal on drag")
             onClicked: root.nState.openSubPage(2)
@@ -37,8 +37,8 @@ PageBase {
         }
 
         NavRow {
-            icon: "dock_to_right"
-            text: Tr.tr("Sidebar")
+            icon: "dock_to_left"
+            text: Tr.tr("Side panel")
             subtext: Config.sidebar.enabled ? Tr.trCtx("Enabled", "panel status") : Tr.trCtx("Disabled", "panel status")
             onClicked: root.nState.openSubPage(4)
         }

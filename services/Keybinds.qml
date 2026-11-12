@@ -397,8 +397,8 @@ Singleton {
         },
         {
             id: "sidebar",
-            label: () => Tr.tr("Sidebar"),
-            description: () => Tr.tr("Toggle the sidebar"),
+            label: () => Tr.tr("Side panel"),
+            description: () => Tr.tr("Toggle the side panel"),
             defaultBind: "SUPER + N",
             global: "sylphrena:sidebar",
             category: "shell"

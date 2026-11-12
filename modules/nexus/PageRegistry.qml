@@ -45,7 +45,7 @@ QtObject {
             id: "panels",
             label: Tr.tr("Panels"),
             icon: "dock_to_bottom",
-            description: Tr.tr("Dashboard, taskbar, launcher, sidebar"),
+            description: Tr.tr("Dashboard, taskbar, launcher, side panel"),
             category: "appearance"
         },
         {

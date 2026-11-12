@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 18:45+0100\n"
+"POT-Creation-Date: 2026-11-12 18:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1415,7 +1415,7 @@ msgid "Panels"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml
-msgid "Dashboard, taskbar, launcher, sidebar"
+msgid "Dashboard, taskbar, launcher, side panel"
 msgstr ""
 
 #: modules/nexus/PageRegistry.qml modules/nexus/pages/ExtensionsPage.qml
@@ -2840,11 +2840,11 @@ msgstr ""
 
 #: modules/nexus/pages/panels/SidebarPanel.qml
 #: modules/nexus/pages/PanelsPage.qml services/Keybinds.qml
-msgid "Sidebar"
+msgid "Side panel"
 msgstr ""
 
 #: modules/nexus/pages/panels/SidebarPanel.qml
-msgid "Pixels dragged before the sidebar opens"
+msgid "Pixels dragged before the side panel opens"
 msgstr ""
 
 #: modules/nexus/pages/panels/taskbar/BarActiveWindow.qml
@@ -4860,7 +4860,7 @@ msgid "Power / session menu"
 msgstr ""
 
 #: services/Keybinds.qml
-msgid "Toggle the sidebar"
+msgid "Toggle the side panel"
 msgstr ""
 
 #: services/Keybinds.qml

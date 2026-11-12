@@ -9,7 +9,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: Tr.tr("Sidebar")
+    title: Tr.tr("Side panel")
     isSubPage: true
 
     ColumnLayout {
@@ -40,7 +40,7 @@ PageBase {
         StepperRow {
             last: true
             label: Tr.tr("Drag threshold")
-            subtext: Tr.tr("Pixels dragged before the sidebar opens")
+            subtext: Tr.tr("Pixels dragged before the side panel opens")
             value: Config.sidebar.dragThreshold
             from: 0
             to: 200
