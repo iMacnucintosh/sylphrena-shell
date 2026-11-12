@@ -64,6 +64,68 @@ ColumnLayout {
         opacity: 0.5
     }
 
+    // A new release of Sylphrena (installed with its packages): updated apart from the system
+    StyledRect {
+        Layout.fillWidth: true
+        Layout.rightMargin: Tokens.padding.extraSmall
+        Layout.topMargin: Tokens.spacing.small
+        visible: SylphrenaUpdates.hasUpdate
+        implicitHeight: sylRow.implicitHeight + Tokens.padding.small * 2
+        radius: Tokens.rounding.large
+        color: Colours.palette.m3secondaryContainer
+
+        RowLayout {
+            id: sylRow
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: Tokens.padding.medium
+            anchors.rightMargin: Tokens.padding.small
+            spacing: Tokens.spacing.small
+
+            MaterialIcon {
+                text: "auto_awesome"
+                color: Colours.palette.m3onSecondaryContainer
+                fontStyle: Tokens.font.icon.small
+            }
+
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 0
+
+                StyledText {
+                    Layout.fillWidth: true
+                    // TRANSLATORS: %1 = version, e.g. 0.5.0
+                    text: Tr.tr("Sylphrena %1 is available").arg(SylphrenaUpdates.version)
+                    color: Colours.palette.m3onSecondaryContainer
+                    font: Tokens.font.body.small
+                    elide: Text.ElideRight
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: SylphrenaUpdates.updates.map(u => `${u.name} ${u.installed} → ${u.latest}`).join(" · ")
+                    color: Colours.palette.m3onSecondaryContainer
+                    opacity: 0.8
+                    font: Tokens.font.label.small
+                    elide: Text.ElideRight
+                }
+            }
+
+            IconTextButton {
+                icon: "deployed_code_update"
+                text: Tr.tr("Update")
+                type: IconTextButton.Filled
+                enabled: !SylphrenaUpdates.updating
+                onClicked: {
+                    root.popouts.hasCurrent = false;
+                    SylphrenaUpdates.update();
+                }
+            }
+        }
+    }
+
     Item {
         Layout.fillWidth: true
         Layout.preferredHeight: root.bodyHeight
@@ -155,7 +217,7 @@ ColumnLayout {
             anchors.verticalCenter: parent.verticalCenter
             visible: !Updates.busy && !Updates.hasUpdates
             horizontalAlignment: Text.AlignHCenter
-            text: Tr.tr("No updates available.")
+            text: SylphrenaUpdates.hasUpdate ? Tr.tr("The rest of the system is up to date.") : Tr.tr("No updates available.")
             color: Colours.palette.m3outline
             font: Tokens.font.body.small
         }

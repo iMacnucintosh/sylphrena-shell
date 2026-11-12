@@ -44,7 +44,7 @@ StyledRect {
             return !Hypr.capsLock && !Hypr.numLock;
         // Hide updates badge when there is nothing to install (keep visible while installing)
         if (entry.id === "updates")
-            return root.Config.bar.status.onlyShowUpdatesWithUpdates && !Updates.hasUpdates && !Updates.busy && !Updates.installing;
+            return root.Config.bar.status.onlyShowUpdatesWithUpdates && !Updates.anyUpdates && !Updates.busy && !Updates.installing;
         // Not a built-in icon: it comes from an extension, and is absent while that is disabled
         if (!builtinIds.includes(entry.id))
             return !Extensions.statusIcons.some(i => i.id === entry.id);

@@ -209,15 +209,25 @@ def aur_knows(pkgs: list[str]) -> set[str]:
         return set()
 
 
-def latest_release(repo: str) -> str | None:
-    """The tag of the latest release of one of our repositories (what the installer and the updates install)."""
-    req = urllib.request.Request(f"https://api.github.com/repos/iMacnucintosh/{repo}/releases/latest",
-                                 headers={"Accept": "application/vnd.github+json", "User-Agent": "sylphrena-installer"})
-    try:
-        with urllib.request.urlopen(req, timeout=8) as r:
-            return json.load(r).get("tag_name") or None
-    except (OSError, ValueError, urllib.error.URLError):
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):
         return None
+
+
+def latest_release(repo: str) -> str | None:
+    """The tag of the latest release of one of our repositories (what the installer and the updates install).
+    github.com/<repo>/releases/latest redirects to …/releases/tag/<tag>: the web page, unlike the API, is not limited
+    to 60 requests an hour without an account (the shell asks every few minutes)."""
+    req = urllib.request.Request(f"https://github.com/iMacnucintosh/{repo}/releases/latest", method="HEAD",
+                                 headers={"User-Agent": "sylphrena-installer"})
+    try:
+        urllib.request.build_opener(_NoRedirect).open(req, timeout=8)
+    except urllib.error.HTTPError as e:
+        location = e.headers.get("Location", "") if e.code in (301, 302, 303, 307, 308) else ""
+        return location.rsplit("/tag/", 1)[1] if "/tag/" in location else None
+    except (OSError, urllib.error.URLError):
+        return None
+    return None
 
 
 def installed_version(pkg: str) -> str | None:
