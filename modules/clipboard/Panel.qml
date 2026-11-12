@@ -573,26 +573,6 @@ StyledWindow {
                 mipmap: true
                 source: big.source
             }
-
-            StyledRect {
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.margins: Tokens.padding.small
-                implicitWidth: dims.implicitWidth + Tokens.padding.medium * 2
-                implicitHeight: dims.implicitHeight + Tokens.padding.extraSmall * 2
-                radius: Tokens.rounding.full
-                color: Qt.alpha(Colours.palette.m3surface, 0.8)
-                opacity: Math.max(0, (preview.progress - 0.7) / 0.3)
-
-                StyledText {
-                    id: dims
-
-                    anchors.centerIn: parent
-                    text: `${big.implicitWidth} × ${big.implicitHeight}`
-                    color: Colours.palette.m3onSurface
-                    font: Tokens.font.label.small
-                }
-            }
         }
     }
 }

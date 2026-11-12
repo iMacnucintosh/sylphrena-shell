@@ -310,7 +310,7 @@ Ya presentes en este fork respecto a un Sylphrena “vanilla” típico:
 
 Popout flotante junto al cursor (estilo Sylphrena), respaldado por **cliphist** + `wl-clipboard`:
 
-- **Vista previa de imágenes:** al quedarte ~300 ms sobre una entrada de imagen (o al seleccionarla con las flechas) su miniatura sale de la fila hacia un panel que brota del borde de la tarjeta —a la izquierda, salvo que no quepa— como los drawers de la shell (una sola forma con esquinas cóncavas donde se unen) y crece desde la propia fila y la convierte en la imagen grande (hasta 480×360, sin ampliar de más) con sus dimensiones; no captura el ratón.
+- **Vista previa de imágenes:** al quedarte ~300 ms sobre una entrada de imagen (o al seleccionarla con las flechas) su miniatura sale de la fila hacia un panel que brota del borde de la tarjeta —a la izquierda, salvo que no quepa— como los drawers de la shell (una sola forma con esquinas cóncavas donde se unen) y crece desde la propia fila y la convierte en la imagen grande (hasta 480×360, sin ampliar de más); no captura el ratón.
 - Atajo por defecto: **Super + Shift + V** (Super+V sigue siendo float de ventana; remapeable en Nexus).
 - Buscar, favoritos persistentes (estrella a la derecha; vacía solo al hover), borrar entradas o limpiar historial.
 - Al elegir un ítem: se copia y se pega con **Ctrl+V** en la ventana que tenía el foco (`wtype`).
