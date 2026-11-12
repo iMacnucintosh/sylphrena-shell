@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 14:41+0100\n"
+"POT-Creation-Date: 2026-11-12 17:21+0100\n"
 "PO-Revision-Date: 2026-10-26 14:55+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -301,6 +301,7 @@ msgid "No active timers"
 msgstr "Sin temporizadores activos"
 
 #: modules/bar/popouts/kblayout/KbLayout.qml
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
 msgid "Keyboard layouts"
 msgstr "Distribuciones de teclado"
 
@@ -2053,6 +2054,38 @@ msgstr "«%1» ya lo usa «%2». ¿Quieres reasignarlo?"
 msgid "Replace"
 msgstr "Reemplazar"
 
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "The first one is used when the session starts; switch from the bar or with the shortcut below"
+msgstr "La primera es la que se usa al entrar; cambia de una a otra desde la barra o con el atajo de abajo"
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "The ones of the system. Changing anything here makes Sylphrena keep them"
+msgstr "Las del sistema. Si cambias algo aquí, Sylphrena pasa a guardarlas"
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Default"
+msgstr "Principal"
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Add a layout: search by language or code"
+msgstr "Añade una distribución: busca por idioma o código"
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Up to four layouts at a time"
+msgstr "Hasta cuatro distribuciones a la vez"
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "No layouts found"
+msgstr "No se ha encontrado ninguna distribución"
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Switch layout"
+msgstr "Cambiar de distribución"
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Keys that change to the next layout"
+msgstr "Teclas que pasan a la siguiente distribución"
+
 #: modules/nexus/pages/LanguageAndRegion.qml
 msgid "Auto"
 msgstr "Automático"
@@ -2096,6 +2129,10 @@ msgstr "Idioma de la interfaz"
 #: modules/nexus/pages/LanguageAndRegion.qml
 msgid "The language used in the shell UI"
 msgstr "El idioma usado en la interfaz del shell"
+
+#: modules/nexus/pages/LanguageAndRegion.qml
+msgid "Keyboard"
+msgstr "Teclado"
 
 #: modules/nexus/pages/LanguageAndRegion.qml
 msgid "Detecting location…"
@@ -4565,6 +4602,26 @@ msgstr "Al hacer clic"
 #: services/Hypr.qml
 msgid "On hover"
 msgstr "Al pasar por encima"
+
+#: services/Hypr.qml
+msgid "Alt+Shift"
+msgstr "Alt+Mayús"
+
+#: services/Hypr.qml
+msgid "Ctrl+Shift"
+msgstr "Ctrl+Mayús"
+
+#: services/Hypr.qml
+msgid "Caps Lock"
+msgstr "Bloq Mayús"
+
+#: services/Hypr.qml
+msgid "Super+Space"
+msgstr "Super+Espacio"
+
+#: services/Hypr.qml
+msgid "No shortcut (only from the bar)"
+msgstr "Sin atajo (solo desde la barra)"
 
 #: services/Hypr.qml
 msgid "Slow"

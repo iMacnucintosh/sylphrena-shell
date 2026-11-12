@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 14:41+0100\n"
+"POT-Creation-Date: 2026-11-12 17:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -302,6 +302,7 @@ msgid "No active timers"
 msgstr ""
 
 #: modules/bar/popouts/kblayout/KbLayout.qml
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
 msgid "Keyboard layouts"
 msgstr ""
 
@@ -2052,6 +2053,38 @@ msgstr ""
 msgid "Replace"
 msgstr ""
 
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "The first one is used when the session starts; switch from the bar or with the shortcut below"
+msgstr ""
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "The ones of the system. Changing anything here makes Sylphrena keep them"
+msgstr ""
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Default"
+msgstr ""
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Add a layout: search by language or code"
+msgstr ""
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Up to four layouts at a time"
+msgstr ""
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "No layouts found"
+msgstr ""
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Switch layout"
+msgstr ""
+
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Keys that change to the next layout"
+msgstr ""
+
 #: modules/nexus/pages/LanguageAndRegion.qml
 msgid "Auto"
 msgstr ""
@@ -2094,6 +2127,10 @@ msgstr ""
 
 #: modules/nexus/pages/LanguageAndRegion.qml
 msgid "The language used in the shell UI"
+msgstr ""
+
+#: modules/nexus/pages/LanguageAndRegion.qml
+msgid "Keyboard"
 msgstr ""
 
 #: modules/nexus/pages/LanguageAndRegion.qml
@@ -4563,6 +4600,26 @@ msgstr ""
 
 #: services/Hypr.qml
 msgid "On hover"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "Alt+Shift"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "Ctrl+Shift"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "Caps Lock"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "Super+Space"
+msgstr ""
+
+#: services/Hypr.qml
+msgid "No shortcut (only from the bar)"
 msgstr ""
 
 #: services/Hypr.qml
