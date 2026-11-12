@@ -15,8 +15,13 @@ hl.env("XDG_STATE_HOME", "/var/lib/regreet/state")
 hl.env("QT_QPA_PLATFORM", "wayland")
 hl.env("QT_QPA_PLATFORMTHEME", "")
 hl.env("GDK_DEBUG", "no-portals")
--- Match the session keyboard (passwd greeter has no ~/.config/hypr).
-hl.env("XKB_DEFAULT_LAYOUT", "es")
+-- Match the system keyboard (the greeter user has no ~/.config/hypr): start-greeter-compositor.sh reads it from
+-- the system (localectl / vconsole.conf) into XKB_DEFAULT_LAYOUT; "us" if it could not.
+local layout = os.getenv("XKB_DEFAULT_LAYOUT")
+if layout == nil or layout == "" then
+  layout = "us"
+end
+hl.env("XKB_DEFAULT_LAYOUT", layout)
 hl.env("XKB_DEFAULT_VARIANT", "")
 
 hl.on("hyprland.start", function()
@@ -25,7 +30,7 @@ end)
 
 hl.config({
   input = {
-    kb_layout = "es",
+    kb_layout = layout,
     kb_variant = "",
     kb_options = "",
   },
