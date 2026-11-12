@@ -4,7 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## Sin publicar
 
-- **Vista previa de ventanas:** al pasar el ratón por el icono de una app en la barra se ve una miniatura en vivo de su ventana (pulsar lleva a ella); activable en Nexus → Activities.
+- **Vista previa de ventanas:** al pasar el ratón por el icono de una app en la barra se ve una miniatura en vivo de su ventana (pulsar lleva a ella); activable en Nexus → Paneles → Barra de tareas → Escritorios.
 
 ## 0.5.1 (2026-11-12)
 
