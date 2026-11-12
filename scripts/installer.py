@@ -46,6 +46,14 @@ RECOMMENDED_EXTENSIONS = ["tasks", "hydration"]
 STATE = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "sylphrena"
 CACHE = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "sylphrena-install"
 
+# makepkg installs with "sudo -k", which throws away the password the installer already checked, so sudo
+# asks again where nobody sees it and gives up after five minutes. This configuration keeps everything
+# from the system's makepkg.conf and only makes it use plain sudo (the cached password, kept alive).
+MAKEPKG_CONF = """source /etc/makepkg.conf
+for _conf in /etc/makepkg.conf.d/*.conf; do [[ -f $_conf ]] && source "$_conf"; done
+PACMAN_AUTH=(sudo)
+"""
+
 ES = {
     "Sylphrena installer": "Instalador de Sylphrena",
     "This computer": "Este equipo",
@@ -361,11 +369,13 @@ class Runner:
             name, url = a[0], a[1]
             sub = a[2] if len(a) > 2 else "."
             work = CACHE / name
+            conf = CACHE / "makepkg.conf"
             if not self.dry:
                 shutil.rmtree(work, ignore_errors=True)
                 CACHE.mkdir(parents=True, exist_ok=True)
+                conf.write_text(MAKEPKG_CONF)
             return self.run(["git", "clone", "--depth", "1", url, str(work)]) and \
-                self.run(["makepkg", "-si", "--noconfirm", "--needed"], cwd=(work / sub))
+                self.run(["makepkg", "--config", str(conf), "-si", "--noconfirm", "--needed"], cwd=(work / sub))
         if k == "user":
             return self.run(a)
         if k == "root":

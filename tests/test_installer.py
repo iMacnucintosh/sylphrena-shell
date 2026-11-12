@@ -117,6 +117,25 @@ class Run(unittest.TestCase):
         self.assertTrue(any(c.startswith("sudo pacman -S --needed --noconfirm") for c in flat))
         self.assertTrue(any(c.startswith("yay -S") for c in flat))
 
+    def test_makepkg_uses_the_cached_sudo(self):
+        # makepkg's own default is "sudo -k", which asks for the password again, unseen, and times out
+        r = inst.Runner(dry=True, helper=None, log=None)
+        calls = []
+        r.run = lambda cmd, **k: calls.append(cmd) or True
+        r.step(inst.Step("build", ["yay-bin", "https://aur.archlinux.org/yay-bin.git"]))
+        build = next(c for c in calls if c[0] == "makepkg")
+        self.assertEqual(build[1], "--config")
+        self.assertIn("PACMAN_AUTH=(sudo)", inst.MAKEPKG_CONF)
+        self.assertIn("source /etc/makepkg.conf", inst.MAKEPKG_CONF)
+
+    def test_the_makepkg_configuration_is_valid_bash(self):
+        import subprocess, tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".conf") as f:
+            f.write(inst.MAKEPKG_CONF + 'printf "%s" "${PACMAN_AUTH[*]}"\n')
+            f.flush()
+            out = subprocess.run(["bash", f.name], capture_output=True, text=True)
+        self.assertEqual(out.stdout, "sudo")
+
     def test_a_required_failure_stops_the_rest(self):
         r = inst.Runner(dry=True, helper="yay", log=None)
         r.run = lambda cmd, **k: False
