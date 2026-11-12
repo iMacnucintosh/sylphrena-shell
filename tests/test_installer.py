@@ -121,6 +121,38 @@ class Plan(unittest.TestCase):
         self.assertTrue(zen.todo)
         self.assertFalse(zen.on)
 
+    def test_versions_compare_with_the_release(self):
+        self.assertTrue(inst.behind("0.4.0.r12.gabcdef-1", "v0.5.0"))
+        self.assertFalse(inst.behind("0.5.0.r0.gabcdef-1", "v0.5.0"))
+        self.assertFalse(inst.behind("0.5.0.r7.gabcdef-1", "v0.5.0"))     # built from main after the release
+        self.assertFalse(inst.behind(None, "v0.5.0"))
+        self.assertFalse(inst.behind("0.4.0.r1.g1-1", None))               # no release known: nothing to say
+        self.assertTrue(inst.behind("0.9.0.r0.g1-1", "v0.10.0"))           # numbers, not text
+
+    def test_packages_are_built_from_their_release_and_updated_when_behind(self):
+        f = bare()
+        f.releases = {"sylphrena-shell": "v0.5.0", "seeker": "v0.1.2"}
+        f.installed |= {"seeker-git"}
+        f.versions = {"seeker-git": "0.1.1.r3.gabc-1"}
+        items = {i.id: i for i in inst.build_plan(f)}
+        self.assertEqual(items["sylphrena-shell-git"].steps[0].args[3], "v0.5.0")
+        seeker = items["seeker-git"]
+        self.assertTrue(seeker.todo)
+        self.assertEqual(seeker.why_args, ("0.1.1", "0.1.2"))
+        f.versions = {"seeker-git": "0.1.2.r0.gabc-1"}
+        self.assertFalse({i.id: i for i in inst.build_plan(f)}["seeker-git"].todo)
+
+    def test_a_release_build_clones_that_tag_and_tells_the_pkgbuild(self):
+        r = inst.Runner(dry=True, helper=None, log=None)
+        calls = []
+        r.run = lambda cmd, **k: calls.append((cmd, k)) or True
+        r.step(inst.Step("build", ["seeker-git", "https://github.com/iMacnucintosh/seeker", "packaging", "v0.1.2"]))
+        clone = next(c for c, _ in calls if c[0] == "git")
+        self.assertIn("--branch", clone)
+        self.assertEqual(clone[clone.index("--branch") + 1], "v0.1.2")
+        make = next(k for c, k in calls if c[0] == "makepkg")
+        self.assertEqual(make["env"], {"SYLPHRENA_REF": "v0.1.2"})
+
     def test_extensions_are_not_part_of_it(self):
         # they are installed later from Things; the installer only says so at the end
         self.assertNotIn("extensions", ids(inst.build_plan(bare())))

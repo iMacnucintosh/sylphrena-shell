@@ -12,6 +12,9 @@ It looks at the system, shows what is missing and why, asks, and does it with a 
 Nothing is changed before you confirm. It can be run again: it only does what is still missing.
 Extensions are not part of it: they are installed later from Things.
 
+Packages are built from the latest release of each repository; --main builds the latest commit instead.
+--update only brings the installed packages and their setup up to date (what the shell runs when it offers a new version).
+
 Options:  --yes (accept the defaults)   --dry-run (show the commands, run nothing)   --list (what it found, JSON)
           --only ID[,ID]   --skip ID[,ID]   --no-login-screen   --demo (preview on a bare system)   --verbose (show the output of every command)   --help
 Log: ~/.local/state/sylphrena/install.log
@@ -20,6 +23,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -119,6 +123,8 @@ ES = {
     "a Firefox-based web browser that suits Sylphrena": "un navegador web basado en Firefox que encaja con Sylphrena",
     "a Firefox-based web browser that suits Sylphrena; not selected because you already have a browser":
         "un navegador web basado en Firefox que encaja con Sylphrena; no viene marcado porque ya tienes un navegador",
+    "a new version: %s → %s": "una versión nueva: %s → %s",
+    "Sylphrena is up to date.": "Sylphrena está al día.",
     "Clock font (Rubik)": "Fuente del reloj (Rubik)", "the font of the clock and the workspaces": "la fuente del reloj y de los escritorios",
     "Screen recorder": "Grabador de pantalla", "so that sylph record works": "para que funcione sylph record",
     "External monitor brightness (ddcutil)": "Brillo del monitor externo (ddcutil)", "this computer has no built-in screen, so its monitor is controlled over DDC/CI": "este equipo no tiene pantalla integrada, así que su monitor se controla por DDC/CI",
@@ -180,6 +186,8 @@ class Facts:
     hyprland_needed: bool = True                            # setup-hyprland.py --check says it would change something
     first_run_needed: bool = True                           # same for the first-run settings and kitty
     greeter_installed: bool = False
+    versions: dict[str, str] = field(default_factory=dict)  # our packages that are installed → their version
+    releases: dict[str, str] = field(default_factory=dict)  # our repositories → the tag of their latest release
     browser: str | None = None                              # a web browser that is already there (then Zen is not preselected)
 
     def have(self, pkg: str) -> bool:
@@ -201,6 +209,34 @@ def aur_knows(pkgs: list[str]) -> set[str]:
         return set()
 
 
+def latest_release(repo: str) -> str | None:
+    """The tag of the latest release of one of our repositories (what the installer and the updates install)."""
+    req = urllib.request.Request(f"https://api.github.com/repos/iMacnucintosh/{repo}/releases/latest",
+                                 headers={"Accept": "application/vnd.github+json", "User-Agent": "sylphrena-installer"})
+    try:
+        with urllib.request.urlopen(req, timeout=8) as r:
+            return json.load(r).get("tag_name") or None
+    except (OSError, ValueError, urllib.error.URLError):
+        return None
+
+
+def installed_version(pkg: str) -> str | None:
+    code, out = sh(["pacman", "-Q", pkg])
+    return out.split()[1] if code == 0 and len(out.split()) > 1 else None
+
+
+def version_tuple(version: str | None) -> tuple[int, int, int] | None:
+    """0.4.0.r12.gabc-1 (a -git package) or v0.5.0 (a tag) → (0, 4, 0)."""
+    m = re.match(r"v?(\d+)\.(\d+)\.(\d+)", version or "")
+    return tuple(int(x) for x in m.groups()) if m else None
+
+
+def behind(installed: str | None, tag: str | None) -> bool:
+    """True when the release is newer than what is installed (a build from main after that release is not behind)."""
+    have, latest = version_tuple(installed), version_tuple(tag)
+    return bool(have and latest and have < latest)
+
+
 def check_status(script: str) -> str:
     """What a setup script (--check: it changes nothing) says it would do: needed | already | seen | kept | ..."""
     path = installed_shell_dir() / "scripts" / script
@@ -211,7 +247,7 @@ def check_status(script: str) -> str:
         return "needed" if code else "unknown"
 
 
-def scan() -> Facts:
+def scan(from_main: bool = False) -> Facts:
     f = Facts()
     f.arch = Path("/etc/arch-release").exists() or shutil.which("pacman") is not None
     f.is_root = os.geteuid() == 0
@@ -231,6 +267,9 @@ def scan() -> Facts:
     f.first_run_needed = any(check_status(n) == "needed" for n in ("setup-defaults.py", "setup-kitty.py"))
     f.greeter_installed = Path("/etc/greetd/sylphrena").is_dir() and f.display_manager == "greetd"
     f.browser = next((b for b in BROWSERS if shutil.which(b)), None)
+    f.versions = {p: v for p, _ in PACKAGES if (v := installed_version(p))}
+    # Friends get what has been released, not every commit (--main builds the latest commit instead)
+    f.releases = {} if from_main else {repo: tag for _, repo in PACKAGES if (tag := latest_release(repo))}
     return f
 
 
@@ -254,6 +293,7 @@ class Item:
     required: bool = False
     steps: list[Step] = field(default_factory=list)
     on: bool = True
+    why_args: tuple = ()
 
 
 def installed_shell_dir() -> Path:
@@ -293,8 +333,12 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
               "sylphrena-shell-git": ("Sylphrena shell", "the shell itself, with its icons, GTK theme, fonts and tools")}
     for pkg, repo in PACKAGES:
         title, why = labels[pkg]
-        step = Step("aur", [pkg]) if pkg in f.in_aur else Step("build", [pkg, f"{GITHUB}/{repo}", "packaging"])
-        add(pkg, "Required", title, why, True, todo=not f.have(pkg), required=True, steps=[step])
+        tag = f.releases.get(repo, "")
+        step = Step("aur", [pkg]) if pkg in f.in_aur else Step("build", [pkg, f"{GITHUB}/{repo}", "packaging", tag])
+        it = add(pkg, "Required", title, why, True, todo=not f.have(pkg) or behind(f.versions.get(pkg), tag), required=True,
+                 steps=[step])
+        if f.have(pkg) and it.todo:
+            it.why, it.why_args = "a new version: %s → %s", (f.versions[pkg].split(".r")[0].split("-")[0], tag.lstrip("v"))
     add("rubik", "Recommended", "Clock font (Rubik)", "the font of the clock and the workspaces", True, todo=not f.have("ttf-rubik-vf"),
         steps=[Step("aur", ["ttf-rubik-vf"])])
     add("recorder", "Recommended", "Screen recorder", "so that sylph record works", True, todo=not f.have("gpu-screen-recorder"),
@@ -352,7 +396,7 @@ class Runner:
         print(text, flush=True)
         self._to_log(text)
 
-    def run(self, cmd: list[str], cwd: Path | None = None, input_text: str | None = None) -> bool:
+    def run(self, cmd: list[str], cwd: Path | None = None, input_text: str | None = None, env: dict | None = None) -> bool:
         line = "$ " + " ".join(cmd)
         self._to_log(line)
         if self.dry:
@@ -361,7 +405,8 @@ class Runner:
         if self.spinner:
             self.spinner.detail = line
         try:
-            p = subprocess.Popen(cmd, cwd=cwd, stdin=subprocess.PIPE if input_text is not None else subprocess.DEVNULL,
+            p = subprocess.Popen(cmd, cwd=cwd, env={**os.environ, **env} if env else None,
+                                 stdin=subprocess.PIPE if input_text is not None else subprocess.DEVNULL,
                                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         except OSError as e:
             self._to_log(str(e))
@@ -429,6 +474,7 @@ class Runner:
         if k == "build":
             name, url = a[0], a[1]
             sub = a[2] if len(a) > 2 else "."
+            ref = a[3] if len(a) > 3 else ""             # a release tag: its PKGBUILD, and its code (SYLPHRENA_REF)
             work = CACHE / name
             conf = CACHE / "makepkg.conf"
             if not self.dry:
@@ -437,8 +483,10 @@ class Runner:
                 if not self.remove_tree(work):
                     # Something in an earlier build could not be removed: build somewhere new instead of failing
                     work = CACHE / f"{name}-{int(time.time())}"
-            return self.run(["git", "clone", "--depth", "1", url, str(work)]) and \
-                self.run(["makepkg", "--config", str(conf), "-si", "--noconfirm", "--needed"], cwd=(work / sub))
+            clone = ["git", "clone", "--depth", "1", *(["--branch", ref] if ref else []), url, str(work)]
+            return self.run(clone) and \
+                self.run(["makepkg", "--config", str(conf), "-si", "--noconfirm", "--needed"], cwd=(work / sub),
+                         env={"SYLPHRENA_REF": ref} if ref else None)
         if k == "user":
             return self.run(a)
         if k == "root":
@@ -502,6 +550,8 @@ def describe(it: Item, f: Facts) -> str:
     if not it.todo:
         return tr("Already done")
     why = tr(it.why)
+    if it.why_args:
+        return why % it.why_args
     return why % (f.display_manager or "") if "%s" in why else why
 
 
@@ -561,7 +611,8 @@ def conversation(items: list[Item], f: Facts, yes: bool) -> bool:
 
 
 def parse(argv: list[str]) -> dict:
-    opts = {"demo": False, "yes": False, "dry": False, "list": False, "only": None, "skip": set(), "login": True, "verbose": False}
+    opts = {"demo": False, "yes": False, "dry": False, "list": False, "only": None, "skip": set(), "login": True, "verbose": False,
+            "main": False, "update": False}
     it = iter(argv)
     for a in it:
         if a in ("--yes", "-y"):
@@ -575,6 +626,10 @@ def parse(argv: list[str]) -> dict:
             opts["dry"] = True
         elif a == "--verbose":
             opts["verbose"] = True
+        elif a == "--main":
+            opts["main"] = True
+        elif a == "--update":
+            opts["update"] = True
         elif a == "--no-login-screen":
             opts["login"] = False
         elif a == "--only":
@@ -621,7 +676,7 @@ def finish(results: list[tuple[Item, str, int]], dry: bool, log: Path) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     opts = parse(sys.argv[1:] if argv is None else argv)
-    f = scan()
+    f = scan(from_main=opts["main"])
     if opts["demo"]:
         # What a bare Arch looks like (nothing of ours, no AUR helper, a desktop, another display manager); changes nothing
         f = Facts(arch=True, helper=None, installed={"git"}, in_aur=set(AUR_DEPS) | {"ttf-rubik-vf"}, backlight=False,
@@ -633,6 +688,14 @@ def main(argv: list[str] | None = None) -> int:
         print(tr("This installer is for Arch Linux and its derivatives."), file=sys.stderr)
         return 1
     items = build_plan(f, login_screen=opts["login"])
+    if opts["update"]:
+        # Updating Sylphrena: new versions of its packages and whatever its setup needs now; nothing new is offered
+        for it in items:
+            if it.group == "Recommended":
+                it.on = False
+        if not any(i.todo and i.on for i in items):
+            print("\n  " + tr("Sylphrena is up to date.") + "\n")
+            return 0
     for it in items:
         if opts["only"] is not None and it.id not in opts["only"] and not it.required:
             it.on = False
