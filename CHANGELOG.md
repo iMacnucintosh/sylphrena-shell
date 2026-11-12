@@ -4,6 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## Sin publicar
 
+- **Notificaciones sin texto:** en el panel lateral ya no muestran «No body here! :/».
 - **Notificaciones que se abren desplegadas:** entran ya desplegadas; antes se desplegaban mientras entraban y el título se cruzaba con el nombre de la app y la hora.
 - **Aviso de extensiones actualizables:** título «Actualizaciones de extensiones», que cabe (el anterior se cortaba).
 - **Actualizar una extensión recién publicada:** `ext.py update-hub` lee el catálogo por la API de GitHub, porque la caché del fichero tardaba minutos en dar la versión nueva y volvía a instalar la vieja; la comprobación de cada minuto pide el catálogo sin caché.
