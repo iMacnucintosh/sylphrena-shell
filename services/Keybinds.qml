@@ -509,7 +509,7 @@ Singleton {
             id: "screenshot",
             label: () => Tr.tr("Screenshot region"),
             description: () => Tr.tr("Capture a screen region"),
-            defaultBind: "Print",
+            defaultBind: "ALT + Sys_Req",
             global: "sylphrena:screenshot",
             category: "capture"
         },
@@ -533,7 +533,7 @@ Singleton {
             id: "screenshotFreezeClip",
             label: () => Tr.tr("Screenshot freeze + clipboard"),
             description: () => Tr.tr("Frozen region capture to the clipboard"),
-            defaultBind: "SUPER + SHIFT + Print",
+            defaultBind: "Print",
             global: "sylphrena:screenshotFreezeClip",
             category: "capture"
         },

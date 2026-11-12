@@ -122,7 +122,6 @@ class GeneralConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(QString, activityAnimation, u"fade"_s)
     CONFIG_PROPERTY(QString, activityAnimationSpeed, u"normal"_s)
     CONFIG_PROPERTY(qreal, mediaGifSpeedAdjustment, 300)
-    CONFIG_PROPERTY(qreal, sessionGifSpeed, 0.7)
     CONFIG_GLOBAL_SUBOBJECT(GeneralApps, apps)
     CONFIG_GLOBAL_SUBOBJECT(GeneralIdle, idle)
     CONFIG_GLOBAL_SUBOBJECT(GeneralBattery, battery)

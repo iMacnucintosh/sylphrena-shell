@@ -49,19 +49,18 @@ Column {
         KeyNavigation.down: suspendBtn
     }
 
-    Loader {
-        active: Config.paths.sessionGif.trim() !== ""
+    // The animated Sylphrena orb between the buttons; only while the menu is open (it never stops animating)
+    Item {
+        implicitWidth: Tokens.sizes.session.button
+        implicitHeight: Tokens.sizes.session.button
 
-        sourceComponent: AnimatedImage {
-            width: Tokens.sizes.session.button
-            height: Tokens.sizes.session.button
-            sourceSize.width: width * ((QsWindow.window as QsWindow)?.devicePixelRatio ?? 1)
+        Loader {
+            anchors.centerIn: parent
+            active: root.screenState.session
 
-            playing: visible
-            asynchronous: true
-            speed: Config.general.sessionGifSpeed
-            source: Paths.absolutePath(Config.paths.sessionGif)
-            fillMode: AnimatedImage.PreserveAspectFit
+            sourceComponent: SylphOrb {
+                orbSize: Math.round(Tokens.sizes.session.button / 1.55)
+            }
         }
     }
 
