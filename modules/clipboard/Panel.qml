@@ -1,10 +1,12 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import Sylphrena.Blobs
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
@@ -103,7 +105,56 @@ StyledWindow {
         }
     }
 
-    Elevation {
+    // Card and image preview are drawn as one shape, like the shell's drawers: the preview grows out of
+    // the card's edge with smooth concave corners where they meet.
+    Item {
+        id: blobLayer
+
+        anchors.fill: parent
+        opacity: Colours.tPalette.m3surface.a
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            shadowEnabled: true
+            blurMax: 15
+            shadowColor: Qt.alpha(Colours.palette.m3shadow, 0.7)
+        }
+
+        BlobGroup {
+            id: blobs
+
+            color: Qt.alpha(Colours.tPalette.m3surface, 1)
+            smoothing: blobLayer.Tokens.rounding.large
+        }
+
+        BlobRect {
+            group: blobs
+            x: card.x
+            y: card.y
+            width: card.width
+            height: card.height
+            radius: card.radius
+            deformScale: 0.00001
+        }
+
+        BlobRect {
+            // How much of it hides under the card, so both always merge
+            readonly property real tuck: card.radius
+            readonly property real w: preview.lerp(0, preview.contW)
+
+            // Closed: parked inside the card, where it adds nothing to the shape
+            readonly property bool shown: preview.visible
+
+            group: blobs
+            x: !shown ? card.x + card.radius : preview.side < 0 ? card.x - w : card.x + card.width - tuck
+            y: shown ? preview.lerp(preview.fromY, preview.imgY - preview.pad) : card.y + card.height / 2
+            width: shown ? w + tuck : 1
+            height: shown ? Math.max(1, preview.lerp(preview.fromH, preview.contH)) : 1
+            radius: Tokens.rounding.large
+            deformScale: 0.00001
+        }
+    }
+
+    Item {
         id: card
 
         readonly property real localX: Clipboard.cursorX - (win.screen?.x ?? 0)
@@ -116,15 +167,15 @@ StyledWindow {
         y: Math.min(Math.max(margin, localY), (win.screen?.height ?? height) - height - margin)
         width: maxW
         height: Math.min(maxH, col.implicitHeight + Tokens.padding.large * 2)
-        radius: Tokens.rounding.extraLarge
-        level: 3
+
+        readonly property real radius: Tokens.rounding.extraLarge
 
         StyledRect {
             id: panel
 
             anchors.fill: parent
             radius: parent.radius
-            color: Colours.tPalette.m3surface
+            color: "transparent" // the blob layer above draws the surface
             clip: true
 
             ColumnLayout {
@@ -505,27 +556,6 @@ StyledWindow {
                     preview.open(win.previewWanted);
             }
             source: preview.leading ? Qt.resolvedUrl(preview.leading.thumbPath) : (win.previewWanted ? Qt.resolvedUrl(win.previewWanted.thumbPath) : "")
-        }
-
-        // The panel: starts as a sliver at the card's edge and grows outwards from the row
-        Elevation {
-            readonly property real w: preview.lerp(0, preview.contW)
-
-            x: preview.side < 0 ? card.x - w : card.x + card.width
-            y: preview.lerp(preview.fromY, preview.imgY - preview.pad)
-            width: w
-            height: preview.lerp(preview.fromH, preview.contH)
-            radius: Tokens.rounding.large
-            level: 3
-
-            StyledRect {
-                anchors.fill: parent
-                color: Colours.tPalette.m3surface
-                topLeftRadius: preview.side < 0 ? Tokens.rounding.large : 0
-                bottomLeftRadius: preview.side < 0 ? Tokens.rounding.large : 0
-                topRightRadius: preview.side < 0 ? 0 : Tokens.rounding.large
-                bottomRightRadius: preview.side < 0 ? 0 : Tokens.rounding.large
-            }
         }
 
         // The thumbnail itself: leaves the row and grows into the panel
