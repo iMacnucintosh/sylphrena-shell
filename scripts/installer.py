@@ -244,6 +244,8 @@ def version_tuple(version: str | None) -> tuple[int, int, int] | None:
 def behind(installed: str | None, tag: str | None) -> bool:
     """True when the release is newer than what is installed (a build from main after that release is not behind)."""
     have, latest = version_tuple(installed), version_tuple(tag)
+    if installed and latest and not have:
+        return True                      # numbered the old way (r32.9d7e99a, by commit): older than any release
     return bool(have and latest and have < latest)
 
 

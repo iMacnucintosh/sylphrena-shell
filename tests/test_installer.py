@@ -128,6 +128,7 @@ class Plan(unittest.TestCase):
         self.assertFalse(inst.behind(None, "v0.5.0"))
         self.assertFalse(inst.behind("0.4.0.r1.g1-1", None))               # no release known: nothing to say
         self.assertTrue(inst.behind("0.9.0.r0.g1-1", "v0.10.0"))           # numbers, not text
+        self.assertTrue(inst.behind("r32.9d7e99a-1", "v0.1.2"))            # the old numbering, by commit
 
     def test_packages_are_built_from_their_release_and_updated_when_behind(self):
         f = bare()
