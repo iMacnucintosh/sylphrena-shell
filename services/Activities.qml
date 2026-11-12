@@ -294,10 +294,6 @@ Singleton {
         return root.enabled ? (root.currentActivity?.id || root.principalId) : root.principalId;
     }
 
-    function shouldApplyFor(activityId: string): bool {
-        return (activityId || "") === root.styleTargetId();
-    }
-
     // Re-resolve and apply the focused activity's look (covers Principal edits
     // that activities inherit without switching workspace).
     function refreshLiveStyle(): void {
@@ -536,14 +532,6 @@ Singleton {
             else
                 Hypr.dispatch(`closewindow address:0x${addr}`);
         }
-    }
-
-    function focusWorkspaceInActivity(activityId: string, workspaceIndex: int): void {
-        const act = root.activityById(activityId);
-        if (!act)
-            return;
-        const idx = Math.max(0, Math.min(act.workspaceCount - 1, workspaceIndex));
-        root.focusWorkspace(act.workspaceIds[idx]);
     }
 
     function focusNextInActivity(delta: int): void {

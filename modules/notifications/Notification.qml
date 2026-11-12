@@ -15,13 +15,14 @@ import qs.utils
 StyledRect {
     id: root
 
+    // ?. in the bindings: modelData goes null while a dismissed card is destroyed
     required property NotifData modelData
-    readonly property bool hasImage: modelData.image.length > 0
-    readonly property bool hasAppIcon: modelData.appIcon.length > 0
+    readonly property bool hasImage: (modelData?.image ?? "").length > 0
+    readonly property bool hasAppIcon: (modelData?.appIcon ?? "").length > 0
     // notify-send without app icon: Material "notifications"; prefer app icon alone when present.
-    readonly property bool useMaterialPrimary: !!modelData.useMaterialNotifIcon && !hasImage && !hasAppIcon
+    readonly property bool useMaterialPrimary: !!modelData?.useMaterialNotifIcon && !hasImage && !hasAppIcon
     readonly property bool showAppIconMain: hasAppIcon && !useMaterialPrimary
-    readonly property int bodyTextFormat: /[<*_`#\[\]]/.test(modelData.body) ? Text.MarkdownText : Text.PlainText
+    readonly property int bodyTextFormat: /[<*_`#\[\]]/.test(modelData?.body ?? "") ? Text.MarkdownText : Text.PlainText
     readonly property var displayActions: Notifs.displayActions(root.modelData)
     readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? Tokens.spacing.extraSmall * 2 + appName.height + body.height + progress.height + progress.anchors.topMargin + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
     property bool expanded: Config.notifs.openExpanded
@@ -179,9 +180,9 @@ StyledRect {
 
                         sourceComponent: ColouredIcon {
                             anchors.fill: parent
-                            source: Icons.notifIconSource(root.modelData.appIcon)
+                            source: Icons.notifIconSource(root.modelData?.appIcon ?? "")
                             colour: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData?.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
-                            layer.enabled: root.modelData.appIcon.endsWith("symbolic")
+                            layer.enabled: (root.modelData?.appIcon ?? "").endsWith("symbolic")
                         }
                     }
 
@@ -192,7 +193,7 @@ StyledRect {
                         anchors.verticalCenterOffset: 1
 
                         sourceComponent: MaterialIcon {
-                            text: root.useMaterialPrimary ? "notifications" : Icons.getNotifIcon(root.modelData.summary, root.modelData?.urgency)
+                            text: root.useMaterialPrimary ? "notifications" : Icons.getNotifIcon(root.modelData?.summary ?? "", root.modelData?.urgency)
                             color: root.modelData?.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData?.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
                             fontStyle: Tokens.font.icon.medium
                         }
@@ -225,7 +226,7 @@ StyledRect {
             TextMetrics {
                 id: appNameMetrics
 
-                text: root.modelData.appName
+                text: root.modelData?.appName ?? ""
                 font: appName.font
                 elide: Text.ElideRight
                 elideWidth: expandBtn.x - time.width - timeSep.width - summary.x - root.Tokens.spacing.small * 3
@@ -281,7 +282,7 @@ StyledRect {
             TextMetrics {
                 id: summaryMetrics
 
-                text: root.modelData.summary
+                text: root.modelData?.summary ?? ""
                 font: summary.font
                 elide: Text.ElideRight
                 elideWidth: expandBtn.x - time.width - timeSep.width - summary.x - root.Tokens.spacing.small * 3

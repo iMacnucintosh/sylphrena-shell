@@ -38,10 +38,6 @@ def move(addr, x, y):
     hypr("dispatch", f"hl.dsp.window.move({{ x = {int(x)}, y = {int(y)}, {win(addr)} }})")
 
 
-def set_float(addr, on):
-    hypr("dispatch", f'hl.dsp.window.float({{ action = "{"enable" if on else "disable"}", {win(addr)} }})')
-
-
 def load():
     try:
         with open(STATE) as f:

@@ -50,10 +50,6 @@ Singleton {
         props.paused = !props.paused;
     }
 
-    function syncFromSystem(): void {
-        checkProc.running = true;
-    }
-
     PersistentProperties {
         id: props
 

@@ -80,13 +80,14 @@ StackView {
             StyledRect {
                 id: item
 
+                // ?. throughout: the entry goes null while the menu closes (the delegate is still being destroyed)
                 required property QsMenuEntry modelData
 
                 implicitWidth: Tokens.sizes.bar.trayMenuWidth
-                implicitHeight: modelData.isSeparator ? 1 : children.implicitHeight
+                implicitHeight: modelData?.isSeparator ? 1 : children.implicitHeight
 
                 radius: Tokens.rounding.full
-                color: modelData.isSeparator ? Colours.palette.m3outlineVariant : "transparent"
+                color: modelData?.isSeparator ? Colours.palette.m3outlineVariant : "transparent"
 
                 Loader {
                     id: children
@@ -95,7 +96,7 @@ StackView {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    active: !item.modelData.isSeparator
+                    active: !(item.modelData?.isSeparator ?? true)
 
                     sourceComponent: Item {
                         implicitHeight: label.implicitHeight
@@ -106,7 +107,7 @@ StackView {
                             anchors.rightMargin: -Tokens.padding.small
 
                             radius: item.radius
-                            disabled: !item.modelData.enabled
+                            disabled: !item.modelData?.enabled
 
                             onClicked: {
                                 const entry = item.modelData;
@@ -128,13 +129,13 @@ StackView {
                             asynchronous: true
                             anchors.left: parent.left
 
-                            active: item.modelData.icon !== ""
+                            active: (item.modelData?.icon ?? "") !== ""
 
                             sourceComponent: IconImage {
                                 asynchronous: true
                                 implicitSize: label.implicitHeight
 
-                                source: item.modelData.icon
+                                source: item.modelData?.icon ?? ""
                             }
                         }
 
@@ -145,13 +146,13 @@ StackView {
                             anchors.leftMargin: icon.active ? Tokens.spacing.medium : 0
 
                             text: labelMetrics.elidedText
-                            color: item.modelData.enabled ? Colours.palette.m3onSurface : Colours.palette.m3outline
+                            color: item.modelData?.enabled ? Colours.palette.m3onSurface : Colours.palette.m3outline
                         }
 
                         TextMetrics {
                             id: labelMetrics
 
-                            text: item.modelData.text
+                            text: item.modelData?.text ?? ""
                             font: label.font
 
                             elide: Text.ElideRight
@@ -165,11 +166,11 @@ StackView {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.right: parent.right
 
-                            active: item.modelData.hasChildren
+                            active: item.modelData?.hasChildren ?? false
 
                             sourceComponent: MaterialIcon {
                                 text: "chevron_right"
-                                color: item.modelData.enabled ? Colours.palette.m3onSurface : Colours.palette.m3outline
+                                color: item.modelData?.enabled ? Colours.palette.m3onSurface : Colours.palette.m3outline
                             }
                         }
                     }

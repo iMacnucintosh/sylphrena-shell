@@ -84,15 +84,6 @@ Singleton {
         return `${p.w}x${p.h}@${hzStr}`;
     }
 
-    function formatModeLabel(modeStr: string): string {
-        const p = root.parseMode(modeStr);
-        if (!p)
-            return modeStr;
-        const rounded = Math.round(p.hz);
-        const hz = Math.abs(p.hz - rounded) < 0.051 ? rounded : Math.round(p.hz * 100) / 100;
-        return Tr.tr("%1×%2 · %3 Hz").arg(p.w).arg(p.h).arg(hz);
-    }
-
     function dedupeModes(availableModes: list<string>): list<string> {
         const seen = ({});
         const out = [];

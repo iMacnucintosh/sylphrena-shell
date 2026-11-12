@@ -104,10 +104,6 @@ Singleton {
         return root.cardFor(address)?.a2dpAll ?? [];
     }
 
-    function isMusic(address: string): bool {
-        return !!root.cardFor(address)?.profile.startsWith("a2dp");
-    }
-
     // Pick a specific profile (e.g. the music codec) without touching the auto-switch setting
     function setProfile(address: string, profile: string): void {
         const c = root.cardFor(address);
@@ -115,10 +111,6 @@ Singleton {
             return;
         applyProc.command = ["pactl", "set-card-profile", c.card, profile];
         applyProc.running = true;
-    }
-
-    function inCall(address: string): bool {
-        return !!root.cardFor(address)?.profile.startsWith("headset-head-unit");
     }
 
     function setMode(address: string, mode: string): void {
