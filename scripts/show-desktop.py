@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 
 STATE = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "sylphrena", "show-desktop.json")
 
@@ -62,9 +63,7 @@ def hide(ws, state):
     saved = []
     wins = [c for c in clients() if c["workspace"]["id"] == ws and c["mapped"] and not c["hidden"]]
     for c in wins:
-        saved.append({"address": c["address"], "floating": c["floating"], "at": c["at"]})
-    # Restore right to left: each window re-tiled lands on the left of the previous one.
-    saved.sort(key=lambda w: (-w["at"][0], -w["at"][1]))
+        saved.append({"address": c["address"], "floating": c["floating"], "at": c["at"], "size": c["size"]})
     if not saved:
         return
     state[str(ws)] = saved
@@ -82,16 +81,63 @@ def hide(ws, state):
         move(c["address"], x, c["at"][1])
 
 
+def cut(rects, vertical):
+    """Split rects (dicts with at/size) in two groups separated by a straight line; None if impossible."""
+    key = (lambda w: w["at"][0]) if vertical else (lambda w: w["at"][1])
+    end = (lambda w: w["at"][0] + w["size"][0]) if vertical else (lambda w: w["at"][1] + w["size"][1])
+    order = sorted(rects, key=key)
+    for i in range(1, len(order)):
+        first, rest = order[:i], order[i:]
+        if max(end(w) for w in first) <= min(key(w) for w in rest):
+            return first, rest
+    return None
+
+
+def plan(group, out, anchor=None):
+    """Order tiled windows the way dwindle would have built them: each window is tiled while focusing the
+    one whose region it splits. Appends (window, window-to-focus) to out."""
+    if anchor is None:
+        anchor = group[0]
+        out.append((anchor, None))
+    if len(group) == 1:
+        return
+    left, top = min(w["at"][0] for w in group), min(w["at"][1] for w in group)
+    width = max(w["at"][0] + w["size"][0] for w in group) - left
+    height = max(w["at"][1] + w["size"][1] for w in group) - top
+    halves = cut(group, width >= height) or cut(group, width < height)
+    if not halves:
+        for w in group:
+            if w is not anchor:
+                out.append((w, anchor))
+        return
+    first, second = halves
+    out.append((second[0], first[0]))
+    plan(first, out, first[0])
+    plan(second, out, second[0])
+
+
 def show(ws, state):
     saved = state.pop(str(ws), [])
     save(state)
     alive = {c["address"] for c in clients()}
+    saved = [w for w in saved if w["address"] in alive]
+    active = (json.loads(hypr("activewindow", "-j") or "{}") or {}).get("address")
     for w in saved:
-        if w["address"] not in alive:
-            continue
+        if w["floating"]:
+            move(w["address"], w["at"][0], w["at"][1])
+    tiled = [w for w in saved if not w["floating"]]
+    steps = []
+    if tiled:
+        tiled.sort(key=lambda w: (w["at"][0], w["at"][1]))
+        plan(tiled, steps)
+    for w, focus_on in steps:
+        if focus_on:
+            hypr("dispatch", f"hl.dsp.focus({{ {win(focus_on['address'])} }})")
         move(w["address"], w["at"][0], w["at"][1])
-        if not w["floating"]:
-            set_float(w["address"], False)
+        set_float(w["address"], False)
+        time.sleep(0.15)
+    if active and active in alive:
+        hypr("dispatch", f"hl.dsp.focus({{ window = \"address:{active}\" }})")
 
 
 def prune(state):
