@@ -2,7 +2,7 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
-## Sin publicar (siguiente versión)
+## 0.3.1 (2026-11-12)
 
 - **Things, Seeker y la pantalla de login hablan tu idioma:** su código está ahora en inglés y cada idioma es un catálogo JSON (`i18n/es.json`; la pantalla de login, `greeter/i18n/es.json`). Un idioma sin catálogo se ve en inglés. Antes estaban escritos en español, sin más idioma posible. Sus comprobadores: `scripts/check-i18n.py`.
 - **Nada personal en el repo:** la pantalla de login ya no trae un nombre ni unas coordenadas del tiempo (salen de la cuenta y del ajuste del tiempo de Nexus) y la pantalla de bloqueo saluda con el usuario del sistema.
