@@ -4,6 +4,7 @@ Cambios relevantes de este fork respecto a releases internas. El detalle de uso 
 
 ## Sin publicar
 
+- **Instalador:** recomienda el navegador Zen (del AUR); viene marcado solo si no hay otro navegador instalado.
 - **Teclado en Nexus:** Idioma y región → Teclado permite elegir las distribuciones (y variantes), cuál es la principal y el atajo para cambiar entre ellas.
 - **Atajos:** los de Sylphrena sustituyen a los que `hyprland.lua` tuviera en las mismas teclas (en un sistema nuevo `Super+Q` abría dos terminales).
 - **Instalador:** ya no ofrece extensiones (al terminar indica que se instalan desde Things); limita la compilación a la memoria disponible y avisa si se queda sin ella; `makepkg` ya no vuelve a pedir la contraseña a mitad de instalación.

@@ -110,6 +110,17 @@ class Plan(unittest.TestCase):
         hook = items["hyprland-config"].steps[0].args
         self.assertEqual(hook[hook.index("--shell-dir") + 1], str(inst.INSTALLED_SHELL))
 
+    def test_zen_is_recommended_but_only_preselected_without_a_browser(self):
+        zen = {i.id: i for i in inst.build_plan(bare())}["zen"]
+        self.assertEqual(zen.group, "Recommended")
+        self.assertTrue(zen.on)
+        self.assertEqual(zen.steps[0].kind, "aur")
+        f = bare()
+        f.browser = "firefox"
+        zen = {i.id: i for i in inst.build_plan(f)}["zen"]
+        self.assertTrue(zen.todo)
+        self.assertFalse(zen.on)
+
     def test_extensions_are_not_part_of_it(self):
         # they are installed later from Things; the installer only says so at the end
         self.assertNotIn("extensions", ids(inst.build_plan(bare())))
