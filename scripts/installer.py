@@ -6,7 +6,7 @@
 It looks at the system, shows what is missing and why, asks, and does it with a single password:
   Required      an AUR helper (yay) if there is none, the AUR packages the shell builds on, and the four
                 packages of Sylphrena: sylphrena-cli, seeker, things and the shell itself
-  Recommended   the font of the clock, the screen recorder, DDC/CI brightness for an external monitor
+  Recommended   the Zen browser (the clock font, the screen recorder and DDC/CI brightness come with the shell)
   Setup         hook the shell into Hyprland, create the first-run settings, connect kitty
   Login screen  greetd with the Sylphrena greeter (replaces the display manager you have)
 Nothing is changed before you confirm. It can be run again: it only does what is still missing.
@@ -47,7 +47,7 @@ PACKAGES = [("sylphrena-cli-git", "sylphrena-cli"), ("seeker-git", "seeker"), ("
 # Commands of the usual web browsers: with one of them there, Zen is offered but not selected
 BROWSERS = ["zen-browser", "firefox", "chromium", "google-chrome-stable", "brave", "librewolf", "vivaldi-stable", "epiphany"]
 # Dependencies of the shell package that are not in the Arch repositories (makepkg -s cannot install them)
-AUR_DEPS = ["quickshell-git", "qt6-m3shapes-git", "python-materialyoucolor", "libcava"]
+AUR_DEPS = ["quickshell-git", "qt6-m3shapes-git", "python-materialyoucolor", "libcava", "ttf-rubik-vf"]
 STATE = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "sylphrena"
 CACHE = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "sylphrena-install"
 
@@ -125,10 +125,6 @@ ES = {
         "un navegador web basado en Firefox que encaja con Sylphrena; no viene marcado porque ya tienes un navegador",
     "a new version: %s → %s": "una versión nueva: %s → %s",
     "Sylphrena is up to date.": "Sylphrena está al día.",
-    "Clock font (Rubik)": "Fuente del reloj (Rubik)", "the font of the clock and the workspaces": "la fuente del reloj y de los escritorios",
-    "Screen recorder": "Grabador de pantalla", "so that sylph record works": "para que funcione sylph record",
-    "External monitor brightness (ddcutil)": "Brillo del monitor externo (ddcutil)", "this computer has no built-in screen, so its monitor is controlled over DDC/CI": "este equipo no tiene pantalla integrada, así que su monitor se controla por DDC/CI",
-    "lets the brightness slider reach an external monitor over DDC/CI": "deja que el control de brillo llegue a un monitor externo por DDC/CI",
     "Hook Sylphrena into Hyprland": "Enganchar Sylphrena a Hyprland", "starts the shell with the session and loads its shortcuts and rules; your configuration is only added to, and copied first": "arranca la shell con la sesión y carga sus atajos y reglas; a tu configuración solo se le añade, y se copia antes",
     "First-run settings": "Ajustes del primer arranque", "the recommended settings, one activity with its wallpaper, and kitty connected to the colours": "los ajustes recomendados, una actividad con su fondo y kitty conectado a los colores",
     "Sylphrena login screen": "Pantalla de inicio de sesión de Sylphrena", "greetd with the Material You greeter; it replaces %s": "greetd con el greeter Material You; sustituye a %s",
@@ -329,7 +325,7 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         steps=[Step("pacman", ["hyprland"])])
     need_aur = [p for p in AUR_DEPS if not f.have(p)]
     own_from_aur = [p for p, _ in PACKAGES if not f.have(p) and p in f.in_aur]
-    need_helper = f.helper is None and bool(need_aur or own_from_aur or not f.have("ttf-rubik-vf")
+    need_helper = f.helper is None and bool(need_aur or own_from_aur
                                             or (f.browser is None and not f.have("zen-browser-bin")))
     add("aur-helper", "Required", "AUR helper (yay)", "to install packages that are only in the AUR", True, todo=need_helper,
         required=True, steps=[Step("build", ["yay-bin", "https://aur.archlinux.org/yay-bin.git"])])
@@ -351,21 +347,11 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
                  steps=[step])
         if f.have(pkg) and it.todo:
             it.why, it.why_args = "a new version: %s → %s", (f.versions[pkg].split(".r")[0].split("-")[0], tag.lstrip("v"))
-    add("rubik", "Recommended", "Clock font (Rubik)", "the font of the clock and the workspaces", True, todo=not f.have("ttf-rubik-vf"),
-        steps=[Step("aur", ["ttf-rubik-vf"])])
-    add("recorder", "Recommended", "Screen recorder", "so that sylph record works", True, todo=not f.have("gpu-screen-recorder"),
-        steps=[Step("pacman", ["gpu-screen-recorder"])])
     add("zen", "Recommended", "Zen browser",
         "a Firefox-based web browser that suits Sylphrena; not selected because you already have a browser" if f.browser
         else "a Firefox-based web browser that suits Sylphrena",
         True, todo=not f.have("zen-browser-bin") and f.browser != "zen-browser", default=f.browser is None,
         steps=[Step("aur", ["zen-browser-bin"])])
-    ddc_steps = [Step("pacman", ["ddcutil"]), Step("write-root", ["/etc/modules-load.d/i2c-dev.conf", "i2c-dev\n"]),
-                 Step("root", ["modprobe", "i2c-dev"], ) ]
-    add("ddcutil", "Recommended", "External monitor brightness (ddcutil)",
-        "this computer has no built-in screen, so its monitor is controlled over DDC/CI" if not f.backlight
-        else "lets the brightness slider reach an external monitor over DDC/CI",
-        True, todo=not f.have("ddcutil"), default=not f.backlight, steps=ddc_steps)
     # The setup steps run after the packages, so they use the installed shell even though, while planning, it is
     # not there yet (otherwise hyprland.lua and the settings would point at the clone, which may be deleted)
     shell_dir = INSTALLED_SHELL if any(i.id == "sylphrena-shell-git" for i in items) else installed_shell_dir()

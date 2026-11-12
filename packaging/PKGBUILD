@@ -19,16 +19,15 @@ depends=(
   'power-profiles-daemon' 'cliphist' 'wl-clipboard' 'wtype' 'grim' 'slurp' 'swappy' 'playerctl' 'libnotify' 'qt6ct'
   # Look: icons and GTK theme that follow the colours of the shell (sylphrena-quiet writes their settings)
   'papirus-icon-theme' 'adw-gtk-theme'
-  # Fonts of the interface
-  'ttf-material-symbols-variable' 'ttf-cascadia-code-nerd'
+  # Fonts of the interface (Rubik: the clock and the desktops, from the AUR)
+  'ttf-material-symbols-variable' 'ttf-cascadia-code-nerd' 'ttf-rubik-vf'
+  # Screen recording (sylph record, the quick toggles) and the brightness of external monitors (DDC/CI)
+  'gpu-screen-recorder' 'ddcutil'
   # The CLI and the apps that come with it
   'sylphrena-cli-git' 'things-git' 'seeker-git' 'kitty'
 )
 makedepends=('git' 'cmake' 'ninja' 'qt6-shadertools' 'gettext')
-optdepends=('ttf-rubik-vf: the font of the clock and the workspaces (AUR)'
-            'gpu-screen-recorder: screen recording (sylph record)'
-            'fish: the calculator of the launcher opens qalc in it'
-            'ddcutil: brightness of external monitors'
+optdepends=('fish: the calculator of the launcher opens qalc in it'
             'greetd: the login screen (scripts/install-system.sh)')
 provides=('sylphrena-shell')
 conflicts=('sylphrena-shell')
@@ -55,4 +54,6 @@ package() {
   DESTDIR="$pkgdir" cmake --install build
   # The wallpaper is not GPL: its licence and author travel with the package
   install -Dm644 assets/wallpapers/README.md "$pkgdir/usr/share/licenses/$pkgname/wallpaper-licence.md"
+  # ddcutil talks to monitors through i2c-dev: load it at boot
+  install -Dm644 /dev/stdin "$pkgdir/usr/lib/modules-load.d/sylphrena-i2c-dev.conf" <<< "i2c-dev"
 }

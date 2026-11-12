@@ -58,12 +58,14 @@ class Plan(unittest.TestCase):
         f.installed |= {"quickshell-git"}
         self.assertNotIn("quickshell-conflict", ids(inst.build_plan(f)))
 
-    def test_ddcutil_is_on_by_default_only_without_a_built_in_screen(self):
-        desktop = {i.id: i for i in inst.build_plan(bare())}
-        self.assertTrue(desktop["ddcutil"].on)
-        laptop = bare()
-        laptop.backlight = True
-        self.assertFalse({i.id: i for i in inst.build_plan(laptop)}["ddcutil"].on)
+    def test_the_clock_font_the_recorder_and_ddcutil_come_with_the_shell(self):
+        # parts of Sylphrena, not options: dependencies of its package, not items of the list
+        ids = {i.id for i in inst.build_plan(bare())}
+        self.assertFalse(ids & {"rubik", "recorder", "ddcutil"})
+        self.assertIn("ttf-rubik-vf", inst.AUR_DEPS)
+        srcinfo = (Path(__file__).resolve().parent.parent / "packaging" / ".SRCINFO").read_text()
+        for pkg in ("ttf-rubik-vf", "gpu-screen-recorder", "ddcutil"):
+            self.assertIn(f"\tdepends = {pkg}\n", srcinfo)
 
     def test_the_login_screen_is_one_root_script_and_can_be_left_out(self):
         items = {i.id: i for i in inst.build_plan(bare())}
