@@ -54,6 +54,33 @@ for _conf in /etc/makepkg.conf.d/*.conf; do [[ -f $_conf ]] && source "$_conf"; 
 PACMAN_AUTH=(sudo)
 """
 
+
+def build_jobs(mem_kib: int | None = None, cpus: int | None = None) -> int:
+    """Parallel compile jobs that fit in memory: about 2 GiB each (optimised C++ such as Quickshell)."""
+    if mem_kib is None:
+        try:
+            mem_kib = next(int(l.split()[1]) for l in Path("/proc/meminfo").read_text().splitlines() if l.startswith("MemTotal:"))
+        except (OSError, StopIteration, ValueError):
+            mem_kib = 0
+    cpus = cpus or os.cpu_count() or 1
+    if mem_kib <= 0:
+        return cpus
+    return max(1, min(cpus, mem_kib // (2 * 1024 * 1024)))
+
+
+def limit_build_jobs() -> int:
+    """Without this, a machine with little RAM (a VM) runs out of memory compiling and the compiler is killed.
+    makepkg reads MAKEFLAGS; CMake projects built with Ninja read CMAKE_BUILD_PARALLEL_LEVEL. The user's own values win."""
+    n = build_jobs()
+    os.environ.setdefault("MAKEFLAGS", f"-j{n}")
+    os.environ.setdefault("CMAKE_BUILD_PARALLEL_LEVEL", str(n))
+    return n
+
+
+def out_of_memory(lines) -> bool:
+    """The compiler was killed (the usual sign of running out of memory while building)."""
+    return any("killed" in l.lower() or "signal 9" in l.lower() for l in lines)
+
 ES = {
     "Sylphrena installer": "Instalador de Sylphrena",
     "This computer": "Este equipo",
@@ -68,7 +95,9 @@ ES = {
     "Cancelled. Nothing was changed.": "Cancelado. No se ha cambiado nada.",
     "Run without a password prompt: not possible here": "Ejecutar sin pedir contraseña: no es posible aquí",
     "Done": "Hecho", "Failed": "Falló", "Skipped": "Omitido",
-    "It did not finish: %s": "No terminó: %s", "See the log: %s": "Mira el registro: %s",
+    "It did not finish: %s": "No terminó: %s",
+    "The computer ran out of memory while compiling. Give it more RAM, or run the installer again with fewer builds at once: %s":
+        "El equipo se quedó sin memoria al compilar. Dale más RAM o vuelve a lanzar el instalador compilando menos cosas a la vez: %s", "See the log: %s": "Mira el registro: %s",
     "Everything is ready.": "Todo está listo.",
     "Start it now with: sylph shell -d  (or log out and back in: Hyprland starts it)": "Arráncala ahora con: sylph shell -d  (o cierra sesión y vuelve a entrar: Hyprland la arranca)",
     "A copy of your Hyprland configuration is in %s": "Hay una copia de tu configuración de Hyprland en %s",
@@ -434,6 +463,9 @@ def execute(items: list[Item], r: Runner) -> list[tuple[Item, str, int]]:
             if not (r.dry or r.verbose) and r.recent:
                 print("\n  " + ui.style(tr("Last lines of the output:"), dim=True))
                 print(ui.tail(r.recent))
+            if out_of_memory(r.recent):
+                hint = tr("The computer ran out of memory while compiling. Give it more RAM, or run the installer again with fewer builds at once: %s")
+                print("\n  " + hint % "MAKEFLAGS=-j1 CMAKE_BUILD_PARALLEL_LEVEL=1 ./install.sh")
             if it.required:
                 print("\n  " + ui.bad(tr("It did not finish: %s") % tr(it.title)))
                 break
@@ -602,6 +634,7 @@ def main(argv: list[str] | None = None) -> int:
     if any(i.root and i.on and i.todo for i in items) and not r.keep_sudo():
         print(tr("sudo does not work for this user: it is needed to install packages."), file=sys.stderr)
         return 1
+    r._to_log(f"parallel build jobs: {limit_build_jobs()}")
     ui.rule(tr("Installing"))
     try:
         results = execute(items, r)
