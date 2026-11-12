@@ -178,9 +178,21 @@ class Run(unittest.TestCase):
             (old / "src" / "locked" / "file").write_text("x")
             os.chmod(old / "src" / "locked" / "file", 0o444)
             os.chmod(old / "src" / "locked", 0o555)                 # a read-only directory: plain rmtree fails here
+            (old / "pkg" / "inner").mkdir(parents=True)
+            os.chmod(old / "pkg", 0o000)                            # one it cannot even read (what makepkg left in the VM)
             r = inst.Runner(dry=False, helper=None, log=None)
             self.assertTrue(r.remove_tree(old))
             self.assertFalse(old.exists())
+
+    def test_a_folder_it_cannot_remove_does_not_stop_it(self):
+        import tempfile
+        from unittest import mock
+        with tempfile.TemporaryDirectory() as d:
+            old = Path(d) / "x"
+            old.mkdir()
+            r = inst.Runner(dry=False, helper=None, log=None)
+            with mock.patch.object(inst.shutil, "rmtree", side_effect=PermissionError("root owns it")):
+                self.assertFalse(r.remove_tree(old))                # no exception: the caller builds elsewhere
 
     def test_a_required_failure_stops_the_rest(self):
         r = inst.Runner(dry=True, helper="yay", log=None)
