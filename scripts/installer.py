@@ -9,8 +9,8 @@ It looks at the system, shows what is missing and why, asks, and does it with a 
   Recommended   the font of the clock, the screen recorder, DDC/CI brightness for an external monitor
   Setup         hook the shell into Hyprland, create the first-run settings, connect kitty
   Login screen  greetd with the Sylphrena greeter (replaces the display manager you have)
-  Optional      the recommended extensions (Tasks, Hydration)
 Nothing is changed before you confirm. It can be run again: it only does what is still missing.
+Extensions are not part of it: they are installed later from Things.
 
 Options:  --yes (accept the defaults)   --dry-run (show the commands, run nothing)   --list (what it found, JSON)
           --only ID[,ID]   --skip ID[,ID]   --no-login-screen   --demo (preview on a bare system)   --verbose (show the output of every command)   --help
@@ -40,9 +40,8 @@ GITHUB = "https://github.com/iMacnucintosh"
 # Our packages, in the order they have to be installed (the shell depends on the other three)
 PACKAGES = [("sylphrena-cli-git", "sylphrena-cli"), ("seeker-git", "seeker"), ("things-git", "things"),
             ("sylphrena-shell-git", "sylphrena-shell")]
-AUR_DEPS = ["quickshell-git", "qt6-m3shapes-git", "python-materialyoucolor"]
-HUB_INDEX = "https://raw.githubusercontent.com/iMacnucintosh/sylphrena-hub/main/index.json"
-RECOMMENDED_EXTENSIONS = ["tasks", "hydration"]
+# Dependencies of the shell package that are not in the Arch repositories (makepkg -s cannot install them)
+AUR_DEPS = ["quickshell-git", "qt6-m3shapes-git", "python-materialyoucolor", "libcava"]
 STATE = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "sylphrena"
 CACHE = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "sylphrena-install"
 
@@ -85,7 +84,6 @@ ES = {
     "Sylphrena installer": "Instalador de Sylphrena",
     "This computer": "Este equipo",
     "Required": "Necesario", "Recommended": "Recomendado", "Setup": "Configuración", "Login screen": "Pantalla de inicio de sesión",
-    "Optional": "Opcional",
     "Already done": "Ya hecho",
     "Nothing to do: everything is already in place.": "Nada que hacer: todo está ya en su sitio.",
     "Administrator password: asked once": "Contraseña de administrador: se pide una vez",
@@ -96,6 +94,8 @@ ES = {
     "Run without a password prompt: not possible here": "Ejecutar sin pedir contraseña: no es posible aquí",
     "Done": "Hecho", "Failed": "Falló", "Skipped": "Omitido",
     "It did not finish: %s": "No terminó: %s",
+    "Want more? Extensions (dashboard widgets, your Steam library, a VPN…) are installed from Things, in its Sylphrena section.":
+        "¿Quieres más? Las extensiones (widgets del dashboard, tu biblioteca de Steam, una VPN…) se instalan desde Things, en su sección Sylphrena.",
     "The computer ran out of memory while compiling. Give it more RAM, or run the installer again with fewer builds at once: %s":
         "El equipo se quedó sin memoria al compilar. Dale más RAM o vuelve a lanzar el instalador compilando menos cosas a la vez: %s", "See the log: %s": "Mira el registro: %s",
     "Everything is ready.": "Todo está listo.",
@@ -107,7 +107,7 @@ ES = {
     "Base tools": "Herramientas base", "to build packages from the AUR and run this installer": "para construir paquetes del AUR y ejecutar este instalador",
     "Hyprland": "Hyprland", "the compositor Sylphrena runs on": "el compositor sobre el que corre Sylphrena",
     "AUR helper (yay)": "Ayudante del AUR (yay)", "to install packages that are only in the AUR": "para instalar paquetes que solo están en el AUR",
-    "Libraries from the AUR": "Librerías del AUR", "Quickshell (git version), the Material shapes and the colour library the shell is built on": "Quickshell (versión git), las formas Material y la librería de color sobre las que se construye la shell",
+    "Libraries from the AUR": "Librerías del AUR", "Quickshell (git version), the Material shapes, the colour library and the audio visualiser the shell is built on": "Quickshell (versión git), las formas Material, la librería de color y el visualizador de audio sobre los que se construye la shell",
     "Remove the stable Quickshell": "Quitar el Quickshell estable", "it conflicts with the git version the shell needs": "choca con la versión git que necesita la shell",
     "sylphrena-cli": "sylphrena-cli", "the sylph command (shell, themes, wallpapers, screenshots)": "el comando sylph (shell, temas, fondos, capturas)",
     "Seeker": "Seeker", "the file manager of Sylphrena": "el explorador de archivos de Sylphrena",
@@ -121,7 +121,6 @@ ES = {
     "First-run settings": "Ajustes del primer arranque", "the recommended settings, one activity with its wallpaper, and kitty connected to the colours": "los ajustes recomendados, una actividad con su fondo y kitty conectado a los colores",
     "Sylphrena login screen": "Pantalla de inicio de sesión de Sylphrena", "greetd with the Material You greeter; it replaces %s": "greetd con el greeter Material You; sustituye a %s",
     "greetd with the Material You greeter": "greetd con el greeter Material You",
-    "Recommended extensions": "Extensiones recomendadas", "Tasks and Hydration, from the Sylphrena Hub": "Tareas e Hidratación, del Sylphrena Hub",
     "asks for the password": "pide contraseña", "no password": "sin contraseña",
     "Hyprland needs to be installed first: it will be added.": "Primero hace falta Hyprland: se añadirá.",
     "yes": "sí", "no": "no",
@@ -175,7 +174,6 @@ class Facts:
     hyprland_needed: bool = True                            # setup-hyprland.py --check says it would change something
     first_run_needed: bool = True                           # same for the first-run settings and kitty
     greeter_installed: bool = False
-    extensions: set[str] = field(default_factory=set)       # already installed
 
     def have(self, pkg: str) -> bool:
         return pkg in self.installed
@@ -225,8 +223,6 @@ def scan() -> Facts:
     f.hyprland_needed = check_status("setup-hyprland.py") in ("needed", "failed")
     f.first_run_needed = any(check_status(n) == "needed" for n in ("setup-defaults.py", "setup-kitty.py"))
     f.greeter_installed = Path("/etc/greetd/sylphrena").is_dir() and f.display_manager == "greetd"
-    ext_dir = Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local/share") / "sylphrena" / "extensions"
-    f.extensions = {d.name for d in ext_dir.iterdir() if d.is_dir()} if ext_dir.is_dir() else set()
     return f
 
 
@@ -234,7 +230,7 @@ def scan() -> Facts:
 
 @dataclass
 class Step:
-    kind: str            # pacman | aur | build | user | root | write-root | extension
+    kind: str            # pacman | aur | build | user | root | write-root
     args: list = field(default_factory=list)
 
 
@@ -281,7 +277,7 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         add("quickshell-conflict", "Required", "Remove the stable Quickshell", "it conflicts with the git version the shell needs",
             True, required=True, steps=[Step("root", ["pacman", "-Rdd", "--noconfirm", "quickshell"])])
     add("aur-deps", "Required", "Libraries from the AUR",
-        "Quickshell (git version), the Material shapes and the colour library the shell is built on", True, todo=bool(need_aur),
+        "Quickshell (git version), the Material shapes, the colour library and the audio visualiser the shell is built on", True, todo=bool(need_aur),
         required=True, steps=[Step("aur", need_aur)] if need_aur else [])
     labels = {"sylphrena-cli-git": ("sylphrena-cli", "the sylph command (shell, themes, wallpapers, screenshots)"),
               "seeker-git": ("Seeker", "the file manager of Sylphrena"), "things-git": ("Things", "the package manager and extension manager"),
@@ -317,9 +313,6 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         add("login-screen", "Login screen", "Sylphrena login screen",
             "greetd with the Material You greeter; it replaces %s" if dm else "greetd with the Material You greeter",
             True, todo=not f.greeter_installed, steps=steps)
-    ext_missing = [e for e in RECOMMENDED_EXTENSIONS if e not in f.extensions]
-    add("extensions", "Optional", "Recommended extensions", "Tasks and Hydration, from the Sylphrena Hub", False, todo=bool(ext_missing),
-        default=False, steps=[Step("extension", [e]) for e in ext_missing])
     return items
 
 
@@ -412,25 +405,7 @@ class Runner:
         if k == "write-root":
             path, content = a
             return self.run(["sudo", "tee", path], input_text=content)
-        if k == "extension":
-            return install_extension(self, a[0])
         raise ValueError(k)
-
-
-def install_extension(r: Runner, ext_id: str) -> bool:
-    script = installed_shell_dir() / "scripts" / "ext.py"
-    if r.dry:
-        r.run([sys.executable, str(script), "install-hub", ext_id, "--url", "<zip of the hub>", "--sha256", "<hash>", "--version", "<version>"])
-        return True
-    try:
-        with urllib.request.urlopen(HUB_INDEX, timeout=15) as resp:
-            entry = next(i for i in json.load(resp)["items"] if i["id"] == ext_id)
-    except (OSError, ValueError, StopIteration, urllib.error.URLError) as e:
-        r._to_log(f"could not read the hub: {e}")
-        r.recent.append(f"could not read the hub: {e}")
-        return False
-    return r.run([sys.executable, str(script), "install-hub", ext_id, "--url", entry["zip"], "--sha256", entry["sha256"],
-                  "--version", entry["version"]])
 
 
 def execute(items: list[Item], r: Runner) -> list[tuple[Item, str, int]]:
@@ -474,7 +449,7 @@ def execute(items: list[Item], r: Runner) -> list[tuple[Item, str, int]]:
 
 # ── The conversation ─────────────────────────────────────────────────────────────────────────────
 
-GROUPS = ["Required", "Recommended", "Setup", "Login screen", "Optional"]
+GROUPS = ["Required", "Recommended", "Setup", "Login screen"]
 
 
 def version() -> str:
@@ -590,6 +565,8 @@ def finish(results: list[tuple[Item, str, int]], dry: bool, log: Path) -> int:
         return 0
     print("  " + ui.rgb(ui.LAVENDER, tr("Welcome to Sylphrena."), True))
     print(ui.wrap(tr("The installer will open the welcome guide the first time the shell starts."), 2, "  "))
+    print()
+    print(ui.wrap(tr("Want more? Extensions (dashboard widgets, your Steam library, a VPN…) are installed from Things, in its Sylphrena section."), 2, "  "))
     print()
     print("  " + ui.style(tr("Start Sylphrena now"), bold=True) + ":  " + ui.rgb(ui.ROSE, "sylph shell -d"))
     print("  " + ui.style(tr("or log out and log back in: Hyprland starts it by itself"), dim=True))

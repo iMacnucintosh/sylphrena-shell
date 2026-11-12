@@ -3,6 +3,9 @@ set(po_files
 )
 
 set(trs_script "${CMAKE_SOURCE_DIR}/scripts/trs.fish")
+# The translations are compiled with msgfmt directly (gettext, part of base-devel): building the package
+# must not need fish, which only the maintenance commands of scripts/trs.fish use.
+find_program(MSGFMT msgfmt REQUIRED)
 
 # Compile .po -> .mo and alias each one to <lang>.mo in the module's resources
 set(mo_files)
@@ -14,8 +17,8 @@ foreach(po IN LISTS po_files)
 
     add_custom_command(
         OUTPUT "${mo}"
-        COMMAND "${trs_script}" compile "${lang}" "${mo}"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${po}" "${trs_script}"
+        COMMAND "${MSGFMT}" --check-format -o "${mo}" "${CMAKE_CURRENT_SOURCE_DIR}/${po}"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${po}"
         COMMENT "Compiling translations for ${lang}"
         VERBATIM
     )
