@@ -224,9 +224,37 @@ Singleton {
         return true;
     }
 
-    // Slide the active workspace's windows off the bottom of the screen (they stay on the workspace); again to bring them back.
+    // Workspaces whose windows are slid off-screen by "show desktop" (the bar draws their pill as an outline).
+    property var hiddenWs: []
+
+    function isDesktopHidden(ws: int): bool {
+        return hiddenWs.includes(ws);
+    }
+
+    function runShowDesktop(args: var): void {
+        if (showDesktopProc.running)
+            return;
+        showDesktopProc.command = ["python3", Quickshell.shellPath("scripts/show-desktop.py"), ...args];
+        showDesktopProc.running = true;
+    }
+
+    // Slide the active workspace's windows off the screen (they stay on the workspace); again to bring them back.
     function toggleShowDesktop(): void {
-        Quickshell.execDetached(["python3", Quickshell.shellPath("scripts/show-desktop.py"), "toggle", String(activeWsId)]);
+        runShowDesktop(["toggle", String(activeWsId)]);
+    }
+
+    Process {
+        id: showDesktopProc
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                try {
+                    root.hiddenWs = JSON.parse(text);
+                } catch (e) {
+                    root.hiddenWs = [];
+                }
+            }
+        }
     }
 
     function toggleSpecial(name: string): void {
@@ -308,7 +336,10 @@ Singleton {
     }
 
     onUsingLuaChanged: reloadDynamicConfs()
-    Component.onCompleted: reloadDynamicConfs()
+    Component.onCompleted: {
+        reloadDynamicConfs();
+        runShowDesktop(["status"]);
+    }
 
     Connections {
         target: GlobalConfig.general

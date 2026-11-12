@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Show desktop: slide every window of a workspace off the bottom of the screen (they stay on the
-workspace, so the bar keeps their icons); run again to slide them back.
+"""Show desktop: slide every window of a workspace off the screen (left half to the left, right half to
+the right; they stay on the workspace, so the bar keeps their icons); run again to slide them back.
 
     show-desktop.py toggle <workspace-id>
+    show-desktop.py status
+
+Both print a JSON list with the workspaces whose windows are currently hidden.
 
 State lives in $XDG_RUNTIME_DIR/sylphrena/show-desktop.json so it survives a shell restart.
 """
@@ -68,10 +71,15 @@ def hide(ws, state):
     save(state)
     for c in wins:
         m = mons.get(c["monitor"])
-        bottom = (m["y"] + m["height"] / (m.get("scale") or 1)) if m else 2000
+        scale = (m.get("scale") or 1) if m else 1
+        left = m["x"] if m else 0
+        width = m["width"] / scale if m else 2560
+        centre = c["at"][0] + c["size"][0] / 2
+        # Left half slides out to the left, right half to the right.
+        x = left - c["size"][0] - 20 if centre < left + width / 2 else left + width + 20
         if not c["floating"]:
             set_float(c["address"], True)
-        move(c["address"], c["at"][0], bottom + 20)
+        move(c["address"], x, c["at"][1])
 
 
 def show(ws, state):
@@ -86,16 +94,30 @@ def show(ws, state):
             set_float(w["address"], False)
 
 
+def prune(state):
+    """Forget workspaces whose hidden windows are all gone (closed meanwhile)."""
+    alive = {c["address"] for c in clients()}
+    for ws in list(state):
+        if not any(w["address"] in alive for w in state[ws]):
+            del state[ws]
+    save(state)
+
+
 def main():
-    if len(sys.argv) != 3 or sys.argv[1] != "toggle":
+    args = sys.argv[1:]
+    if not (args == ["status"] or (len(args) == 2 and args[0] == "toggle")):
         print(__doc__, file=sys.stderr)
         return 2
-    ws = int(sys.argv[2])
     state = load()
-    if str(ws) in state:
-        show(ws, state)
-    else:
-        hide(ws, state)
+    if args[0] == "toggle":
+        ws = int(args[1])
+        if str(ws) in state:
+            show(ws, state)
+        else:
+            hide(ws, state)
+        state = load()
+    prune(state)
+    print(json.dumps(sorted(int(k) for k in state)))
     return 0
 
 

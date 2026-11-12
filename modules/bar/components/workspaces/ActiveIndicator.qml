@@ -45,7 +45,16 @@ StyledRect {
     implicitWidth: mask.width
     implicitHeight: end - start
     radius: Tokens.rounding.full
-    color: Colours.palette.m3primary
+    // "Show desktop" hid this workspace's windows: draw only the outline
+    readonly property bool desktopHidden: Hypr.isDesktopHidden(activeWs?.ws ?? -1)
+
+    color: desktopHidden ? "transparent" : Colours.palette.m3primary
+    border.width: desktopHidden ? 2 : 0
+    border.color: Colours.palette.m3primary
+
+    Behavior on color {
+        CAnim {}
+    }
 
     Anim on start {
         id: startAnim
@@ -77,7 +86,7 @@ StyledRect {
         visible: recolorContent
         source: root.mask
         sourceColor: Colours.palette.m3onSurface
-        colorizationColor: Colours.palette.m3onPrimary
+        colorizationColor: root.desktopHidden ? Colours.palette.m3primary : Colours.palette.m3onPrimary
 
         x: 0
         y: -parent.start

@@ -66,7 +66,12 @@ Item {
         y: modelData ? modelData.y + anchors.margins - topPadding : 0
         implicitHeight: modelData ? modelData.LazyListView.visibleHeight - anchors.margins * 2 + topPadding + bottomPadding : 0
 
-        color: Qt.alpha(root.colour, 1)
+        // "Show desktop" hid this workspace's windows: outline instead of fill
+        readonly property bool desktopHidden: modelData ? Hypr.isDesktopHidden(modelData.ws) : false
+
+        color: desktopHidden ? "transparent" : Qt.alpha(root.colour, 1)
+        border.width: desktopHidden ? 2 : 0
+        border.color: Colours.palette.m3outline
         topLeftRadius: topRadius
         topRightRadius: topRadius
         bottomLeftRadius: bottomRadius
