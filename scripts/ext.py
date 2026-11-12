@@ -10,11 +10,11 @@ The shell owns the extension contract, so this is the one implementation of inst
   ext.py install <zip>       a local zip: unpack (checked), install its system pieces if it has them
                              (sudo), enable it. It stays "local" (no hub receipt)
   ext.py install-hub <id> --url <zip url> --sha256 <hex> --version <v>
+                             what Things runs: download from the hub, check the sha256 and the
+                             compatibility with this shell, install, write the receipt, enable it
   ext.py update-hub <id>     install the version the hub's catalog has now (what the shell's updates run)
   ext.py <id>                the commands an extension offers
   ext.py <id> <command> [args]   run one of them (sylph ext hydration show, sylph ext hydration add 250)
-                             what Things runs: download from the hub, check the sha256 and the
-                             compatibility with this shell, install, write the receipt, enable it
   ext.py remove <id> [--purge]  the extension forgets its data in the shell, its system pieces go, then its files.
                              --purge also deletes its settings and data (the paths its manifest `data` lists)
   ext.py enable <id> | disable <id>
@@ -48,7 +48,6 @@ BUILTIN = SHELL / "extensions"
 # Zips of the hub live in the releases of its repository. Anything else is refused (defence in depth:
 # the URL comes from a catalog). Tests may point SYLPHRENA_HUB_TEST_PREFIX at a local folder (file://…).
 HUB_RELEASES = "https://github.com/iMacnucintosh/sylphrena-hub/releases/download/"
-HUB_INDEX = "https://raw.githubusercontent.com/iMacnucintosh/sylphrena-hub/main/index.json"
 HUB_INDEX_API = "https://api.github.com/repos/iMacnucintosh/sylphrena-hub/contents/index.json?ref=main"
 MAX_ZIP = 50 * 1024 * 1024
 ID_RE = re.compile(r"^[a-z0-9-]+$")
@@ -368,7 +367,11 @@ def cmd_commands(ext_id: str) -> int:
     if answer.startswith("error:"):
         print(answer, file=sys.stderr)
         return 1
-    commands = json.loads(answer)
+    try:
+        commands = json.loads(answer)
+    except ValueError:
+        print(f"error: unexpected answer from the shell: {answer}", file=sys.stderr)
+        return 1
     if not commands:
         print(f"{ext_id} has no commands")
         return 0
