@@ -96,7 +96,7 @@ Runtime / sistema (Arch):
 - Qt 6: `qt6-base`, `qt6-declarative`, `qt6-imageformats`, `qt6-multimedia`, [`qt6-m3shapes-git`](https://github.com/soramanew/m3shapes)
 - `swappy`, `fish`, `bash`
 - Clipboard: `cliphist`, `wl-clipboard`, `wtype`
-- Hyprland + portales (`xdg-desktop-portal-hyprland`, `xdg-desktop-portal-gtk`), `qt6ct`, tema de iconos Papirus (recomendado)
+- Hyprland + portales (`xdg-desktop-portal-hyprland`, `xdg-desktop-portal-gtk`), `qt6ct`, tema de iconos `papirus-icon-theme` y tema GTK `adw-gtk-theme` (necesarios: la shell escribe su configuración)
 
 Build: `cmake`, `ninja`, `qt6-shadertools`.
 
