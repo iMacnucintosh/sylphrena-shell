@@ -89,6 +89,11 @@ def render(shell_dir: Path, rest: str) -> str:
         watcher = shell_dir / "scripts" / "start-shell-with-tray-watcher.sh"
         cmd = str(watcher) if watcher.is_file() else "sylph shell -d"
         lines += ['hl.on("hyprland.start", function()', f'  hl.exec_cmd("{cmd}")', "end)"]
+    if not re.search(r"disable_hyprland_logo\s*=\s*true", rest):
+        # Hyprland's own wallpaper (logo, mascot, a random line) flashes until the shell draws its own: plain black
+        lines += ["-- No Hyprland wallpaper while the shell starts (it draws its own)",
+                  "hl.config({ misc = { disable_hyprland_logo = true, disable_splash_rendering = true, "
+                  "force_default_wallpaper = 0, background_color = 0xff000000 } })"]
     kb = keyboard_line(rest)
     if kb:
         lines += ["-- The keyboard layout of the system (Hyprland's default is \"us\")", kb]
