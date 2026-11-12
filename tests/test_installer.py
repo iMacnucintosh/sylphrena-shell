@@ -136,6 +136,28 @@ class Run(unittest.TestCase):
             out = subprocess.run(["bash", f.name], capture_output=True, text=True)
         self.assertEqual(out.stdout, "sudo")
 
+    def test_build_jobs_fit_in_memory(self):
+        gib = 1024 * 1024
+        self.assertEqual(inst.build_jobs(mem_kib=4 * gib, cpus=8), 2)      # a small VM
+        self.assertEqual(inst.build_jobs(mem_kib=3 * gib, cpus=8), 1)
+        self.assertEqual(inst.build_jobs(mem_kib=1 * gib, cpus=8), 1)      # never zero
+        self.assertEqual(inst.build_jobs(mem_kib=64 * gib, cpus=12), 12)   # plenty: all the cores
+        self.assertEqual(inst.build_jobs(mem_kib=0, cpus=6), 6)            # unknown memory: no limit
+
+    def test_the_users_own_build_flags_win(self):
+        import os
+        from unittest import mock
+        with mock.patch.dict(os.environ, {"MAKEFLAGS": "-j7"}, clear=False):
+            os.environ.pop("CMAKE_BUILD_PARALLEL_LEVEL", None)
+            n = inst.limit_build_jobs()
+            self.assertEqual(os.environ["MAKEFLAGS"], "-j7")
+            self.assertEqual(os.environ["CMAKE_BUILD_PARALLEL_LEVEL"], str(n))
+
+    def test_a_killed_compiler_is_recognised(self):
+        self.assertTrue(inst.out_of_memory(["c++: fatal error: la señal Terminado (killed) terminó el programa cc1plus"]))
+        self.assertTrue(inst.out_of_memory(["g++: internal compiler error: Killed (program cc1plus)"]))
+        self.assertFalse(inst.out_of_memory(["error: undefined reference to foo"]))
+
     def test_a_required_failure_stops_the_rest(self):
         r = inst.Runner(dry=True, helper="yay", log=None)
         r.run = lambda cmd, **k: False
