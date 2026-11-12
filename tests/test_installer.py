@@ -170,6 +170,18 @@ class Run(unittest.TestCase):
         self.assertTrue(inst.out_of_memory(["g++: internal compiler error: Killed (program cc1plus)"]))
         self.assertFalse(inst.out_of_memory(["error: undefined reference to foo"]))
 
+    def test_an_earlier_build_is_removed_even_with_read_only_parts(self):
+        import os, tempfile
+        with tempfile.TemporaryDirectory() as d:
+            old = Path(d) / "sylphrena-shell-git"
+            (old / "src" / "locked").mkdir(parents=True)
+            (old / "src" / "locked" / "file").write_text("x")
+            os.chmod(old / "src" / "locked" / "file", 0o444)
+            os.chmod(old / "src" / "locked", 0o555)                 # a read-only directory: plain rmtree fails here
+            r = inst.Runner(dry=False, helper=None, log=None)
+            self.assertTrue(r.remove_tree(old))
+            self.assertFalse(old.exists())
+
     def test_a_required_failure_stops_the_rest(self):
         r = inst.Runner(dry=True, helper="yay", log=None)
         r.run = lambda cmd, **k: False

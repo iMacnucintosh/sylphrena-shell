@@ -363,6 +363,25 @@ class Runner:
                 self.spinner.detail = out.strip()
         return p.wait() == 0
 
+    def remove_tree(self, path: Path) -> bool:
+        """Remove an earlier build (read-only files included); True if it is gone. The reason goes to the log."""
+        if not path.exists():
+            return True
+
+        def writable(func, p, exc):
+            try:
+                os.chmod(os.path.dirname(p), 0o755)
+                os.chmod(p, 0o755)
+                func(p)
+            except OSError as e:
+                self._to_log(f"could not remove {p}: {e}")
+
+        try:
+            shutil.rmtree(path, onexc=writable)
+        except OSError as e:
+            self._to_log(f"could not remove {path}: {e}")
+        return not path.exists()
+
     def keep_sudo(self) -> bool:
         if self.dry:
             return True
@@ -393,9 +412,11 @@ class Runner:
             work = CACHE / name
             conf = CACHE / "makepkg.conf"
             if not self.dry:
-                shutil.rmtree(work, ignore_errors=True)
                 CACHE.mkdir(parents=True, exist_ok=True)
                 conf.write_text(MAKEPKG_CONF)
+                if not self.remove_tree(work):
+                    # Something in an earlier build could not be removed: build somewhere new instead of failing
+                    work = CACHE / f"{name}-{int(time.time())}"
             return self.run(["git", "clone", "--depth", "1", url, str(work)]) and \
                 self.run(["makepkg", "--config", str(conf), "-si", "--noconfirm", "--needed"], cwd=(work / sub))
         if k == "user":
