@@ -2,6 +2,14 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## Sin publicar
+
+- **Contraseña de las actualizaciones:** el socket que la guarda en memoria es privado desde que se crea (antes, un instante con los permisos por defecto) y solo responde a procesos de tu usuario.
+- **Actualizar, quitar o ver un paquete desde la lista:** el nombre llega a la terminal como argumento y no pegado dentro de la orden.
+- **Desplegable de distribuciones de teclado de la barra:** usa las mismas distribuciones y nombres que Nexus → Idioma y región, sin su propio lector de XKB.
+- **Log limpio:** fuera cientos de avisos que dejaban el orbe, el menú de la bandeja y las notificaciones al cerrarse.
+- **Limpieza:** código, opciones y traducciones que ya no usaba nadie (entre ellas `utilities.toasts.kbLimit`, que se borra sola de las configuraciones existentes).
+
 ## 0.5.5 (2026-11-12)
 
 - **La fuente del reloj, el grabador de pantalla y el brillo de monitores externos vienen con la shell:** son dependencias de su paquete (`ttf-rubik-vf` desde el AUR, `gpu-screen-recorder`, `ddcutil`, y el paquete carga `i2c-dev` al arrancar) y dejan de ser opciones del instalador, donde solo queda recomendado el navegador Zen.
