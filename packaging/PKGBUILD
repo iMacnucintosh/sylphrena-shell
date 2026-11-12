@@ -24,7 +24,7 @@ depends=(
   # The CLI and the apps that come with it
   'sylphrena-cli-git' 'things-git' 'seeker-git' 'kitty'
 )
-makedepends=('git' 'cmake' 'ninja' 'qt6-shadertools')
+makedepends=('git' 'cmake' 'ninja' 'qt6-shadertools' 'gettext')
 optdepends=('ttf-rubik-vf: the font of the clock and the workspaces (AUR)'
             'gpu-screen-recorder: screen recording (sylph record)'
             'fish: the calculator of the launcher opens qalc in it'

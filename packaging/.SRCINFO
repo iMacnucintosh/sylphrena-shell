@@ -10,6 +10,7 @@ pkgbase = sylphrena-shell-git
 	makedepends = cmake
 	makedepends = ninja
 	makedepends = qt6-shadertools
+	makedepends = gettext
 	depends = quickshell-git
 	depends = hyprland
 	depends = qt6-base
