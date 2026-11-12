@@ -278,7 +278,9 @@ StyledWindow {
 
                         readonly property bool isFav: modelData.section === "favorite" || Clipboard.isFavorite(modelData)
                         readonly property bool selected: index === Clipboard.currentIndex
-                        readonly property bool hovered: rowLayer.containsMouse
+                        // Over the whole row, its buttons included: a MouseArea loses the hover to the star, which then
+                        // hid itself and let the click through to the row (pasting instead of marking a favourite)
+                        readonly property bool hovered: rowHover.hovered
                         readonly property bool wantsPreview: leading.isImage && leading.thumbReady && (hovered || (selected && win.keyboardNav))
 
                         onWantsPreviewChanged: {
@@ -294,6 +296,10 @@ StyledWindow {
 
                         width: list.width
                         height: Tokens.font.body.small.pointSize + Tokens.padding.large * 2
+
+                        HoverHandler {
+                            id: rowHover
+                        }
 
                         StyledRect {
                             anchors.fill: parent
