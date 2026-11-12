@@ -68,6 +68,10 @@ def hide(ws, state):
         return
     state[str(ws)] = saved
     save(state)
+    # Float + restore the size + park all windows in one go: a window turned floating comes with another
+    # size, which must not be seen. Only the final slide is animated.
+    batch_cmds = ['eval hl.config({ animations = { enabled = false } })']
+    slides = []
     for c in wins:
         m = mons.get(c["monitor"])
         scale = (m.get("scale") or 1) if m else 1
@@ -76,9 +80,17 @@ def hide(ws, state):
         centre = c["at"][0] + c["size"][0] / 2
         # Left half slides out to the left, right half to the right.
         x = left - c["size"][0] - 20 if centre < left + width / 2 else left + width + 20
+        a = win(c["address"])
         if not c["floating"]:
-            set_float(c["address"], True)
-        move(c["address"], x, c["at"][1])
+            batch_cmds.append(f'dispatch hl.dsp.window.float({{ action = "enable", {a} }})')
+        batch_cmds.append(f'dispatch hl.dsp.window.resize({{ x = {c["size"][0]}, y = {c["size"][1]}, exact = true, {a} }})')
+        batch_cmds.append(f'dispatch hl.dsp.window.move({{ x = {c["at"][0]}, y = {c["at"][1]}, {a} }})')
+        slides.append((a, x, c["at"][1]))
+    anim = option("animations:enabled")
+    batch_cmds.append(f"eval hl.config({{ animations = {{ enabled = {'false' if anim is False else 'true'} }} }})")
+    for a, x, y in slides:
+        batch_cmds.append(f"dispatch hl.dsp.window.move({{ x = {int(x)}, y = {int(y)}, {a} }})")
+    batch(batch_cmds)
 
 
 def cut(rects, vertical):
