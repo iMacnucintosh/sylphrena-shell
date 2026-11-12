@@ -49,9 +49,9 @@ StyledWindow {
     readonly property real shadowOpacity: 0.7 * (1 - fsTransitionProg)
     readonly property real borderLayoutThickness: collapseBorder ? 0 : contentItem.Config.border.thickness
     // With the sidebar open the toast sits beside it (both positions), so it only stacks on
-    // the notification popups / utilities while the sidebar is closed.
+    // the notification popups while the sidebar is closed; beside the quick toggles too, never on them.
     readonly property bool toastsJoinNotifs: panels.toasts.height > 0 && !panels.toasts.atBottom && panels.notifications.height > 0 && !panels.sidebar.visible
-    readonly property bool toastsJoinUtils: panels.toasts.height > 0 && panels.toasts.atBottom && panels.utilities.visible && !panels.sidebar.visible
+    readonly property bool toastsJoinUtils: false
 
     property color surfaceColour: Colours.tPalette.m3surface
 

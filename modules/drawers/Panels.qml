@@ -84,8 +84,14 @@ Item {
         // popups / utilities; with the sidebar open it moves beside it in either corner.
         // Vertical position via y, not anchors: toggling top/bottom anchors at runtime
         // leaves both set and stretches it.
-        y: atBottom ? (utilities.visible && !sidebar.visible ? utilities.y : root.height) - height + edgeOverlap : -edgeOverlap
+        // The quick toggles on their own (no side panel) push it aside too, like the side panel does
+        readonly property bool besideUtilities: atBottom && utilities.visible && !sidebar.visible
+
+        y: atBottom ? root.height - height + edgeOverlap : -edgeOverlap
         anchors.right: sidebar.visible ? sidebar.left : parent.right
+        // Slides aside as the quick toggles come up, at their pace (they rise from the bottom, so nothing would
+        // drag it sideways as the side panel does)
+        anchors.rightMargin: besideUtilities ? utilities.width * (1 - utilities.offsetScale) : 0
         // Stacked on the popups it shares their lobe width.
         width: notifications.belowToasts && notifications.visible ? Math.max(implicitWidth, notifications.width) : implicitWidth
     }

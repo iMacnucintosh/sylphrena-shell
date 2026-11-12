@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Sylphrena
 import Sylphrena.I18n
+import qs.utils
 
 // What Sylphrena itself can update, as two more sources of the updates list (next to pacman, the AUR and Flatpak):
 //  · SYLPHRENA: its packages (the shell, the CLI, Seeker, Things) behind their latest release, on a machine that
@@ -48,7 +49,14 @@ Singleton {
                 desc: ""
             }))]
 
-    property var _announced: []
+    // What has been announced already (per version), kept across restarts: each new version is announced once
+    readonly property var _announced: {
+        try {
+            return JSON.parse(announcedFile.text()).announced ?? [];
+        } catch (e) {
+            return [];
+        }
+    }
 
     function check(): void {
         if (!proc.running)
@@ -60,10 +68,18 @@ Singleton {
         const fresh = root.entries.filter((_, i) => !root._announced.includes(keys[i]));
         if (!fresh.length)
             return;
-        root._announced = [...root._announced, ...keys];
+        announcedFile.setText(JSON.stringify({ announced: [...new Set([...root._announced, ...keys])] }));
         const names = fresh.map(e => `${e.name} ${e.to}`).join(", ");
         const title = fresh.some(e => e.source === "SYLPHRENA") ? Tr.tr("New version of Sylphrena") : Tr.tr("Extension updates");
         Toaster.toast(title, Tr.tr("%1 · update it from Nexus → Updates").arg(names), "sylphrena");
+    }
+
+    FileView {
+        id: announcedFile
+
+        path: `${Paths.state}/updates-announced.json`
+        printErrors: false
+        blockLoading: true
     }
 
     Timer {
