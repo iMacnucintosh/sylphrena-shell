@@ -49,6 +49,21 @@ Column {
         KeyNavigation.down: suspendBtn
     }
 
+    // The animated Sylphrena orb between the buttons; only while the menu is open (it never stops animating)
+    Item {
+        implicitWidth: Tokens.sizes.session.button
+        implicitHeight: Tokens.sizes.session.button
+
+        Loader {
+            anchors.centerIn: parent
+            active: root.screenState.session
+
+            sourceComponent: SylphOrb {
+                orbSize: Math.round(Tokens.sizes.session.button / 1.55)
+            }
+        }
+    }
+
     SessionButton {
         id: suspendBtn
 
