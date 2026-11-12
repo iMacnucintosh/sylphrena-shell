@@ -94,8 +94,8 @@ ES = {
     "Run without a password prompt: not possible here": "Ejecutar sin pedir contraseña: no es posible aquí",
     "Done": "Hecho", "Failed": "Falló", "Skipped": "Omitido",
     "It did not finish: %s": "No terminó: %s",
-    "Want more? Extensions (dashboard widgets, your Steam library, a VPN…) are installed from Things, in its Sylphrena section.":
-        "¿Quieres más? Las extensiones (widgets del dashboard, tu biblioteca de Steam, una VPN…) se instalan desde Things, en su sección Sylphrena.",
+    "Want more? Extensions (dashboard widgets, your Steam library, a VPN...) are installed from Things, in its Sylphrena section.":
+        "¿Quieres más? Las extensiones (widgets del dashboard, tu biblioteca de Steam, una VPN...) se instalan desde Things, en su sección Sylphrena.",
     "The computer ran out of memory while compiling. Give it more RAM, or run the installer again with fewer builds at once: %s":
         "El equipo se quedó sin memoria al compilar. Dale más RAM o vuelve a lanzar el instalador compilando menos cosas a la vez: %s", "See the log: %s": "Mira el registro: %s",
     "Everything is ready.": "Todo está listo.",
@@ -131,7 +131,7 @@ ES = {
     "It will ask for your administrator password once.": "Pedirá tu contraseña de administrador una vez.",
     "No password needed.": "No hace falta contraseña.",
     "Installing": "Instalando", "Everything is ready": "Todo está listo", "Something did not go as planned": "Algo no ha salido como se esperaba",
-    "Start Sylphrena now": "Arranca Sylphrena ahora", "or log out and log back in: Hyprland starts it by itself": "o cierra sesión y vuelve a entrar: Hyprland la arranca sola",
+    "Restart the computer to start using Sylphrena": "Reinicia el equipo para empezar a usar Sylphrena",
     "Your Hyprland configuration was copied to": "Tu configuración de Hyprland se copió en", "Details of every step": "Detalle de cada paso",
     "Welcome to Sylphrena.": "Bienvenido a Sylphrena.",
     "The installer will open the welcome guide the first time the shell starts.": "La primera vez que arranque la shell se abrirá la guía de bienvenida.",
@@ -296,7 +296,9 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         "this computer has no built-in screen, so its monitor is controlled over DDC/CI" if not f.backlight
         else "lets the brightness slider reach an external monitor over DDC/CI",
         True, todo=not f.have("ddcutil"), default=not f.backlight, steps=ddc_steps)
-    shell_dir = installed_shell_dir()
+    # The setup steps run after the packages, so they use the installed shell even though, while planning, it is
+    # not there yet (otherwise hyprland.lua and the settings would point at the clone, which may be deleted)
+    shell_dir = INSTALLED_SHELL if any(i.id == "sylphrena-shell-git" for i in items) else installed_shell_dir()
     add("hyprland-config", "Setup", "Hook Sylphrena into Hyprland",
         "starts the shell with the session and loads its shortcuts and rules; your configuration is only added to, and copied first",
         False, todo=f.hyprland_needed,
@@ -591,10 +593,11 @@ def finish(results: list[tuple[Item, str, int]], dry: bool, log: Path) -> int:
     print("  " + ui.rgb(ui.LAVENDER, tr("Welcome to Sylphrena."), True))
     print(ui.wrap(tr("The installer will open the welcome guide the first time the shell starts."), 2, "  "))
     print()
-    print(ui.wrap(tr("Want more? Extensions (dashboard widgets, your Steam library, a VPN…) are installed from Things, in its Sylphrena section."), 2, "  "))
+    print(ui.wrap(tr("Want more? Extensions (dashboard widgets, your Steam library, a VPN...) are installed from Things, in its Sylphrena section."), 2, "  "))
     print()
-    print("  " + ui.style(tr("Start Sylphrena now"), bold=True) + ":  " + ui.rgb(ui.ROSE, "sylph shell -d"))
-    print("  " + ui.style(tr("or log out and log back in: Hyprland starts it by itself"), dim=True))
+    # A fresh start, not a shell launched by hand: the login screen, the Hyprland hook and the environment
+    # (Qt theme…) only apply cleanly to a new session
+    print("  " + ui.style(tr("Restart the computer to start using Sylphrena"), bold=True) + ":  " + ui.rgb(ui.ROSE, "sudo reboot"))
     backup = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "hypr" / "hyprland.lua.sylphrena-backup"
     if backup.exists():
         print("\n  " + ui.style(f"{tr('Your Hyprland configuration was copied to')} {backup}", dim=True))

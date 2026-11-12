@@ -100,6 +100,16 @@ class Plan(unittest.TestCase):
                    and subprocess.run(["pacman", "-Si", d], capture_output=True).returncode != 0]
         self.assertEqual(missing, [])
 
+    def test_the_setup_steps_use_the_installed_shell_not_the_clone(self):
+        # planned before the package exists: hyprland.lua must still point at /etc/xdg, not at the folder cloned
+        items = {i.id: i for i in inst.build_plan(bare())}
+        for item in ("hyprland-config", "first-run", "login-screen"):
+            for step in items[item].steps:
+                if step.kind in ("user", "root"):
+                    self.assertTrue(all(str(inst.ROOT) not in a for a in step.args), (item, step.args))
+        hook = items["hyprland-config"].steps[0].args
+        self.assertEqual(hook[hook.index("--shell-dir") + 1], str(inst.INSTALLED_SHELL))
+
     def test_extensions_are_not_part_of_it(self):
         # they are installed later from Things; the installer only says so at the end
         self.assertNotIn("extensions", ids(inst.build_plan(bare())))

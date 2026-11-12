@@ -195,9 +195,9 @@ def checklist(groups: list[tuple[str, list]], describe, lock_text, hint: str, st
         top = max(0, min(top, len(lines) - height))
         view = lines[top:top + height]
         if top > 0:
-            view[0] = "  " + style("↑ …", dim=True)
+            view[0] = "  " + style("↑ ...", dim=True)
         if top + height < len(lines):
-            view[-1] = "  " + style("↓ …", dim=True)
+            view[-1] = "  " + style("↓ ...", dim=True)
         view += [""] * (rows_available - len(view)) if len(lines) >= rows_available else []
         w = min(width(), 80)
         it = flat[pos]
@@ -251,7 +251,7 @@ class Spinner:
             self._thread = threading.Thread(target=self._spin, daemon=True)
             self._thread.start()
         else:
-            print(f"  … {self.title}", flush=True)
+            print(f"  ... {self.title}", flush=True)
         return self
 
     def _spin(self) -> None:
