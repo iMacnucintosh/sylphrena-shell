@@ -87,10 +87,9 @@ class Plan(unittest.TestCase):
         import subprocess
         self.assertEqual(subprocess.run(["bash", "-n", str(Path(__file__).resolve().parent.parent / "scripts/system/10-greeter.sh")]).returncode, 0)
 
-    def test_extensions_are_optional_and_off(self):
-        ext = {i.id: i for i in inst.build_plan(bare())}["extensions"]
-        self.assertFalse(ext.on)
-        self.assertEqual(ext.group, "Optional")
+    def test_extensions_are_not_part_of_it(self):
+        # they are installed later from Things; the installer only says so at the end
+        self.assertNotIn("extensions", ids(inst.build_plan(bare())))
 
     def test_what_is_done_is_not_offered(self):
         f = bare()
