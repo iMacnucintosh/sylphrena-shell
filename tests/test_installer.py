@@ -112,7 +112,7 @@ class Run(unittest.TestCase):
         with redirect_stdout(io.StringIO()):
             results = inst.execute(items, r)
         self.assertTrue(calls)
-        self.assertTrue(all(s in ("done", "skipped") for _, s in results))
+        self.assertTrue(all(s in ("done", "skipped") for _, s, _ in results))
         flat = [" ".join(c) for c in calls]
         self.assertTrue(any(c.startswith("sudo pacman -S --needed --noconfirm") for c in flat))
         self.assertTrue(any(c.startswith("yay -S") for c in flat))
@@ -122,7 +122,7 @@ class Run(unittest.TestCase):
         r.run = lambda cmd, **k: False
         with redirect_stdout(io.StringIO()):
             results = inst.execute(inst.build_plan(bare()), r)
-        self.assertEqual([s for _, s in results if s == "failed"], ["failed"])
+        self.assertEqual([s for _, s, _ in results if s == "failed"], ["failed"])
         self.assertLess(len(results), len(inst.build_plan(bare())))
 
     def test_an_optional_failure_does_not_stop_the_rest(self):
@@ -133,7 +133,7 @@ class Run(unittest.TestCase):
         r.run = lambda cmd, **k: False
         with redirect_stdout(io.StringIO()):
             results = inst.execute(inst.build_plan(f), r)
-        self.assertGreater(len([1 for _, s in results if s == "failed"]), 1)
+        self.assertGreater(len([1 for _, s, _ in results if s == "failed"]), 1)
 
 
 class Options(unittest.TestCase):
@@ -145,6 +145,50 @@ class Options(unittest.TestCase):
     def test_refuses_what_it_does_not_know(self):
         with self.assertRaises(SystemExit):
             inst.parse(["--format-disk"])
+
+
+
+class Look(unittest.TestCase):
+    def test_plain_output_when_there_is_no_colour_terminal(self):
+        ui = sys.modules["installer_ui"]
+        out = io.StringIO()
+        with redirect_stdout(out):
+            ui.banner("A Material You shell for Hyprland", "v9.9.9")
+        text = out.getvalue()
+        self.assertNotIn("\x1b", text)            # stdout is not a terminal here
+        self.assertIn("╔═╗", text)
+        self.assertIn("A Material You shell for Hyprland", text)
+        self.assertIn("v9.9.9", text)
+        self.assertEqual(len([l for l in text.splitlines() if "╔" in l or "╚" in l or "╠" in l]), 3)
+
+    def test_a_failing_command_shows_its_last_lines_and_stops_a_required_item(self):
+        r = inst.Runner(dry=False, helper="yay", log=None)
+        item = inst.Item("x", "Required", "Something", "why", False, required=True,
+                         steps=[inst.Step("user", ["sh", "-c", "echo building; echo it broke >&2; exit 3"])])
+        out = io.StringIO()
+        with redirect_stdout(out):
+            results = inst.execute([item], r)
+        self.assertEqual(results[0][1], "failed")
+        self.assertIn("it broke", out.getvalue())
+        self.assertIn("Something", out.getvalue())
+
+    def test_a_working_command_is_quiet(self):
+        r = inst.Runner(dry=False, helper="yay", log=None)
+        item = inst.Item("x", "Setup", "Something", "why", False, steps=[inst.Step("user", ["sh", "-c", "echo secret-output"])])
+        out = io.StringIO()
+        with redirect_stdout(out):
+            results = inst.execute([item], r)
+        self.assertEqual(results[0][1], "done")
+        self.assertNotIn("secret-output", out.getvalue())   # it goes to the log, not the screen
+        r2 = inst.Runner(dry=False, helper="yay", log=None, verbose=True)
+        out2 = io.StringIO()
+        with redirect_stdout(out2):
+            inst.execute([item], r2)
+        self.assertIn("secret-output", out2.getvalue())
+
+    def test_the_demo_option_is_a_dry_run(self):
+        o = inst.parse(["--demo"])
+        self.assertTrue(o["demo"] and o["dry"])
 
 
 if __name__ == "__main__":

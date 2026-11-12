@@ -13,7 +13,7 @@ It looks at the system, shows what is missing and why, asks, and does it with a 
 Nothing is changed before you confirm. It can be run again: it only does what is still missing.
 
 Options:  --yes (accept the defaults)   --dry-run (show the commands, run nothing)   --list (what it found, JSON)
-          --only ID[,ID]   --skip ID[,ID]   --no-login-screen   --help
+          --only ID[,ID]   --skip ID[,ID]   --no-login-screen   --demo (preview on a bare system)   --verbose (show the output of every command)   --help
 Log: ~/.local/state/sylphrena/install.log
 """
 from __future__ import annotations
@@ -23,15 +23,17 @@ import os
 import shutil
 import subprocess
 import sys
-import textwrap
 import threading
 import time
+from collections import deque
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import installer_ui as ui  # noqa: E402
 ROOT = HERE.parent
 INSTALLED_SHELL = Path("/etc/xdg/quickshell/sylphrena")
 GITHUB = "https://github.com/iMacnucintosh"
@@ -86,6 +88,20 @@ ES = {
     "asks for the password": "pide contraseña", "no password": "sin contraseña",
     "Hyprland needs to be installed first: it will be added.": "Primero hace falta Hyprland: se añadirá.",
     "yes": "sí", "no": "no",
+    "A Material You shell for Hyprland": "Una shell Material You para Hyprland",
+    "This is what Sylphrena needs on this computer. Nothing is changed until you press Enter.": "Esto es lo que Sylphrena necesita en este equipo. No se cambia nada hasta que pulses Intro.",
+    "↑↓ move   space switch on or off   enter install   q quit": "↑↓ moverse   espacio activar o desactivar   intro instalar   q salir",
+    "%d of %d selected": "%d de %d seleccionados", "required": "necesario",
+    "It will ask for your administrator password once.": "Pedirá tu contraseña de administrador una vez.",
+    "No password needed.": "No hace falta contraseña.",
+    "Installing": "Instalando", "Everything is ready": "Todo está listo", "Something did not go as planned": "Algo no ha salido como se esperaba",
+    "Start Sylphrena now": "Arranca Sylphrena ahora", "or log out and log back in: Hyprland starts it by itself": "o cierra sesión y vuelve a entrar: Hyprland la arranca sola",
+    "Your Hyprland configuration was copied to": "Tu configuración de Hyprland se copió en", "Details of every step": "Detalle de cada paso",
+    "Welcome to Sylphrena.": "Bienvenido a Sylphrena.",
+    "The installer will open the welcome guide the first time the shell starts.": "La primera vez que arranque la shell se abrirá la guía de bienvenida.",
+    "(dry run: nothing was changed)": "(simulación: no se ha cambiado nada)",
+    "Last lines of the output:": "Últimas líneas de la salida:",
+    "Nothing is installed yet.": "Todavía no hay nada instalado.",
 }
 
 
@@ -273,36 +289,48 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
 # ── Doing it ─────────────────────────────────────────────────────────────────────────────────────
 
 class Runner:
-    """Runs the steps; `dry` only prints them. Everything goes to the log too."""
+    """Runs the steps; `dry` only prints them. Quiet by default (a spinner and the log); `verbose` shows the output."""
 
-    def __init__(self, dry: bool, helper: str | None, log: Path | None):
-        self.dry, self.helper, self.log = dry, helper or "yay", log
+    def __init__(self, dry: bool, helper: str | None, log: Path | None, verbose: bool = False):
+        self.dry, self.helper, self.log, self.verbose = dry, helper or "yay", log, verbose
         self._sudo_alive = False
+        self.spinner: ui.Spinner | None = None
+        self.recent: deque[str] = deque(maxlen=60)
 
-    def say(self, text: str, out=None) -> None:
-        print(text, file=out or sys.stdout, flush=True)
+    def _to_log(self, text: str) -> None:
         if self.log:
             with self.log.open("a") as fh:
-                fh.write(text + "\n")
+                fh.write(text if text.endswith("\n") else text + "\n")
+
+    def say(self, text: str) -> None:
+        print(text, flush=True)
+        self._to_log(text)
 
     def run(self, cmd: list[str], cwd: Path | None = None, input_text: str | None = None) -> bool:
-        self.say("   $ " + " ".join(cmd))
+        line = "$ " + " ".join(cmd)
+        self._to_log(line)
         if self.dry:
+            print("   " + ui.style(line, dim=True))
             return True
+        if self.spinner:
+            self.spinner.detail = line
         try:
             p = subprocess.Popen(cmd, cwd=cwd, stdin=subprocess.PIPE if input_text is not None else subprocess.DEVNULL,
                                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         except OSError as e:
-            self.say(f"   {e}")
+            self._to_log(str(e))
+            self.recent.append(str(e))
             return False
         if input_text is not None:
             p.stdin.write(input_text)
             p.stdin.close()
-        for line in p.stdout:
-            if self.log:
-                with self.log.open("a") as fh:
-                    fh.write(line)
-            sys.stdout.write("   │ " + line if line.endswith("\n") else line)
+        for out in p.stdout:
+            self._to_log(out)
+            self.recent.append(out)
+            if self.verbose:
+                sys.stdout.write("   │ " + out)
+            elif self.spinner and out.strip():
+                self.spinner.detail = out.strip()
         return p.wait() == 0
 
     def keep_sudo(self) -> bool:
@@ -353,74 +381,116 @@ class Runner:
 def install_extension(r: Runner, ext_id: str) -> bool:
     script = installed_shell_dir() / "scripts" / "ext.py"
     if r.dry:
-        r.say(f"   $ python3 {script} install-hub {ext_id} --url <zip of the hub> --sha256 <hash> --version <version>")
+        r.run([sys.executable, str(script), "install-hub", ext_id, "--url", "<zip of the hub>", "--sha256", "<hash>", "--version", "<version>"])
         return True
     try:
         with urllib.request.urlopen(HUB_INDEX, timeout=15) as resp:
             entry = next(i for i in json.load(resp)["items"] if i["id"] == ext_id)
     except (OSError, ValueError, StopIteration, urllib.error.URLError) as e:
-        r.say(f"   could not read the hub: {e}")
+        r._to_log(f"could not read the hub: {e}")
+        r.recent.append(f"could not read the hub: {e}")
         return False
     return r.run([sys.executable, str(script), "install-hub", ext_id, "--url", entry["zip"], "--sha256", entry["sha256"],
                   "--version", entry["version"]])
 
 
-def execute(items: list[Item], r: Runner) -> list[tuple[Item, str]]:
-    results: list[tuple[Item, str]] = []
+def execute(items: list[Item], r: Runner) -> list[tuple[Item, str, int]]:
+    """[(item, "done" | "failed" | "skipped", seconds)]. A required item that fails stops the rest."""
+    results: list[tuple[Item, str, int]] = []
+    todo = [i for i in items if i.on and i.todo]
     for it in items:
         if not it.on or not it.todo:
-            results.append((it, "skipped"))
+            results.append((it, "skipped", 0))
             continue
-        r.say(f"\n==> {tr(it.title)}")
-        ok = all(r.step(s) for s in it.steps)
-        results.append((it, "done" if ok else "failed"))
-        if not ok and it.required:
-            r.say("\n" + tr("It did not finish: %s") % tr(it.title))
-            break
+        n = len([x for x in results if x[1] != "skipped"]) + 1
+        title = f"[{n}/{len(todo)}] {tr(it.title)}"
+        r.recent.clear()
+        r._to_log(f"==> {it.title}")
+        started = time.time()
+        if r.dry or r.verbose:
+            print(f"\n  {ui.rgb(ui.LAVENDER, '◆', True)} {ui.style(title, bold=True)}")
+            ok = all(r.step(s) for s in it.steps)
+        else:
+            with ui.Spinner(title) as sp:
+                r.spinner = sp
+                ok = all(r.step(s) for s in it.steps)
+                r.spinner = None
+        secs = int(time.time() - started)
+        results.append((it, "done" if ok else "failed", secs))
+        if not (r.dry or r.verbose):
+            took = ui.style(f"{secs}s", dim=True)
+            print(("  " + ui.ok(f"{tr(it.title)}  {took}")) if ok else ("  " + ui.bad(f"{tr(it.title)}  {took}")), flush=True)
+        if not ok:
+            if not (r.dry or r.verbose) and r.recent:
+                print("\n  " + ui.style(tr("Last lines of the output:"), dim=True))
+                print(ui.tail(r.recent))
+            if it.required:
+                print("\n  " + ui.bad(tr("It did not finish: %s") % tr(it.title)))
+                break
     return results
 
 
 # ── The conversation ─────────────────────────────────────────────────────────────────────────────
 
 GROUPS = ["Required", "Recommended", "Setup", "Login screen", "Optional"]
-BOLD, DIM, RESET = ("\033[1m", "\033[2m", "\033[0m") if sys.stdout.isatty() else ("", "", "")
 
 
-def show(items: list[Item], f: Facts) -> None:
-    print(f"\n{BOLD}{tr('Sylphrena installer')}{RESET}\n")
+def version() -> str:
+    code, out = sh(["git", "-C", str(ROOT), "describe", "--tags", "--match", "v0.*"])
+    return out.split("-")[0] if code == 0 and out else ""
+
+
+def describe(it: Item, f: Facts) -> str:
+    if not it.todo:
+        return tr("Already done")
+    why = tr(it.why)
+    return why % f.display_manager if "%s" in why else why
+
+
+def lock_text(it: Item) -> str:
+    if not it.todo:
+        return ""
+    return tr("It will ask for your administrator password once.") if it.root else tr("No password needed.")
+
+
+def grouped(items: list[Item]) -> list[tuple[str, list[Item]]]:
+    return [(tr(g), [i for i in items if i.group == g]) for g in GROUPS if any(i.group == g for i in items)]
+
+
+def show_plain(items: list[Item], f: Facts) -> None:
     for g in GROUPS:
         rows = [(i, it) for i, it in enumerate(items, 1) if it.group == g]
         if not rows:
             continue
-        print(f"{BOLD}{tr(g)}{RESET}")
+        ui.rule(tr(g))
         for i, it in rows:
-            mark = "[x]" if it.on else "[ ]"
-            if not it.todo:
-                mark, why = " ✓ ", tr("Already done")
-            else:
-                why = tr(it.why) % f.display_manager if "%s" in it.why else tr(it.why)
-            lock = f" ({tr('asks for the password') if it.root else tr('no password')})" if it.todo else ""
-            head = f"  {mark} {i:>2}. "
-            body = f"{tr(it.title)}  {DIM}— {why}{lock}{RESET}"
-            width = max(40, shutil.get_terminal_size((100, 24)).columns - 2)
-            print(textwrap.fill(head + body, width=width, subsequent_indent=" " * len(head), break_long_words=False,
-                                break_on_hyphens=False))
-        print()
+            mark = ui.rgb(ui.GREEN, "✔") if not it.todo else (ui.rgb(ui.LAVENDER, "◉") if it.on else ui.style("○", dim=True))
+            head = f"    {mark} {i:>2}. "
+            print(ui.wrap(f"{tr(it.title)}  {ui.style('— ' + describe(it, f), dim=True)}", 11, head))
+    print()
 
 
 def conversation(items: list[Item], f: Facts, yes: bool) -> bool:
-    show(items, f)
-    todo = [i for i in items if i.todo and i.on]
-    if not todo:
-        print(tr("Nothing to do: everything is already in place."))
+    todo = lambda: [i for i in items if i.todo and i.on]  # noqa: E731
+    ui.banner(tr("A Material You shell for Hyprland"), version())
+    if not any(i.todo for i in items):
+        show_plain(items, f)
+        print("  " + tr("Nothing to do: everything is already in place."))
         return False
+    print(ui.wrap(tr("This is what Sylphrena needs on this computer. Nothing is changed until you press Enter."), 2, "  "))
     if yes or not sys.stdin.isatty():
+        show_plain(items, f)
         return True
+    if ui.can_interact():
+        groups = grouped(items)
+        status = lambda flat: tr("%d of %d selected") % (len([i for i in flat if i.todo and i.on]), len([i for i in flat if i.todo]))  # noqa: E731
+        return ui.checklist(groups, lambda it: describe(it, f), lock_text, tr("↑↓ move   space switch on or off   enter install   q quit"), status,
+                            label=lambda it: tr(it.title), required_text=tr("required"))
+    # A terminal without cursor control: switch items by number
     while True:
-        if any(i.root for i in todo):
-            print(tr("Administrator password: asked once"))
-        print(tr("Nothing has been changed yet."))
-        answer = input(tr("Type the number of an item to switch it on or off, Enter to continue, q to quit") + ": ").strip().lower()
+        show_plain(items, f)
+        print("  " + tr("Nothing has been changed yet."))
+        answer = input("  " + tr("Type the number of an item to switch it on or off, Enter to continue, q to quit") + ": ").strip().lower()
         if answer in ("q", "quit", "n", "no"):
             return False
         if answer == "":
@@ -430,12 +500,10 @@ def conversation(items: list[Item], f: Facts, yes: bool) -> bool:
                 it = items[int(token) - 1]
                 if it.todo and not it.required:
                     it.on = not it.on
-        show(items, f)
-        todo = [i for i in items if i.todo and i.on]
 
 
 def parse(argv: list[str]) -> dict:
-    opts = {"yes": False, "dry": False, "list": False, "only": None, "skip": set(), "login": True}
+    opts = {"demo": False, "yes": False, "dry": False, "list": False, "only": None, "skip": set(), "login": True, "verbose": False}
     it = iter(argv)
     for a in it:
         if a in ("--yes", "-y"):
@@ -444,6 +512,11 @@ def parse(argv: list[str]) -> dict:
             opts["dry"] = True
         elif a == "--list":
             opts["list"] = True
+        elif a == "--demo":
+            opts["demo"] = True
+            opts["dry"] = True
+        elif a == "--verbose":
+            opts["verbose"] = True
         elif a == "--no-login-screen":
             opts["login"] = False
         elif a == "--only":
@@ -459,9 +532,39 @@ def parse(argv: list[str]) -> dict:
     return opts
 
 
+def finish(results: list[tuple[Item, str, int]], dry: bool, log: Path) -> int:
+    failed = [it for it, s, _ in results if s == "failed"]
+    done = [it for it, s, _ in results if s == "done"]
+    ui.rule(tr("Something did not go as planned") if failed else tr("Everything is ready"))
+    for it, s, secs in results:
+        if s != "skipped":
+            print("  " + (ui.ok if s == "done" else ui.bad)(tr(it.title)))
+    print()
+    if failed:
+        print("  " + tr("See the log: %s") % log)
+        return 1
+    if dry:
+        print("  " + ui.style(tr("(dry run: nothing was changed)"), dim=True))
+        return 0
+    print("  " + ui.rgb(ui.LAVENDER, tr("Welcome to Sylphrena."), True))
+    print(ui.wrap(tr("The installer will open the welcome guide the first time the shell starts."), 2, "  "))
+    print()
+    print("  " + ui.style(tr("Start Sylphrena now"), bold=True) + ":  " + ui.rgb(ui.ROSE, "sylph shell -d"))
+    print("  " + ui.style(tr("or log out and log back in: Hyprland starts it by itself"), dim=True))
+    backup = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "hypr" / "hyprland.lua.sylphrena-backup"
+    if backup.exists():
+        print("\n  " + ui.style(f"{tr('Your Hyprland configuration was copied to')} {backup}", dim=True))
+    print("  " + ui.style(f"{tr('Details of every step')}: {log}", dim=True) + "\n")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     opts = parse(sys.argv[1:] if argv is None else argv)
     f = scan()
+    if opts["demo"]:
+        # What a bare Arch looks like (nothing of ours, no AUR helper, a desktop, another display manager); changes nothing
+        f = Facts(arch=True, helper=None, installed={"git"}, in_aur=set(AUR_DEPS) | {"ttf-rubik-vf"}, backlight=False,
+                  display_manager="sddm")
     if f.is_root:
         print(tr("Do not run this as root: the AUR packages cannot be built as root. Run it as your user; it asks for sudo when it needs it."), file=sys.stderr)
         return 1
@@ -480,33 +583,21 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if not conversation(items, f, opts["yes"]):
         if any(i.todo and i.on for i in items) or sys.stdin.isatty():
-            print(tr("Cancelled. Nothing was changed."))
+            print("\n  " + tr("Cancelled. Nothing was changed.") + "\n")
         return 0
     STATE.mkdir(parents=True, exist_ok=True)
     log = STATE / "install.log"
-    r = Runner(opts["dry"], f.helper, log if not opts["dry"] else None)
+    r = Runner(opts["dry"], f.helper, log if not opts["dry"] else None, verbose=opts["verbose"])
+    print()
     if any(i.root and i.on and i.todo for i in items) and not r.keep_sudo():
         print(tr("sudo does not work for this user: it is needed to install packages."), file=sys.stderr)
         return 1
+    ui.rule(tr("Installing"))
     try:
         results = execute(items, r)
     finally:
         r.stop_sudo()
-    print()
-    failed = [it for it, s in results if s == "failed"]
-    for it, s in results:
-        if s != "skipped":
-            print(f"  {'✓' if s == 'done' else '✗'} {tr(it.title)}  ({tr('Done') if s == 'done' else tr('Failed')})")
-    if failed:
-        print("\n" + tr("See the log: %s") % log)
-        return 1
-    if not opts["dry"]:
-        print("\n" + tr("Everything is ready."))
-        print(tr("Start it now with: sylph shell -d  (or log out and back in: Hyprland starts it)"))
-        backup = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "hypr" / "hyprland.lua.sylphrena-backup"
-        if backup.exists():
-            print(tr("A copy of your Hyprland configuration is in %s") % backup)
-    return 0
+    return finish(results, opts["dry"], log)
 
 
 if __name__ == "__main__":
