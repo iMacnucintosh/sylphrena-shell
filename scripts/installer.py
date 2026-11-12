@@ -364,21 +364,25 @@ class Runner:
         return p.wait() == 0
 
     def remove_tree(self, path: Path) -> bool:
-        """Remove an earlier build (read-only files included); True if it is gone. The reason goes to the log."""
+        """Remove an earlier build, even with folders it may not read or write; True if it is gone. It never raises:
+        whatever stops it goes to the log, and the caller builds somewhere else."""
         if not path.exists():
             return True
 
-        def writable(func, p, exc):
+        def force(_func, p, _exc):
             try:
-                os.chmod(os.path.dirname(p), 0o755)
-                os.chmod(p, 0o755)
-                func(p)
+                os.chmod(os.path.dirname(p), 0o700)
+                if os.path.isdir(p) and not os.path.islink(p):
+                    os.chmod(p, 0o700)
+                    shutil.rmtree(p, onexc=force)
+                else:
+                    os.unlink(p)
             except OSError as e:
                 self._to_log(f"could not remove {p}: {e}")
 
         try:
-            shutil.rmtree(path, onexc=writable)
-        except OSError as e:
+            shutil.rmtree(path, onexc=force)
+        except Exception as e:  # noqa: BLE001 — a leftover folder must not stop the installer
             self._to_log(f"could not remove {path}: {e}")
         return not path.exists()
 
