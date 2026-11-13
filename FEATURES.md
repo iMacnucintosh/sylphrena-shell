@@ -456,20 +456,10 @@ horizontal (en el carrusel el calendario no consume la rueda: `Calendar.scrollab
 - Para añadir un widget: entrada en `services/DashWidgets.qml` (+ `isEnabled`), caso en
   `modules/dashboard/dash/WidgetCarousel.qml` y, si tiene opciones, su tarjeta en `modules/nexus/pages/panels/DashboardPanel.qml`.
 
-## Plugin C++ (build user-local)
+## Plugin C++
 
-La shell **carga el plugin compilado en `~/.local`**, no el del paquete AUR (que vive en
-`/usr/lib/qt6/qml` y no lo pisamos):
-
-- Build **desde la raíz del repo** (`~/.config/quickshell/sylphrena`, su `CMakeLists.txt` ya trae
-  `cmake_minimum_required`): `cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_MODULES=plugin
-  -DCMAKE_INSTALL_PREFIX=$HOME/.local` → `cmake --build build` → `cmake --install build`.
-  Con `ENABLE_MODULES=plugin` no se sobrescribe `shell.qml` (la trampa del install solo aplica al
-  módulo `shell`); `build/` está gitignored.
-- La shell lo engancha con el pragma `//@ pragma Env QT_ADDITIONAL_PACKAGES_PREFIX_PATH=/home/manu/.local/lib/qt6/qml`
-  en `shell.qml` — verificar tras un restart: el proceso debe mapear `~/.local/lib/qt6/qml/Sylphrena/…/*.so`.
-- Cambios C++ concretos: `Requests.get` con **transfer timeout de 15 s** (sin él, una conexión
-  colgada dejaba el contador `pending` a 1 para siempre y el spinner de Steam no paraba).
+Compilarlo e instalarlo en `~/.local` (y por qué la shell carga ese y no el del sistema) está en
+[docs/DEVELOPMENT.md](./docs/DEVELOPMENT.md).
 
 ## Notas
 

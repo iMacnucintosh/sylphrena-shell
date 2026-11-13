@@ -38,8 +38,12 @@ function gen_trs
     set -l mdir build/i18n/extensions
     rm -rf $mdir
     python3 scripts/manifest-strings.py $mdir extensions
-    xgettext -L JavaScript -o $pot_file --join-existing --from-code=UTF-8 --no-wrap \
-        --add-location=file --package-name=sylphrena-shell -k -ktr:1 $mdir/*/manifest.json.js
+    # None when extensions/ is empty (they live in the hub, with their own catalogues)
+    set -l manifests $mdir/*/manifest.json.js
+    if test (count $manifests) -gt 0
+        xgettext -L JavaScript -o $pot_file --join-existing --from-code=UTF-8 --no-wrap \
+            --add-location=file --package-name=sylphrena-shell -k -ktr:1 $manifests
+    end
     gen C++ **.cpp **.hpp
 
     # Strip js format then tag qt-format, with qt-plural-format for the %n count

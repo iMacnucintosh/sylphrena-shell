@@ -29,6 +29,8 @@ El instalador mira qué tiene tu sistema, te enseña qué va a instalar y por qu
 
 Puedes repetirlo cuando quieras: solo hace lo que falte. Para ver qué haría sin cambiar nada, `./install.sh --dry-run`.
 
+Para actualizar más adelante, la shell avisa de las versiones nuevas en su lista de actualizaciones (icono de la barra y Nexus → Actualizaciones); desde una terminal, `sylph update`.
+
 Compila algunos paquetes, así que tómatelo con calma; en un equipo con poca memoria (una máquina virtual de 2 GB, por ejemplo) compila de uno en uno y tarda más.
 
 <!-- captura: docs/media/installer.webp — el instalador con la lista de pasos -->

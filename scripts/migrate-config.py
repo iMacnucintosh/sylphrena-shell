@@ -44,6 +44,7 @@ REMOVED_KEYS = [
     "bar.workspaces.showUnoccupied",
     "bar.workspaces.showWindowsOnSpecialWorkspaces",
     "bar.workspaces.specialDisplayType",
+    "utilities.toasts.kbLimit",  # the "more than four keyboard layouts" toast went with the old keyboard popout (v0.5)
 ]
 REMOVED_EXTENSIONS = ["razer-mouse"]
 

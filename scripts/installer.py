@@ -88,32 +88,24 @@ def out_of_memory(lines) -> bool:
 
 ES = {
     "Sylphrena installer": "Instalador de Sylphrena",
-    "This computer": "Este equipo",
     "Required": "Necesario", "Recommended": "Recomendado", "Setup": "Configuración", "Login screen": "Pantalla de inicio de sesión",
     "Already done": "Ya hecho",
     "Nothing to do: everything is already in place.": "Nada que hacer: todo está ya en su sitio.",
-    "Administrator password: asked once": "Contraseña de administrador: se pide una vez",
     "Type the number of an item to switch it on or off, Enter to continue, q to quit": "Escribe el número de un elemento para activarlo o desactivarlo, Intro para continuar, q para salir",
     "Nothing has been changed yet.": "Todavía no se ha cambiado nada.",
-    "Continue?": "¿Continuar?",
     "Cancelled. Nothing was changed.": "Cancelado. No se ha cambiado nada.",
-    "Run without a password prompt: not possible here": "Ejecutar sin pedir contraseña: no es posible aquí",
-    "Done": "Hecho", "Failed": "Falló", "Skipped": "Omitido",
     "It did not finish: %s": "No terminó: %s",
     "Want more? Extensions (dashboard widgets, your Steam library, a VPN...) are installed from Things, in its Sylphrena section.":
         "¿Quieres más? Las extensiones (widgets del dashboard, tu biblioteca de Steam, una VPN...) se instalan desde Things, en su sección Sylphrena.",
     "The computer ran out of memory while compiling. Give it more RAM, or run the installer again with fewer builds at once: %s":
         "El equipo se quedó sin memoria al compilar. Dale más RAM o vuelve a lanzar el instalador compilando menos cosas a la vez: %s", "See the log: %s": "Mira el registro: %s",
-    "Everything is ready.": "Todo está listo.",
-    "Start it now with: sylph shell -d  (or log out and back in: Hyprland starts it)": "Arráncala ahora con: sylph shell -d  (o cierra sesión y vuelve a entrar: Hyprland la arranca)",
-    "A copy of your Hyprland configuration is in %s": "Hay una copia de tu configuración de Hyprland en %s",
     "Do not run this as root: the AUR packages cannot be built as root. Run it as your user; it asks for sudo when it needs it.": "No lo ejecutes como root: los paquetes del AUR no se pueden construir como root. Ejecútalo con tu usuario; pide sudo cuando lo necesita.",
     "This installer is for Arch Linux and its derivatives.": "Este instalador es para Arch Linux y derivados.",
     "sudo does not work for this user: it is needed to install packages.": "sudo no funciona con este usuario: hace falta para instalar paquetes.",
     "Base tools": "Herramientas base", "to build packages from the AUR and run this installer": "para construir paquetes del AUR y ejecutar este instalador",
     "Hyprland": "Hyprland", "the compositor Sylphrena runs on": "el compositor sobre el que corre Sylphrena",
     "AUR helper (yay)": "Ayudante del AUR (yay)", "to install packages that are only in the AUR": "para instalar paquetes que solo están en el AUR",
-    "Libraries from the AUR": "Librerías del AUR", "Quickshell (git version), the Material shapes, the colour library and the audio visualiser the shell is built on": "Quickshell (versión git), las formas Material, la librería de color y el visualizador de audio sobre los que se construye la shell",
+    "Libraries from the AUR": "Librerías del AUR", "Quickshell (git version), the Material shapes, the colour library, the audio visualiser and the clock font the shell is built on": "Quickshell (versión git), las formas Material, la librería de color, el visualizador de audio y la fuente del reloj sobre los que se construye la shell",
     "Remove the stable Quickshell": "Quitar el Quickshell estable", "it conflicts with the git version the shell needs": "choca con la versión git que necesita la shell",
     "sylphrena-cli": "sylphrena-cli", "the sylph command (shell, themes, wallpapers, screenshots)": "el comando sylph (shell, temas, fondos, capturas)",
     "Seeker": "Seeker", "the file manager of Sylphrena": "el explorador de archivos de Sylphrena",
@@ -129,8 +121,6 @@ ES = {
     "First-run settings": "Ajustes del primer arranque", "the recommended settings, one activity with its wallpaper, and kitty connected to the colours": "los ajustes recomendados, una actividad con su fondo y kitty conectado a los colores",
     "Sylphrena login screen": "Pantalla de inicio de sesión de Sylphrena", "greetd with the Material You greeter; it replaces %s": "greetd con el greeter Material You; sustituye a %s",
     "greetd with the Material You greeter": "greetd con el greeter Material You",
-    "asks for the password": "pide contraseña", "no password": "sin contraseña",
-    "Hyprland needs to be installed first: it will be added.": "Primero hace falta Hyprland: se añadirá.",
     "yes": "sí", "no": "no",
     "A Material You shell for Hyprland": "Una shell Material You para Hyprland",
     "This is what Sylphrena needs on this computer. Nothing is changed until you press Enter.": "Esto es lo que Sylphrena necesita en este equipo. No se cambia nada hasta que pulses Intro.",
@@ -145,7 +135,6 @@ ES = {
     "The installer will open the welcome guide the first time the shell starts.": "La primera vez que arranque la shell se abrirá la guía de bienvenida.",
     "(dry run: nothing was changed)": "(simulación: no se ha cambiado nada)",
     "Last lines of the output:": "Últimas líneas de la salida:",
-    "Nothing is installed yet.": "Todavía no hay nada instalado.",
 }
 
 
@@ -176,9 +165,7 @@ class Facts:
     helper: str | None = None
     installed: set[str] = field(default_factory=set)
     in_aur: set[str] = field(default_factory=set)         # of the packages we may need from there
-    backlight: bool = True                                  # a built-in screen with its own brightness
     display_manager: str | None = None
-    hyprland_config: bool = False
     hyprland_needed: bool = True                            # setup-hyprland.py --check says it would change something
     first_run_needed: bool = True                           # same for the first-run settings and kitty
     greeter_installed: bool = False
@@ -260,17 +247,12 @@ def scan(from_main: bool = False) -> Facts:
     f.arch = Path("/etc/arch-release").exists() or shutil.which("pacman") is not None
     f.is_root = os.geteuid() == 0
     f.helper = next((h for h in ("yay", "paru") if shutil.which(h)), None)
-    names = ["git", "base-devel", "hyprland", "quickshell", "quickshell-git", "greetd", "ddcutil", "gpu-screen-recorder", "ttf-rubik-vf",
-             "rsync", "zen-browser-bin", *AUR_DEPS, *(p for p, _ in PACKAGES)]
+    names = ["git", "base-devel", "hyprland", "quickshell", "quickshell-git", "greetd", "rsync", "zen-browser-bin", *AUR_DEPS, *(p for p, _ in PACKAGES)]
     f.installed = {n for n in dict.fromkeys(names) if provided(n)}
-    f.in_aur = aur_knows([*AUR_DEPS, "ttf-rubik-vf", *(p for p, _ in PACKAGES)])
-    backlight = Path("/sys/class/backlight")
-    f.backlight = backlight.is_dir() and any(backlight.iterdir())
+    f.in_aur = aur_knows([*AUR_DEPS, *(p for p, _ in PACKAGES)])
     unit = Path("/etc/systemd/system/display-manager.service")
     if unit.is_symlink():
         f.display_manager = os.path.basename(os.readlink(unit)).removesuffix(".service")
-    config = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "hypr" / "hyprland.lua"
-    f.hyprland_config = config.is_file()
     f.hyprland_needed = check_status("setup-hyprland.py") in ("needed", "failed")
     f.first_run_needed = any(check_status(n) == "needed" for n in ("setup-defaults.py", "setup-kitty.py"))
     f.greeter_installed = Path("/etc/greetd/sylphrena").is_dir() and f.display_manager == "greetd"
@@ -334,7 +316,7 @@ def build_plan(f: Facts, login_screen: bool = True) -> list[Item]:
         add("quickshell-conflict", "Required", "Remove the stable Quickshell", "it conflicts with the git version the shell needs",
             True, required=True, steps=[Step("root", ["pacman", "-Rdd", "--noconfirm", "quickshell"])])
     add("aur-deps", "Required", "Libraries from the AUR",
-        "Quickshell (git version), the Material shapes, the colour library and the audio visualiser the shell is built on", True, todo=bool(need_aur),
+        "Quickshell (git version), the Material shapes, the colour library, the audio visualiser and the clock font the shell is built on", True, todo=bool(need_aur),
         required=True, steps=[Step("aur", need_aur)] if need_aur else [])
     labels = {"sylphrena-cli-git": ("sylphrena-cli", "the sylph command (shell, themes, wallpapers, screenshots)"),
               "seeker-git": ("Seeker", "the file manager of Sylphrena"), "things-git": ("Things", "the package manager and extension manager"),
@@ -683,7 +665,7 @@ def main(argv: list[str] | None = None) -> int:
     f = scan(from_main=opts["main"])
     if opts["demo"]:
         # What a bare Arch looks like (nothing of ours, no AUR helper, a desktop, another display manager); changes nothing
-        f = Facts(arch=True, helper=None, installed={"git"}, in_aur=set(AUR_DEPS) | {"ttf-rubik-vf"}, backlight=False,
+        f = Facts(arch=True, helper=None, installed={"git"}, in_aur=set(AUR_DEPS),
                   display_manager="sddm")
     if f.is_root:
         print(tr("Do not run this as root: the AUR packages cannot be built as root. Run it as your user; it asks for sudo when it needs it."), file=sys.stderr)

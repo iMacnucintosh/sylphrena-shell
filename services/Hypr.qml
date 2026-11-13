@@ -398,14 +398,6 @@ Singleton {
         return bestScore >= 0 ? best : null;
     }
 
-    function focusApp(hints: var, defer: bool): bool {
-        const best = root.findAppToplevel(hints);
-        if (!best)
-            return false;
-        root.focusToplevel(best, defer);
-        return true;
-    }
-
     // Workspaces whose windows are slid off-screen by "show desktop" (the bar draws their pill as an outline).
     property var hiddenWs: []
 

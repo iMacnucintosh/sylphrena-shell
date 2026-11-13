@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sylphrena-shell\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 19:26+0100\n"
+"POT-Creation-Date: 2026-11-13 00:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -301,35 +301,16 @@ msgstr ""
 msgid "No active timers"
 msgstr ""
 
-#: modules/bar/popouts/kblayout/KbLayout.qml
-#: modules/nexus/pages/KeyboardLayoutsCard.qml
-msgid "Keyboard layouts"
-msgstr ""
-
-#: modules/bar/popouts/kblayout/KbLayout.qml
-msgid "XKB limitation: maximum 4 layouts allowed"
-msgstr ""
-
-#. TRANSLATORS: %1 = language, %2 = layout code
-#: modules/bar/popouts/kblayout/KbLayoutModel.qml
-#, qt-format
-msgctxt "keyboard layout language and code"
-msgid "%1 (%2)"
-msgstr ""
-
-#: modules/bar/popouts/kblayout/KbLayoutModel.qml
-msgid "Keyboard layout limit"
-msgstr ""
-
-#: modules/bar/popouts/kblayout/KbLayoutModel.qml
-msgid "XKB supports only 4 layouts at a time"
-msgstr ""
-
 #. TRANSLATORS: %1 = layout code, %2 = layout name
-#: modules/bar/popouts/kblayout/KbLayoutModel.qml
+#: modules/bar/popouts/kblayout/KbLayout.qml
 #, qt-format
 msgctxt "keyboard layout code and name"
 msgid "%1 - %2"
+msgstr ""
+
+#: modules/bar/popouts/kblayout/KbLayout.qml
+#: modules/nexus/pages/KeyboardLayoutsCard.qml
+msgid "Keyboard layouts"
 msgstr ""
 
 #: modules/bar/popouts/LockStatus.qml
@@ -2834,7 +2815,6 @@ msgstr ""
 #: modules/nexus/pages/panels/LauncherPanel.qml
 #: modules/nexus/pages/ShellPage.qml
 #: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
-#: modules/nexus/pages/WallpaperAndStyle.qml
 msgid "Wallpapers"
 msgstr ""
 
@@ -3566,7 +3546,7 @@ msgstr ""
 msgid "How fast the activity transition plays"
 msgstr ""
 
-#: modules/nexus/pages/ShellPage.qml modules/nexus/pages/WallpaperAndStyle.qml
+#: modules/nexus/pages/ShellPage.qml
 msgid "Display wallpaper"
 msgstr ""
 
@@ -3654,35 +3634,30 @@ msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
 #: modules/nexus/pages/wallandstyle/ColourSelect.qml
-#: modules/nexus/pages/WallpaperAndStyle.qml
 msgid "Colours"
 msgstr ""
 
-#: modules/nexus/pages/ShellPage.qml modules/nexus/pages/WallpaperAndStyle.qml
+#: modules/nexus/pages/ShellPage.qml
 msgid "Transparency"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
 #: modules/nexus/pages/wallandstyle/ColourSelect.qml
-#: modules/nexus/pages/WallpaperAndStyle.qml
 msgid "Dark theme"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
 #: modules/nexus/pages/wallandstyle/ColourSelect.qml
-#: modules/nexus/pages/WallpaperAndStyle.qml
 msgid "Shell and bar colours"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
 #: modules/nexus/pages/wallandstyle/ColourSelect.qml
-#: modules/nexus/pages/WallpaperAndStyle.qml
 msgid "Light apps"
 msgstr ""
 
 #: modules/nexus/pages/ShellPage.qml
 #: modules/nexus/pages/wallandstyle/ColourSelect.qml
-#: modules/nexus/pages/WallpaperAndStyle.qml
 msgid "Keep GTK/Qt apps light even if the shell is dark"
 msgstr ""
 
@@ -3874,20 +3849,6 @@ msgstr ""
 
 #: modules/nexus/pages/wallandstyle/WallpaperSelect.qml
 msgid "No local wallpapers found"
-msgstr ""
-
-#: modules/nexus/pages/WallpaperAndStyle.qml
-msgid "Wallpaper & style"
-msgstr ""
-
-#: modules/nexus/pages/WallpaperAndStyle.qml
-msgid "Wallpaper disabled"
-msgstr ""
-
-#. TRANSLATORS: %1/%2 = opacity values from 0 to 1 for the base surface and layered surfaces
-#: modules/nexus/pages/WallpaperAndStyle.qml
-#, qt-format
-msgid "Base %1, layers %2"
 msgstr ""
 
 #: modules/nexus/WindowFactory.qml
@@ -4535,11 +4496,6 @@ msgstr ""
 
 #: services/DashWidgets.qml
 msgid "Month view of the dashboard"
-msgstr ""
-
-#: services/Displays.qml
-#, qt-format
-msgid "%1×%2 · %3 Hz"
 msgstr ""
 
 #: services/Displays.qml

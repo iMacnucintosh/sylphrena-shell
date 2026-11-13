@@ -12,7 +12,7 @@ inst = load("installer")
 
 def bare() -> "inst.Facts":
     """Arch with nothing of ours: no AUR helper, no Hyprland, a desktop (no built-in screen), another display manager."""
-    return inst.Facts(arch=True, helper=None, installed={"git"}, in_aur=set(inst.AUR_DEPS) | {"ttf-rubik-vf"}, backlight=False,
+    return inst.Facts(arch=True, helper=None, installed={"git"}, in_aur=set(inst.AUR_DEPS),
                       display_manager="sddm")
 
 
@@ -363,7 +363,7 @@ class Translations(unittest.TestCase):
 
         src = (Path(__file__).resolve().parent.parent / "scripts/installer.py").read_text()
         wanted = set(re.findall(r'\btr\(\s*"((?:[^"\\]|\\.)*)"', src)) | set(inst.GROUPS)
-        for f in (bare(), inst.Facts(arch=True, helper="yay", installed={"quickshell"}, backlight=True)):
+        for f in (bare(), inst.Facts(arch=True, helper="yay", installed={"quickshell"})):
             for it in inst.build_plan(f):
                 wanted |= {it.title, it.why}
         self.assertEqual(sorted(w for w in wanted if w not in inst.ES), [])

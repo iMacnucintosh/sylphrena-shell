@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 import signal
 import socket
+import struct
 import sys
 
 
@@ -28,8 +29,12 @@ def main() -> None:
         pass
 
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    sock.bind(path)
-    os.chmod(path, 0o600)
+    # Private from the moment it exists (bind, then chmod, left a window with the umask's mode)
+    old_umask = os.umask(0o077)
+    try:
+        sock.bind(path)
+    finally:
+        os.umask(old_umask)
     sock.listen(8)
 
     def stop(*_args: object) -> None:
@@ -45,7 +50,10 @@ def main() -> None:
     while True:
         conn, _ = sock.accept()
         try:
-            conn.sendall(pw)
+            # Only this user's processes (the socket may live in /tmp when there is no XDG_RUNTIME_DIR)
+            uid = struct.unpack("3i", conn.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, struct.calcsize("3i")))[1]
+            if uid == os.getuid():
+                conn.sendall(pw)
         finally:
             conn.close()
 

@@ -29,6 +29,8 @@ The installer looks at your system, shows what it is going to install and why, a
 
 You can run it again whenever you want: it only does what is still missing. To see what it would do without changing anything, `./install.sh --dry-run`.
 
+To update later, the shell offers new versions in its updates list (bar icon and Nexus → Updates); from a terminal, `sylph update`.
+
 It compiles a few packages, so give it some time; on a machine with little memory (a 2 GB virtual machine, say) it compiles one thing at a time and takes longer.
 
 <!-- screenshot: docs/media/installer.webp — the installer with its list of steps -->

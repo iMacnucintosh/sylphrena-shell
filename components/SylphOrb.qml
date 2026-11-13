@@ -181,6 +181,8 @@ Item {
     }
 
     Item {
+        id: orbit
+
         anchors.centerIn: parent
         width: root.orbSize * 1.35
         height: width
@@ -197,8 +199,9 @@ Item {
                 radius: root.Tokens.rounding.full
                 color: index % 2 === 0 ? Colours.palette.m3primary : Colours.palette.m3tertiary
                 opacity: 0.35 + (index % 3) * 0.15
-                x: parent.width / 2 + Math.cos(index * 1.256) * (parent.width / 2) - width / 2
-                y: parent.height / 2 + Math.sin(index * 1.256) * (parent.height / 2) - height / 2
+                // orbit, not parent: a delegate loses its parent while being destroyed
+                x: orbit.width / 2 + Math.cos(index * 1.256) * (orbit.width / 2) - width / 2
+                y: orbit.height / 2 + Math.sin(index * 1.256) * (orbit.height / 2) - height / 2
             }
         }
     }

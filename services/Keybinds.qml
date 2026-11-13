@@ -880,13 +880,9 @@ Singleton {
         return `, { ${parts.join(", ")} }`;
     }
 
-    function escapeLuaString(s: string): string {
-        return s.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    }
-
     function dispatcherLua(action: var): string {
         if (action.global)
-            return `hl.dsp.global("${root.escapeLuaString(action.global)}")`;
+            return `hl.dsp.global("${Strings.luaString(action.global)}")`;
         if (action.id === "openFiles") {
             // Hyprland's PATH has no ~/.local/bin — resolve seeker (and any
             // bare explorer name) to an absolute path when needed.
@@ -894,7 +890,7 @@ Singleton {
             let bin = (parts && parts.length) ? String(parts[0]) : "seeker";
             if (bin && !bin.includes("/"))
                 bin = `${Quickshell.env("HOME")}/.local/bin/${bin}`;
-            return `hl.dsp.exec_cmd("${root.escapeLuaString(bin)}")`;
+            return `hl.dsp.exec_cmd("${Strings.luaString(bin)}")`;
         }
         if (action.dispatch)
             return action.dispatch;
@@ -921,7 +917,7 @@ Singleton {
             }
             // Replace whatever hyprland.lua bound to the same keys (Hyprland's default config has Super+Q, Super+C, Super+E…):
             // without this both actions run (two terminals for one Super+Q)
-            const key = root.escapeLuaString(bind);
+            const key = Strings.luaString(bind);
             out += `hl.unbind("${key}")\n`;
             out += `hl.bind("${key}", ${root.dispatcherLua(action)}${root.flagsLua(action.flags)})\n`;
         }

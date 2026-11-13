@@ -9,7 +9,6 @@ then regenerate and apply colours once.
 from __future__ import annotations
 
 import argparse
-import subprocess
 import sys
 from pathlib import Path
 

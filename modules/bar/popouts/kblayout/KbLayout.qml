@@ -1,28 +1,30 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
+import Quickshell
 import Sylphrena.Config
 import Sylphrena.I18n
 import qs.components
 import qs.services
 
+// Bar popout of the keyboard layouts: the others to switch to, and the one in use. The same layouts and names as
+// Nexus → Language & region (Hypr); Hyprland reports which one is active.
 ColumnLayout {
     id: root
 
-    function refresh() {
-        kb.refresh();
+    // XKB holds four at most
+    readonly property var entries: Hypr.shownKeyboardEntries().slice(0, 4)
+    readonly property int active: Hypr.keyboard?.lastIpcObject?.active_layout_index ?? -1
+    readonly property string activeLabel: root.entries[root.active] ? root.label(root.entries[root.active]) : ""
+
+    function label(entry: string): string {
+        // TRANSLATORS: %1 = layout code, %2 = layout name
+        return Tr.trCtx("%1 - %2", "keyboard layout code and name").arg(entry.split(":")[0].toUpperCase()).arg(Hypr.keyboardName(entry));
     }
 
     spacing: Tokens.spacing.small
     width: Tokens.sizes.bar.kbLayoutWidth
-
-    Component.onCompleted: kb.start()
-
-    KbLayoutModel {
-        id: kb
-    }
 
     StyledText {
         Layout.topMargin: Tokens.padding.medium
@@ -31,82 +33,27 @@ ColumnLayout {
         font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
     }
 
-    ListView {
-        id: list
+    Repeater {
+        model: root.entries.map((entry, index) => ({ entry, index })).filter(e => e.index !== root.active)
 
-        model: kb.visibleModel
+        Item {
+            id: row
 
-        Layout.fillWidth: true
-        Layout.rightMargin: Tokens.padding.extraSmall
-        Layout.topMargin: Tokens.spacing.small
+            required property var modelData
 
-        clip: true
-        interactive: true
-        implicitHeight: Math.min(contentHeight, 320)
-        visible: kb.visibleModel.count > 0
-        spacing: Tokens.spacing.small
-
-        add: Transition {
-            NumberAnimation {
-                properties: "opacity"
-                from: 0
-                to: 1
-                duration: 140
-            }
-            NumberAnimation {
-                properties: "y"
-                duration: 180
-                easing.type: Easing.OutCubic
-            }
-        }
-        remove: Transition {
-            NumberAnimation {
-                properties: "opacity"
-                to: 0
-                duration: 100
-            }
-        }
-        move: Transition {
-            NumberAnimation {
-                properties: "y"
-                duration: 180
-                easing.type: Easing.OutCubic
-            }
-        }
-        displaced: Transition {
-            NumberAnimation {
-                properties: "y"
-                duration: 180
-                easing.type: Easing.OutCubic
-            }
-        }
-
-        delegate: Item {
-            id: kbDelegate
-
-            required property int layoutIndex
-            required property string label
-            readonly property bool isDisabled: layoutIndex > 3
-
-            width: list.width
-            height: Math.max(36, rowText.implicitHeight + Tokens.padding.small)
-            ToolTip.visible: isDisabled && layer.containsMouse
-            ToolTip.text: Tr.tr("XKB limitation: maximum 4 layouts allowed")
+            Layout.fillWidth: true
+            Layout.rightMargin: Tokens.padding.extraSmall
+            implicitHeight: Math.max(36, rowText.implicitHeight + Tokens.padding.small)
 
             StateLayer {
                 id: layer
-
-                onClicked: {
-                    if (!kbDelegate.isDisabled)
-                        kb.switchTo(kbDelegate.layoutIndex);
-                }
 
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 implicitHeight: parent.height - 4
                 radius: Tokens.rounding.full
-                enabled: !kbDelegate.isDisabled
+                onClicked: Quickshell.execDetached(["hyprctl", "switchxkblayout", "all", String(row.modelData.index)])
             }
 
             StyledText {
@@ -117,19 +64,17 @@ ColumnLayout {
                 anchors.right: layer.right
                 anchors.leftMargin: Tokens.padding.extraSmall
                 anchors.rightMargin: Tokens.padding.extraSmall
-                text: kbDelegate.label
+                text: root.label(row.modelData.entry)
                 elide: Text.ElideRight
-                opacity: kbDelegate.isDisabled ? 0.4 : 1.0
             }
         }
     }
 
     Rectangle {
-        visible: kb.activeLabel.length > 0
+        visible: root.activeLabel.length > 0 && root.entries.length > 1
         Layout.fillWidth: true
         Layout.rightMargin: Tokens.padding.extraSmall
         Layout.topMargin: Tokens.spacing.small
-
         implicitHeight: 1
         color: Colours.palette.m3onSurfaceVariant
         opacity: 0.35
@@ -138,14 +83,12 @@ ColumnLayout {
     RowLayout {
         id: activeRow
 
-        visible: kb.activeLabel.length > 0
+        visible: root.activeLabel.length > 0
         Layout.fillWidth: true
         Layout.rightMargin: Tokens.padding.extraSmall
         Layout.topMargin: Tokens.spacing.small
+        Layout.bottomMargin: Tokens.padding.small
         spacing: Tokens.spacing.small
-
-        opacity: 1
-        scale: 1
 
         MaterialIcon {
             text: "keyboard"
@@ -154,56 +97,26 @@ ColumnLayout {
 
         StyledText {
             Layout.fillWidth: true
-            text: kb.activeLabel
+            text: root.activeLabel
             elide: Text.ElideRight
             font: Tokens.font.body.builders.medium.weight(Font.Medium).build()
             color: Colours.palette.m3primary
-        }
 
-        Connections {
-            function onActiveLabelChanged() {
-                if (!activeRow.visible)
-                    return;
-                popIn.restart();
-            }
-
-            target: kb
-        }
-
-        SequentialAnimation {
-            id: popIn
-
-            running: false
-
-            ParallelAnimation {
-                NumberAnimation {
-                    target: activeRow
-                    property: "opacity"
-                    to: 0.0
-                    duration: 70
-                }
-                NumberAnimation {
-                    target: activeRow
-                    property: "scale"
-                    to: 0.92
-                    duration: 70
-                }
-            }
-
-            ParallelAnimation {
-                NumberAnimation {
-                    target: activeRow
-                    property: "opacity"
-                    to: 1.0
-                    duration: 160
-                    easing.type: Easing.OutCubic
-                }
-                NumberAnimation {
-                    target: activeRow
-                    property: "scale"
-                    to: 1.0
-                    duration: 220
-                    easing.type: Easing.OutBack
+            Behavior on text {
+                SequentialAnimation {
+                    Anim {
+                        target: activeRow
+                        property: "opacity"
+                        to: 0
+                        duration: 70
+                    }
+                    PropertyAction {}
+                    Anim {
+                        target: activeRow
+                        property: "opacity"
+                        to: 1
+                        duration: 160
+                    }
                 }
             }
         }

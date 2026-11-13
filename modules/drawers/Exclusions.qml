@@ -13,7 +13,8 @@ Scope {
     required property ShellScreen screen
     required property Bar.BarWrapper bar
 
-    readonly property int frameZone: RuntimeState.gameMode ? 0 : Config.border.thickness
+    // Through the bar: Config needs an item on a screen (this Scope has none)
+    readonly property int frameZone: RuntimeState.gameMode ? 0 : root.bar.Config.border.thickness
 
     ExclusionZone {
         anchors.left: true

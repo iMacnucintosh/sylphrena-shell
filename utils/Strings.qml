@@ -6,6 +6,11 @@ import Sylphrena.I18n
 Singleton {
     property var _regexCache: ({})
 
+    // The inside of a "…" Lua string (for the files and commands written for Hyprland)
+    function luaString(s: var): string {
+        return String(s ?? "").replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n").replace(/\r/g, "\\r");
+    }
+
     function percent(value: int): string {
         // TRANSLATORS: %1 = a number
         return Tr.tr("%1%").arg(value);
