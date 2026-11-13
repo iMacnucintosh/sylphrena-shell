@@ -427,6 +427,25 @@ Singleton {
         }, at);
     }
 
+    // For other apps (Things marks the packages with a new version): the same list the bar and Nexus show
+    IpcHandler {
+        target: "updates"
+
+        // [{ name, from, to, source, pkg?, id? }]: source ARCH | AUR | FLATPAK… | SYLPHRENA (pkg = its package) |
+        // EXTENSION (id = the extension); `checking` while a check runs
+        function list(): string {
+            return JSON.stringify({
+                checking: root.busy,
+                installing: root.installing,
+                entries: root.entries.map(e => ({ name: e.name, from: e.from ?? "", to: e.to ?? "", source: e.source ?? "", pkg: e.pkg ?? "", id: e.id ?? "" }))
+            });
+        }
+
+        function refresh(): void {
+            root.refresh();
+        }
+    }
+
     Component.onCompleted: {
         root.ensureStatusIcon();
         root.refresh();
