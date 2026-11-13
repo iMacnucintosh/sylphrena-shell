@@ -2,6 +2,10 @@
 
 Cambios relevantes de este fork respecto a releases internas. El detalle de uso está en [FEATURES.md](./FEATURES.md).
 
+## 0.5.7 (2026-11-13)
+
+- **Things marca las actualizaciones:** la shell comparte su lista de actualizaciones (`qs -c sylphrena ipc call updates list`) y abre Nexus en una página concreta (`ipc call nexus openPage updates`); Things 0.1.5 las usa para marcar los paquetes con versión nueva y llevar a Nexus → Actualizaciones.
+
 ## 0.5.6 (2026-11-13)
 
 - **Contraseña de las actualizaciones:** el socket que la guarda en memoria es privado desde que se crea (antes, un instante con los permisos por defecto) y solo responde a procesos de tu usuario.

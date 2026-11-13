@@ -209,6 +209,11 @@ Scope {
             WindowFactory.create();
         }
 
+        // Nexus straight on one page (its PageRegistry id: "updates", "bluetooth"…); Things opens the updates this way
+        function openPage(pageId: string): void {
+            WindowFactory.openPage(pageId);
+        }
+
         target: "nexus"
     }
 
